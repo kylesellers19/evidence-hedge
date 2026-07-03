@@ -12,9 +12,14 @@ from abc import ABC, abstractmethod
 
 from pydantic import BaseModel
 
+from typing import TYPE_CHECKING
+
 from .graph import DelibGraph
 from .models.edges import Edge
 from .models.nodes import Node
+
+if TYPE_CHECKING:
+    from .dedup import Deduplicator
 
 
 class GoalStateProposal(BaseModel):
@@ -55,20 +60,39 @@ class Generator(ABC):
 
 
 def apply_expansion(
-    graph: DelibGraph, result: ExpansionResult, mark_expanded: bool = True
+    graph: DelibGraph,
+    result: ExpansionResult,
+    mark_expanded: bool = True,
+    deduplicator: "Deduplicator | None" = None,
 ) -> list[str]:
     """Insert an expansion's candidates into the graph (idempotent on node id).
 
     Returns the ids of newly added nodes. Edges are always (re-)validated on
     insert. When ``mark_expanded`` and the parent supports it, flips the
     parent's ``expanded`` flag to True.
+
+    When a ``deduplicator`` is supplied, a *new* candidate that matches an
+    existing node is merged: its attaching edge is rewired to the existing node
+    (giving that node a second parent → DAG) and no twin is added.
     """
     added: list[str] = []
     for cand in result.candidates:
-        if cand.node.id not in graph:
-            graph.add_node(cand.node)
-            added.append(cand.node.id)
-        graph.add_edge(cand.edge)
+        node, edge = cand.node, cand.edge
+
+        # Loop-back / closure / otherwise-known targets: attach, don't re-add.
+        if node.id in graph:
+            graph.add_edge(edge)
+            continue
+
+        if deduplicator is not None:
+            dup_id = deduplicator.find_duplicate(graph, node)
+            if dup_id is not None:
+                graph.add_edge(edge.model_copy(update={"target": dup_id}))
+                continue
+
+        graph.add_node(node)
+        added.append(node.id)
+        graph.add_edge(edge)
 
     if mark_expanded and result.parent_id in graph:
         parent = graph.get_node(result.parent_id)

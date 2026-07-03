@@ -111,6 +111,11 @@ def small_graph(registries) -> DelibGraph:
     )
     g.add_node(consequence("capacity", "Housing capacity increases", 2, 0.85))
 
+    # Seed roots the causal graph via a causal edge to ring-1 (flagged decision:
+    # seed->ring-1 uses a causal edge, the only type-consistent option).
+    g.add_edge(CausalEdge(source="seed", target="build", mechanism_text="scenario prompts the decision",
+                          evidence_grade=EvidenceGrade.SUPPORTED, polarity=1))
+
     # Reinforcing loop: all same-direction (+1) polarities.
     g.add_edge(CausalEdge(source="build", target="desirability", mechanism_text="m",
                           evidence_grade=EvidenceGrade.SUPPORTED, polarity=1))

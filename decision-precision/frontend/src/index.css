@@ -1,0 +1,103 @@
+@import "tailwindcss";
+@import "@xyflow/react/dist/style.css";
+
+/*
+ * Graph-semantic token layer.
+ * All graph marks (node fills, edge strokes, glows) read from these CSS
+ * variables — never hard-coded colors — so the semantic palette is centralized
+ * and swappable, and the renderer stays dumb about meaning.
+ *
+ * Valence is a DIVERGING encoding: orange (harm) <-> gray (neutral) <-> blue
+ * (benefit), the CVD-safe pair (validated). Status colors (amber CONTESTED, red
+ * CONTRADICTED) are RESERVED and always shipped with dash + label, never color
+ * alone. Divergence uses fuchsia as a spatial glow; closure uses teal.
+ */
+:root {
+  --surface: #f7f8fa;
+  --surface-raised: #ffffff;
+  --ink: #0f172a;
+  --ink-muted: #64748b;
+  --hairline: #e2e8f0;
+
+  /* diverging valence ramp (-2..+2) */
+  --valence-neg2: #c2410c;
+  --valence-neg1: #f97316;
+  --valence-0: #cbd5e1;
+  --valence-pos1: #3b82f6;
+  --valence-pos2: #1d4ed8;
+
+  /* evidence grade: hue only for the two reserved status grades */
+  --grade-ink: #475569;      /* SUPPORTED/WEAK/ANALOGICAL/SPECULATIVE stroke */
+  --grade-contested: #b45309; /* amber, dashed + label */
+  --grade-contradicted: #dc2626; /* red, dashed + label */
+
+  --divergence: #c026d3;     /* fuchsia glow + badge */
+  --closure: #0d9488;        /* teal arc to center */
+  --reinforcing: #ea580c;    /* loop marker R */
+  --balancing: #2563eb;      /* loop marker B */
+
+  --node-decision: #ffffff;
+  --node-consequence: #ffffff;
+  --node-border: #94a3b8;
+  --seed: #0f172a;
+
+  --path-highlight: #0ea5e9;
+}
+
+.dark {
+  --surface: #0b1020;
+  --surface-raised: #131a2c;
+  --ink: #e6edf6;
+  --ink-muted: #94a3b8;
+  --hairline: #24304a;
+
+  --valence-neg2: #ea580c;
+  --valence-neg1: #fb923c;
+  --valence-0: #475569;
+  --valence-pos1: #60a5fa;
+  --valence-pos2: #3b82f6;
+
+  --grade-ink: #94a3b8;
+  --grade-contested: #f59e0b;
+  --grade-contradicted: #f87171;
+
+  --divergence: #e879f9;
+  --closure: #2dd4bf;
+  --reinforcing: #fb923c;
+  --balancing: #60a5fa;
+
+  --node-decision: #172033;
+  --node-consequence: #172033;
+  --node-border: #46567a;
+  --seed: #e6edf6;
+
+  --path-highlight: #38bdf8;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+/* React Flow surface should use our tokens */
+.react-flow {
+  background: var(--surface);
+}
+
+/* divergence glow (used on nodes flagged is_divergence) */
+@keyframes divergence-pulse {
+  0%, 100% { filter: drop-shadow(0 0 3px var(--divergence)); }
+  50% { filter: drop-shadow(0 0 9px var(--divergence)); }
+}
+.divergence-glow {
+  animation: divergence-pulse 2.2s ease-in-out infinite;
+}
+
+/* dotted halo for unexpanded nodes with hidden children */
+.node-halo {
+  outline: 2px dotted var(--node-border);
+  outline-offset: 4px;
+  border-radius: 9999px;
+}

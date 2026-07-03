@@ -42,4 +42,19 @@ frontend/   Vite + React + React Flow          (added in Phase 3)
 cd backend
 uv sync
 uv run pytest
+uv run uvicorn delib.api:app --reload --port 8000   # API on :8000
 ```
+
+## Frontend dev
+
+```bash
+cd frontend
+npm install
+npm run dev          # Vite on :5173, proxies /api -> :8000
+```
+
+Run the backend first, then the frontend. The app opens on the Brooklyn mock:
+seed + ring-1, click a node to expand it, hover to trace its path to the seed
+(weakest-link confidence shown), edit fields in the side panel (writes to the
+correction log), toggle full/resolution view, and zoom out for semantic
+(label-suppressed, valence-colored) rendering.

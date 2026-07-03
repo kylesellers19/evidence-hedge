@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# uv
+# (uv.lock IS committed; the venv is not)
+
+# Local data stores (training-data log + evidence cache live outside git)
+*.sqlite
+*.sqlite3
+*.db
+data/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Node / frontend
+node_modules/
+dist/
+frontend/.vite/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

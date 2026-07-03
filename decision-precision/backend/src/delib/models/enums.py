@@ -51,15 +51,16 @@ class LoopClass(str, Enum):
 # link (the MIN of the ordinals along the path). Higher ordinal == higher
 # confidence that the causal claim actually holds.
 #
-# NOTE (flagged for confirmation): the *ordering* below is a semantic choice
-# the brief does not fully pin down. Rationale for the default:
-#   SUPPORTED    direct empirical support                       -> highest
-#   WEAK         some real but weak support
-#   ANALOGICAL   transferred from an analogous domain (transfer risk)
-#   SPECULATIVE  plausible reasoning, no evidence yet
-#   CONTESTED    literature actively conflicts
-#   CONTRADICTED evidence points against the claim              -> lowest
-# It lives in exactly one place so re-ordering is a one-line change.
+# VALIDATED against evidence-hierarchy scholarship (GRADE, OCEBM 2011, Maryland
+# SMS, Nesta, IPCC) — see docs/evidence-hierarchies.md for the anchor levels and
+# sources behind each rung. The six grades project three axes (direction,
+# certainty, directness) onto one ordinal; Phase 4/5 will back this with the
+# richer {direction, certainty, provenance} representation.
+#
+# The one expert-disputed adjacency is SPECULATIVE (2) > CONTESTED (1): an
+# untested-but-plausible mechanism keeps forward warrant, whereas contested
+# direct evidence has shown the effect is unreliable. Swap the two if you prefer
+# "any direct signal outranks none" — this dict is the single place to do it.
 EVIDENCE_GRADE_ORDINAL: dict[EvidenceGrade, int] = {
     EvidenceGrade.SUPPORTED: 5,
     EvidenceGrade.WEAK: 4,

@@ -69,8 +69,26 @@ class ClosureEdge(BaseModel):
     justification: str = Field(min_length=1)
 
 
+class FramesEdge(BaseModel):
+    """SEED -> ring-1 node. Roots the graph.
+
+    A framing edge is NOT an empirical causal claim — the seed does not *cause*
+    the ring-1 decisions/consequences, it *frames* them — so it carries no
+    evidence grade or polarity and is confidence-neutral in path_confidence.
+
+    NOTE (flagged for confirmation): scoped to seed -> ring-1 rooting; causal
+    edges remain the branching structure for ring >= 1. If you meant a general
+    structural parent link across the whole tree, say so and I'll broaden it.
+    """
+
+    model_config = _STRICT
+    type: Literal[EdgeType.FRAMES] = EdgeType.FRAMES
+    source: str = Field(min_length=1)
+    target: str = Field(min_length=1)
+
+
 Edge = Annotated[
-    Union[CausalEdge, DeliberativeEdge, ClosureEdge],
+    Union[CausalEdge, DeliberativeEdge, ClosureEdge, FramesEdge],
     Field(discriminator="type"),
 ]
 
@@ -79,5 +97,6 @@ __all__ = [
     "CausalEdge",
     "DeliberativeEdge",
     "ClosureEdge",
+    "FramesEdge",
     "Edge",
 ]

@@ -11,7 +11,7 @@ from __future__ import annotations
 import pytest
 
 from delib.graph import DelibGraph
-from delib.models.edges import CausalEdge, ClosureEdge
+from delib.models.edges import CausalEdge, ClosureEdge, FramesEdge
 from delib.models.enums import ClosureSatisfaction, EvidenceGrade
 from delib.models.nodes import (
     CFIRTags,
@@ -111,10 +111,9 @@ def small_graph(registries) -> DelibGraph:
     )
     g.add_node(consequence("capacity", "Housing capacity increases", 2, 0.85))
 
-    # Seed roots the causal graph via a causal edge to ring-1 (flagged decision:
-    # seed->ring-1 uses a causal edge, the only type-consistent option).
-    g.add_edge(CausalEdge(source="seed", target="build", mechanism_text="scenario prompts the decision",
-                          evidence_grade=EvidenceGrade.SUPPORTED, polarity=1))
+    # Seed roots the graph via a FRAMES edge to ring-1 (not an empirical causal
+    # claim; confidence-neutral in path_confidence).
+    g.add_edge(FramesEdge(source="seed", target="build"))
 
     # Reinforcing loop: all same-direction (+1) polarities.
     g.add_edge(CausalEdge(source="build", target="desirability", mechanism_text="m",

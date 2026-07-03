@@ -16,6 +16,7 @@ class EdgeType(str, Enum):
     CAUSAL = "CAUSAL"
     DELIBERATIVE = "DELIBERATIVE"
     CLOSURE = "CLOSURE"
+    FRAMES = "FRAMES"
 
 
 class EvidenceGrade(str, Enum):

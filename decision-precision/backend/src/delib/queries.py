@@ -19,7 +19,7 @@ import networkx as nx
 from pydantic import BaseModel
 
 from .graph import DelibGraph
-from .models.edges import CausalEdge, ClosureEdge
+from .models.edges import CausalEdge, ClosureEdge, FramesEdge
 from .models.enums import EVIDENCE_GRADE_ORDINAL, EdgeType, EvidenceGrade, LoopClass
 from .models.nodes import ConsequenceNode
 
@@ -34,36 +34,49 @@ def _signum(x: int) -> int:
 
 
 class PathConfidence(BaseModel):
-    """The strongest causal route source->target, scored by its weakest link."""
+    """The strongest route source->target, scored by its weakest causal link.
+
+    Routes may traverse the seed's framing edge; framing edges are
+    confidence-neutral, so ``weakest_grade`` is None (and ordinal == max) only
+    when the route contains no causal edge at all.
+    """
 
     source: str
     target: str
     path: list[str]
-    weakest_grade: EvidenceGrade
+    weakest_grade: EvidenceGrade | None
     ordinal: int  # ordinal of weakest_grade; higher == more confident
 
 
-def _weakest_link(causal: nx.DiGraph, path: list[str]) -> tuple[EvidenceGrade, int]:
-    grades = [causal[u][v]["data"].evidence_grade for u, v in zip(path, path[1:])]
+def _weakest_link(structural: nx.DiGraph, path: list[str]) -> tuple[EvidenceGrade | None, int]:
+    # Only causal edges carry a grade; framing edges are confidence-neutral.
+    grades = [
+        structural[u][v]["data"].evidence_grade
+        for u, v in zip(path, path[1:])
+        if structural[u][v]["data"].type is EdgeType.CAUSAL
+    ]
+    if not grades:
+        return None, _MAX_ORDINAL
     weakest = min(grades, key=lambda g: EVIDENCE_GRADE_ORDINAL[g])
     return weakest, EVIDENCE_GRADE_ORDINAL[weakest]
 
 
 def path_confidence(g: DelibGraph, source: str, target: str) -> PathConfidence | None:
-    """Confidence of a causal path = its weakest link (min ordinal).
+    """Confidence of a route = its weakest causal link (min ordinal).
 
-    Over all simple causal paths, return the one whose weakest link is
-    strongest (max-min). Returns None if no causal path exists.
+    Traverses the causal+framing spine (so paths from the seed work), and over
+    all simple routes returns the one whose weakest link is strongest (max-min).
+    Returns None if no route exists.
     """
-    causal = g.causal_digraph()
-    if source not in causal or target not in causal:
+    structural = g.structural_digraph()
+    if source not in structural or target not in structural:
         return None
 
     best: PathConfidence | None = None
-    for path in nx.all_simple_paths(causal, source, target):
+    for path in nx.all_simple_paths(structural, source, target):
         if len(path) < 2:
             continue
-        grade, ordinal = _weakest_link(causal, path)
+        grade, ordinal = _weakest_link(structural, path)
         if best is None or ordinal > best.ordinal:
             best = PathConfidence(
                 source=source,
@@ -137,44 +150,53 @@ def divergence_points(g: DelibGraph) -> DivergenceReport:
 
 
 class ResolutionSubgraph(BaseModel):
-    """Nodes/edges on some causal path from the seed to a closure-bearing
+    """Nodes/edges on some simple route from the seed to a closure-bearing
     consequence, plus those closure edges."""
 
     node_ids: list[str]
     causal_edges: list[CausalEdge]
+    frames_edges: list[FramesEdge]
     closure_edges: list[ClosureEdge]
 
 
 def resolution_subgraph(g: DelibGraph) -> ResolutionSubgraph:
     seed = g.seed_id
     closure_edges = [e for e in g.edges(EdgeType.CLOSURE)]  # type: ignore[misc]
+    empty = ResolutionSubgraph(node_ids=[], causal_edges=[], frames_edges=[], closure_edges=[])
     if seed is None or not closure_edges:
-        return ResolutionSubgraph(node_ids=[], causal_edges=[], closure_edges=[])
+        return empty
 
-    causal = g.causal_digraph()
-    if seed not in causal:
-        return ResolutionSubgraph(node_ids=[], causal_edges=[], closure_edges=[])
+    structural = g.structural_digraph()  # causal + framing spine
+    if seed not in structural:
+        return empty
 
-    # Nodes/edges appearing on some SIMPLE causal path seed -> closure
-    # consequence. Simple (not mere reachability) so a reinforcing loop that
-    # merely touches the route does not drag its members into the resolution.
-    # (all_simple_paths is exponential in the worst case; fine at graph sizes
-    # here — revisit with a cap if graphs grow dense.)
+    # Nodes/edges on some SIMPLE route seed -> closure consequence. Simple (not
+    # mere reachability) so a reinforcing loop that merely touches the route
+    # does not drag its members into the resolution. (all_simple_paths is
+    # exponential worst-case; fine at these sizes — cap if graphs grow dense.)
     nodes: set[str] = set()
     edge_pairs: set[tuple[str, str]] = set()
     for ce in closure_edges:
         target = ce.source  # the closure-bearing consequence
-        if target not in causal:
+        if target not in structural:
             continue
-        for path in nx.all_simple_paths(causal, seed, target):
+        for path in nx.all_simple_paths(structural, seed, target):
             nodes.update(path)
             edge_pairs.update(zip(path, path[1:]))
 
-    causal_on_path = [causal[u][v]["data"] for (u, v) in edge_pairs]
+    causal_on_path: list[CausalEdge] = []
+    frames_on_path: list[FramesEdge] = []
+    for u, v in edge_pairs:
+        data = structural[u][v]["data"]
+        if data.type is EdgeType.CAUSAL:
+            causal_on_path.append(data)
+        else:
+            frames_on_path.append(data)
     closure_on_path = [ce for ce in closure_edges if ce.source in nodes]
     return ResolutionSubgraph(
         node_ids=sorted(nodes),
         causal_edges=causal_on_path,
+        frames_edges=frames_on_path,
         closure_edges=closure_on_path,
     )
 

@@ -25,6 +25,7 @@ from .edges import (
     ClosureEdge,
     DeliberativeEdge,
     Edge,
+    FramesEdge,
 )
 from .registries import (
     Framework,
@@ -55,6 +56,7 @@ __all__ = [
     "CausalEdge",
     "DeliberativeEdge",
     "ClosureEdge",
+    "FramesEdge",
     "Citation",
     "Edge",
     # registries

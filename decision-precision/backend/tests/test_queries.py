@@ -66,11 +66,14 @@ def test_no_spurious_stakeholder_divergence(small_graph):
 
 def test_resolution_subgraph_only_seed_to_closure(small_graph):
     res = resolution_subgraph(small_graph)
-    # seed->build->capacity->(closure) is the only resolution path.
+    # seed-(frames)->build-(causal)->capacity->(closure) is the only route.
     assert set(res.node_ids) == {"seed", "build", "capacity"}
     assert len(res.closure_edges) == 1
     assert res.closure_edges[0].source == "capacity"
-    # displacement / desirability / rent are NOT on a seed->closure path.
+    # the framing root and the one causal edge are both included.
+    assert [(e.source, e.target) for e in res.frames_edges] == [("seed", "build")]
+    assert [(e.source, e.target) for e in res.causal_edges] == [("build", "capacity")]
+    # displacement / desirability / rent are NOT on a seed->closure route.
     assert "displacement" not in res.node_ids
     assert "rent" not in res.node_ids
 

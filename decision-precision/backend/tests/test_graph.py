@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from delib.graph import DelibGraph, GraphConstraintError
-from delib.models.edges import CausalEdge, ClosureEdge, DeliberativeEdge
+from delib.models.edges import CausalEdge, ClosureEdge, DeliberativeEdge, FramesEdge
 from delib.models.enums import ClosureSatisfaction
 from delib.models.nodes import SeedNode
 from conftest import consequence, decision, val
@@ -143,6 +143,40 @@ def test_edge_endpoint_missing_raises():
     g.add_node(consequence("c1", "y", 2, 0.5))
     with pytest.raises(GraphConstraintError):
         g.add_edge(CausalEdge(source="c1", target="ghost", mechanism_text="m"))
+
+
+# --- Frames edges -----------------------------------------------------------
+
+
+def test_frames_seed_to_ring1_ok():
+    g = DelibGraph()
+    _seed(g)
+    g.add_node(decision("d1", "x", 1))
+    g.add_edge(FramesEdge(source="seed", target="d1"))
+
+
+def test_frames_from_nonseed_raises():
+    g = DelibGraph()
+    _seed(g)
+    g.add_node(decision("d1", "x", 1))
+    g.add_node(decision("d2", "y", 1))
+    with pytest.raises(GraphConstraintError):
+        g.add_edge(FramesEdge(source="d1", target="d2"))
+
+
+def test_frames_to_seed_raises():
+    g = DelibGraph()
+    _seed(g)
+    with pytest.raises(GraphConstraintError):
+        g.add_edge(FramesEdge(source="seed", target="seed"))
+
+
+def test_frames_to_nonring1_raises():
+    g = DelibGraph()
+    _seed(g)
+    g.add_node(consequence("c2", "y", 2, 0.5))
+    with pytest.raises(GraphConstraintError):
+        g.add_edge(FramesEdge(source="seed", target="c2"))
 
 
 # --- Valence referential integrity -----------------------------------------

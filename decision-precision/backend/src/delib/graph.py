@@ -23,7 +23,13 @@ from typing import Iterator
 
 import networkx as nx
 
-from .models.edges import CausalEdge, ClosureEdge, DeliberativeEdge, Edge
+from .models.edges import (
+    CausalEdge,
+    ClosureEdge,
+    DeliberativeEdge,
+    Edge,
+    FramesEdge,
+)
 from .models.enums import EdgeType, NodeType
 from .models.nodes import ConsequenceNode, Node
 from .models.registries import FrameworkRegistry, StakeholderRegistry
@@ -117,6 +123,18 @@ class DelibGraph:
                     "causal edge may not target the SEED (only closure re-enters "
                     "the seed)"
                 )
+        elif isinstance(edge, FramesEdge):
+            if s_type is not NodeType.SEED:
+                raise GraphConstraintError(
+                    f"frames edge must originate at the SEED, got {s_type.value}"
+                )
+            if t_type is NodeType.SEED:
+                raise GraphConstraintError("frames edge may not target the SEED")
+            target_ring = self.get_node(edge.target).ring
+            if target_ring != 1:
+                raise GraphConstraintError(
+                    f"frames edge must target a ring-1 node, got ring {target_ring}"
+                )
         else:  # pragma: no cover - exhaustive over Edge union
             raise GraphConstraintError(f"unknown edge type: {type(edge).__name__}")
 
@@ -177,6 +195,23 @@ class DelibGraph:
 
     def deliberative_digraph(self) -> nx.DiGraph:
         return self._subgraph_by_type(EdgeType.DELIBERATIVE)
+
+    def frames_digraph(self) -> nx.DiGraph:
+        return self._subgraph_by_type(EdgeType.FRAMES)
+
+    def structural_digraph(self) -> nx.DiGraph:
+        """Causal + framing edges — the connective spine from the seed outward.
+
+        Used by queries that must reach the seed (resolution_subgraph, and
+        path_confidence's path-to-seed). Framing edges connect but are
+        confidence-neutral; only causal edges carry an evidence grade.
+        """
+        dg: nx.DiGraph = nx.DiGraph()
+        dg.add_nodes_from(self._g.nodes)
+        for u, v, attrs in self._g.edges(data=True):
+            if attrs["data"].type in (EdgeType.CAUSAL, EdgeType.FRAMES):
+                dg.add_edge(u, v, data=attrs["data"])
+        return dg
 
 
 __all__ = ["DelibGraph", "GraphConstraintError"]

@@ -1,0 +1,101 @@
+"""LLM-facing response schemas.
+
+These are deliberately *flatter* than the graph models — an LLM returns a simple
+JSON shape and the role adapters map it into the strict node/edge models. Keeping
+them separate means the structured-output contract with the model is decoupled
+from the internal type discipline.
+"""
+
+from __future__ import annotations
+
+from typing import Literal
+
+from pydantic import BaseModel, ConfigDict, Field
+
+from ..models.enums import EvidenceGrade
+
+_STRICT = ConfigDict(extra="forbid")
+
+
+# --- generator --------------------------------------------------------------
+
+
+class ProposedChild(BaseModel):
+    model_config = _STRICT
+    type: Literal["DECISION", "CONSEQUENCE", "STATE"]
+    label: str = Field(min_length=1)
+    mechanism_text: str = Field(min_length=1, description="How the parent leads to this")
+    evidence_grade: EvidenceGrade = EvidenceGrade.SPECULATIVE
+    polarity: int = Field(default=0, ge=-1, le=1)
+    goal_relevance: float = Field(default=0.5, ge=0.0, le=1.0)
+    unexpanded_child_estimate: int = Field(default=0, ge=0)
+
+
+class GeneratorOutput(BaseModel):
+    model_config = _STRICT
+    children: list[ProposedChild] = Field(default_factory=list)
+
+
+class SeedIntakeOutput(BaseModel):
+    model_config = _STRICT
+    goal_state_text: str = Field(min_length=1)
+    goal_criteria: list[str] = Field(default_factory=list)
+
+
+# --- coder ------------------------------------------------------------------
+
+
+class ValenceCoding(BaseModel):
+    model_config = _STRICT
+    stakeholder_id: str = Field(min_length=1)
+    framework_id: str = Field(min_length=1)
+    sign: int = Field(ge=-2, le=2)
+    justification: str = Field(min_length=1)
+
+
+class ConsequenceCoding(BaseModel):
+    model_config = _STRICT
+    valences: list[ValenceCoding] = Field(default_factory=list)
+    goal_relevance: float = Field(ge=0.0, le=1.0)
+
+
+class ProctorScoreCoding(BaseModel):
+    model_config = _STRICT
+    score: int = Field(ge=1, le=5)
+    justification: str = Field(min_length=1)
+
+
+class DecisionCoding(BaseModel):
+    model_config = _STRICT
+    # CFIR domain -> construct tags
+    innovation: list[str] = Field(default_factory=list)
+    outer_setting: list[str] = Field(default_factory=list)
+    inner_setting: list[str] = Field(default_factory=list)
+    individuals: list[str] = Field(default_factory=list)
+    process: list[str] = Field(default_factory=list)
+    acceptability: ProctorScoreCoding
+    feasibility: ProctorScoreCoding
+    cost: ProctorScoreCoding
+    sustainability: ProctorScoreCoding
+    adoption: ProctorScoreCoding
+
+
+# --- grader -----------------------------------------------------------------
+
+
+class GradeOutput(BaseModel):
+    model_config = _STRICT
+    evidence_grade: EvidenceGrade
+    transfer_note: str | None = None
+
+
+__all__ = [
+    "ProposedChild",
+    "GeneratorOutput",
+    "SeedIntakeOutput",
+    "ValenceCoding",
+    "ConsequenceCoding",
+    "ProctorScoreCoding",
+    "DecisionCoding",
+    "GradeOutput",
+]

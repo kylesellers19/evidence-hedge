@@ -1,0 +1,169 @@
+"""The single LLM interface (principles 1 & 2).
+
+Every LLM call goes through :class:`LLM`. It is the one place that talks to
+LiteLLM, enforces structured output (reject + retry on schema violation), and
+appends every request/response pair to the training-data store. The three roles
+— ``generate`` / ``code`` / ``grade`` (plus seed ``intake``) — are thin methods
+over one private ``_structured`` call, differing only by prompt, schema, and
+task-typed config. Model choice never appears in code; it comes from settings.
+"""
+
+from __future__ import annotations
+
+import json
+from typing import Any, Callable, TypeVar
+
+from pydantic import BaseModel, ValidationError
+
+from ..store import TrainingDataStore
+from . import config as cfg
+from . import prompts
+from .config import LLMSettings
+from .schemas import (
+    ConsequenceCoding,
+    DecisionCoding,
+    GeneratorOutput,
+    GradeOutput,
+    SeedIntakeOutput,
+)
+
+T = TypeVar("T", bound=BaseModel)
+
+
+class LLMError(RuntimeError):
+    """Raised when structured output can't be obtained within the retry budget."""
+
+
+def _extract_content(resp: Any) -> str:
+    """Pull the message text out of a LiteLLM (OpenAI-shaped) response."""
+    try:
+        return resp.choices[0].message.content
+    except AttributeError:
+        return resp["choices"][0]["message"]["content"]
+
+
+class LLM:
+    def __init__(
+        self,
+        settings: LLMSettings | None = None,
+        store: TrainingDataStore | None = None,
+        completion_fn: Callable[..., Any] | None = None,
+    ) -> None:
+        self.settings = settings or LLMSettings()
+        self.store = store or TrainingDataStore()
+        if completion_fn is None:  # pragma: no cover - real transport
+            import litellm
+
+            completion_fn = litellm.completion
+        self._completion = completion_fn
+
+    # --- core ---------------------------------------------------------------
+
+    def _structured(
+        self,
+        task_type: str,
+        system: str,
+        user: str,
+        schema: type[T],
+        post_validate: Callable[[T], None] | None = None,
+    ) -> T:
+        """One structured call: LiteLLM -> validate against ``schema`` ->
+        optional semantic ``post_validate`` -> log. Retries with a repair prompt
+        on any validation failure, up to ``max_schema_retries``."""
+        model = self.settings.model_for(task_type)
+        temperature = self.settings.temperature_for(task_type)
+        messages = [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ]
+        input_payload = {"model": model, "task_type": task_type, "messages": messages}
+
+        last_error: Exception | None = None
+        for _ in range(self.settings.max_schema_retries + 1):
+            resp = self._completion(
+                model=model,
+                messages=messages,
+                temperature=temperature,
+                max_tokens=self.settings.max_tokens,
+                response_format=schema,
+            )
+            content = _extract_content(resp)
+            try:
+                obj = schema.model_validate_json(content)
+                if post_validate is not None:
+                    post_validate(obj)  # raises ValueError to trigger a retry
+                self.store.log(
+                    task_type=task_type,
+                    input_obj=input_payload,
+                    output_obj=obj.model_dump(mode="json"),
+                )
+                return obj
+            except (ValidationError, ValueError) as e:
+                last_error = e
+                messages = messages + [
+                    {"role": "assistant", "content": content},
+                    {
+                        "role": "user",
+                        "content": (
+                            f"That did not satisfy the requirements: {e}. "
+                            "Return ONLY corrected JSON matching the schema."
+                        ),
+                    },
+                ]
+
+        self.store.log(
+            task_type=f"{task_type}:schema_fail",
+            input_obj=input_payload,
+            output_obj={"error": str(last_error)},
+        )
+        raise LLMError(f"{task_type}: schema validation failed after retries: {last_error}")
+
+    # --- roles --------------------------------------------------------------
+
+    def intake(self, question_text: str) -> SeedIntakeOutput:
+        user = f"Question:\n{question_text}"
+        return self._structured(cfg.INTAKE, prompts.INTAKE_SYSTEM, user, SeedIntakeOutput)
+
+    def generate(self, node_summary: str, graph_context: str) -> GeneratorOutput:
+        user = f"Node to expand:\n{node_summary}\n\nGraph context:\n{graph_context}"
+        return self._structured(cfg.GENERATE, prompts.GENERATOR_SYSTEM, user, GeneratorOutput)
+
+    def code_consequence(
+        self,
+        node_summary: str,
+        stakeholder_ids: set[str],
+        framework_ids: set[str],
+    ) -> ConsequenceCoding:
+        user = (
+            f"Consequence node:\n{node_summary}\n\n"
+            f"Allowed stakeholder ids: {sorted(stakeholder_ids)}\n"
+            f"Allowed framework ids: {sorted(framework_ids)}\n"
+            "Produce one valence per relevant (stakeholder, framework) pair."
+        )
+
+        def check(c: ConsequenceCoding) -> None:
+            for v in c.valences:
+                if v.framework_id not in framework_ids:
+                    raise ValueError(f"unknown framework id: {v.framework_id!r}")
+                if v.stakeholder_id not in stakeholder_ids:
+                    raise ValueError(f"unknown stakeholder id: {v.stakeholder_id!r}")
+
+        return self._structured(
+            cfg.CODE, prompts.CODER_SYSTEM, user, ConsequenceCoding, post_validate=check
+        )
+
+    def code_decision(self, node_summary: str) -> DecisionCoding:
+        user = (
+            f"Decision node:\n{node_summary}\n\n"
+            "Tag CFIR domains (innovation, outer_setting, inner_setting, individuals, "
+            "process) and score the five Proctor implementation outcomes 1-5 with "
+            "justifications."
+        )
+        return self._structured(cfg.CODE, prompts.CODER_SYSTEM, user, DecisionCoding)
+
+    def grade(self, claim: str, abstracts: str) -> GradeOutput:
+        user = f"Causal claim:\n{claim}\n\nRetrieved evidence:\n{abstracts}"
+        return self._structured(cfg.GRADE, prompts.GRADER_SYSTEM, user, GradeOutput)
+
+
+__all__ = ["LLM", "LLMError"]

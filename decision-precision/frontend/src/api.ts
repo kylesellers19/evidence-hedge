@@ -76,6 +76,7 @@ export interface EdgeView {
   type: EdgeType;
   evidence_grade: EvidenceGrade | null;
   evidence_consistency: string | null;
+  evidence_defaulted_tier: boolean;
   polarity: number | null;
   satisfies: string | null;
   justification: string | null;
@@ -155,6 +156,7 @@ export interface GradeComponents {
   consistency: Consistency;
   directness: "DIRECT" | "ANALOGICAL" | "NONE";
   per_study_designs: StudyDesign[];
+  defaulted_tier: boolean;
 }
 
 export interface ClaimRecord {

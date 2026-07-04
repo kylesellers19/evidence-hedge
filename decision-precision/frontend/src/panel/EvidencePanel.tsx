@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import { api, type ClaimDomain, type ClaimRecord, type EdgeView, type StudyDesign } from "../api";
 
-/** "systematic_review of [rct]" so synthesis strength is visible. */
+/** "systematic_review of [rct]" so synthesis strength is visible; an unspecified
+ *  synthesis is called out honestly rather than shown as a bare review. */
 function fmtDesign(d: StudyDesign): string {
-  return d.synthesis_of.length ? `${d.design} of [${d.synthesis_of.join(", ")}]` : d.design;
+  if (!d.synthesis_of.length) return d.design;
+  if (d.synthesis_of.length === 1 && d.synthesis_of[0] === "UNSPECIFIED") {
+    return `${d.design} of [unspecified — tier defaulted to MODERATE]`;
+  }
+  return `${d.design} of [${d.synthesis_of.join(", ")}]`;
 }
 import { GRADE_LABEL, consistencyWord, gradeStroke } from "../graph/semantics";
 
@@ -76,6 +81,17 @@ export function EvidencePanel({ edge, onRegrade, onClose }: Props) {
             </span>
           )}
         </div>
+
+        {/* defaulted-tier honesty banner — same register as PENDING/estimate */}
+        {comps?.defaulted_tier && (
+          <div
+            className="rounded border px-2 py-1 text-[11px]"
+            style={{ borderColor: "var(--coding-pending)", color: "var(--coding-pending)" }}
+          >
+            ⋯ tier defaulted to MODERATE — the review's constituent designs were
+            unspecified. Re-grade to resolve (a person can read the full text).
+          </div>
+        )}
 
         {/* decomposition */}
         {comps ? (

@@ -20,8 +20,16 @@ Named cutoffs (config, editable):
 Synthesis rule (meta-analysis / systematic review): a synthesis is NOT strong by
 being a synthesis — its tier is the tier of the strongest constituent design it
 synthesizes (recorded as ``synthesis_of``). A review of RCTs takes the STRONG
-path; a review of observational-only evidence is MODERATE, never STRONG; a review
-whose constituents are unspecified is treated as an observational review (MODERATE).
+path; a review of observational-only evidence is MODERATE, never STRONG.
+
+MODERATE-as-floor for unspecified syntheses: when the grader cannot say what a
+review pooled, ``synthesis_of`` is the explicit sentinel ``UNSPECIFIED`` and
+``defaulted_tier`` is set. Such a review defaults to MODERATE — never INADEQUATE,
+never STRONG. It pools real empirical studies (so it cannot be unevidenced), but
+we cannot presume they are RCTs (so it cannot be presumed strong). The error
+direction is conservative-only, and the default is SURFACED (not silent) so a
+human can resolve it by reading the full text the grader could not — the re-grade
+button is that path.
 
 Ratified asymmetries (methods-paper text, defensible cells):
   * MODERATE + CONSISTENT_CONTRA → CONTESTED, not CONTRADICTED. Refutation is
@@ -97,6 +105,10 @@ _CANON = {
 
 _SYNTHESIS = {"meta_analysis", "systematic_review"}
 
+# explicit marker for a synthesis whose constituent designs the grader could not
+# determine — recorded in synthesis_of instead of a silent empty list.
+UNSPECIFIED = "UNSPECIFIED"
+
 
 # --- domain design-band tables ----------------------------------------------
 # Higher band == stronger design. The band -> hierarchy-level annotations are
@@ -153,8 +165,10 @@ class StudyDesign(BaseModel):
 
 def _as_study(d: "StudyDesign | str") -> StudyDesign:
     if isinstance(d, StudyDesign):
-        return StudyDesign(design=canonical_design(d.design),
-                           synthesis_of=[canonical_design(c) for c in d.synthesis_of])
+        return StudyDesign(
+            design=canonical_design(d.design),
+            synthesis_of=[c if c == UNSPECIFIED else canonical_design(c) for c in d.synthesis_of],
+        )
     return StudyDesign(design=canonical_design(d))
 
 
@@ -188,10 +202,10 @@ def effective_band(study: "StudyDesign | str", domain: ClaimDomain) -> int:
     sd = _as_study(study)
     table = _band_table(domain)
     if sd.design in _SYNTHESIS:
-        consts = [c for c in sd.synthesis_of if c not in _SYNTHESIS]  # no nested reviews
+        consts = [c for c in sd.synthesis_of if c not in _SYNTHESIS and c != UNSPECIFIED]
         if consts:
             return max(table.get(c, table["unknown"]) for c in consts)
-        return _REVIEW_UNKNOWN_BAND[domain]
+        return _REVIEW_UNKNOWN_BAND[domain]  # empty OR [UNSPECIFIED] -> observational-review floor
     return table.get(sd.design, table["unknown"])
 
 
@@ -240,6 +254,9 @@ class GradeComponents(BaseModel):
     consistency: Consistency
     directness: Directness
     per_study_designs: list[StudyDesign] = Field(default_factory=list)
+    # True when a synthesis's tier fell back to the MODERATE floor because its
+    # constituent designs were unspecified (surfaced, never silent).
+    defaulted_tier: bool = False
 
 
 def components_from(
@@ -249,7 +266,16 @@ def components_from(
     directness: Directness,
     cutoffs: GradeCutoffs = DEFAULT_CUTOFFS,
 ) -> GradeComponents:
-    studies = [_as_study(d) for d in designs]
+    studies: list[StudyDesign] = []
+    defaulted = False
+    for sd in (_as_study(d) for d in designs):
+        if sd.design in _SYNTHESIS:
+            consts = [c for c in sd.synthesis_of if c not in _SYNTHESIS and c != UNSPECIFIED]
+            if not consts:
+                # unspecified synthesis constituents -> explicit marker, tier defaulted
+                sd = StudyDesign(design=sd.design, synthesis_of=[UNSPECIFIED])
+                defaulted = True
+        studies.append(sd)
     return GradeComponents(
         domain=domain,
         design_tier=normalized_design_tier(studies, domain),
@@ -257,6 +283,7 @@ def components_from(
         consistency=consistency,
         directness=directness,
         per_study_designs=studies,
+        defaulted_tier=defaulted,
     )
 
 
@@ -313,6 +340,7 @@ __all__ = [
     "Directness",
     "DesignTier",
     "StudyDesign",
+    "UNSPECIFIED",
     "GradeComponents",
     "GradeCutoffs",
     "DEFAULT_CUTOFFS",

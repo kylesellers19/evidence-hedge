@@ -76,7 +76,9 @@ export function CausalEdge(props: EdgeProps) {
           stroke: hl ? "var(--path-highlight)" : g.color,
           strokeWidth: hl ? g.width + 1 : g.width,
           strokeDasharray: g.dash,
-          opacity: d.dimmed ? 0.2 : 1,
+          // defaulted synthesis tier reads as an estimate (same 0.55 register as
+          // PENDING nodes — reuse the treatment, no new token)
+          opacity: d.dimmed ? 0.2 : d.view.evidence_defaulted_tier ? 0.55 : 1,
         }}
       />
       {d.view.contradicted

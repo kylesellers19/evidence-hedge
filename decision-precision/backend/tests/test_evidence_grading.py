@@ -83,6 +83,18 @@ def test_review_with_unknown_constituents_is_moderate_not_strong():
         assert effective_band(_review(), domain) == 3  # observational-review default
 
 
+def test_unspecified_synthesis_is_surfaced_never_silent():
+    from delib.evidence.grading import UNSPECIFIED
+
+    c = components_from(POLICY, [_review()], SUPPORT, DIRECT)  # review, no constituents
+    assert c.defaulted_tier is True                            # flagged, not silent
+    assert c.per_study_designs[0].synthesis_of == [UNSPECIFIED]  # explicit marker, not []
+    assert c.design_tier_class is DesignTier.MODERATE          # conservative floor
+    # a review WITH constituents is not flagged
+    ok = components_from(POLICY, [_review("rct")], SUPPORT, DIRECT)
+    assert ok.defaulted_tier is False and ok.per_study_designs[0].synthesis_of == ["rct"]
+
+
 def test_normalized_ordinal_is_display_only_not_the_decision():
     # cohort has a higher normalized strength under policy than health, yet BOTH
     # land in the MODERATE class -> the float is not the decision variable

@@ -22,6 +22,7 @@ interface Props {
   selectedId: string | null;
   excludeUncoded: boolean;
   onSelect: (id: string) => void;
+  onSelectEdge: (id: string) => void;
   onExpand: (id: string) => void;
   onHover: (id: string) => void;
   onClearHover: () => void;
@@ -33,6 +34,7 @@ export function GraphCanvas({
   selectedId,
   excludeUncoded,
   onSelect,
+  onSelectEdge,
   onExpand,
   onHover,
   onClearHover,
@@ -113,6 +115,7 @@ export function GraphCanvas({
       }}
       onNodeMouseEnter={(_, n) => onHover(n.id)}
       onNodeMouseLeave={onClearHover}
+      onEdgeClick={(_, e) => onSelectEdge(e.id)}
       onPaneClick={onClearHover}
     >
       <Background gap={28} color="var(--hairline)" />

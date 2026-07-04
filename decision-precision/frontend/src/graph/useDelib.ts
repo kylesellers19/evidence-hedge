@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { api, type GraphView, type PathConfidence } from "../api";
+import {
+  api,
+  type BudgetSnapshot,
+  type ClaimDomain,
+  type GraphView,
+  type PathConfidence,
+} from "../api";
 
 export interface PathState {
   active: boolean;
@@ -20,10 +26,20 @@ export function useDelib() {
   const [view, setView] = useState<"full" | "resolution">("full");
   const [excludeUncoded, setExcludeUncoded] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   const [path, setPath] = useState<PathState>(EMPTY_PATH);
   const [corrections, setCorrections] = useState(0);
+  const [budget, setBudget] = useState<BudgetSnapshot | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  const refreshBudget = useCallback(async () => {
+    try {
+      setBudget(await api.budget());
+    } catch {
+      /* evidence service may be unconfigured */
+    }
+  }, []);
 
   const refreshHealth = useCallback(async () => {
     try {
@@ -53,7 +69,23 @@ export function useDelib() {
   }, [view, load]);
   useEffect(() => {
     void refreshHealth();
-  }, [refreshHealth]);
+    void refreshBudget();
+  }, [refreshHealth, refreshBudget]);
+
+  const regrade = useCallback(
+    async (claimText: string, domain: ClaimDomain, healthTyped: boolean) => {
+      try {
+        const res = await api.regrade(claimText, domain, healthTyped);
+        await load(view); // restyled edges land on the next graph fetch
+        await refreshBudget();
+        return res.claim;
+      } catch (e) {
+        setError(String(e));
+        return null;
+      }
+    },
+    [view, load, refreshBudget],
+  );
 
   const expand = useCallback(
     async (id: string) => {
@@ -122,6 +154,8 @@ export function useDelib() {
 
   const selected =
     graph && selectedId ? graph.nodes.find((n) => n.id === selectedId) ?? null : null;
+  const selectedEdge =
+    graph && selectedEdgeId ? graph.edges.find((e) => e.id === selectedEdgeId) ?? null : null;
 
   return {
     graph,
@@ -132,14 +166,19 @@ export function useDelib() {
     selectedId,
     setSelectedId,
     selected,
+    selectedEdgeId,
+    setSelectedEdgeId,
+    selectedEdge,
     path,
     hover,
     clearHover,
     expand,
     edit,
-    reset,
+    regrade,
+    budget,
     corrections,
     error,
     busy,
+    reset,
   };
 }

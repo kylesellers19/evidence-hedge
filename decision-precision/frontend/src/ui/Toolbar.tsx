@@ -1,4 +1,4 @@
-import type { Overlays } from "../api";
+import type { BudgetSnapshot, Overlays } from "../api";
 import type { PathState } from "../graph/useDelib";
 
 interface Props {
@@ -8,13 +8,18 @@ interface Props {
   setExcludeUncoded: (v: boolean) => void;
   onReset: () => void;
   corrections: number;
+  budget: BudgetSnapshot | null;
   overlays: Overlays | null;
   path: PathState;
   busy: boolean;
 }
 
+function cap(n: number | null): string {
+  return n == null ? "∞" : String(n);
+}
+
 export function Toolbar({
-  view, setView, excludeUncoded, setExcludeUncoded, onReset, corrections, overlays, path, busy,
+  view, setView, excludeUncoded, setExcludeUncoded, onReset, corrections, budget, overlays, path, busy,
 }: Props) {
   const loops = overlays?.loops.filter((l) => l.loop_class !== "UNDETERMINED").length ?? 0;
   const clashes = overlays?.register_clashes.length ?? 0;
@@ -63,6 +68,15 @@ export function Toolbar({
         <span title="register clashes">◈ {clashes} clashes</span>
         <span title="tradition tensions">⚔ {tensions} tensions</span>
         <span>✎ {corrections} corrections</span>
+        {budget && (
+          <span
+            title="evidence budget — OpenAlex credits · LLM dollars this session"
+            className="rounded border border-[var(--hairline)] px-1.5"
+          >
+            ⛽ {budget.openalex_credits}/{cap(budget.openalex_credit_cap)} · $
+            {budget.llm_dollars.toFixed(3)}/{cap(budget.llm_dollar_cap)}
+          </span>
+        )}
         {busy && <span className="animate-pulse">…</span>}
       </div>
 

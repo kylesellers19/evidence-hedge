@@ -127,6 +127,46 @@ export interface PathConfidence {
   ordinal: number;
 }
 
+// --- Phase 5: evidence multiplexer ------------------------------------------
+
+export interface Citation {
+  source: string;
+  doi: string | null;
+  title: string;
+  year: number | null;
+  venue: string | null;
+  url: string | null;
+  study_design: string | null;
+  citation_intent: string | null;
+}
+
+export interface GradeComponents {
+  design_tier: number;
+  consistency: "CONSISTENT_SUPPORT" | "MIXED" | "CONSISTENT_CONTRA" | "NONE";
+  directness: "DIRECT" | "ANALOGICAL" | "NONE";
+  per_study_designs: string[];
+}
+
+export interface ClaimRecord {
+  claim_hash: string;
+  claim_text: string;
+  normalized_text: string;
+  graded_at: number | null;
+  grade_components: GradeComponents | null;
+  evidence_grade: EvidenceGrade | null;
+  citations: Citation[];
+}
+
+export type ClaimDomain = "HEALTH" | "POLICY";
+
+export interface BudgetSnapshot {
+  openalex_credits: number;
+  openalex_credit_cap: number | null;
+  llm_dollars: number;
+  llm_dollar_cap: number | null;
+  source_calls: Record<string, number>;
+}
+
 async function j<T>(res: Response): Promise<T> {
   if (!res.ok) {
     const body = await res.text();
@@ -163,4 +203,19 @@ export const api = {
     fetch(`/api/health`).then((r) =>
       j<{ ok: boolean; nodes: number; corrections: number }>(r),
     ),
+
+  // evidence multiplexer
+  claim: (claimText: string) =>
+    fetch(`/api/evidence/claim?claim_text=${encodeURIComponent(claimText)}`).then(
+      (r) => j<{ claim: ClaimRecord | null }>(r),
+    ),
+
+  regrade: (claimText: string, domain: ClaimDomain, healthTyped: boolean) =>
+    fetch(`/api/evidence/regrade`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ claim_text: claimText, domain, health_typed: healthTyped }),
+    }).then((r) => j<{ claim: ClaimRecord; edges_restyled: number }>(r)),
+
+  budget: () => fetch(`/api/evidence/budget`).then((r) => j<BudgetSnapshot>(r)),
 };

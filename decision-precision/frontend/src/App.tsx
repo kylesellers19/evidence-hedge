@@ -2,6 +2,7 @@ import { ReactFlowProvider } from "@xyflow/react";
 import { AtlasRoute } from "./atlas/AtlasRoute";
 import { GraphCanvas } from "./graph/GraphCanvas";
 import { useDelib } from "./graph/useDelib";
+import { EvidencePanel } from "./panel/EvidencePanel";
 import { SidePanel } from "./panel/SidePanel";
 import { Legend } from "./ui/Legend";
 import { Toolbar } from "./ui/Toolbar";
@@ -40,6 +41,7 @@ function DeliberationApp() {
         setExcludeUncoded={d.setExcludeUncoded}
         onReset={d.reset}
         corrections={d.corrections}
+        budget={d.budget}
         overlays={d.graph?.overlays ?? null}
         path={d.path}
         busy={d.busy}
@@ -59,7 +61,8 @@ function DeliberationApp() {
                 path={d.path}
                 selectedId={d.selectedId}
                 excludeUncoded={d.view === "resolution" && d.excludeUncoded}
-                onSelect={d.setSelectedId}
+                onSelect={(id) => { d.setSelectedEdgeId(null); d.setSelectedId(id); }}
+                onSelectEdge={(id) => { d.setSelectedId(null); d.setSelectedEdgeId(id); }}
                 onExpand={d.expand}
                 onHover={d.hover}
                 onClearHover={d.clearHover}
@@ -79,6 +82,14 @@ function DeliberationApp() {
             overlays={d.graph.overlays}
             onEdit={d.edit}
             onClose={() => d.setSelectedId(null)}
+          />
+        )}
+
+        {d.selectedEdge && (
+          <EvidencePanel
+            edge={d.selectedEdge}
+            onRegrade={d.regrade}
+            onClose={() => d.setSelectedEdgeId(null)}
           />
         )}
       </div>

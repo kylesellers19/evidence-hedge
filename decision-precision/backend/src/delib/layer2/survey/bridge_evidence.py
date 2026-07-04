@@ -18,11 +18,30 @@ from pydantic import BaseModel
 from ..bridge import BridgeAssignment, BridgeRelation
 from ..enums import Provenance
 from ..map import Layer2Map
-from .scrape import DEFAULT_CATEGORY, PhilPeopleScraper, build_correlation_url, parse_correlations
+from .scrape import (
+    THINKER_EXCLUSIONS,
+    DEFAULT_CATEGORY,
+    PhilPeopleScraper,
+    build_correlation_url,
+    parse_correlations,
+)
 from .store import Cells, CorrelationStore, slugify
 
 PHILOSOPHER_CATEGORY = "Philosopher"
 PHILOSOPHER_PREFIX = "Philosopher: "  # the survey prefixes the identification row label
+
+
+def normalize_thinker_name(name: str) -> str:
+    """Canonical display casing for a thinker label. The survey ships a few
+    all-lowercase write-ins ('ramsey'); capitalize each word's first letter for
+    those, but leave already-cased names untouched so 'McTaggart' / 'Du Bois' /
+    'Merleau-Ponty' survive. Slug ids are casing-stable regardless (slugify
+    lowercases), so this only fixes the human-facing label — and keeps one row
+    per thinker instead of 'ramsey' and 'Ramsey' splitting."""
+    name = name.strip()
+    if name and name == name.lower():
+        return " ".join(w[:1].upper() + w[1:] for w in name.split(" "))
+    return name
 
 
 class BridgeEvidence(BaseModel):
@@ -98,6 +117,12 @@ class BridgeEvidenceStore:
     def count(self) -> int:
         return int(self._conn.execute("SELECT COUNT(*) FROM bridge_evidence").fetchone()[0])
 
+    def remove_thinker(self, thinker_id: str) -> int:
+        """Delete every bridge row for a thinker (by slug id). Returns rows removed."""
+        cur = self._conn.execute("DELETE FROM bridge_evidence WHERE thinker_id = ?", (thinker_id,))
+        self._conn.commit()
+        return cur.rowcount
+
 
 def scrape_bridge_evidence(
     scraper: PhilPeopleScraper,
@@ -126,6 +151,9 @@ def ingest_philosopher_page(store: BridgeEvidenceStore, html: str) -> int:
         elif row.label_b.startswith(PHILOSOPHER_PREFIX):
             thinker, position, cells = row.label_b[len(PHILOSOPHER_PREFIX):], row.label_a, row.cells.transposed()
         else:
+            continue
+        thinker = normalize_thinker_name(thinker)
+        if thinker.lower() in THINKER_EXCLUSIONS:  # 'none' = no-identification option
             continue
         store.add(thinker, position, row.r, row.n, p_value=row.p_value, cells=cells)
         added += 1
@@ -158,6 +186,7 @@ def ingest_bridge_evidence_into_map(
 
 __all__ = [
     "PHILOSOPHER_CATEGORY",
+    "normalize_thinker_name",
     "BridgeEvidence",
     "BridgeEvidenceStore",
     "scrape_bridge_evidence",

@@ -55,6 +55,10 @@ CATEGORY_LABELS = frozenset({
     "Region of nationality", "Region of PhD", "Gender", "Tradition", "Other demographics",
 })
 
+# Philosopher-dropdown options that are NOT thinkers. "none" is the survey's
+# no-identification answer option. Matched case-insensitively.
+THINKER_EXCLUSIONS = frozenset({"none"})
+
 _R = re.compile(r"r:\s*(-?\d*\.?\d+)")
 _INT = re.compile(r"^-?\d+$")
 # The variable picker is a dropdown of <a class="dropdown-item"><span> Label </span></a>.
@@ -240,7 +244,7 @@ def derive_philosophers(scraper: "PhilPeopleScraper") -> list[str]:
     """The ~60 philosopher names from the Philosopher category's dropdown (any
     category=Philosopher page carries it; category labels already filtered out)."""
     html = scraper.fetch(f"{PHILPEOPLE_BASE}{CORRELATIONS_PATH}?category={urllib.parse.quote(PHILOSOPHER_CATEGORY)}")
-    return parse_variable_inventory(html)
+    return [n for n in parse_variable_inventory(html) if n.lower() not in THINKER_EXCLUSIONS]
 
 
 def build_correlation_url(variable: str, category: str = DEFAULT_CATEGORY, base: str = PHILPEOPLE_BASE) -> str:
@@ -358,6 +362,7 @@ __all__ = [
     "DEFAULT_CATEGORY",
     "PHILOSOPHER_CATEGORY",
     "CATEGORY_LABELS",
+    "THINKER_EXCLUSIONS",
     "derive_philosophers",
     "ScrapeConfig",
     "ParsedCorrelation",

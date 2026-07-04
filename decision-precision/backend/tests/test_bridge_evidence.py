@@ -10,9 +10,11 @@ from delib.layer2.survey import phi_from_cells
 from delib.layer2.survey.bridge_evidence import (
     BridgeEvidenceStore,
     ingest_bridge_evidence_into_map,
+    ingest_philosopher_page,
+    normalize_thinker_name,
     scrape_bridge_evidence,
 )
-from delib.layer2.survey.scrape import PhilPeopleScraper, ScrapeConfig
+from delib.layer2.survey.scrape import PhilPeopleScraper, ScrapeConfig, derive_philosophers
 
 CAP = Path(__file__).resolve().parents[2] / "data" / "fixtures" / "site_captures"
 
@@ -63,6 +65,53 @@ def test_scrape_bridge_evidence_from_real_philosopher_page():
     assert ev.thinker_id == "kant" and ev.r == 0.55 and ev.n == 639
     assert (phi_from_cells(ev.cells) < 0) == (ev.r < 0)  # sign matches (attenuated magnitude)
     assert abs(phi_from_cells(ev.cells) - ev.r) < 0.05
+
+
+# --- thinker hygiene: exclusions + casing normalization ---------------------
+
+
+def test_normalize_thinker_name_casing():
+    assert normalize_thinker_name("ramsey") == "Ramsey"
+    assert normalize_thinker_name("Kant") == "Kant"
+    assert normalize_thinker_name("McTaggart") == "McTaggart"  # already-cased untouched
+    assert normalize_thinker_name("Du Bois") == "Du Bois"
+    assert normalize_thinker_name("Merleau-Ponty") == "Merleau-Ponty"
+
+
+def test_derive_philosophers_excludes_none():
+    scraper = PhilPeopleScraper(
+        fetcher=lambda url: (CAP / "philosopher_kant.html").read_text(),
+        config=ScrapeConfig(min_interval_seconds=0.0), sleep_fn=lambda s: None,
+    )
+    names = derive_philosophers(scraper)
+    assert "none" not in {n.lower() for n in names}
+
+
+def test_ingest_skips_none_and_normalizes_casing():
+    # 'none' block and a lowercased thinker are both handled at ingest
+    block = (
+        '<table class="table"><thead>'
+        '<tr class="meta-heading"><th class="rcell"><div> r: 0.30 </div></th>'
+        '<th class="collabel"><span class="colname">'
+        '<a href="/x?category=Q&amp;variable=Foo"> Free will: libertarianism </a></span></th></tr>'
+        '<tr><td class="rowlabel rowname">{thinker}</td><th>Accept</th><th>Reject</th></tr></thead>'
+        '<tbody><tr><th>Accept</th><td>10</td><td>20</td></tr>'
+        '<tr><th>Reject</th><td>30</td><td>40</td></tr></tbody></table>'
+    )
+    store = BridgeEvidenceStore()
+    ingest_philosopher_page(store, block.format(thinker="Philosopher: none"))
+    ingest_philosopher_page(store, block.format(thinker="Philosopher: ramsey"))
+    rows = store.all()
+    assert {r.thinker_label for r in rows} == {"Ramsey"}  # none dropped, ramsey recased
+    assert rows[0].thinker_id == "ramsey"  # slug casing-stable
+
+
+def test_remove_thinker_deletes_rows():
+    store = BridgeEvidenceStore()
+    store.add("none", "Free will: libertarianism", 0.3, 100)
+    store.add("Kant", "Practical reason: Kantian", 0.55, 639)
+    removed = store.remove_thinker("none")
+    assert removed == 1 and {r.thinker_label for r in store.all()} == {"Kant"}
 
 
 # --- validation triples -> bridge assignments -------------------------------

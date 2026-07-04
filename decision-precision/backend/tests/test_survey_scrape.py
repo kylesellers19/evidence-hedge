@@ -120,8 +120,9 @@ def test_derive_philosophers_from_category_page():
         config=ScrapeConfig(min_interval_seconds=0.0), sleep_fn=lambda s: None,
     )
     phils = derive_philosophers(scraper)
-    assert len(phils) == 60
+    assert len(phils) == 59  # 60 dropdown thinkers minus the 'none' non-identification option
     assert "Kant" in phils and "Aristotle" in phils and "Wollstonecraft" in phils
+    assert "none" not in {p.lower() for p in phils}
     assert not (set(phils) & CATEGORY_LABELS)
 
 

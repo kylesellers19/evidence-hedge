@@ -1,71 +1,106 @@
-"""Layer 2 Stage A5: philpeople scraper, replayed against a recorded (synthetic)
-page fixture with no network."""
+"""Layer 2 A5 (reconciled): philpeople scraper against the real page structure,
+replayed on synthetic recorded fixtures (no network)."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from delib.layer2.survey import CorrelationStore, SourceTier, load_fixture
+from delib.layer2.survey import CorrelationStore, SourceTier, phi_from_cells
 from delib.layer2.survey.scrape import (
     PhilPeopleScraper,
     ScrapeConfig,
+    build_correlation_url,
     parse_correlations,
+    parse_variable_inventory,
 )
 
-SAMPLE = (
-    Path(__file__).resolve().parents[2]
-    / "data" / "fixtures" / "philpeople_sample_question.SYNTHETIC.html"
-)
+FIX = Path(__file__).resolve().parents[2] / "data" / "fixtures"
 
 
-def _html() -> str:
-    return SAMPLE.read_text(encoding="utf-8")
+def _html(name: str) -> str:
+    return (FIX / name).read_text(encoding="utf-8")
 
 
-def _scraper(fetcher):
+def _scraper(pages: dict[str, str]):
+    """pages: url-substring -> html. Fetcher matches by substring."""
+    def fetcher(url: str) -> str:
+        for key, html in pages.items():
+            if key in url:
+                return html
+        raise AssertionError(f"unexpected url {url}")
+
     return PhilPeopleScraper(
-        fetcher=fetcher,
-        config=ScrapeConfig(min_interval_seconds=0.0),
-        sleep_fn=lambda s: None,
+        fetcher=fetcher, config=ScrapeConfig(min_interval_seconds=0.0), sleep_fn=lambda s: None
     )
 
 
-def test_parse_extracts_rows():
-    rows = parse_correlations(_html())
-    assert len(rows) == 3
-    by = {(r.label_a, r.label_b): r for r in rows}
-    got = by[("God: theism", "Mind: physicalism")]
-    assert got.r == -0.52 and got.n == 1477
+# --- parsing ----------------------------------------------------------------
 
 
-def test_fetch_caches_page():
-    calls = {"n": 0}
-
-    def fetcher(url):
-        calls["n"] += 1
-        return _html()
-
-    scraper = _scraper(fetcher)
-    url = "https://survey2020.philpeople.org/q/mind-physicalism"
-    scraper.fetch(url)
-    scraper.fetch(url)  # served from cache
-    assert calls["n"] == 1
+def test_parse_page_extracts_r_n_p_cells_and_paired_variable():
+    rows = parse_correlations(_html("philpeople_physicalism.SYNTHETIC.html"), "Mind: physicalism")
+    assert len(rows) == 2
+    god = next(r for r in rows if r.label_b == "God: theism")
+    assert god.label_a == "Mind: physicalism"
+    assert god.r == -0.60 and god.n == 1000 and god.p_value == 0.0001
+    assert god.paired_variable_id == "God: theism"
+    assert god.cells is not None
 
 
-def test_scrape_into_store_tags_site_scrape():
-    scraper = _scraper(lambda url: _html())
+def test_parsed_cells_phi_matches_r():
+    for row in parse_correlations(_html("philpeople_physicalism.SYNTHETIC.html"), "Mind: physicalism"):
+        assert abs(phi_from_cells(row.cells) - row.r) < 0.02
+
+
+# --- enumeration ------------------------------------------------------------
+
+
+def test_inventory_parses_select_options():
+    inv = parse_variable_inventory(_html("philpeople_inventory.SYNTHETIC.html"))
+    assert "Mind: physicalism" in inv and "God: theism" in inv
+    assert all(not v.lower().startswith("select") for v in inv)  # placeholder dropped
+
+
+def test_build_correlation_url_encodes_params():
+    url = build_correlation_url("Mind: physicalism")
+    assert "category=Philosophical" in url and "variable=Mind" in url
+
+
+# --- scrape + dedupe/consistency --------------------------------------------
+
+
+def test_scrape_variables_stores_site_scrape_with_cells():
+    scraper = _scraper({"variable=Mind": _html("philpeople_physicalism.SYNTHETIC.html")})
     store = CorrelationStore()
-    added = scraper.scrape_into_store(store, ["https://survey2020.philpeople.org/q/x"])
-    assert added == 3
-    row = store.get("God: theism", "Mind: physicalism")
+    inconsistencies = scraper.scrape_variables(store, ["Mind: physicalism"])
+    assert inconsistencies == []
+    row = store.get("Mind: physicalism", "God: theism")
     assert row.source_tier is SourceTier.SITE_SCRAPE
+    assert row.cells is not None and abs(phi_from_cells(row.cells) - row.r) < 0.02
 
 
-def test_site_scrape_overrides_published_table():
+def test_cross_page_pair_is_deduped_and_consistent():
+    scraper = _scraper({
+        "variable=Mind": _html("philpeople_physicalism.SYNTHETIC.html"),
+        "variable=Metaphilosophy": _html("philpeople_naturalism.SYNTHETIC.html"),
+    })
     store = CorrelationStore()
-    # a (deliberately wrong) published-table value...
-    store.add("God: theism", "Mind: physicalism", -0.99, 10, SourceTier.PUBLISHED_TABLE)
-    # ...is overridden by the higher-tier scrape
-    _scraper(lambda url: _html()).scrape_into_store(store, ["https://x"])
-    row = store.get("God: theism", "Mind: physicalism")
-    assert row.r == -0.52 and row.source_tier is SourceTier.SITE_SCRAPE
+    inconsistencies = scraper.scrape_variables(
+        store, ["Mind: physicalism", "Metaphilosophy: naturalism"]
+    )
+    # the (physicalism, naturalism) pair appears on both pages at r=0.60 -> consistent
+    assert inconsistencies == []
+    # deduped: one stored row for the shared pair
+    assert store.get("Mind: physicalism", "Metaphilosophy: naturalism").r == 0.60
+
+
+def test_cross_page_r_mismatch_is_reported():
+    good = _html("philpeople_physicalism.SYNTHETIC.html")
+    tampered = _html("philpeople_naturalism.SYNTHETIC.html").replace("r: 0.60", "r: 0.20")
+    scraper = _scraper({"variable=Mind": good, "variable=Metaphilosophy": tampered})
+    store = CorrelationStore()
+    inconsistencies = scraper.scrape_variables(
+        store, ["Mind: physicalism", "Metaphilosophy: naturalism"]
+    )
+    assert len(inconsistencies) == 1
+    assert {inconsistencies[0].r_first, inconsistencies[0].r_second} == {0.60, 0.20}

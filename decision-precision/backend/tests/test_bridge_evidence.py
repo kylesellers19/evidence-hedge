@@ -14,7 +14,7 @@ from delib.layer2.survey.bridge_evidence import (
 )
 from delib.layer2.survey.scrape import PhilPeopleScraper, ScrapeConfig
 
-FIX = Path(__file__).resolve().parents[2] / "data" / "fixtures"
+CAP = Path(__file__).resolve().parents[2] / "data" / "fixtures" / "site_captures"
 
 # the A7 validation triples supplied with the spec
 TRIPLES = [
@@ -51,18 +51,18 @@ def _map_with_thinkers_and_positions() -> Layer2Map:
 # --- scrape philosopher page (reuses A5 parser) -----------------------------
 
 
-def test_scrape_bridge_evidence_from_philosopher_page():
+def test_scrape_bridge_evidence_from_real_philosopher_page():
     scraper = PhilPeopleScraper(
-        fetcher=lambda url: (FIX / "philpeople_kant.SYNTHETIC.html").read_text(),
+        fetcher=lambda url: (CAP / "philosopher_kant.html").read_text(),
         config=ScrapeConfig(min_interval_seconds=0.0), sleep_fn=lambda s: None,
     )
     store = BridgeEvidenceStore()
     added = scrape_bridge_evidence(scraper, store, ["Kant"])
-    assert added == 1
-    ev = store.all()[0]
-    assert ev.thinker_id == "kant" and ev.position_id == "practical-reason-kantian"
-    assert ev.r == 0.55 and ev.n == 639
-    assert abs(phi_from_cells(ev.cells) - ev.r) < 0.02
+    assert added == 70  # real Kant page: 70 thinker<->position associations
+    ev = next(e for e in store.all() if e.position_id == "practical-reason-kantian")
+    assert ev.thinker_id == "kant" and ev.r == 0.55 and ev.n == 639
+    assert (phi_from_cells(ev.cells) < 0) == (ev.r < 0)  # sign matches (attenuated magnitude)
+    assert abs(phi_from_cells(ev.cells) - ev.r) < 0.05
 
 
 # --- validation triples -> bridge assignments -------------------------------

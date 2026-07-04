@@ -11,14 +11,13 @@ venv/
 # uv
 # (uv.lock IS committed; the venv is not)
 
-# Local data stores (training-data log + evidence cache live outside git)
+# Local data stores (training-data log + evidence/page caches live outside git)
 *.sqlite
 *.sqlite3
 *.db
-data/
-# ...but versioned fixtures under data/fixtures/ ARE committed
-!data/fixtures/
-!data/fixtures/**
+data/cache/
+# NB: data/fixtures/ (incl. site_captures/) IS committed — the real captures
+# are the single source of truth for markup.
 
 # Env / secrets
 .env

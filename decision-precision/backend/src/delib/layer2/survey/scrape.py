@@ -1,26 +1,35 @@
-"""PhilPeople site scraper (A5, tier 2) — reconciled to the real page structure.
+"""PhilPeople site scraper (A5, tier 2) — reconciled to the REAL page markup.
 
-Pages are server-rendered (no JS). Each correlation is a <table>: a header row
-with "r: <float>" and an <a> to the paired variable (href carries
-?category=&variable=); a nested 2x2 contingency table; a footer with "n: <int>"
-and "p < 0.0001" or "p: <float>". Each page is ONE page-variable's correlations,
-so a parsed row is (page_variable, paired_variable, r, n, p, cells).
+Confirmed against live captures. Each correlation is a ``<table class="table">``:
 
-Enumeration: the /survey/results/correlations page carries a variable <select>
-(~230 options); we fetch ?category=Philosophical questions&variable=<each>. Every
-pair appears on both endpoints' pages, so we dedupe and check r agrees.
+    <thead>
+      <tr class="meta-heading">
+        <th class="rcell"><div> r: -0.69 </div></th>
+        <th class="collabel"><span class="colname"><a href="?...variable=X"> X </a></span></th>
+      </tr>
+      <tr><td class="rowlabel rowname">PAGE VARIABLE</td><th>Accept</th><th>Reject</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Accept</th><td>aa</td><td>ar</td></tr>   row = page-var Accept, cols = paired Accept/Reject
+      <tr><th>Reject</th><td>ra</td><td>rr</td></tr>
+    </tbody>
 
-Same plugin discipline as the evidence multiplexer: injectable fetcher (stdlib
-urllib default, no new dep), conservative rate limit, SQLite page cache. Offline
-tests replay recorded (synthetic) fixtures.
+Key facts learned from the captures:
+- The displayed table is Accept/Reject BINARIZED. Its phi therefore ATTENUATES
+  the published 5-point Pearson r (median |phi-r| ~0.025, max ~0.10, 0 sign
+  disagreements). The cell mapping is validated by sign + cell-sum==n + a band,
+  NOT by phi==r (they are different estimators). See test_survey_scrape.
+- There is no per-block "n"; n is the SUM of the four cells (verified against
+  published n: dualism 838, naturalism 1231, God 1477).
+- Variables are enumerated from a ``dropdown-item`` menu, NOT a <select>.
 
-CELL-EXTRACTION CAVEAT: the 2x2 cells are read as the four integer <td>s inside
-the correlation <table>, in reading order (aa, ar, ra, rr). This is the one part
-that needs a real capture to confirm exact ordering/selectors.
+Injectable fetcher (stdlib urllib, no dep), conservative rate limit, SQLite page
+cache. Cloudflare challenge stubs are detected and rejected (never cached/parsed).
 """
 
 from __future__ import annotations
 
+import html as _html
 import re
 import time
 import urllib.parse
@@ -38,10 +47,28 @@ CORRELATIONS_PATH = "/survey/results/correlations"
 DEFAULT_CATEGORY = "Philosophical questions"
 
 _R = re.compile(r"r:\s*(-?\d*\.?\d+)")
-_N = re.compile(r"n:\s*(\d+)")
-_P = re.compile(r"p\s*[:<]\s*(\d*\.?\d+)")
 _INT = re.compile(r"^-?\d+$")
-_OPTION = re.compile(r"<option[^>]*>([^<]+)</option>", re.IGNORECASE)
+# The variable picker is a dropdown of <a class="dropdown-item"><span> Label </span></a>.
+_DROPDOWN = re.compile(
+    r'<a[^>]*class="[^"]*dropdown-item[^"]*"[^>]*>.*?<span[^>]*>(.*?)</span>',
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+class ChallengeError(RuntimeError):
+    """Raised when a fetch returns a bot-challenge interstitial, not a real page."""
+
+
+def is_challenge(html: str) -> bool:
+    """A Cloudflare 'Just a moment…' interstitial — NOT a real page. Real pages
+    also embed the invisible ``challenge-platform`` script, so we key on the
+    interstitial signature only (title/body text + the running-challenge div),
+    never on the generic cf script."""
+    low = html.lower()
+    if "just a moment" in low or "challenge-running" in low or "cf-error-details" in low:
+        return True
+    # An interstitial is tiny; a real results page is ~1MB+.
+    return len(html) < 5000 and ("cf-challenge" in low or "_cf_chl_opt" in low)
 
 
 class ScrapeConfig(BaseModel):
@@ -69,30 +96,36 @@ class Inconsistency(BaseModel):
 
 
 class _PageParser(HTMLParser):
-    """Segments top-level <table> blocks, collecting each block's text, links,
-    and integer cells (nested tables included)."""
+    """Segments each ``<table class="table">`` correlation block, collecting its
+    text, its links, and — precisely — the integer <td>s inside <tbody> (the 2x2
+    contingency cells, in document/reading order aa, ar, ra, rr)."""
 
     def __init__(self) -> None:
         super().__init__()
         self.blocks: list[dict] = []
         self._depth = 0
         self._cur: dict | None = None
+        self._in_tbody = False
         self._a: str | None = None
         self._a_href = ""
         self._td: str | None = None
+        self._td_in_body = False
 
     def handle_starttag(self, tag, attrs):
         if tag == "table":
             self._depth += 1
             if self._depth == 1:
-                self._cur = {"text": "", "links": [], "nums": []}
+                self._cur = {"text": "", "links": [], "cells": []}
         if self._cur is None:
             return
-        if tag == "a":
+        if tag == "tbody":
+            self._in_tbody = True
+        elif tag == "a":
             self._a = ""
             self._a_href = dict(attrs).get("href", "") or ""
         elif tag == "td":
             self._td = ""
+            self._td_in_body = self._in_tbody
 
     def handle_data(self, data):
         if self._cur is not None:
@@ -103,16 +136,20 @@ class _PageParser(HTMLParser):
             self._td += data
 
     def handle_endtag(self, tag):
-        if tag == "a" and self._a is not None and self._cur is not None:
+        if self._cur is None:
+            return
+        if tag == "tbody":
+            self._in_tbody = False
+        elif tag == "a" and self._a is not None:
             self._cur["links"].append((self._a.strip(), self._a_href))
             self._a = None
         elif tag == "td" and self._td is not None:
             t = self._td.strip()
-            if self._cur is not None and _INT.match(t):
-                self._cur["nums"].append(int(t))
+            if self._td_in_body and _INT.match(t):
+                self._cur["cells"].append(int(t))
             self._td = None
         elif tag == "table":
-            if self._depth == 1 and self._cur is not None:
+            if self._depth == 1:
                 self.blocks.append(self._cur)
                 self._cur = None
             self._depth = max(0, self._depth - 1)
@@ -123,7 +160,7 @@ def _query(url: str) -> dict[str, list[str]]:
 
 
 def _variable_from_href(href: str) -> str | None:
-    vals = _query(href).get("variable")
+    vals = _query(_html.unescape(href)).get("variable")
     return vals[0] if vals else None
 
 
@@ -137,26 +174,34 @@ def category_from_url(url: str) -> str | None:
 
 
 def parse_correlations(html: str, page_variable: str) -> list[ParsedCorrelation]:
+    """Parse one page-variable's correlation blocks. n is derived as the sum of
+    the four contingency cells (the page shows no separate n); p is not shown
+    per block (all significant at p<0.0001) and is left null."""
     parser = _PageParser()
     parser.feed(html)
     out: list[ParsedCorrelation] = []
     for block in parser.blocks:
         mr = _R.search(block["text"])
-        if not mr or not block["links"]:
+        if not mr:
             continue
-        r = float(mr.group(1))
-        mn = _N.search(block["text"])
-        mp = _P.search(block["text"])
-        label_b, href = block["links"][0]
-        nums = block["nums"]
-        cells = Cells(aa=nums[0], ar=nums[1], ra=nums[2], rr=nums[3]) if len(nums) == 4 else None
+        # the paired variable is the block's link whose href carries ?variable=
+        paired = next(((t, h) for t, h in block["links"] if "variable=" in h), None)
+        if paired is None:
+            continue
+        label_b, href = paired
+        cells_list = block["cells"]
+        cells = (
+            Cells(aa=cells_list[0], ar=cells_list[1], ra=cells_list[2], rr=cells_list[3])
+            if len(cells_list) == 4 else None
+        )
+        n = (cells.aa + cells.ar + cells.ra + cells.rr) if cells else 0
         out.append(
             ParsedCorrelation(
                 label_a=page_variable,
                 label_b=label_b,
-                r=r,
-                n=int(mn.group(1)) if mn else 0,
-                p_value=float(mp.group(1)) if mp else None,
+                r=float(mr.group(1)),
+                n=n,
+                p_value=None,
                 cells=cells,
                 paired_variable_id=_variable_from_href(href),
             )
@@ -165,11 +210,13 @@ def parse_correlations(html: str, page_variable: str) -> list[ParsedCorrelation]
 
 
 def parse_variable_inventory(html: str) -> list[str]:
-    """The ~230 options from the variable <select> (placeholder options dropped)."""
+    """The variables from the dropdown-item picker (deduped, order preserved)."""
     out: list[str] = []
-    for text in _OPTION.findall(html):
-        label = text.strip()
-        if label and not label.lower().startswith("select"):
+    seen: set[str] = set()
+    for raw in _DROPDOWN.findall(html):
+        label = re.sub(r"<[^>]+>", "", _html.unescape(raw)).strip()
+        if label and label.lower() != "select a variable" and label not in seen:
+            seen.add(label)
             out.append(label)
     return out
 
@@ -199,6 +246,14 @@ class PhilPeopleScraper:
         self.cache_hits = 0
 
     def _default_fetcher(self, url: str) -> str:  # pragma: no cover - network
+        # NOTE (why this succeeds where a bare `curl` got a Cloudflare challenge):
+        # the live capture passed the invisible Cloudflare check with a plain
+        # urllib GET carrying the ScrapeConfig.user_agent ("DELIB/0.1 (research;
+        # consequence mapping)") — a descriptive, non-curl UA. If Cloudflare
+        # tightens and challenge stubs start appearing (ChallengeError), options
+        # in order: (1) a browser-like User-Agent, (2) a persisted cf_clearance
+        # cookie from one manual browser solve, (3) a real browser session
+        # (Playwright). The cache makes any of these a one-time cost.
         req = urllib.request.Request(url, headers={"User-Agent": self.config.user_agent})
         with urllib.request.urlopen(req, timeout=30) as resp:
             return resp.read().decode("utf-8", errors="replace")
@@ -223,7 +278,12 @@ class PhilPeopleScraper:
             return cached
         self._throttle()
         html = self._fetch(url)
-        self.cache.put(url, html)  # unconditional: independent of parse outcome
+        # A bot-challenge stub is a FAILED fetch, not a page: never cache it (so
+        # it stays refetch-eligible) and never let it reach the parser/store.
+        # This is distinct from a PARSE failure, which does not gate caching.
+        if is_challenge(html):
+            raise ChallengeError(f"bot-challenge interstitial for {url} (not cached)")
+        self.cache.put(url, html)  # unconditional wrt parse outcome
         self.network_fetches += 1
         return html
 
@@ -277,6 +337,8 @@ __all__ = [
     "ScrapeConfig",
     "ParsedCorrelation",
     "Inconsistency",
+    "ChallengeError",
+    "is_challenge",
     "parse_correlations",
     "parse_variable_inventory",
     "build_correlation_url",

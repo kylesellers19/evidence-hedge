@@ -43,15 +43,29 @@ def _extract_content(resp: Any) -> str:
         return resp["choices"][0]["message"]["content"]
 
 
+def _usage_tokens(resp: Any) -> int:
+    """Total tokens from a LiteLLM response usage block (0 if absent)."""
+    try:
+        usage = resp.usage
+        return int(getattr(usage, "total_tokens", 0) or 0)
+    except AttributeError:
+        try:
+            return int((resp.get("usage") or {}).get("total_tokens", 0) or 0)
+        except Exception:
+            return 0
+
+
 class LLM:
     def __init__(
         self,
         settings: LLMSettings | None = None,
         store: TrainingDataStore | None = None,
         completion_fn: Callable[..., Any] | None = None,
+        budget: Any | None = None,
     ) -> None:
         self.settings = settings or LLMSettings()
         self.store = store or TrainingDataStore()
+        self.budget = budget  # optional evidence.BudgetMeter — records LLM dollars
         if completion_fn is None:  # pragma: no cover - real transport
             import litellm
 
@@ -74,7 +88,7 @@ class LLM:
         model = self.settings.model_for(task_type)
         temperature = self.settings.temperature_for(task_type)
         messages = [
-            {"role": "system", "content": system},
+            self._system_message(task_type, system),
             {"role": "user", "content": user},
         ]
         input_payload = {"model": model, "task_type": task_type, "messages": messages}
@@ -88,6 +102,7 @@ class LLM:
                 max_tokens=self.settings.max_tokens,
                 response_format=schema,
             )
+            self._charge_budget(model, resp)
             content = _extract_content(resp)
             try:
                 obj = schema.model_validate_json(content)
@@ -118,6 +133,24 @@ class LLM:
             output_obj={"error": str(last_error)},
         )
         raise LLMError(f"{task_type}: schema validation failed after retries: {last_error}")
+
+    def _system_message(self, task_type: str, system: str) -> dict[str, Any]:
+        """Cache the grader's large rubric block via LiteLLM's Anthropic prompt-
+        cache (content-block form with cache_control). Other roles use a plain
+        string system message."""
+        if self.settings.enable_prompt_cache and task_type == cfg.GRADE:
+            return {
+                "role": "system",
+                "content": [{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
+            }
+        return {"role": "system", "content": system}
+
+    def _charge_budget(self, model: str, resp: Any) -> None:
+        if self.budget is None:
+            return
+        tokens = _usage_tokens(resp)
+        if tokens:
+            self.budget.record_llm(self.budget.estimate_llm_cost(model, tokens))
 
     # --- roles --------------------------------------------------------------
 

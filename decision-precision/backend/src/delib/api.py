@@ -7,12 +7,20 @@ edits are logged to the training-data store.
 
 from __future__ import annotations
 
+import time
 from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
+from .evidence.budget import BudgetExceeded
+from .evidence.claims import claim_hash
+from .evidence.grading import ClaimDomain
+from .evidence.service import EvidenceService
+from .models.edges import CausalEdge
+from .models.enums import EdgeType, EvidenceGrade
 
 from .layer2.cache import SparqlCache
 from .layer2.survey.atlas import AtlasView, build_atlas
@@ -161,6 +169,59 @@ def atlas_project(body: ProjectRequest) -> ProjectResponse:
     them and dim the rest. Nothing computes the mapping yet; the contract exists so
     the convergence demo is a data change later, not a rebuild. Always [] for now."""
     return ProjectResponse(graph_id=body.graph_id, touched_node_ids=[])
+
+
+# Evidence multiplexer (Phase 5): claims are graded once and compound across
+# graphs. The service holds the persistent claim store, raw cache, sources, budget.
+evidence_service = EvidenceService()
+
+
+class RegradeRequest(BaseModel):
+    claim_text: str
+    domain: ClaimDomain = ClaimDomain.POLICY
+    health_typed: bool = False
+
+
+def _apply_grade_to_edges(h: str, grade: str) -> int:
+    """Restyle every causal edge whose mechanism claim hashes to ``h``."""
+    g = session.graph
+    updated = 0
+    for e in g.edges():
+        if e.type is not EdgeType.CAUSAL:
+            continue
+        edge: CausalEdge = e  # type: ignore[assignment]
+        if claim_hash(edge.mechanism_text) == h:
+            new = edge.model_copy(update={"evidence_grade": EvidenceGrade(grade)})
+            g.raw()[e.source][e.target][EdgeType.CAUSAL.value]["data"] = new
+            updated += 1
+    return updated
+
+
+@app.post("/api/evidence/regrade")
+def regrade(body: RegradeRequest) -> dict[str, Any]:
+    """Retrieve evidence for a claim and write a fresh grade snapshot, then restyle
+    any causal edges that assert this claim. Grades are snapshots — this can run
+    again any time. 402 when a budget cap is hit."""
+    try:
+        rec = evidence_service.regrade(
+            body.claim_text, domain=body.domain, health_typed=body.health_typed, now=time.time()
+        )
+    except BudgetExceeded as exc:
+        raise HTTPException(402, str(exc))
+    edges = _apply_grade_to_edges(rec.claim_hash, rec.evidence_grade) if rec.evidence_grade else 0
+    return {"claim": rec.model_dump(mode="json"), "edges_restyled": edges}
+
+
+@app.get("/api/evidence/claim")
+def get_claim(claim_text: str) -> dict[str, Any]:
+    """The current grade snapshot for a claim (null when never graded)."""
+    rec = evidence_service.get_claim(claim_text)
+    return {"claim": rec.model_dump(mode="json") if rec else None}
+
+
+@app.get("/api/evidence/budget")
+def evidence_budget() -> dict[str, Any]:
+    return evidence_service.budget_snapshot()
 
 
 __all__ = ["app", "session"]

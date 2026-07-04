@@ -9,6 +9,7 @@ gates the whole thing.
 """
 
 from .claims import Citation, ClaimRecord, ClaimStore, claim_hash, normalize_claim
+from .budget import BudgetConfig, BudgetExceeded, BudgetMeter
 from .grading import (
     ClaimDomain,
     Consistency,
@@ -52,4 +53,7 @@ __all__ = [
     "design_from_pubtypes",
     "normalized_design_tier",
     "evidence_grade_from_components",
+    "BudgetConfig",
+    "BudgetMeter",
+    "BudgetExceeded",
 ]

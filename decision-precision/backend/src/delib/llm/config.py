@@ -28,9 +28,17 @@ class LLMSettings(BaseModel):
     )
     max_tokens: int = 4096
     max_schema_retries: int = 2
+    # Cache the grader's large rubric/instruction block via the LiteLLM layer.
+    enable_prompt_cache: bool = True
 
     def model_for(self, task_type: str) -> str:
-        return self.model_by_task.get(task_type, self.default_model)
+        if task_type in self.model_by_task:
+            return self.model_by_task[task_type]
+        # The grader defaults to the configured CODER model (per the Phase-5 spec):
+        # both are low-temp analytic roles, so they share a model unless overridden.
+        if task_type == GRADE and CODE in self.model_by_task:
+            return self.model_by_task[CODE]
+        return self.default_model
 
     def temperature_for(self, task_type: str) -> float:
         return self.temperature_by_task.get(task_type, 0.5)

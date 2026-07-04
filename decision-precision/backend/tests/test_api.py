@@ -51,6 +51,81 @@ def test_atlas_project_stub_returns_empty(client):
     assert body["graph_id"] == "demo" and body["touched_node_ids"] == []
 
 
+# --- evidence multiplexer endpoints (injected fake service) -----------------
+
+
+def _fake_evidence_service():
+    import json as _json
+    from pathlib import Path
+
+    from delib.evidence import BudgetConfig, ClaimStore
+    from delib.evidence.service import EvidenceService
+    from delib.evidence.sources import OpenAlexSource
+    from delib.llm import LLM, LLMSettings
+
+    fix = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "evidence"
+
+    def fetch(_url):
+        return (fix / "openalex_rent_displacement.SYNTHETIC.json").read_text()
+
+    def completion(**kw):
+        return {"choices": [{"message": {"content": _json.dumps({
+            "per_study_designs": [{"ref": "10.1000/rent1", "design": "cohort study"}],
+            "consistency": "CONSISTENT_SUPPORT", "directness": "DIRECT", "transfer_note": None,
+        })}}], "usage": {"total_tokens": 500}}
+
+    return EvidenceService(
+        claim_store=ClaimStore(),
+        budget_config=BudgetConfig(openalex_credit_cap=5, llm_dollar_cap=1.0),
+        sources=[OpenAlexSource()],
+        llm=LLM(settings=LLMSettings(), completion_fn=completion),
+        fetcher=fetch,
+    )
+
+
+def test_regrade_writes_snapshot_and_restyles_edges(client, monkeypatch):
+    monkeypatch.setattr(api, "evidence_service", _fake_evidence_service())
+    # the fixture graph has a build->capacity causal edge with this mechanism
+    client.post("/api/nodes/build/expand")
+    body = client.post("/api/evidence/regrade", json={
+        "claim_text": "more units directly add capacity", "domain": "POLICY",
+    }).json()
+    assert body["claim"]["evidence_grade"] == "SUPPORTED"
+    assert body["claim"]["graded_at"] is not None
+    assert body["edges_restyled"] >= 1
+    # the edge now carries the computed grade
+    edges = client.get("/api/graph").json()["edges"]
+    cap = next(e for e in edges if e["source"] == "build" and e["target"] == "capacity")
+    assert cap["evidence_grade"] == "SUPPORTED"
+
+
+def test_regrade_402_on_budget_cap(client, monkeypatch):
+    from delib.evidence import BudgetConfig, ClaimStore
+    from delib.evidence.service import EvidenceService
+    from delib.evidence.sources import OpenAlexSource
+
+    svc = EvidenceService(
+        claim_store=ClaimStore(),
+        budget_config=BudgetConfig(openalex_credit_cap=0),  # no source budget
+        sources=[OpenAlexSource()],
+        fetcher=lambda url: "{}",
+    )
+    monkeypatch.setattr(api, "evidence_service", svc)
+    r = client.post("/api/evidence/regrade", json={"claim_text": "x"})
+    assert r.status_code == 402
+
+
+def test_budget_endpoint_shape(client, monkeypatch):
+    monkeypatch.setattr(api, "evidence_service", _fake_evidence_service())
+    snap = client.get("/api/evidence/budget").json()
+    assert snap["openalex_credit_cap"] == 5 and snap["llm_dollar_cap"] == 1.0
+
+
+def test_get_claim_null_before_grading(client, monkeypatch):
+    monkeypatch.setattr(api, "evidence_service", _fake_evidence_service())
+    assert client.get("/api/evidence/claim", params={"claim_text": "ungraded"}).json()["claim"] is None
+
+
 def test_initial_graph_is_seed_plus_ring1(client):
     r = client.get("/api/graph")
     assert r.status_code == 200

@@ -31,6 +31,39 @@ class EmbeddingResult(BaseModel):
     coords_umap: dict[str, list[float]] | None = None
 
 
+class SignedPCAResult(BaseModel):
+    node_ids: list[str]
+    variance: list[float]  # fraction of trace per component
+    components: list[list[float]]  # loadings[component][node]
+
+
+def signed_pca(rows: list[CorrelationRow], node_ids: list[str], k: int = 3) -> SignedPCAResult:
+    """PCA on the SIGNED correlation matrix (unobserved pairs = 0, diagonal = 1).
+
+    This is the B&C-published-structure validation, NOT the DELIB metric space.
+    The metric space uses d=sqrt(1-|r|) — sign-stripped, so opposed positions sit
+    NEAR (the sign rides on an EMPIRICAL_OPPOSITION edge). B&C's first principal
+    component is instead a *bipolar* factor (naturalism at one pole, anti-naturalist
+    realism at the other), which only the signed matrix can recover."""
+    import numpy as np
+
+    idx = {n: i for i, n in enumerate(node_ids)}
+    n = len(node_ids)
+    R = np.eye(n)
+    for row in rows:
+        i, j = idx.get(row.option_a_id), idx.get(row.option_b_id)
+        if i is not None and j is not None:
+            R[i, j] = R[j, i] = row.r
+    evals, evecs = np.linalg.eigh(R)
+    order = np.argsort(evals)[::-1]
+    trace = np.trace(R) or 1.0
+    return SignedPCAResult(
+        node_ids=node_ids,
+        variance=[float(evals[order[c]] / trace) for c in range(k)],
+        components=[evecs[:, order[c]].tolist() for c in range(k)],
+    )
+
+
 def build_distance_graph(rows: list[CorrelationRow], distance_fn: DistanceFn = DEFAULT_DISTANCE) -> nx.Graph:
     g: nx.Graph = nx.Graph()
     for row in rows:
@@ -118,12 +151,24 @@ def embed_survey(
     )
 
 
-def apply_partial_coords(m: Layer2Map, result: EmbeddingResult, which: str = "mds") -> list[str]:
-    """Write the smoke-test coordinates onto matching POSITION nodes as PARTIAL.
-    Only nodes present in the map and currently UNPLACED are touched."""
+_COORD_FIELD = {
+    Placement.SURVEY: "coords_survey",
+    Placement.CALIBRATED: "coords_calibrated",
+    Placement.PARTIAL: "coords_partial",
+}
+
+
+def apply_coords(
+    m: Layer2Map,
+    result: EmbeddingResult,
+    placement: Placement = Placement.SURVEY,
+    which: str = "mds",
+) -> list[str]:
+    """Write embedding coordinates onto matching POSITION nodes at the given
+    placement (SURVEY once the real matrix supports it; PARTIAL for the sparse
+    smoke path). Only nodes present in the map that are UNPLACED are touched."""
     coords = result.coords_umap if which == "umap" else result.coords_mds
-    if not coords:
-        return []
+    field = _COORD_FIELD[placement]
     updated: list[str] = []
     for node_id, c in coords.items():
         if node_id not in m:
@@ -132,18 +177,26 @@ def apply_partial_coords(m: Layer2Map, result: EmbeddingResult, which: str = "md
         if node.placement is not Placement.UNPLACED:
             continue
         m.raw().nodes[node_id]["data"] = node.model_copy(
-            update={"coords_partial": list(c), "placement": Placement.PARTIAL}
+            update={field: list(c), "placement": placement}
         )
         updated.append(node_id)
     return updated
 
 
+def apply_partial_coords(m: Layer2Map, result: EmbeddingResult, which: str = "mds") -> list[str]:
+    """Back-compat wrapper: place at PARTIAL."""
+    return apply_coords(m, result, placement=Placement.PARTIAL, which=which)
+
+
 __all__ = [
     "EmbeddingResult",
+    "SignedPCAResult",
+    "signed_pca",
     "build_distance_graph",
     "largest_component",
     "classical_mds",
     "umap_embed",
     "embed_survey",
+    "apply_coords",
     "apply_partial_coords",
 ]

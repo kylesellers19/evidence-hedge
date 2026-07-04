@@ -10,12 +10,15 @@ import pytest
 from delib.layer2 import Layer2Map, Placement
 from delib.layer2.survey import CorrelationStore, ingest_survey_into_map, load_fixture
 from delib.layer2.survey.embedding import (
+    apply_coords,
     apply_partial_coords,
     classical_mds,
     embed_survey,
     largest_component,
+    signed_pca,
     umap_embed,
 )
+from delib.layer2.survey.store import CorrelationRow
 
 
 def _pairwise(coords):
@@ -63,6 +66,44 @@ def test_apply_partial_coords_marks_partial():
     sample = m.get_node(result.component[0])
     assert sample.placement is Placement.PARTIAL
     assert sample.coords_partial is not None and sample.coords_survey is None
+
+
+def _signed_row(a, b, r):
+    from delib.layer2.survey import SourceTier
+    return CorrelationRow(option_a_id=a, option_b_id=b, label_a=a, label_b=b,
+                          r=r, n=100, source_tier=SourceTier.SITE_SCRAPE, retrieved_at=0.0)
+
+
+def test_signed_pca_pc1_is_bipolar():
+    # two clusters, within-cluster r=+0.8, cross-cluster r=-0.8 -> PC1 splits them
+    A, B = ["a1", "a2", "a3"], ["b1", "b2", "b3"]
+    rows = []
+    for grp in (A, B):
+        for i in range(len(grp)):
+            for j in range(i + 1, len(grp)):
+                rows.append(_signed_row(grp[i], grp[j], 0.8))
+    for a in A:
+        for b in B:
+            rows.append(_signed_row(a, b, -0.8))
+    res = signed_pca(rows, A + B, k=2)
+    pc1 = res.components[0]
+    signs = [pc1[i] > 0 for i in range(6)]
+    # cluster A shares one sign, cluster B the opposite (bipolar separation)
+    assert len(set(signs[:3])) == 1 and len(set(signs[3:])) == 1
+    assert signs[0] != signs[3]
+    assert res.variance[0] > res.variance[1] > 0
+
+
+def test_apply_coords_survey_placement():
+    m = Layer2Map()
+    store = CorrelationStore()
+    load_fixture(store)
+    ingest_survey_into_map(m, store.all())
+    result = embed_survey(store.all(), k=2, compute_umap=False)
+    updated = apply_coords(m, result, placement=Placement.SURVEY)
+    sample = m.get_node(updated[0])
+    assert sample.placement is Placement.SURVEY
+    assert sample.coords_survey is not None and sample.coords_partial is None
 
 
 @pytest.mark.skipif(

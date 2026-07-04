@@ -10,10 +10,12 @@ from .edges import (
     AttackEdge,
     CompatibilityEdge,
     DescentEdge,
+    EmpiricalCobeliefEdge,
+    EmpiricalOppositionEdge,
     InfluenceEdge,
     Layer2Edge,
 )
-from .enums import Grain, Layer2EdgeType, Placement, Provenance
+from .enums import Grain, Layer2EdgeType, Placement, Provenance, SourceTier
 from .map import Layer2ConstraintError, Layer2Map
 from .nodes import MapNode
 from .queries import (
@@ -40,6 +42,9 @@ __all__ = [
     "DescentEdge",
     "AttackEdge",
     "CompatibilityEdge",
+    "EmpiricalOppositionEdge",
+    "EmpiricalCobeliefEdge",
+    "SourceTier",
     "Layer2Edge",
     "Thinker",
     "BridgeAssignment",

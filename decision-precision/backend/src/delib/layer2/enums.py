@@ -22,6 +22,7 @@ class Placement(str, Enum):
     """How a node got its coordinates. Estimates must declare themselves."""
 
     UNPLACED = "UNPLACED"  # exists (has edges/bridge) but not yet on the metric
+    PARTIAL = "PARTIAL"  # smoke-test coords from a sparse component; NOT the metric
     SURVEY = "SURVEY"  # placed by the Bourget-Chalmers survey metric (ground truth)
     CALIBRATED = "CALIBRATED"  # placed by Procrustes-calibrated embedding (estimate)
     CORROBORATED = "CORROBORATED"  # survey/calibrated + independent instruments agree
@@ -32,13 +33,38 @@ class Layer2EdgeType(str, Enum):
     DESCENT = "DESCENT"  # curated refinement/schism lineage
     ATTACK = "ATTACK"  # curated; states the contested proposition
     COMPATIBILITY = "COMPATIBILITY"  # curated
+    EMPIRICAL_OPPOSITION = "EMPIRICAL_OPPOSITION"  # survey r <= -threshold (corroborates ATTACK)
+    EMPIRICAL_COBELIEF = "EMPIRICAL_COBELIEF"  # survey r >= threshold
 
 
 class Provenance(str, Enum):
     WIKIDATA = "wikidata"
     PHILPAPERS = "philpapers"
+    PHILSURVEY = "philsurvey2020"
     MANUAL = "manual"
     CURATED = "curated"
 
 
-__all__ = ["Grain", "GRAIN_ORDER", "Placement", "Layer2EdgeType", "Provenance"]
+class SourceTier(str, Enum):
+    PUBLISHED_TABLE = "PUBLISHED_TABLE"  # the fixture (top of the distribution)
+    SITE_SCRAPE = "SITE_SCRAPE"  # survey2020.philpeople.org per-question pages
+    RESPONSE_DATA = "RESPONSE_DATA"  # anonymized respondent rows (authoritative)
+
+
+# merge priority: higher wins
+TIER_PRIORITY: dict[SourceTier, int] = {
+    SourceTier.PUBLISHED_TABLE: 1,
+    SourceTier.SITE_SCRAPE: 2,
+    SourceTier.RESPONSE_DATA: 3,
+}
+
+
+__all__ = [
+    "Grain",
+    "GRAIN_ORDER",
+    "Placement",
+    "Layer2EdgeType",
+    "Provenance",
+    "SourceTier",
+    "TIER_PRIORITY",
+]

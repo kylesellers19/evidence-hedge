@@ -13,7 +13,7 @@ from typing import Annotated, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .enums import Layer2EdgeType, Provenance
+from .enums import Layer2EdgeType, Provenance, SourceTier
 
 _STRICT = ConfigDict(extra="forbid")
 
@@ -47,8 +47,41 @@ class CompatibilityEdge(_Layer2EdgeBase):
     weight: float | None = Field(default=None, ge=0.0)
 
 
+class _EmpiricalEdgeBase(BaseModel):
+    """Survey-derived edges carry r and n (not a curated confidence) plus the
+    source tier, so a published-table edge is distinguishable from a
+    response-data one."""
+
+    model_config = _STRICT
+    source: str = Field(min_length=1)
+    target: str = Field(min_length=1)
+    r: float = Field(ge=-1.0, le=1.0)
+    n: int = Field(ge=0)
+    provenance: Provenance
+    tier: SourceTier
+
+
+class EmpiricalOppositionEdge(_EmpiricalEdgeBase):
+    """r <= -threshold. CORROBORATES the curated ATTACK matrix, never replaces it."""
+
+    type: Literal[Layer2EdgeType.EMPIRICAL_OPPOSITION] = Layer2EdgeType.EMPIRICAL_OPPOSITION
+
+
+class EmpiricalCobeliefEdge(_EmpiricalEdgeBase):
+    """r >= threshold. Survey-grounded co-belief (positions held together)."""
+
+    type: Literal[Layer2EdgeType.EMPIRICAL_COBELIEF] = Layer2EdgeType.EMPIRICAL_COBELIEF
+
+
 Layer2Edge = Annotated[
-    Union[InfluenceEdge, DescentEdge, AttackEdge, CompatibilityEdge],
+    Union[
+        InfluenceEdge,
+        DescentEdge,
+        AttackEdge,
+        CompatibilityEdge,
+        EmpiricalOppositionEdge,
+        EmpiricalCobeliefEdge,
+    ],
     Field(discriminator="type"),
 ]
 
@@ -57,5 +90,7 @@ __all__ = [
     "DescentEdge",
     "AttackEdge",
     "CompatibilityEdge",
+    "EmpiricalOppositionEdge",
+    "EmpiricalCobeliefEdge",
     "Layer2Edge",
 ]

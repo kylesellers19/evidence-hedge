@@ -12,25 +12,13 @@ from __future__ import annotations
 import re
 import sqlite3
 import time
-from enum import Enum
 from pathlib import Path
 
 from pydantic import BaseModel
 
+from ..enums import SourceTier, TIER_PRIORITY
 
-class SourceTier(str, Enum):
-    PUBLISHED_TABLE = "PUBLISHED_TABLE"  # this fixture (top of the distribution)
-    SITE_SCRAPE = "SITE_SCRAPE"  # survey2020.philpeople.org per-question pages
-    RESPONSE_DATA = "RESPONSE_DATA"  # anonymized respondent rows (authoritative)
-
-
-# higher wins on merge
-_TIER_PRIORITY: dict[SourceTier, int] = {
-    SourceTier.PUBLISHED_TABLE: 1,
-    SourceTier.SITE_SCRAPE: 2,
-    SourceTier.RESPONSE_DATA: 3,
-}
-
+_TIER_PRIORITY = TIER_PRIORITY
 _SLUG_RE = re.compile(r"[^a-z0-9]+")
 
 

@@ -85,7 +85,7 @@ def test_expand_unknown_node_404(client):
 
 
 def test_full_expansion_surfaces_overlays(client):
-    # grow the whole graph, then overlays should show the loop + divergence
+    # grow the whole graph, then overlays should show the loop + tension layers
     for nid in ("build", "affordability_mandate", "zoning_variance"):
         client.post(f"/api/nodes/{nid}/expand")
     for nid in ("capacity", "desirability", "rent", "displacement", "tax_revenue",
@@ -93,8 +93,10 @@ def test_full_expansion_surfaces_overlays(client):
         client.post(f"/api/nodes/{nid}/expand")
     ov = client.get("/api/overlays").json()
     assert any(l["loop_class"] == "REINFORCING" for l in ov["loops"])
-    assert any(d["node_id"] == "displacement" for d in ov["divergence"]["across_frameworks"])
-    assert ov["burden_index"]["incumbents"] > 0
+    assert any(c["node_id"] == "displacement" for c in ov["register_clashes"])
+    assert any(
+        t["source"] == "rent" and t["target"] == "displacement" for t in ov["tradition_tensions"]
+    )
 
 
 def test_resolution_view_filters(client):
@@ -126,11 +128,20 @@ def test_edit_logs_correction(client):
 
 
 def test_edit_invalid_is_rejected(client):
-    # putting valences on a decision must 400 (type discipline holds over HTTP)
-    r = client.patch("/api/nodes/build", json={"changes": {"valences": [
-        {"stakeholder_id": "incumbents", "framework_id": "prioritarian", "sign": -1, "justification": "x"}
+    # putting registers on a decision must 400 (type discipline holds over HTTP)
+    r = client.patch("/api/nodes/build", json={"changes": {"registers": [
+        {"register": "MARKET", "signature_marker": "m", "justification": "x"}
     ]}})
     assert r.status_code == 400
+
+
+def test_verify_edit_logs_tier(client):
+    # confirming a consequence HUMAN_VERIFIED writes a correction at that tier
+    client.post("/api/nodes/build/expand")
+    r = client.patch("/api/nodes/capacity", json={"changes": {"coding_status": "HUMAN_VERIFIED"}})
+    assert r.status_code == 200 and r.json()["data"]["coding_status"] == "HUMAN_VERIFIED"
+    rows = api.session.store.all()
+    assert rows[-1]["tier"] == "HUMAN_VERIFIED"
 
 
 def test_edge_style_semantics_present(client):

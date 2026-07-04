@@ -12,6 +12,40 @@ class NodeType(str, Enum):
     STATE = "STATE"
 
 
+class Register(str, Enum):
+    """Boltanski & Thévenot orders of worth — the evaluative registers a
+    consequence can engage. Replaces the (stakeholder, framework, sign) valence:
+    an engagement is UNSIGNED (it names the order of worth invoked, evidenced by
+    a signature marker), and tension comes from the curated clash table, not a
+    per-attribution sign."""
+
+    MARKET = "MARKET"
+    INDUSTRIAL = "INDUSTRIAL"
+    CIVIC = "CIVIC"
+    DOMESTIC = "DOMESTIC"
+    INSPIRED = "INSPIRED"
+    FAME = "FAME"
+    GREEN = "GREEN"
+    PROJECTIVE = "PROJECTIVE"
+
+
+class Confidence(str, Enum):
+    """Attribution confidence — rendered as opacity on chips/tags."""
+
+    HIGH = "HIGH"
+    MODERATE = "MODERATE"
+    LOW = "LOW"
+
+
+class CodingStatus(str, Enum):
+    """Whether a node's attributions have been human-verified. PENDING nodes are
+    greyed and excludable from the resolution view; HUMAN_VERIFIED is written to
+    the correction log at that tier."""
+
+    PENDING = "PENDING"
+    HUMAN_VERIFIED = "HUMAN_VERIFIED"
+
+
 class EdgeType(str, Enum):
     CAUSAL = "CAUSAL"
     DELIBERATIVE = "DELIBERATIVE"

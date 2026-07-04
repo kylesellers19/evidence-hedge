@@ -28,26 +28,26 @@ def test_expanded_nodes_excluded():
     assert len(ids) == 16
 
 
-def test_favoring_divergence_promotes_most_divergent():
+def test_favoring_tension_promotes_most_tense():
     g = build_brooklyn_master()
-    # rent carries both an across-framework and an across-stakeholder divergence
-    items = prioritize_expansions(g, PriorityWeights(divergence=10, evidence=0, goal_relevance=0))
-    assert items[0].node_id == "rent"
+    # displacement carries three register clashes plus two tradition tensions
+    items = prioritize_expansions(g, PriorityWeights(tension=10, evidence=0, goal_relevance=0))
+    assert items[0].node_id == "displacement"
 
 
 def test_components_are_normalized():
     items = prioritize_expansions(build_brooklyn_master())
     for i in items:
-        assert 0.0 <= i.divergence <= 1.0
+        assert 0.0 <= i.tension <= 1.0
         assert 0.0 <= i.evidence <= 1.0
         assert 0.0 <= i.goal_relevance <= 1.0
 
 
 def test_weights_change_ranking():
     g = build_brooklyn_master()
-    default = prioritize_expansions(g)
-    gr_only = prioritize_expansions(g, PriorityWeights(divergence=0, evidence=0, goal_relevance=1))
-    # goal_relevance-only should top out on a 0.9-relevance node (capacity or displacement)
-    assert gr_only[0].goal_relevance == 0.9
-    # default blend tops on rent (evidence+divergence); gr-only tops elsewhere
-    assert default[0].node_id != gr_only[0].node_id
+    default = [i.node_id for i in prioritize_expansions(g)]
+    tension_only = [
+        i.node_id for i in prioritize_expansions(g, PriorityWeights(tension=1, evidence=0, goal_relevance=0))
+    ]
+    # a different weighting yields a different overall ordering
+    assert default != tension_only

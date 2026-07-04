@@ -4,30 +4,26 @@ All queries are pure functions of a :class:`~delib.graph.DelibGraph`. Result
 types are pydantic models so they serialize straight to the API/frontend.
 
 Implemented:
-- ``path_confidence``    weakest-link confidence of the strongest causal route
-- ``divergence_points``  valence sign-flips (across frameworks / stakeholders)
-- ``resolution_subgraph`` only the seed -> closure-bearing-consequence paths
-- ``loop_inventory``     causal cycles classified reinforcing / balancing
-- ``burden_index``       per-stakeholder negative valence weighted by confidence
+- ``path_confidence``          weakest-link confidence of the strongest causal route
+- ``register_clash_points``    within-consequence order-of-worth clashes
+- ``tradition_tension_points`` adjacent nodes whose traditions attack
+- ``resolution_subgraph``      only the seed -> closure-bearing-consequence paths
+- ``loop_inventory``           causal cycles classified reinforcing / balancing
 """
 
 from __future__ import annotations
-
-from typing import Literal
 
 import networkx as nx
 from pydantic import BaseModel
 
 from .graph import DelibGraph
 from .models.edges import CausalEdge, ClosureEdge, FramesEdge
-from .models.enums import EVIDENCE_GRADE_ORDINAL, EdgeType, EvidenceGrade, LoopClass
+from .models.enums import EVIDENCE_GRADE_ORDINAL, EdgeType, EvidenceGrade, LoopClass, Register
 from .models.nodes import ConsequenceNode
+from .models.registers import register_clashes
+from .models.traditions import tradition_attacks
 
 _MAX_ORDINAL = max(EVIDENCE_GRADE_ORDINAL.values())
-
-
-def _signum(x: int) -> int:
-    return (x > 0) - (x < 0)
 
 
 # --- path_confidence --------------------------------------------------------
@@ -88,62 +84,60 @@ def path_confidence(g: DelibGraph, source: str, target: str) -> PathConfidence |
     return best
 
 
-# --- divergence_points ------------------------------------------------------
+# --- tension: register clashes + tradition attacks --------------------------
+# Supersedes the old valence divergence. Two distinct tension layers:
+#   register clashes  — WITHIN a consequence (two engaged orders of worth clash)
+#   tradition tensions — BETWEEN adjacent nodes whose traditions attack
 
 
-class DivergencePoint(BaseModel):
+class RegisterClash(BaseModel):
     node_id: str
-    kind: Literal["across_frameworks", "across_stakeholders"]
-    fixed_id: str  # stakeholder (across_frameworks) or framework (across_stakeholders)
-    signs: dict[str, int]  # varying dimension id -> sign
+    register_a: Register
+    register_b: Register
 
 
-class DivergenceReport(BaseModel):
-    across_frameworks: list[DivergencePoint] = []
-    across_stakeholders: list[DivergencePoint] = []
+class TraditionTension(BaseModel):
+    source: str
+    target: str
+    tradition_a: str
+    tradition_b: str
+    about: str
 
 
-def _is_divergent(signs: list[int]) -> bool:
-    """True when the group mixes sign classes (e.g. negative vs neutral)."""
-    return len({_signum(s) for s in signs}) > 1
-
-
-def divergence_points(g: DelibGraph) -> DivergenceReport:
-    report = DivergenceReport()
+def register_clash_points(g: DelibGraph) -> list[RegisterClash]:
+    """Per consequence, the clashing register pairs among its engaged registers
+    (compromise pairs suppressed by the clash table)."""
+    out: list[RegisterClash] = []
     for node in g.nodes():
-        if not isinstance(node, ConsequenceNode) or not node.valences:
+        if not isinstance(node, ConsequenceNode) or not node.registers:
             continue
+        regs = {e.register for e in node.registers}
+        for a, b in register_clashes(regs):
+            out.append(RegisterClash(node_id=node.id, register_a=a, register_b=b))
+    return out
 
-        # across frameworks, stakeholder fixed
-        by_stakeholder: dict[str, dict[str, int]] = {}
-        for v in node.valences:
-            by_stakeholder.setdefault(v.stakeholder_id, {})[v.framework_id] = v.sign
-        for stakeholder, fw_signs in by_stakeholder.items():
-            if _is_divergent(list(fw_signs.values())):
-                report.across_frameworks.append(
-                    DivergencePoint(
-                        node_id=node.id,
-                        kind="across_frameworks",
-                        fixed_id=stakeholder,
-                        signs=fw_signs,
-                    )
-                )
 
-        # across stakeholders, framework fixed
-        by_framework: dict[str, dict[str, int]] = {}
-        for v in node.valences:
-            by_framework.setdefault(v.framework_id, {})[v.stakeholder_id] = v.sign
-        for framework, sh_signs in by_framework.items():
-            if _is_divergent(list(sh_signs.values())):
-                report.across_stakeholders.append(
-                    DivergencePoint(
-                        node_id=node.id,
-                        kind="across_stakeholders",
-                        fixed_id=framework,
-                        signs=sh_signs,
+def tradition_tension_points(g: DelibGraph) -> list[TraditionTension]:
+    """Adjacent node pairs (any edge) whose attributed traditions attack in the
+    curated matrix. Reports each ordered edge once, per attacking tradition pair."""
+    out: list[TraditionTension] = []
+    for e in g.edges():
+        src = g.get_node(e.source)
+        tgt = g.get_node(e.target)
+        if not isinstance(src, ConsequenceNode) or not isinstance(tgt, ConsequenceNode):
+            continue
+        for ta in src.traditions:
+            for tb in tgt.traditions:
+                attack = tradition_attacks(ta.tradition, tb.tradition)
+                if attack is not None:
+                    out.append(
+                        TraditionTension(
+                            source=e.source, target=e.target,
+                            tradition_a=ta.tradition, tradition_b=tb.tradition,
+                            about=attack.about,
+                        )
                     )
-                )
-    return report
+    return out
 
 
 # --- resolution_subgraph ----------------------------------------------------
@@ -231,47 +225,15 @@ def loop_inventory(g: DelibGraph) -> list[Loop]:
     return loops
 
 
-# --- burden_index -----------------------------------------------------------
-
-
-def burden_index(g: DelibGraph, stakeholder_id: str) -> float:
-    """Sum of a stakeholder's negative valences, each weighted by the confidence
-    of the causal path from the seed to the bearing consequence.
-
-    weight = path_confidence(seed -> node).ordinal / max_ordinal  (0 if no path)
-    contribution = |sign| * weight   for every valence with sign < 0
-    """
-    seed = g.seed_id
-    total = 0.0
-    for node in g.nodes():
-        if not isinstance(node, ConsequenceNode):
-            continue
-        negatives = [v for v in node.valences if v.stakeholder_id == stakeholder_id and v.sign < 0]
-        if not negatives:
-            continue
-        weight = 0.0
-        if seed is not None:
-            pc = path_confidence(g, seed, node.id)
-            if pc is not None:
-                weight = pc.ordinal / _MAX_ORDINAL
-        total += sum(abs(v.sign) for v in negatives) * weight
-    return total
-
-
-def burden_indices(g: DelibGraph) -> dict[str, float]:
-    return {s.id: burden_index(g, s.id) for s in g.stakeholders}
-
-
 __all__ = [
     "PathConfidence",
     "path_confidence",
-    "DivergencePoint",
-    "DivergenceReport",
-    "divergence_points",
+    "RegisterClash",
+    "TraditionTension",
+    "register_clash_points",
+    "tradition_tension_points",
     "ResolutionSubgraph",
     "resolution_subgraph",
     "Loop",
     "loop_inventory",
-    "burden_index",
-    "burden_indices",
 ]

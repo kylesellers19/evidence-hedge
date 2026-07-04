@@ -7,12 +7,13 @@ from delib.fixtures.brooklyn import build_brooklyn_master
 from delib.generation import apply_expansion
 from delib.mock import MockGenerator, grow_full
 from delib.models.enums import ClosureSatisfaction, LoopClass, NodeType
+from delib.models.enums import Register
 from delib.queries import (
-    burden_index,
-    divergence_points,
     loop_inventory,
     path_confidence,
+    register_clash_points,
     resolution_subgraph,
+    tradition_tension_points,
 )
 
 
@@ -37,12 +38,26 @@ def test_master_has_reinforcing_loop():
     assert loop.loop_class is LoopClass.REINFORCING
 
 
-def test_master_divergence_point_displacement():
-    report = divergence_points(build_brooklyn_master())
-    disp = [d for d in report.across_frameworks if d.node_id == "displacement"]
-    assert len(disp) == 1
-    assert disp[0].fixed_id == "incumbents"
-    assert disp[0].signs == {"prioritarian": -2, "aggregate_utilitarian": 0}
+def test_master_register_clash_on_displacement():
+    clashes = register_clash_points(build_brooklyn_master())
+    disp = {frozenset({c.register_a, c.register_b}) for c in clashes if c.node_id == "displacement"}
+    # displacement engages MARKET + CIVIC + DOMESTIC: three clashing pairs
+    assert frozenset({Register.MARKET, Register.CIVIC}) in disp
+    assert frozenset({Register.MARKET, Register.DOMESTIC}) in disp
+
+
+def test_master_tradition_tension_rent_displacement():
+    tensions = tradition_tension_points(build_brooklyn_master())
+    edge = [t for t in tensions if t.source == "rent" and t.target == "displacement"]
+    assert len(edge) == 1
+    assert edge[0].tradition_a == "utilitarian_aggregate"
+    assert edge[0].tradition_b == "kantian_deontological"
+
+
+def test_master_compromise_pairs_suppressed():
+    # construction_jobs engages MARKET + INDUSTRIAL (a compromise) -> no clash
+    clashes = register_clash_points(build_brooklyn_master())
+    assert all(c.node_id != "construction_jobs" for c in clashes)
 
 
 def test_master_partial_closure():
@@ -71,9 +86,9 @@ def test_grow_full_reconstructs_master():
     live = grow_full()
     master = build_brooklyn_master()
     assert len(live) == len(master) == 18
-    # same reinforcing loop and divergence appear in the grown graph
+    # same reinforcing loop and register clash appear in the grown graph
     assert loop_inventory(live)[0].loop_class is LoopClass.REINFORCING
-    assert any(d.node_id == "displacement" for d in divergence_points(live).across_frameworks)
+    assert any(c.node_id == "displacement" for c in register_clash_points(live))
     # closure survived the grow
     assert len(resolution_subgraph(live).closure_edges) == 1
 
@@ -102,9 +117,8 @@ def test_expand_unknown_node_returns_empty():
     assert res.candidates == []
 
 
-def test_burden_index_incumbents_bear_most():
+def test_master_coding_status_mix():
     g = build_brooklyn_master()
-    incumbents = burden_index(g, "incumbents")
-    developer = burden_index(g, "developer")
-    assert incumbents > developer  # displacement/rent/social_fabric land on incumbents
-    assert developer == 0.0
+    statuses = {n.id: n.coding_status.value for n in g.nodes() if hasattr(n, "coding_status")}
+    assert statuses["displacement"] == "HUMAN_VERIFIED"
+    assert statuses["social_fabric"] == "PENDING"

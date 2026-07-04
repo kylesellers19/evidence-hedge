@@ -12,16 +12,19 @@ Rules:
   (SUPPORTED/WEAK/CONTESTED/CONTRADICTED/ANALOGICAL/SPECULATIVE); default SPECULATIVE.
 - polarity: +1 if more-parent -> more-child, -1 if more-parent -> less-child, 0 if unclear.
 - goal_relevance (consequences): 0-1, how much it bears on the seed's goal state.
-Return ONLY valid JSON matching the schema. Do not code stakeholder valences or
+Return ONLY valid JSON matching the schema. Do not code registers, traditions, or
 implementation tags here — that is a separate step."""
 
 INTAKE_SYSTEM = """Extract the implicit goal state from a planning/policy question.
 The goal state is the world-state the questioner wants, against which outcomes
 are judged. Also list concise, checkable goal criteria. Return ONLY valid JSON."""
 
-CODER_SYSTEM = """You code a single node against fixed vocabularies. You MUST only
-use framework ids and stakeholder ids from the provided registries — never invent
-new ones. Provide a short justification for every judgement. Return ONLY valid JSON
+CODER_SYSTEM = """You code a single node against fixed vocabularies. For a
+consequence, attribute the orders of worth (registers) it engages — each with a
+QUOTED signature marker (the phrase that evidences it), a justification, and a
+confidence (HIGH/MODERATE/LOW) — and any clearly-implicated normative tradition
+(from the allowed leaves only). For a decision, tag CFIR domains and score the
+Proctor outcomes. Never invent register or tradition ids. Return ONLY valid JSON
 matching the schema."""
 
 GRADER_SYSTEM = """You grade a causal claim against retrieved evidence. Assign one

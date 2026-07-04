@@ -12,15 +12,16 @@ import pytest
 
 from delib.graph import DelibGraph
 from delib.models.edges import CausalEdge, ClosureEdge, FramesEdge
-from delib.models.enums import ClosureSatisfaction, EvidenceGrade
+from delib.models.enums import ClosureSatisfaction, EvidenceGrade, Register
 from delib.models.nodes import (
     CFIRTags,
     ConsequenceNode,
     DecisionNode,
     ProctorScore,
     ProctorScores,
+    RegisterEngagement,
     SeedNode,
-    Valence,
+    TraditionAttribution,
 )
 from delib.models.registries import (
     Framework,
@@ -44,24 +45,24 @@ def decision(nid: str, label: str, ring: int) -> DecisionNode:
 
 
 def consequence(
-    nid: str, label: str, ring: int, goal_relevance: float, valences=None
+    nid: str, label: str, ring: int, goal_relevance: float, registers=None, traditions=None
 ) -> ConsequenceNode:
     return ConsequenceNode(
         id=nid,
         label=label,
         ring=ring,
         goal_relevance=goal_relevance,
-        valences=valences or [],
+        registers=registers or [],
+        traditions=traditions or [],
     )
 
 
-def val(stakeholder: str, framework: str, sign: int) -> Valence:
-    return Valence(
-        stakeholder_id=stakeholder,
-        framework_id=framework,
-        sign=sign,
-        justification="j",
-    )
+def reg(register: Register) -> RegisterEngagement:
+    return RegisterEngagement(register=register, signature_marker="m", justification="j")
+
+
+def trad(leaf: str) -> TraditionAttribution:
+    return TraditionAttribution(tradition=leaf, signature_marker="m", justification="j")
 
 
 @pytest.fixture
@@ -79,7 +80,8 @@ def registries() -> tuple[StakeholderRegistry, FrameworkRegistry]:
 def small_graph(registries) -> DelibGraph:
     """seed -> decision -> {desirability, displacement, rent} with:
     - reinforcing loop: build -> desirability -> rent -> build
-    - divergence point: displacement (prioritarian -2, utilitarian 0)
+    - register clash: displacement engages MARKET + CIVIC (a clash pair)
+    - tradition tension: rent (utilitarian) -> displacement (kantian)
     - PARTIAL closure: capacity -> seed
     """
     sh, fw = registries
@@ -96,17 +98,15 @@ def small_graph(registries) -> DelibGraph:
     )
     g.add_node(decision("build", "Build 40-story tower", 1))
     g.add_node(consequence("desirability", "Neighborhood more desirable", 2, 0.3))
-    g.add_node(consequence("rent", "Rents rise", 2, 0.5))
+    g.add_node(consequence("rent", "Rents rise", 2, 0.5, traditions=[trad("utilitarian_aggregate")]))
     g.add_node(
         consequence(
             "displacement",
             "Incumbent displacement",
             3,
             0.9,
-            valences=[
-                val("incumbents", "prioritarian", -2),
-                val("incumbents", "aggregate_utilitarian", 0),
-            ],
+            registers=[reg(Register.MARKET), reg(Register.CIVIC)],
+            traditions=[trad("kantian_deontological")],
         )
     )
     g.add_node(consequence("capacity", "Housing capacity increases", 2, 0.85))

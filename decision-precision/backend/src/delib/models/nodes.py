@@ -13,7 +13,7 @@ from typing import Annotated, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .enums import NodeType
+from .enums import CodingStatus, Confidence, NodeType, Register
 
 _STRICT = ConfigDict(extra="forbid")
 
@@ -51,19 +51,32 @@ class CFIRTags(BaseModel):
     process: list[str] = Field(default_factory=list)
 
 
-class Valence(BaseModel):
-    """A (stakeholder, framework)-relative valuation of a consequence.
+class RegisterEngagement(BaseModel):
+    """A consequence engaging one order of worth (Boltanski–Thévenot register).
 
-    ``framework_id`` must reference a framework in the registry and
-    ``stakeholder_id`` a stakeholder in the registry; that cross-reference is
-    validated at graph-insert time, not here.
+    UNSIGNED: it names the register invoked, evidenced by a ``signature_marker``
+    (a quoted phrase from the source that triggered the attribution). Tension
+    comes from the curated clash table over the set of engaged registers, not
+    from a per-engagement sign.
     """
 
     model_config = _STRICT
-    stakeholder_id: str = Field(min_length=1)
-    framework_id: str = Field(min_length=1)
-    sign: int = Field(ge=-2, le=2)
+    register: Register
+    signature_marker: str = Field(min_length=1, description="Quoted phrase evidencing this register.")
     justification: str = Field(min_length=1)
+    confidence: Confidence = Confidence.MODERATE
+
+
+class TraditionAttribution(BaseModel):
+    """A consequence attributed to a normative tradition (leaf id). Same unsigned
+    shape as a register engagement; tradition tensions come from the curated
+    attack matrix over adjacent nodes' traditions."""
+
+    model_config = _STRICT
+    tradition: str = Field(min_length=1, description="Tradition leaf id.")
+    signature_marker: str = Field(min_length=1, description="Quoted phrase evidencing this tradition.")
+    justification: str = Field(min_length=1)
+    confidence: Confidence = Confidence.MODERATE
 
 
 # --- Node types -------------------------------------------------------------
@@ -74,6 +87,7 @@ class _NodeBase(BaseModel):
     id: str = Field(min_length=1)
     label: str = Field(min_length=1)
     ring: int = Field(ge=0, description="Causal distance from the seed.")
+    coding_status: CodingStatus = CodingStatus.PENDING
 
 
 class SeedNode(BaseModel):
@@ -100,7 +114,8 @@ class DecisionNode(_NodeBase):
 
 class ConsequenceNode(_NodeBase):
     type: Literal[NodeType.CONSEQUENCE] = NodeType.CONSEQUENCE
-    valences: list[Valence] = Field(default_factory=list)
+    registers: list[RegisterEngagement] = Field(default_factory=list)
+    traditions: list[TraditionAttribution] = Field(default_factory=list)
     goal_relevance: float = Field(ge=0.0, le=1.0)
     expanded: bool = False
     unexpanded_child_estimate: int = Field(default=0, ge=0)
@@ -128,7 +143,8 @@ __all__ = [
     "ProctorScore",
     "ProctorScores",
     "CFIRTags",
-    "Valence",
+    "RegisterEngagement",
+    "TraditionAttribution",
     "SeedNode",
     "DecisionNode",
     "ConsequenceNode",

@@ -3,7 +3,7 @@
 Ranks unexpanded nodes for a future auto-explore mode by a weighted blend of
 three normalized signals:
 
-- **divergence**: how much frameworks/stakeholders disagree at the node
+- **tension**: register clashes on the node + tradition tensions touching it
   (chase contested territory)
 - **evidence**: confidence of the causal route from the seed to the node
   (expand where the chain is solid)
@@ -20,13 +20,13 @@ from pydantic import BaseModel
 
 from .graph import DelibGraph
 from .models.enums import EVIDENCE_GRADE_ORDINAL
-from .queries import divergence_points, path_confidence
+from .queries import path_confidence, register_clash_points, tradition_tension_points
 
 _MAX_ORDINAL = max(EVIDENCE_GRADE_ORDINAL.values())
 
 
 class PriorityWeights(BaseModel):
-    divergence: float = 1.0
+    tension: float = 1.0
     evidence: float = 1.0
     goal_relevance: float = 1.0
 
@@ -34,7 +34,7 @@ class PriorityWeights(BaseModel):
 class PriorityItem(BaseModel):
     node_id: str
     score: float
-    divergence: float  # normalized components, each in [0, 1]
+    tension: float  # normalized components, each in [0, 1]
     evidence: float
     goal_relevance: float
 
@@ -44,11 +44,15 @@ def prioritize_expansions(
 ) -> list[PriorityItem]:
     weights = weights or PriorityWeights()
 
-    report = divergence_points(g)
-    div_count: dict[str, int] = {}
-    for d in report.across_frameworks + report.across_stakeholders:
-        div_count[d.node_id] = div_count.get(d.node_id, 0) + 1
-    max_div = max(div_count.values(), default=0)
+    # tension per node: register clashes on the node + tradition tensions on
+    # either endpoint of an edge it participates in.
+    tension_count: dict[str, int] = {}
+    for c in register_clash_points(g):
+        tension_count[c.node_id] = tension_count.get(c.node_id, 0) + 1
+    for t in tradition_tension_points(g):
+        for nid in (t.source, t.target):
+            tension_count[nid] = tension_count.get(nid, 0) + 1
+    max_tension = max(tension_count.values(), default=0)
 
     seed = g.seed_id
     items: list[PriorityItem] = []
@@ -57,7 +61,7 @@ def prioritize_expansions(
         if expanded is None or expanded is True:
             continue  # skip seed/state and already-expanded nodes
 
-        div = (div_count.get(node.id, 0) / max_div) if max_div else 0.0
+        tension = (tension_count.get(node.id, 0) / max_tension) if max_tension else 0.0
 
         evidence = 0.0
         if seed is not None:
@@ -68,7 +72,7 @@ def prioritize_expansions(
         goal_relevance = float(getattr(node, "goal_relevance", 0.0))
 
         score = (
-            weights.divergence * div
+            weights.tension * tension
             + weights.evidence * evidence
             + weights.goal_relevance * goal_relevance
         )
@@ -76,7 +80,7 @@ def prioritize_expansions(
             PriorityItem(
                 node_id=node.id,
                 score=score,
-                divergence=div,
+                tension=tension,
                 evidence=evidence,
                 goal_relevance=goal_relevance,
             )

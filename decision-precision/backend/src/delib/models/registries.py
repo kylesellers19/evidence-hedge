@@ -1,12 +1,10 @@
 """Stakeholder and framework registries.
 
-Frameworks carry a markdown rubric loaded from ``/rubrics/*.md`` at runtime; the
-registry is the single source of truth the CODER prompt is constrained against
-(it must never emit a framework absent from this registry).
-
-``burden_index`` for a stakeholder is *computed from the graph* (sum of negative
-valences weighted by path confidence), not stored here — see
-``delib.queries.burden_index``.
+VESTIGIAL as of the register/tradition pivot: consequences are now coded by
+Boltanski–Thévenot register + normative tradition (see delib.models.registers /
+delib.models.traditions), not by (stakeholder, framework, sign) valence. These
+registries are retained only because the mock generator still threads them
+through; nothing validates against them anymore.
 """
 
 from __future__ import annotations

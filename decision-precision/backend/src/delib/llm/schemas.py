@@ -12,7 +12,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.enums import EvidenceGrade
+from ..models.enums import Confidence, EvidenceGrade, Register
 
 _STRICT = ConfigDict(extra="forbid")
 
@@ -45,17 +45,26 @@ class SeedIntakeOutput(BaseModel):
 # --- coder ------------------------------------------------------------------
 
 
-class ValenceCoding(BaseModel):
+class RegisterEngagementCoding(BaseModel):
     model_config = _STRICT
-    stakeholder_id: str = Field(min_length=1)
-    framework_id: str = Field(min_length=1)
-    sign: int = Field(ge=-2, le=2)
+    register: Register
+    signature_marker: str = Field(min_length=1)
     justification: str = Field(min_length=1)
+    confidence: Confidence = Confidence.MODERATE
+
+
+class TraditionCoding(BaseModel):
+    model_config = _STRICT
+    tradition: str = Field(min_length=1)
+    signature_marker: str = Field(min_length=1)
+    justification: str = Field(min_length=1)
+    confidence: Confidence = Confidence.MODERATE
 
 
 class ConsequenceCoding(BaseModel):
     model_config = _STRICT
-    valences: list[ValenceCoding] = Field(default_factory=list)
+    registers: list[RegisterEngagementCoding] = Field(default_factory=list)
+    traditions: list[TraditionCoding] = Field(default_factory=list)
     goal_relevance: float = Field(ge=0.0, le=1.0)
 
 
@@ -93,7 +102,8 @@ __all__ = [
     "ProposedChild",
     "GeneratorOutput",
     "SeedIntakeOutput",
-    "ValenceCoding",
+    "RegisterEngagementCoding",
+    "TraditionCoding",
     "ConsequenceCoding",
     "ProctorScoreCoding",
     "DecisionCoding",

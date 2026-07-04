@@ -66,11 +66,15 @@ class Session:
         # write back into the graph's networkx store
         self.graph.raw().nodes[node_id]["data"] = updated
         after = updated.model_dump(mode="json")
+        # the correction's tier is the node's resulting coding status (a panel
+        # edit that confirms a node lands HUMAN_VERIFIED at that tier).
+        tier = getattr(getattr(updated, "coding_status", None), "value", None)
         self.store.log(
             task_type=f"edit:{updated.type.value.lower()}",
             input_obj=before,
             output_obj=before,
             corrected_obj=after,
+            tier=tier,
         )
         return updated
 

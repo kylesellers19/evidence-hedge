@@ -4,7 +4,8 @@ An authored 18-node causal-deliberative graph used as the mock generator's
 "answer key". It deliberately contains the elements the brief calls for:
 
 - a reinforcing causal loop: build -> desirability -> rent -> build
-- a framework-divergence point: `displacement` (prioritarian -2, aggregate ~0)
+- register clashes within nodes (e.g. `displacement`: MARKET vs CIVIC vs DOMESTIC)
+- a tradition tension across an edge: rent (utilitarian) -> displacement (kantian)
 - a PARTIAL closure edge: `capacity` -> seed
 
 Seed question:  "What happens if a developer builds a 40-story residential
@@ -20,15 +21,16 @@ from __future__ import annotations
 
 from ..graph import DelibGraph
 from ..models.edges import CausalEdge, ClosureEdge, DeliberativeEdge, FramesEdge
-from ..models.enums import ClosureSatisfaction, EvidenceGrade
+from ..models.enums import ClosureSatisfaction, CodingStatus, Confidence, EvidenceGrade, Register
 from ..models.nodes import (
     CFIRTags,
     ConsequenceNode,
     DecisionNode,
     ProctorScore,
     ProctorScores,
+    RegisterEngagement,
     SeedNode,
-    Valence,
+    TraditionAttribution,
 )
 from ..models.registries import (
     Framework,
@@ -55,20 +57,29 @@ def _proctor(**scores: tuple[int, str]) -> ProctorScores:
     )
 
 
-def _v(stakeholder: str, framework: str, sign: int, why: str) -> Valence:
-    return Valence(
-        stakeholder_id=stakeholder, framework_id=framework, sign=sign, justification=why
-    )
+_HI, _MOD = Confidence.HIGH, Confidence.MODERATE
 
 
-def _c(nid, label, ring, gr, valences) -> ConsequenceNode:
+def _reg(register: Register, marker: str, why: str, conf: Confidence = _MOD) -> RegisterEngagement:
+    return RegisterEngagement(register=register, signature_marker=marker, justification=why, confidence=conf)
+
+
+def _trad(tradition: str, marker: str, why: str, conf: Confidence = _MOD) -> TraditionAttribution:
+    return TraditionAttribution(tradition=tradition, signature_marker=marker, justification=why, confidence=conf)
+
+
+def _c(nid, label, ring, gr, registers=(), traditions=(), coding=CodingStatus.PENDING) -> ConsequenceNode:
     return ConsequenceNode(
-        id=nid, label=label, ring=ring, goal_relevance=gr, valences=valences
+        id=nid, label=label, ring=ring, goal_relevance=gr,
+        registers=list(registers), traditions=list(traditions), coding_status=coding,
     )
 
 
-AGG = "aggregate_utilitarian"
-PRI = "prioritarian"
+# tradition leaf ids (Layer-2 leaves reused on the deliberation canvas)
+UTIL = "utilitarian_aggregate"
+KANT = "kantian_deontological"
+LIBK = "libertarian_nozickian"
+VIRT = "virtue_ethical"
 
 
 def build_brooklyn_registries() -> tuple[StakeholderRegistry, FrameworkRegistry]:
@@ -82,10 +93,12 @@ def build_brooklyn_registries() -> tuple[StakeholderRegistry, FrameworkRegistry]
     ]:
         sh.register(Stakeholder(id=sid, description=desc))
 
+    # Frameworks are vestigial now that consequences are coded by register /
+    # tradition, but the registry infrastructure is retained (the mock reads it).
     fw = FrameworkRegistry()
-    fw.register(Framework(id=AGG, name="Aggregate Utilitarian",
+    fw.register(Framework(id="aggregate_utilitarian", name="Aggregate Utilitarian",
                           rubric="Net welfare summed across stakeholders, equal weight per unit."))
-    fw.register(Framework(id=PRI, name="Prioritarian",
+    fw.register(Framework(id="prioritarian", name="Prioritarian",
                           rubric="Welfare weighted toward the worse-off; harms to incumbents count more."))
     return sh, fw
 
@@ -173,65 +186,109 @@ def build_brooklyn_master() -> DelibGraph:
     )
 
     # --- ring 2: consequences ----------------------------------------------
-    g.add_node(_c("capacity", "Net housing capacity increases (~400 units)", 2, 0.9, [
-        _v("newcomers", AGG, 2, "large welfare gain from new supply"),
-        _v("newcomers", PRI, 1, "some of the gain reaches lower-income newcomers"),
-        _v("incumbents", AGG, 1, "modest supply relief"),
-    ]))
-    g.add_node(_c("desirability", "Neighborhood desirability rises", 2, 0.3, [
-        _v("newcomers", AGG, 1, "amenity and status gains"),
-    ]))
-    g.add_node(_c("construction_disruption", "Multi-year construction disruption", 2, 0.4, [
-        _v("incumbents", AGG, -1, "noise, dust, road closures"),
-        _v("incumbents", PRI, -1, "burden falls on those who cannot leave"),
-    ]))
-    g.add_node(_c("tax_revenue", "Municipal property-tax revenue increases", 2, 0.3, [
-        _v("city", AGG, 1, "expanded tax base"),
-    ]))
-    g.add_node(_c("shadow_infrastructure", "Shadowing and strain on local infrastructure", 2, 0.4, [
-        _v("incumbents", AGG, 0, "mixed: shadows vs. investment"),
-        _v("incumbents", PRI, -1, "reduced light/air for existing residents"),
-    ]))
-    g.add_node(_c("affordable_units", "Below-market units created", 2, 0.6, [
-        _v("newcomers", PRI, 2, "direct benefit to lower-income households"),
-        _v("newcomers", AGG, 1, "welfare gain"),
-        _v("incumbents", PRI, 1, "some incumbents may qualify"),
-    ]))
-    g.add_node(_c("construction_jobs", "Construction and trades employment", 2, 0.2, [
-        _v("developer", AGG, 1, "jobs and margin"),
-    ]))
+    # capacity: MARKET vs CIVIC clash (supply-as-asset vs housing-as-collective-good)
+    g.add_node(_c("capacity", "Net housing capacity increases (~400 units)", 2, 0.9,
+        registers=[
+            _reg(Register.MARKET, "~400 units", "new supply as marketable stock", _HI),
+            _reg(Register.CIVIC, "housing capacity increases", "housing as a collective provision"),
+        ],
+        traditions=[_trad(UTIL, "large welfare gain from new supply", "aggregate welfare improves", _HI)],
+        coding=CodingStatus.HUMAN_VERIFIED,
+    ))
+    # desirability: MARKET + FAME — a recognized COMPROMISE, so suppressed (no clash)
+    g.add_node(_c("desirability", "Neighborhood desirability rises", 2, 0.3,
+        registers=[
+            _reg(Register.MARKET, "perceived desirability", "amenity value capitalized in prices"),
+            _reg(Register.FAME, "status gains", "reputation of the neighborhood"),
+        ],
+    ))
+    # construction_disruption: INDUSTRIAL vs DOMESTIC clash
+    g.add_node(_c("construction_disruption", "Multi-year construction disruption", 2, 0.4,
+        registers=[
+            _reg(Register.INDUSTRIAL, "multi-year construction", "the works as a technical undertaking"),
+            _reg(Register.DOMESTIC, "those who cannot leave", "disruption to home and settled life"),
+        ],
+    ))
+    # tax_revenue: MARKET vs CIVIC clash
+    g.add_node(_c("tax_revenue", "Municipal property-tax revenue increases", 2, 0.3,
+        registers=[
+            _reg(Register.MARKET, "expanded tax base", "value realized as revenue"),
+            _reg(Register.CIVIC, "municipal", "public fisc for collective ends"),
+        ],
+    ))
+    # shadow_infrastructure: INDUSTRIAL vs GREEN clash
+    g.add_node(_c("shadow_infrastructure", "Shadowing and strain on local infrastructure", 2, 0.4,
+        registers=[
+            _reg(Register.INDUSTRIAL, "strain on local infrastructure", "load on technical systems"),
+            _reg(Register.GREEN, "reduced light/air", "loss of environmental quality"),
+        ],
+    ))
+    # affordable_units: MARKET vs CIVIC clash
+    g.add_node(_c("affordable_units", "Below-market units created", 2, 0.6,
+        registers=[
+            _reg(Register.CIVIC, "below-market units", "provision for those priced out"),
+            _reg(Register.MARKET, "cross-subsidized by market units", "financed through the deal"),
+        ],
+        traditions=[_trad(UTIL, "welfare gain", "net welfare of housed households")],
+    ))
+    # construction_jobs: MARKET + INDUSTRIAL — a recognized COMPROMISE, suppressed
+    g.add_node(_c("construction_jobs", "Construction and trades employment", 2, 0.2,
+        registers=[
+            _reg(Register.MARKET, "jobs and margin", "labor market and returns"),
+            _reg(Register.INDUSTRIAL, "trades employment", "skilled technical work"),
+        ],
+    ))
 
     # --- ring 3: consequences ----------------------------------------------
-    g.add_node(_c("rent", "Area rents rise", 3, 0.5, [
-        _v("incumbents", PRI, -2, "rent burden concentrated on the worse-off"),
-        _v("incumbents", AGG, 0, "transfers rather than net welfare loss"),
-        _v("newcomers", AGG, -1, "higher housing cost for movers-in"),
-    ]))
-    # THE specified divergence point: prioritarian strongly negative, aggregate ~neutral.
-    g.add_node(_c("displacement", "Incumbent displacement and turnover", 3, 0.9, [
-        _v("incumbents", PRI, -2, "displacement is a severe harm to the worse-off"),
-        _v("incumbents", AGG, 0, "utilitarian nets displaced against in-movers"),
-    ]))
-    g.add_node(_c("commercial_gentrification", "Local small businesses priced out", 3, 0.5, [
-        _v("small_businesses", PRI, -2, "loss of livelihood for marginal merchants"),
-        _v("small_businesses", AGG, -1, "net loss of local commercial diversity"),
-    ]))
-    g.add_node(_c("wealth_effect", "Incumbent homeowners gain equity", 3, 0.4, [
-        _v("incumbents", AGG, 1, "asset appreciation for owners"),
-        _v("incumbents", PRI, 1, "some benefit reaches modest owners"),
-    ]))
-    g.add_node(_c("school_investment", "Expanded tax base funds school upgrades", 3, 0.4, [
-        _v("incumbents", AGG, 1, "better local services"),
-        _v("newcomers", AGG, 1, "better local services"),
-    ]))
-    g.add_node(_c("transit_crowding", "Subway and transit crowding worsens", 3, 0.3, [
-        _v("incumbents", AGG, -1, "longer, more crowded commutes"),
-        _v("newcomers", AGG, -1, "shared congestion cost"),
-    ]))
-    g.add_node(_c("social_fabric", "Erosion of established community networks", 3, 0.6, [
-        _v("incumbents", PRI, -2, "loss of social capital hits the worse-off hardest"),
-        _v("incumbents", AGG, -1, "net loss of community cohesion"),
-    ]))
+    # rent: utilitarian framing -> attacks displacement's kantian framing downstream
+    g.add_node(_c("rent", "Area rents rise", 3, 0.5,
+        registers=[_reg(Register.MARKET, "area rents rise", "price signal in the housing market", _HI)],
+        traditions=[_trad(UTIL, "transfers rather than net welfare loss", "harms net against gains")],
+        coding=CodingStatus.HUMAN_VERIFIED,
+    ))
+    # displacement: MARKET vs CIVIC vs DOMESTIC (three-way clash); kantian tradition
+    g.add_node(_c("displacement", "Incumbent displacement and turnover", 3, 0.9,
+        registers=[
+            _reg(Register.MARKET, "priced out", "allocation by ability to pay"),
+            _reg(Register.CIVIC, "right to remain", "membership in a community"),
+            _reg(Register.DOMESTIC, "turnover", "severed neighborhood bonds"),
+        ],
+        traditions=[_trad(KANT, "a severe harm to the worse-off", "displacement as an inviolable wrong", _HI)],
+        coding=CodingStatus.HUMAN_VERIFIED,
+    ))
+    # commercial_gentrification: MARKET vs DOMESTIC; libertarian tradition
+    g.add_node(_c("commercial_gentrification", "Local small businesses priced out", 3, 0.5,
+        registers=[
+            _reg(Register.MARKET, "priced out", "commercial rent competition"),
+            _reg(Register.DOMESTIC, "local merchants", "long-standing local ties"),
+        ],
+        traditions=[_trad(LIBK, "loss of livelihood for marginal merchants", "voluntary-exchange displacement")],
+    ))
+    # wealth_effect: MARKET; libertarian property tradition
+    g.add_node(_c("wealth_effect", "Incumbent homeowners gain equity", 3, 0.4,
+        registers=[_reg(Register.MARKET, "asset appreciation", "owners' capital gains")],
+        traditions=[_trad(LIBK, "asset appreciation for owners", "property entitlements")],
+    ))
+    # school_investment: CIVIC; utilitarian
+    g.add_node(_c("school_investment", "Expanded tax base funds school upgrades", 3, 0.4,
+        registers=[_reg(Register.CIVIC, "better local services", "public goods provision")],
+        traditions=[_trad(UTIL, "better local services", "welfare of residents")],
+    ))
+    # transit_crowding: INDUSTRIAL + CIVIC — a recognized COMPROMISE, suppressed
+    g.add_node(_c("transit_crowding", "Subway and transit crowding worsens", 3, 0.3,
+        registers=[
+            _reg(Register.INDUSTRIAL, "transit crowding", "capacity of the network"),
+            _reg(Register.CIVIC, "shared congestion cost", "burden on the public"),
+        ],
+    ))
+    # social_fabric: CIVIC vs DOMESTIC clash; virtue tradition (attacked by displacement's kantian)
+    g.add_node(_c("social_fabric", "Erosion of established community networks", 3, 0.6,
+        registers=[
+            _reg(Register.CIVIC, "community networks", "civic association"),
+            _reg(Register.DOMESTIC, "loss of social capital", "dense particular ties"),
+        ],
+        traditions=[_trad(VIRT, "erosion of established community networks", "corrosion of communal character")],
+    ))
 
     # --- framing edges (seed -> ring 1) ------------------------------------
     for target in ("build", "affordability_mandate", "zoning_variance"):

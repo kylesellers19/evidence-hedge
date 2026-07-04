@@ -2,10 +2,13 @@
 
 from .enums import (
     ClosureSatisfaction,
+    CodingStatus,
+    Confidence,
     EdgeType,
     EvidenceGrade,
     LoopClass,
     NodeType,
+    Register,
     EVIDENCE_GRADE_ORDINAL,
 )
 from .nodes import (
@@ -15,10 +18,13 @@ from .nodes import (
     Node,
     ProctorScore,
     ProctorScores,
+    RegisterEngagement,
     SeedNode,
     StateNode,
-    Valence,
+    TraditionAttribution,
 )
+from .registers import register_clashes
+from .traditions import TRADITION_LEAVES, TraditionAttack, tradition_attacks
 from .edges import (
     CausalEdge,
     Citation,
@@ -41,6 +47,9 @@ __all__ = [
     "EvidenceGrade",
     "ClosureSatisfaction",
     "LoopClass",
+    "Register",
+    "Confidence",
+    "CodingStatus",
     "EVIDENCE_GRADE_ORDINAL",
     # nodes
     "SeedNode",
@@ -51,7 +60,13 @@ __all__ = [
     "CFIRTags",
     "ProctorScore",
     "ProctorScores",
-    "Valence",
+    "RegisterEngagement",
+    "TraditionAttribution",
+    # registers / traditions
+    "register_clashes",
+    "TRADITION_LEAVES",
+    "TraditionAttack",
+    "tradition_attacks",
     # edges
     "CausalEdge",
     "DeliberativeEdge",

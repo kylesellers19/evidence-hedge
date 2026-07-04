@@ -39,10 +39,15 @@ class TrainingDataStore:
                 input_json TEXT NOT NULL,
                 output_json TEXT,
                 human_corrected_output_json TEXT,
+                tier TEXT,
                 timestamp REAL NOT NULL
             )
             """
         )
+        # migrate older DBs that predate the tier column
+        cols = {r[1] for r in self._conn.execute("PRAGMA table_info(interactions)").fetchall()}
+        if "tier" not in cols:
+            self._conn.execute("ALTER TABLE interactions ADD COLUMN tier TEXT")
         self._conn.commit()
 
     def log(
@@ -51,16 +56,18 @@ class TrainingDataStore:
         input_obj: Any,
         output_obj: Any = None,
         corrected_obj: Any = None,
+        tier: str | None = None,
         timestamp: float | None = None,
     ) -> int:
         """Append one row; returns its id. Used both for LLM pairs (Phase 4) and
-        human corrections (input=before, corrected=after)."""
+        human corrections (input=before, corrected=after). ``tier`` records the
+        coding tier of a correction (e.g. HUMAN_VERIFIED)."""
         ts = time.time() if timestamp is None else timestamp
         cur = self._conn.execute(
             "INSERT INTO interactions "
-            "(task_type, input_json, output_json, human_corrected_output_json, timestamp) "
-            "VALUES (?, ?, ?, ?, ?)",
-            (task_type, _dumps(input_obj), _dumps(output_obj), _dumps(corrected_obj), ts),
+            "(task_type, input_json, output_json, human_corrected_output_json, tier, timestamp) "
+            "VALUES (?, ?, ?, ?, ?, ?)",
+            (task_type, _dumps(input_obj), _dumps(output_obj), _dumps(corrected_obj), tier, ts),
         )
         self._conn.commit()
         return int(cur.lastrowid)

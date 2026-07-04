@@ -9,6 +9,7 @@ from __future__ import annotations
 import pytest
 from pydantic import TypeAdapter, ValidationError
 
+from delib.models.enums import Register
 from delib.models.nodes import (
     CFIRTags,
     ConsequenceNode,
@@ -16,9 +17,9 @@ from delib.models.nodes import (
     Node,
     ProctorScore,
     ProctorScores,
+    RegisterEngagement,
     SeedNode,
     StateNode,
-    Valence,
 )
 
 
@@ -29,8 +30,8 @@ def make_proctor() -> ProctorScores:
     )
 
 
-def a_valence() -> Valence:
-    return Valence(stakeholder_id="s1", framework_id="f1", sign=1, justification="j")
+def a_register() -> RegisterEngagement:
+    return RegisterEngagement(register=Register.MARKET, signature_marker="m", justification="j")
 
 
 # --- Happy paths ------------------------------------------------------------
@@ -64,7 +65,7 @@ def test_consequence_valid():
         id="c1",
         label="Rents rise",
         ring=2,
-        valences=[a_valence()],
+        registers=[a_register()],
         goal_relevance=0.7,
     )
     assert c.type.value == "CONSEQUENCE"
@@ -78,7 +79,7 @@ def test_state_valid():
 # --- Illegal combinations must raise ---------------------------------------
 
 
-def test_valences_on_decision_raises():
+def test_registers_on_decision_raises():
     with pytest.raises(ValidationError):
         DecisionNode(
             id="d1",
@@ -86,7 +87,7 @@ def test_valences_on_decision_raises():
             ring=1,
             cfir_tags=CFIRTags(),
             proctor_scores=make_proctor(),
-            valences=[a_valence()],  # illegal: valences belong to consequences
+            registers=[a_register()],  # illegal: registers belong to consequences
         )
 
 
@@ -137,9 +138,14 @@ def test_decision_requires_proctor_and_cfir():
 # --- Field-level constraints ------------------------------------------------
 
 
-def test_valence_sign_out_of_range_raises():
+def test_register_requires_signature_marker():
     with pytest.raises(ValidationError):
-        Valence(stakeholder_id="s", framework_id="f", sign=3, justification="j")
+        RegisterEngagement(register=Register.MARKET, signature_marker="", justification="j")
+
+
+def test_register_rejects_unknown_order():
+    with pytest.raises(ValidationError):
+        RegisterEngagement(register="NOT_AN_ORDER", signature_marker="m", justification="j")
 
 
 def test_proctor_score_out_of_range_raises():
@@ -180,12 +186,12 @@ def test_discriminated_union_dispatch():
             "label": "Rents rise",
             "ring": 2,
             "goal_relevance": 0.7,
-            "valences": [
+            "registers": [
                 {
-                    "stakeholder_id": "s1",
-                    "framework_id": "f1",
-                    "sign": -2,
+                    "register": "MARKET",
+                    "signature_marker": "priced out",
                     "justification": "j",
+                    "confidence": "HIGH",
                 }
             ],
         }

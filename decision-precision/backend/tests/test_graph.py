@@ -8,7 +8,7 @@ from delib.graph import DelibGraph, GraphConstraintError
 from delib.models.edges import CausalEdge, ClosureEdge, DeliberativeEdge, FramesEdge
 from delib.models.enums import ClosureSatisfaction
 from delib.models.nodes import SeedNode
-from conftest import consequence, decision, val
+from conftest import consequence, decision, trad
 
 
 def _seed(g: DelibGraph) -> None:
@@ -179,36 +179,22 @@ def test_frames_to_nonring1_raises():
         g.add_edge(FramesEdge(source="seed", target="c2"))
 
 
-# --- Valence referential integrity -----------------------------------------
+# --- Tradition referential integrity ---------------------------------------
 
 
-def test_valence_unknown_framework_raises(registries):
+def test_unknown_tradition_leaf_raises(registries):
     sh, fw = registries
     g = DelibGraph(stakeholders=sh, frameworks=fw)
     _seed(g)
     with pytest.raises(GraphConstraintError):
-        g.add_node(
-            consequence("c1", "y", 2, 0.5, valences=[val("incumbents", "kantian", -1)])
-        )
+        g.add_node(consequence("c1", "y", 2, 0.5, traditions=[trad("phlogiston_ethics")]))
 
 
-def test_valence_unknown_stakeholder_raises(registries):
+def test_known_tradition_leaf_ok(registries):
     sh, fw = registries
     g = DelibGraph(stakeholders=sh, frameworks=fw)
     _seed(g)
-    with pytest.raises(GraphConstraintError):
-        g.add_node(
-            consequence("c1", "y", 2, 0.5, valences=[val("ghost", "prioritarian", -1)])
-        )
-
-
-def test_valence_refs_ok_when_registered(registries):
-    sh, fw = registries
-    g = DelibGraph(stakeholders=sh, frameworks=fw)
-    _seed(g)
-    g.add_node(
-        consequence("c1", "y", 2, 0.5, valences=[val("incumbents", "prioritarian", -1)])
-    )
+    g.add_node(consequence("c1", "y", 2, 0.5, traditions=[trad("kantian_deontological")]))
 
 
 def test_small_graph_builds(small_graph):

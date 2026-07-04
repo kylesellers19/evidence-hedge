@@ -1,9 +1,10 @@
 """Graph -> renderer-ready view (Phase 3).
 
 Emits positioned nodes, edges with the *semantics* the renderer styles on
-(node type, evidence grade, divergence, resolution membership), and the query
-overlays the UI needs (divergence points, loops, burden index, resolution set).
-Styling itself stays in the renderer — this layer ships meaning, not colors.
+(node type, evidence grade, register clashes, coding status, resolution
+membership), and the query overlays the UI needs (register clashes, tradition
+tensions, loops, resolution set). Styling stays in the renderer — this layer
+ships meaning, not colors.
 """
 
 from __future__ import annotations
@@ -17,10 +18,10 @@ from .layout import radial_layout
 from .models.enums import EdgeType, EvidenceGrade, NodeType
 from .queries import (
     Loop,
-    burden_indices,
-    divergence_points,
     loop_inventory,
+    register_clash_points,
     resolution_subgraph,
+    tradition_tension_points,
 )
 
 
@@ -38,8 +39,8 @@ class NodeView(BaseModel):
     halo: bool = False  # unexpanded with hidden children -> dotted halo + badge
     # semantics the renderer highlights on
     goal_relevance: float | None = None
-    is_divergence: bool = False
-    divergence_kinds: list[str] = []
+    coding_status: str | None = None
+    register_clashes: list[tuple[str, str]] = []  # clashing order-of-worth pairs on this node
     on_resolution_path: bool = False
     # full typed payload for the side panel (every field editable in the UI)
     data: dict[str, Any]
@@ -72,7 +73,8 @@ def _edge_id(e: Any) -> str:
 
 def graph_view(g: DelibGraph, view: str = "full") -> GraphView:
     positions = radial_layout(g)
-    div = divergence_points(g)
+    clashes = register_clash_points(g)
+    tensions = tradition_tension_points(g)
     loops: list[Loop] = loop_inventory(g)
     res = resolution_subgraph(g)
     res_nodes = set(res.node_ids)
@@ -80,12 +82,10 @@ def graph_view(g: DelibGraph, view: str = "full") -> GraphView:
         _edge_id(e) for e in (*res.causal_edges, *res.frames_edges, *res.closure_edges)
     }
 
-    # divergence node -> kinds
-    div_kinds: dict[str, set[str]] = {}
-    for d in div.across_frameworks:
-        div_kinds.setdefault(d.node_id, set()).add("across_frameworks")
-    for d in div.across_stakeholders:
-        div_kinds.setdefault(d.node_id, set()).add("across_stakeholders")
+    # node -> its clashing register pairs
+    node_clashes: dict[str, list[tuple[str, str]]] = {}
+    for c in clashes:
+        node_clashes.setdefault(c.node_id, []).append((c.register_a.value, c.register_b.value))
 
     keep_node = (lambda nid: nid in res_nodes) if view == "resolution" else (lambda nid: True)
 
@@ -110,8 +110,8 @@ def graph_view(g: DelibGraph, view: str = "full") -> GraphView:
                 unexpanded_child_estimate=estimate,
                 halo=halo,
                 goal_relevance=getattr(node, "goal_relevance", None),
-                is_divergence=node.id in div_kinds,
-                divergence_kinds=sorted(div_kinds.get(node.id, set())),
+                coding_status=getattr(getattr(node, "coding_status", None), "value", None),
+                register_clashes=node_clashes.get(node.id, []),
                 on_resolution_path=node.id in res_nodes,
                 data=node.model_dump(mode="json"),
             )
@@ -141,9 +141,9 @@ def graph_view(g: DelibGraph, view: str = "full") -> GraphView:
         )
 
     overlays: dict[str, Any] = {
-        "divergence": div.model_dump(mode="json"),
+        "register_clashes": [c.model_dump(mode="json") for c in clashes],
+        "tradition_tensions": [t.model_dump(mode="json") for t in tensions],
         "loops": [loop.model_dump(mode="json") for loop in loops],
-        "burden_index": burden_indices(g),
         "resolution_node_ids": sorted(res_nodes),
         "closures": [
             {"source": c.source, "satisfies": c.satisfies.value} for c in res.closure_edges

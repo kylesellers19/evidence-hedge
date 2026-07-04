@@ -10,8 +10,7 @@ types*:
 - causal edges may never target the SEED (only closure re-enters the seed);
 - the causal subgraph MAY cycle (loops are inventoried, not forbidden);
 - at most one SEED per graph;
-- if registries are populated, every valence must reference a known
-  stakeholder and a known framework.
+- every tradition attribution must reference a known tradition leaf.
 
 Edges are keyed by their type, so a given ordered pair holds at most one edge of
 each type (a causal and a deliberative edge between two decisions can coexist).
@@ -33,6 +32,7 @@ from .models.edges import (
 from .models.enums import EdgeType, NodeType
 from .models.nodes import ConsequenceNode, Node
 from .models.registries import FrameworkRegistry, StakeholderRegistry
+from .models.traditions import TRADITION_LEAVES
 
 
 class GraphConstraintError(ValueError):
@@ -65,26 +65,19 @@ class DelibGraph:
             self._seed_id = node.id
 
         if isinstance(node, ConsequenceNode):
-            self._validate_valence_refs(node)
+            self._validate_tradition_refs(node)
 
         self._g.add_node(node.id, data=node)
         return node
 
-    def _validate_valence_refs(self, node: ConsequenceNode) -> None:
-        # Only enforce referential integrity once the registries are populated,
-        # so nodes can be built and tested in isolation without wiring them up.
-        check_fw = len(self.frameworks) > 0
-        check_sh = len(self.stakeholders) > 0
-        for v in node.valences:
-            if check_fw and v.framework_id not in self.frameworks:
+    def _validate_tradition_refs(self, node: ConsequenceNode) -> None:
+        # Register engagements are enum-typed (always valid); tradition
+        # attributions must reference a known leaf.
+        for t in node.traditions:
+            if t.tradition not in TRADITION_LEAVES:
                 raise GraphConstraintError(
-                    f"valence on {node.id!r} references unknown framework "
-                    f"{v.framework_id!r}"
-                )
-            if check_sh and v.stakeholder_id not in self.stakeholders:
-                raise GraphConstraintError(
-                    f"valence on {node.id!r} references unknown stakeholder "
-                    f"{v.stakeholder_id!r}"
+                    f"tradition attribution on {node.id!r} references unknown "
+                    f"tradition leaf {t.tradition!r}"
                 )
 
     # --- Edges --------------------------------------------------------------

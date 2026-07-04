@@ -131,22 +131,21 @@ class LLM:
     def code_consequence(
         self,
         node_summary: str,
-        stakeholder_ids: set[str],
-        framework_ids: set[str],
+        tradition_leaves: set[str],
     ) -> ConsequenceCoding:
         user = (
             f"Consequence node:\n{node_summary}\n\n"
-            f"Allowed stakeholder ids: {sorted(stakeholder_ids)}\n"
-            f"Allowed framework ids: {sorted(framework_ids)}\n"
-            "Produce one valence per relevant (stakeholder, framework) pair."
+            "Attribute the orders of worth (registers) this consequence engages — "
+            "MARKET, INDUSTRIAL, CIVIC, DOMESTIC, INSPIRED, FAME, GREEN, PROJECTIVE — "
+            "each with a quoted signature marker and a justification. Where a "
+            f"normative tradition is clearly implicated (of {sorted(tradition_leaves)}), "
+            "add a tradition attribution, likewise with a signature marker."
         )
 
         def check(c: ConsequenceCoding) -> None:
-            for v in c.valences:
-                if v.framework_id not in framework_ids:
-                    raise ValueError(f"unknown framework id: {v.framework_id!r}")
-                if v.stakeholder_id not in stakeholder_ids:
-                    raise ValueError(f"unknown stakeholder id: {v.stakeholder_id!r}")
+            for t in c.traditions:
+                if t.tradition not in tradition_leaves:
+                    raise ValueError(f"unknown tradition leaf: {t.tradition!r}")
 
         return self._structured(
             cfg.CODE, prompts.CODER_SYSTEM, user, ConsequenceCoding, post_validate=check

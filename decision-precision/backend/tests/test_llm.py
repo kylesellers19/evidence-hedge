@@ -77,27 +77,32 @@ def test_schema_fail_raises_and_logs():
     assert any(r["task_type"] == "grade:schema_fail" for r in store.all())
 
 
-# --- coder registry constraint ---------------------------------------------
+# --- coder vocabulary constraint -------------------------------------------
+
+_LEAVES = {"kantian_deontological", "utilitarian_aggregate"}
 
 
-def test_coder_rejects_unknown_framework():
+def test_coder_rejects_unknown_tradition():
     bad = json.dumps({
-        "valences": [{"stakeholder_id": "incumbents", "framework_id": "kantian", "sign": -1, "justification": "j"}],
+        "registers": [{"register": "MARKET", "signature_marker": "priced out", "justification": "j"}],
+        "traditions": [{"tradition": "phlogiston_ethics", "signature_marker": "m", "justification": "j"}],
         "goal_relevance": 0.5,
     })
     fake = Fake(queue=[bad, bad, bad])
     with pytest.raises(LLMError):
-        _llm(fake).code_consequence("rents rise", {"incumbents"}, {"prioritarian"})
+        _llm(fake).code_consequence("rents rise", _LEAVES)
 
 
-def test_coder_accepts_known_ids():
+def test_coder_accepts_known_vocab():
     good = json.dumps({
-        "valences": [{"stakeholder_id": "incumbents", "framework_id": "prioritarian", "sign": -2, "justification": "j"}],
+        "registers": [{"register": "MARKET", "signature_marker": "rents rise", "justification": "j", "confidence": "HIGH"}],
+        "traditions": [{"tradition": "utilitarian_aggregate", "signature_marker": "net welfare", "justification": "j"}],
         "goal_relevance": 0.9,
     })
     fake = Fake(by_schema={"ConsequenceCoding": good})
-    out = _llm(fake).code_consequence("rents rise", {"incumbents"}, {"prioritarian"})
-    assert out.valences[0].sign == -2 and out.goal_relevance == 0.9
+    out = _llm(fake).code_consequence("rents rise", _LEAVES)
+    assert out.registers[0].register.value == "MARKET" and out.goal_relevance == 0.9
+    assert out.traditions[0].tradition == "utilitarian_aggregate"
 
 
 # --- LLM generator through the Generator seam ------------------------------

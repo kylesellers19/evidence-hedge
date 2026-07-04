@@ -17,25 +17,27 @@ from ..models.nodes import (
     Node,
     ProctorScore,
     ProctorScores,
-    Valence,
+    RegisterEngagement,
+    TraditionAttribution,
 )
+from ..models.traditions import TRADITION_LEAVES
 from .interface import LLM
 
 
 def code_node(llm: LLM, graph: DelibGraph, node_id: str) -> Node:
-    """Run the CODER on one node (valences for a consequence, CFIR/Proctor for a
-    decision) and write the coded node back. Cross-contamination is impossible:
-    the method called is chosen by the node's Python type."""
+    """Run the CODER on one node (registers/traditions for a consequence,
+    CFIR/Proctor for a decision) and write the coded node back. Cross-
+    contamination is impossible: the method called is chosen by the node's type.
+    Machine-coded nodes stay coding_status=PENDING until a human verifies them."""
     node = graph.get_node(node_id)
     summary = f"{node.label} (ring {node.ring})"
 
     if isinstance(node, ConsequenceNode):
-        coding = llm.code_consequence(
-            summary, graph.stakeholders.ids(), graph.frameworks.ids()
-        )
+        coding = llm.code_consequence(summary, set(TRADITION_LEAVES))
         updated = node.model_copy(
             update={
-                "valences": [Valence(**v.model_dump()) for v in coding.valences],
+                "registers": [RegisterEngagement(**r.model_dump()) for r in coding.registers],
+                "traditions": [TraditionAttribution(**t.model_dump()) for t in coding.traditions],
                 "goal_relevance": coding.goal_relevance,
             }
         )

@@ -9,6 +9,15 @@ gates the whole thing.
 """
 
 from .claims import Citation, ClaimRecord, ClaimStore, claim_hash, normalize_claim
+from .grading import (
+    ClaimDomain,
+    Consistency,
+    Directness,
+    GradeComponents,
+    design_from_pubtypes,
+    evidence_grade_from_components,
+    normalized_design_tier,
+)
 from .retrieve import MultiplexerRetriever
 from .sources import (
     EvidenceSource,
@@ -36,4 +45,11 @@ __all__ = [
     "merge_on_doi",
     "normalize_doi",
     "MultiplexerRetriever",
+    "ClaimDomain",
+    "Consistency",
+    "Directness",
+    "GradeComponents",
+    "design_from_pubtypes",
+    "normalized_design_tier",
+    "evidence_grade_from_components",
 ]

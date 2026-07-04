@@ -19,7 +19,8 @@ from ..store import TrainingDataStore
 from . import config as cfg
 from . import prompts
 from .config import LLMSettings
-from .schemas import (
+from .schemas import (  # noqa: F401 (GradeComponentsOutput used below)
+    GradeComponentsOutput,
     ConsequenceCoding,
     DecisionCoding,
     GeneratorOutput,
@@ -172,6 +173,18 @@ class LLM:
     def grade(self, claim: str, abstracts: str) -> GradeOutput:
         user = f"Causal claim:\n{claim}\n\nRetrieved evidence:\n{abstracts}"
         return self._structured(cfg.GRADE, prompts.GRADER_SYSTEM, user, GradeOutput)
+
+    def grade_components(self, claim: str, evidence_summary: str) -> GradeComponentsOutput:
+        """Phase-5 grader: classify each paper's study design (using provided
+        publication-type tags where present, the abstract otherwise) and assess
+        consistency + directness across the set. Returns COMPONENTS; the
+        evidence_grade is computed downstream. Cached rubric block via
+        prompts.GRADER_COMPONENTS_SYSTEM (prompt-caching handled at the LiteLLM
+        layer, step 6)."""
+        user = f"Claim:\n{claim}\n\nRetrieved evidence:\n{evidence_summary}"
+        return self._structured(
+            cfg.GRADE, prompts.GRADER_COMPONENTS_SYSTEM, user, GradeComponentsOutput
+        )
 
 
 __all__ = ["LLM", "LLMError"]

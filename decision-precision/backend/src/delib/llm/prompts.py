@@ -30,6 +30,22 @@ moral scores. For a decision, tag CFIR domains and score the Proctor outcomes.
 Never invent register, tradition, or stakeholder ids. Return ONLY valid JSON
 matching the schema."""
 
+GRADER_COMPONENTS_SYSTEM = """You assess a causal claim against retrieved evidence and
+return grade COMPONENTS (never a final grade — that is computed downstream).
+Two sub-tasks:
+1. per_study_designs: classify each paper's study design. Use the provided
+   publication-type tags where present; otherwise infer the design from the
+   abstract. Prefer canonical labels (meta-analysis, systematic review, RCT,
+   cohort, case-control, cross-sectional, case report, quasi-experiment,
+   difference-in-differences, modeling, expert opinion).
+2. consistency across the set — CONSISTENT_SUPPORT (evidence agrees the effect
+   holds), MIXED (conflicting findings), CONSISTENT_CONTRA (evidence agrees the
+   effect is absent/opposite), or NONE (no empirical evidence). Weigh contrasting
+   citations toward CONSISTENT_CONTRA/MIXED. And directness — DIRECT (studies the
+   claimed relationship), ANALOGICAL (a transported/analogous context), or NONE.
+Add a transfer_note when the evidence is indirect or transported. Return ONLY
+valid JSON matching the schema."""
+
 GRADER_SYSTEM = """You grade a causal claim against retrieved evidence. Assign one
 evidence_grade:
 - SUPPORTED: direct, consistent evidence for the effect
@@ -41,4 +57,10 @@ evidence_grade:
 Add a transfer_note when the evidence is indirect or transported. Return ONLY valid JSON."""
 
 
-__all__ = ["GENERATOR_SYSTEM", "INTAKE_SYSTEM", "CODER_SYSTEM", "GRADER_SYSTEM"]
+__all__ = [
+    "GENERATOR_SYSTEM",
+    "INTAKE_SYSTEM",
+    "CODER_SYSTEM",
+    "GRADER_SYSTEM",
+    "GRADER_COMPONENTS_SYSTEM",
+]

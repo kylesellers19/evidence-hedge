@@ -108,6 +108,23 @@ class GradeOutput(BaseModel):
     transfer_note: str | None = None
 
 
+class StudyDesignClassification(BaseModel):
+    model_config = _STRICT
+    ref: str = Field(min_length=1, description="DOI or title identifying the paper.")
+    design: str = Field(min_length=1, description="Study design (use the provided pub-type tags where present).")
+
+
+class GradeComponentsOutput(BaseModel):
+    """The Phase-5 grader output — COMPONENTS, not a grade. evidence_grade is
+    computed from these downstream (evidence.grading)."""
+
+    model_config = _STRICT
+    per_study_designs: list[StudyDesignClassification] = Field(default_factory=list)
+    consistency: Literal["CONSISTENT_SUPPORT", "MIXED", "CONSISTENT_CONTRA", "NONE"]
+    directness: Literal["DIRECT", "ANALOGICAL", "NONE"]
+    transfer_note: str | None = None
+
+
 __all__ = [
     "ProposedChild",
     "GeneratorOutput",
@@ -119,4 +136,6 @@ __all__ = [
     "ProctorScoreCoding",
     "DecisionCoding",
     "GradeOutput",
+    "StudyDesignClassification",
+    "GradeComponentsOutput",
 ]

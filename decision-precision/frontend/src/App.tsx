@@ -1,15 +1,38 @@
 import { ReactFlowProvider } from "@xyflow/react";
+import { AtlasRoute } from "./atlas/AtlasRoute";
 import { GraphCanvas } from "./graph/GraphCanvas";
 import { useDelib } from "./graph/useDelib";
 import { SidePanel } from "./panel/SidePanel";
 import { Legend } from "./ui/Legend";
 import { Toolbar } from "./ui/Toolbar";
+import { useHashRoute, type Route } from "./useHashRoute";
 
-export default function App() {
-  const d = useDelib();
-
+function Nav({ route, go }: { route: Route; go: (r: Route) => void }) {
+  const tab = (r: Route, label: string) => (
+    <button
+      onClick={() => go(r)}
+      className={`rounded px-3 py-1 text-sm transition-colors ${
+        route === r
+          ? "bg-[var(--path-highlight)] text-white"
+          : "text-[var(--ink-muted)] hover:text-[var(--ink)]"
+      }`}
+    >
+      {label}
+    </button>
+  );
   return (
-    <div className="flex h-screen flex-col">
+    <nav className="flex items-center gap-1 border-b border-[var(--hairline)] bg-[var(--surface-raised)] px-3 py-1.5">
+      <span className="mr-2 text-sm font-semibold">DELIB</span>
+      {tab("canvas", "Deliberation")}
+      {tab("atlas", "Atlas")}
+    </nav>
+  );
+}
+
+function DeliberationApp() {
+  const d = useDelib();
+  return (
+    <>
       <Toolbar
         view={d.view}
         setView={d.setView}
@@ -56,6 +79,16 @@ export default function App() {
           />
         )}
       </div>
+    </>
+  );
+}
+
+export default function App() {
+  const [route, go] = useHashRoute();
+  return (
+    <div className="flex h-screen flex-col">
+      <Nav route={route} go={go} />
+      {route === "atlas" ? <AtlasRoute /> : <DeliberationApp />}
     </div>
   );
 }

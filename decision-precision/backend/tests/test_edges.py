@@ -8,8 +8,6 @@ and validate their own fields.
 
 from __future__ import annotations
 
-from pathlib import Path
-
 import pytest
 from pydantic import TypeAdapter, ValidationError
 
@@ -21,14 +19,8 @@ from delib.models.edges import (
     Edge,
 )
 from delib.models.enums import ClosureSatisfaction, EvidenceGrade
-from delib.models.registries import (
-    Framework,
-    FrameworkRegistry,
-    Stakeholder,
-    StakeholderRegistry,
-)
+from delib.models.registries import Stakeholder, StakeholderRegistry
 
-RUBRICS = Path(__file__).resolve().parents[2] / "rubrics"
 
 
 # --- Edge happy paths -------------------------------------------------------
@@ -105,21 +97,6 @@ def test_edge_union_dispatch():
 
 
 # --- Registries -------------------------------------------------------------
-
-
-def test_framework_registry_loads_seed_rubrics():
-    reg = FrameworkRegistry.from_dir(RUBRICS)
-    assert "aggregate_utilitarian" in reg
-    assert "prioritarian" in reg
-    assert reg.get("prioritarian").name == "Prioritarian"
-    assert len(reg.get("aggregate_utilitarian").rubric) > 0
-
-
-def test_framework_registry_rejects_duplicate():
-    reg = FrameworkRegistry()
-    reg.register(Framework(id="f", name="F", rubric="r"))
-    with pytest.raises(ValueError):
-        reg.register(Framework(id="f", name="F2", rubric="r2"))
 
 
 def test_stakeholder_registry_basic():

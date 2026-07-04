@@ -14,6 +14,7 @@ from ..models.nodes import (
     CFIRTags,
     ConsequenceNode,
     DecisionNode,
+    DistributionalEffect,
     Node,
     ProctorScore,
     ProctorScores,
@@ -33,11 +34,14 @@ def code_node(llm: LLM, graph: DelibGraph, node_id: str) -> Node:
     summary = f"{node.label} (ring {node.ring})"
 
     if isinstance(node, ConsequenceNode):
-        coding = llm.code_consequence(summary, set(TRADITION_LEAVES))
+        coding = llm.code_consequence(summary, set(TRADITION_LEAVES), graph.stakeholders.ids())
         updated = node.model_copy(
             update={
                 "registers": [RegisterEngagement(**r.model_dump()) for r in coding.registers],
                 "traditions": [TraditionAttribution(**t.model_dump()) for t in coding.traditions],
+                "distributional_effects": [
+                    DistributionalEffect(**e.model_dump()) for e in coding.distributional_effects
+                ],
                 "goal_relevance": coding.goal_relevance,
             }
         )

@@ -1,15 +1,12 @@
-"""Stakeholder and framework registries.
+"""Stakeholder registry.
 
-VESTIGIAL as of the register/tradition pivot: consequences are now coded by
-Boltanski–Thévenot register + normative tradition (see delib.models.registers /
-delib.models.traditions), not by (stakeholder, framework, sign) valence. These
-registries are retained only because the mock generator still threads them
-through; nothing validates against them anymore.
+The Framework registry was removed with the register/tradition pivot (frameworks
+are superseded by delib.models.traditions). Stakeholders were REPURPOSED: they
+are the referents of a consequence's ``distributional_effects`` (the who-bears-
+what layer), validated at graph-insert time.
 """
 
 from __future__ import annotations
-
-from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -20,22 +17,6 @@ class Stakeholder(BaseModel):
     model_config = _STRICT
     id: str = Field(min_length=1)
     description: str = Field(min_length=1)
-
-
-class Framework(BaseModel):
-    model_config = _STRICT
-    id: str = Field(min_length=1)
-    name: str = Field(min_length=1)
-    rubric: str = Field(min_length=1, description="Markdown rubric text.")
-
-
-def _derive_name(stem: str, text: str) -> str:
-    """Framework display name = first markdown H1, else a title-cased stem."""
-    for line in text.splitlines():
-        line = line.strip()
-        if line.startswith("# "):
-            return line[2:].strip()
-    return stem.replace("_", " ").title()
 
 
 class StakeholderRegistry:
@@ -64,49 +45,7 @@ class StakeholderRegistry:
         return len(self._items)
 
 
-class FrameworkRegistry:
-    def __init__(self) -> None:
-        self._items: dict[str, Framework] = {}
-
-    def register(self, f: Framework) -> Framework:
-        if f.id in self._items:
-            raise ValueError(f"Framework id already registered: {f.id!r}")
-        self._items[f.id] = f
-        return f
-
-    def get(self, fid: str) -> Framework:
-        return self._items[fid]
-
-    def __contains__(self, fid: str) -> bool:
-        return fid in self._items
-
-    def ids(self) -> set[str]:
-        return set(self._items)
-
-    def __iter__(self):
-        return iter(self._items.values())
-
-    def __len__(self) -> int:
-        return len(self._items)
-
-    @classmethod
-    def from_dir(cls, rubrics_dir: str | Path) -> "FrameworkRegistry":
-        """Load one framework per ``*.md`` file; id == filename stem."""
-        reg = cls()
-        path = Path(rubrics_dir)
-        if not path.is_dir():
-            raise FileNotFoundError(f"rubrics dir not found: {path}")
-        for md in sorted(path.glob("*.md")):
-            text = md.read_text(encoding="utf-8")
-            reg.register(
-                Framework(id=md.stem, name=_derive_name(md.stem, text), rubric=text)
-            )
-        return reg
-
-
 __all__ = [
     "Stakeholder",
-    "Framework",
     "StakeholderRegistry",
-    "FrameworkRegistry",
 ]

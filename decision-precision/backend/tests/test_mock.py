@@ -9,6 +9,7 @@ from delib.mock import MockGenerator, grow_full
 from delib.models.enums import ClosureSatisfaction, LoopClass, NodeType
 from delib.models.enums import Register
 from delib.queries import (
+    burden_index,
     loop_inventory,
     path_confidence,
     register_clash_points,
@@ -99,7 +100,7 @@ def test_progressive_disclosure_seed_then_ring1():
     # start with seed only
     from delib.graph import DelibGraph
 
-    live = DelibGraph(stakeholders=master.stakeholders, frameworks=master.frameworks)
+    live = DelibGraph(stakeholders=master.stakeholders)
     live.add_node(master.get_node("seed").model_copy(deep=True))
     assert len(live) == 1
 
@@ -122,3 +123,10 @@ def test_master_coding_status_mix():
     statuses = {n.id: n.coding_status.value for n in g.nodes() if hasattr(n, "coding_status")}
     assert statuses["displacement"] == "HUMAN_VERIFIED"
     assert statuses["social_fabric"] == "PENDING"
+
+
+def test_burden_falls_on_incumbents_not_developer():
+    g = build_brooklyn_master()
+    # incumbents bear displacement/rent/disruption/social_fabric; developer bears none
+    assert burden_index(g, "incumbents") > burden_index(g, "small_businesses") > 0
+    assert burden_index(g, "developer") == 0.0

@@ -12,23 +12,19 @@ import pytest
 
 from delib.graph import DelibGraph
 from delib.models.edges import CausalEdge, ClosureEdge, FramesEdge
-from delib.models.enums import ClosureSatisfaction, EvidenceGrade, Register
+from delib.models.enums import ClosureSatisfaction, EffectType, EvidenceGrade, Register
 from delib.models.nodes import (
     CFIRTags,
     ConsequenceNode,
     DecisionNode,
+    DistributionalEffect,
     ProctorScore,
     ProctorScores,
     RegisterEngagement,
     SeedNode,
     TraditionAttribution,
 )
-from delib.models.registries import (
-    Framework,
-    FrameworkRegistry,
-    Stakeholder,
-    StakeholderRegistry,
-)
+from delib.models.registries import Stakeholder, StakeholderRegistry
 
 
 def proctor(n: int = 3) -> ProctorScores:
@@ -45,7 +41,8 @@ def decision(nid: str, label: str, ring: int) -> DecisionNode:
 
 
 def consequence(
-    nid: str, label: str, ring: int, goal_relevance: float, registers=None, traditions=None
+    nid: str, label: str, ring: int, goal_relevance: float,
+    registers=None, traditions=None, effects=None,
 ) -> ConsequenceNode:
     return ConsequenceNode(
         id=nid,
@@ -54,6 +51,7 @@ def consequence(
         goal_relevance=goal_relevance,
         registers=registers or [],
         traditions=traditions or [],
+        distributional_effects=effects or [],
     )
 
 
@@ -65,15 +63,18 @@ def trad(leaf: str) -> TraditionAttribution:
     return TraditionAttribution(tradition=leaf, signature_marker="m", justification="j")
 
 
+def eff(stakeholder: str, effect_type: EffectType, direction: int) -> DistributionalEffect:
+    return DistributionalEffect(
+        stakeholder_id=stakeholder, effect_type=effect_type, direction=direction, magnitude_note="n",
+    )
+
+
 @pytest.fixture
-def registries() -> tuple[StakeholderRegistry, FrameworkRegistry]:
+def registries() -> StakeholderRegistry:
     sh = StakeholderRegistry()
     sh.register(Stakeholder(id="incumbents", description="existing residents"))
     sh.register(Stakeholder(id="newcomers", description="new residents"))
-    fw = FrameworkRegistry()
-    fw.register(Framework(id="aggregate_utilitarian", name="Aggregate Utilitarian", rubric="r"))
-    fw.register(Framework(id="prioritarian", name="Prioritarian", rubric="r"))
-    return sh, fw
+    return sh
 
 
 @pytest.fixture
@@ -82,10 +83,11 @@ def small_graph(registries) -> DelibGraph:
     - reinforcing loop: build -> desirability -> rent -> build
     - register clash: displacement engages MARKET + CIVIC (a clash pair)
     - tradition tension: rent (utilitarian) -> displacement (kantian)
+    - distributional burden: displacement harms incumbents (DISPLACEMENT -1)
     - PARTIAL closure: capacity -> seed
     """
-    sh, fw = registries
-    g = DelibGraph(stakeholders=sh, frameworks=fw)
+    sh = registries
+    g = DelibGraph(stakeholders=sh)
 
     g.add_node(
         SeedNode(
@@ -107,9 +109,11 @@ def small_graph(registries) -> DelibGraph:
             0.9,
             registers=[reg(Register.MARKET), reg(Register.CIVIC)],
             traditions=[trad("kantian_deontological")],
+            effects=[eff("incumbents", EffectType.DISPLACEMENT, -1)],
         )
     )
-    g.add_node(consequence("capacity", "Housing capacity increases", 2, 0.85))
+    g.add_node(consequence("capacity", "Housing capacity increases", 2, 0.85,
+                           effects=[eff("newcomers", EffectType.ACCESS, +1)]))
 
     # Seed roots the graph via a FRAMES edge to ring-1 (not an empirical causal
     # claim; confidence-neutral in path_confidence).

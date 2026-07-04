@@ -21,23 +21,26 @@ from __future__ import annotations
 
 from ..graph import DelibGraph
 from ..models.edges import CausalEdge, ClosureEdge, DeliberativeEdge, FramesEdge
-from ..models.enums import ClosureSatisfaction, CodingStatus, Confidence, EvidenceGrade, Register
+from ..models.enums import (
+    ClosureSatisfaction,
+    CodingStatus,
+    Confidence,
+    EffectType,
+    EvidenceGrade,
+    Register,
+)
 from ..models.nodes import (
     CFIRTags,
     ConsequenceNode,
     DecisionNode,
+    DistributionalEffect,
     ProctorScore,
     ProctorScores,
     RegisterEngagement,
     SeedNode,
     TraditionAttribution,
 )
-from ..models.registries import (
-    Framework,
-    FrameworkRegistry,
-    Stakeholder,
-    StakeholderRegistry,
-)
+from ..models.registries import Stakeholder, StakeholderRegistry
 
 SEED_QUESTION = (
     "What happens if a developer builds a 40-story residential tower in a "
@@ -68,10 +71,17 @@ def _trad(tradition: str, marker: str, why: str, conf: Confidence = _MOD) -> Tra
     return TraditionAttribution(tradition=tradition, signature_marker=marker, justification=why, confidence=conf)
 
 
-def _c(nid, label, ring, gr, registers=(), traditions=(), coding=CodingStatus.PENDING) -> ConsequenceNode:
+def _c(nid, label, ring, gr, registers=(), traditions=(), effects=(), coding=CodingStatus.PENDING) -> ConsequenceNode:
     return ConsequenceNode(
         id=nid, label=label, ring=ring, goal_relevance=gr,
-        registers=list(registers), traditions=list(traditions), coding_status=coding,
+        registers=list(registers), traditions=list(traditions),
+        distributional_effects=list(effects), coding_status=coding,
+    )
+
+
+def _eff(stakeholder: str, effect_type: EffectType, direction: int, note: str) -> DistributionalEffect:
+    return DistributionalEffect(
+        stakeholder_id=stakeholder, effect_type=effect_type, direction=direction, magnitude_note=note,
     )
 
 
@@ -82,7 +92,7 @@ LIBK = "libertarian_nozickian"
 VIRT = "virtue_ethical"
 
 
-def build_brooklyn_registries() -> tuple[StakeholderRegistry, FrameworkRegistry]:
+def build_brooklyn_registries() -> StakeholderRegistry:
     sh = StakeholderRegistry()
     for sid, desc in [
         ("incumbents", "existing renters and owners in the neighborhood"),
@@ -92,20 +102,12 @@ def build_brooklyn_registries() -> tuple[StakeholderRegistry, FrameworkRegistry]
         ("small_businesses", "existing local merchants"),
     ]:
         sh.register(Stakeholder(id=sid, description=desc))
-
-    # Frameworks are vestigial now that consequences are coded by register /
-    # tradition, but the registry infrastructure is retained (the mock reads it).
-    fw = FrameworkRegistry()
-    fw.register(Framework(id="aggregate_utilitarian", name="Aggregate Utilitarian",
-                          rubric="Net welfare summed across stakeholders, equal weight per unit."))
-    fw.register(Framework(id="prioritarian", name="Prioritarian",
-                          rubric="Welfare weighted toward the worse-off; harms to incumbents count more."))
-    return sh, fw
+    return sh
 
 
 def build_brooklyn_master() -> DelibGraph:
-    sh, fw = build_brooklyn_registries()
-    g = DelibGraph(stakeholders=sh, frameworks=fw)
+    sh = build_brooklyn_registries()
+    g = DelibGraph(stakeholders=sh)
 
     # --- seed ---------------------------------------------------------------
     g.add_node(
@@ -193,6 +195,10 @@ def build_brooklyn_master() -> DelibGraph:
             _reg(Register.CIVIC, "housing capacity increases", "housing as a collective provision"),
         ],
         traditions=[_trad(UTIL, "large welfare gain from new supply", "aggregate welfare improves", _HI)],
+        effects=[
+            _eff("newcomers", EffectType.ACCESS, +1, "~400 households gain housing access"),
+            _eff("city", EffectType.WELFARE, +1, "eases the regional housing shortage"),
+        ],
         coding=CodingStatus.HUMAN_VERIFIED,
     ))
     # desirability: MARKET + FAME — a recognized COMPROMISE, so suppressed (no clash)
@@ -208,6 +214,7 @@ def build_brooklyn_master() -> DelibGraph:
             _reg(Register.INDUSTRIAL, "multi-year construction", "the works as a technical undertaking"),
             _reg(Register.DOMESTIC, "those who cannot leave", "disruption to home and settled life"),
         ],
+        effects=[_eff("incumbents", EffectType.WELFARE, -1, "years of noise, dust, road closures")],
     ))
     # tax_revenue: MARKET vs CIVIC clash
     g.add_node(_c("tax_revenue", "Municipal property-tax revenue increases", 2, 0.3,
@@ -215,6 +222,7 @@ def build_brooklyn_master() -> DelibGraph:
             _reg(Register.MARKET, "expanded tax base", "value realized as revenue"),
             _reg(Register.CIVIC, "municipal", "public fisc for collective ends"),
         ],
+        effects=[_eff("city", EffectType.FINANCIAL, +1, "higher assessed value expands the tax base")],
     ))
     # shadow_infrastructure: INDUSTRIAL vs GREEN clash
     g.add_node(_c("shadow_infrastructure", "Shadowing and strain on local infrastructure", 2, 0.4,
@@ -222,6 +230,7 @@ def build_brooklyn_master() -> DelibGraph:
             _reg(Register.INDUSTRIAL, "strain on local infrastructure", "load on technical systems"),
             _reg(Register.GREEN, "reduced light/air", "loss of environmental quality"),
         ],
+        effects=[_eff("incumbents", EffectType.WELFARE, -1, "shadowing reduces light and air")],
     ))
     # affordable_units: MARKET vs CIVIC clash
     g.add_node(_c("affordable_units", "Below-market units created", 2, 0.6,
@@ -230,6 +239,10 @@ def build_brooklyn_master() -> DelibGraph:
             _reg(Register.MARKET, "cross-subsidized by market units", "financed through the deal"),
         ],
         traditions=[_trad(UTIL, "welfare gain", "net welfare of housed households")],
+        effects=[
+            _eff("newcomers", EffectType.ACCESS, +1, "lower-income households gain units"),
+            _eff("incumbents", EffectType.ACCESS, +1, "some incumbents may qualify"),
+        ],
     ))
     # construction_jobs: MARKET + INDUSTRIAL — a recognized COMPROMISE, suppressed
     g.add_node(_c("construction_jobs", "Construction and trades employment", 2, 0.2,
@@ -237,6 +250,7 @@ def build_brooklyn_master() -> DelibGraph:
             _reg(Register.MARKET, "jobs and margin", "labor market and returns"),
             _reg(Register.INDUSTRIAL, "trades employment", "skilled technical work"),
         ],
+        effects=[_eff("developer", EffectType.FINANCIAL, +1, "construction jobs and project margin")],
     ))
 
     # --- ring 3: consequences ----------------------------------------------
@@ -244,6 +258,10 @@ def build_brooklyn_master() -> DelibGraph:
     g.add_node(_c("rent", "Area rents rise", 3, 0.5,
         registers=[_reg(Register.MARKET, "area rents rise", "price signal in the housing market", _HI)],
         traditions=[_trad(UTIL, "transfers rather than net welfare loss", "harms net against gains")],
+        effects=[
+            _eff("incumbents", EffectType.FINANCIAL, -1, "rent burden concentrated on renters"),
+            _eff("newcomers", EffectType.FINANCIAL, -1, "higher housing cost for movers-in"),
+        ],
         coding=CodingStatus.HUMAN_VERIFIED,
     ))
     # displacement: MARKET vs CIVIC vs DOMESTIC (three-way clash); kantian tradition
@@ -254,6 +272,7 @@ def build_brooklyn_master() -> DelibGraph:
             _reg(Register.DOMESTIC, "turnover", "severed neighborhood bonds"),
         ],
         traditions=[_trad(KANT, "a severe harm to the worse-off", "displacement as an inviolable wrong", _HI)],
+        effects=[_eff("incumbents", EffectType.DISPLACEMENT, -1, "involuntary turnover of long-term residents")],
         coding=CodingStatus.HUMAN_VERIFIED,
     ))
     # commercial_gentrification: MARKET vs DOMESTIC; libertarian tradition
@@ -263,22 +282,32 @@ def build_brooklyn_master() -> DelibGraph:
             _reg(Register.DOMESTIC, "local merchants", "long-standing local ties"),
         ],
         traditions=[_trad(LIBK, "loss of livelihood for marginal merchants", "voluntary-exchange displacement")],
+        effects=[_eff("small_businesses", EffectType.FINANCIAL, -1, "commercial rents price out local merchants")],
     ))
     # wealth_effect: MARKET; libertarian property tradition
     g.add_node(_c("wealth_effect", "Incumbent homeowners gain equity", 3, 0.4,
         registers=[_reg(Register.MARKET, "asset appreciation", "owners' capital gains")],
         traditions=[_trad(LIBK, "asset appreciation for owners", "property entitlements")],
+        effects=[_eff("incumbents", EffectType.FINANCIAL, +1, "incumbent homeowners gain equity")],
     ))
     # school_investment: CIVIC; utilitarian
     g.add_node(_c("school_investment", "Expanded tax base funds school upgrades", 3, 0.4,
         registers=[_reg(Register.CIVIC, "better local services", "public goods provision")],
         traditions=[_trad(UTIL, "better local services", "welfare of residents")],
+        effects=[
+            _eff("incumbents", EffectType.WELFARE, +1, "school upgrades benefit existing families"),
+            _eff("newcomers", EffectType.WELFARE, +1, "school upgrades benefit new families"),
+        ],
     ))
     # transit_crowding: INDUSTRIAL + CIVIC — a recognized COMPROMISE, suppressed
     g.add_node(_c("transit_crowding", "Subway and transit crowding worsens", 3, 0.3,
         registers=[
             _reg(Register.INDUSTRIAL, "transit crowding", "capacity of the network"),
             _reg(Register.CIVIC, "shared congestion cost", "burden on the public"),
+        ],
+        effects=[
+            _eff("incumbents", EffectType.ACCESS, -1, "longer, more crowded commutes"),
+            _eff("newcomers", EffectType.ACCESS, -1, "shared congestion cost"),
         ],
     ))
     # social_fabric: CIVIC vs DOMESTIC clash; virtue tradition (attacked by displacement's kantian)
@@ -288,6 +317,7 @@ def build_brooklyn_master() -> DelibGraph:
             _reg(Register.DOMESTIC, "loss of social capital", "dense particular ties"),
         ],
         traditions=[_trad(VIRT, "erosion of established community networks", "corrosion of communal character")],
+        effects=[_eff("incumbents", EffectType.WELFARE, -1, "loss of social capital and networks")],
     ))
 
     # --- framing edges (seed -> ring 1) ------------------------------------

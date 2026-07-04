@@ -183,18 +183,35 @@ def test_frames_to_nonring1_raises():
 
 
 def test_unknown_tradition_leaf_raises(registries):
-    sh, fw = registries
-    g = DelibGraph(stakeholders=sh, frameworks=fw)
+    g = DelibGraph(stakeholders=registries)
     _seed(g)
     with pytest.raises(GraphConstraintError):
         g.add_node(consequence("c1", "y", 2, 0.5, traditions=[trad("phlogiston_ethics")]))
 
 
 def test_known_tradition_leaf_ok(registries):
-    sh, fw = registries
-    g = DelibGraph(stakeholders=sh, frameworks=fw)
+    g = DelibGraph(stakeholders=registries)
     _seed(g)
     g.add_node(consequence("c1", "y", 2, 0.5, traditions=[trad("kantian_deontological")]))
+
+
+def test_unknown_stakeholder_in_effect_raises(registries):
+    from delib.models.enums import EffectType
+    from conftest import eff
+
+    g = DelibGraph(stakeholders=registries)
+    _seed(g)
+    with pytest.raises(GraphConstraintError):
+        g.add_node(consequence("c1", "y", 2, 0.5, effects=[eff("ghost", EffectType.FINANCIAL, -1)]))
+
+
+def test_known_stakeholder_in_effect_ok(registries):
+    from delib.models.enums import EffectType
+    from conftest import eff
+
+    g = DelibGraph(stakeholders=registries)
+    _seed(g)
+    g.add_node(consequence("c1", "y", 2, 0.5, effects=[eff("incumbents", EffectType.FINANCIAL, -1)]))
 
 
 def test_small_graph_builds(small_graph):

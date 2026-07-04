@@ -225,6 +225,41 @@ def loop_inventory(g: DelibGraph) -> list[Loop]:
     return loops
 
 
+# --- burden_index (over distributional effects) -----------------------------
+
+
+def burden_index(g: DelibGraph, stakeholder_id: str) -> float:
+    """Descriptive exposure of a stakeholder to NEGATIVE distributional effects,
+    each weighted by the confidence of the causal path seed -> bearing node.
+
+    This is empirical burden (who bears harm, how reliably it is caused), NOT a
+    moral score: each negative-direction effect contributes its path-confidence
+    weight (there is no numeric magnitude — magnitude is a prose note).
+    """
+    seed = g.seed_id
+    total = 0.0
+    for node in g.nodes():
+        if not isinstance(node, ConsequenceNode):
+            continue
+        negatives = [
+            e for e in node.distributional_effects
+            if e.stakeholder_id == stakeholder_id and e.direction < 0
+        ]
+        if not negatives:
+            continue
+        weight = 0.0
+        if seed is not None:
+            pc = path_confidence(g, seed, node.id)
+            if pc is not None:
+                weight = pc.ordinal / _MAX_ORDINAL
+        total += len(negatives) * weight
+    return total
+
+
+def burden_indices(g: DelibGraph) -> dict[str, float]:
+    return {s.id: burden_index(g, s.id) for s in g.stakeholders}
+
+
 __all__ = [
     "PathConfidence",
     "path_confidence",
@@ -236,4 +271,6 @@ __all__ = [
     "resolution_subgraph",
     "Loop",
     "loop_inventory",
+    "burden_index",
+    "burden_indices",
 ]

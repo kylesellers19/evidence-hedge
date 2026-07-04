@@ -31,7 +31,7 @@ from .models.edges import (
 )
 from .models.enums import EdgeType, NodeType
 from .models.nodes import ConsequenceNode, Node
-from .models.registries import FrameworkRegistry, StakeholderRegistry
+from .models.registries import StakeholderRegistry
 from .models.traditions import TRADITION_LEAVES
 
 
@@ -43,11 +43,9 @@ class DelibGraph:
     def __init__(
         self,
         stakeholders: StakeholderRegistry | None = None,
-        frameworks: FrameworkRegistry | None = None,
     ) -> None:
         self._g: nx.MultiDiGraph = nx.MultiDiGraph()
         self.stakeholders = stakeholders or StakeholderRegistry()
-        self.frameworks = frameworks or FrameworkRegistry()
         self._seed_id: str | None = None
 
     # --- Nodes --------------------------------------------------------------
@@ -66,6 +64,7 @@ class DelibGraph:
 
         if isinstance(node, ConsequenceNode):
             self._validate_tradition_refs(node)
+            self._validate_stakeholder_refs(node)
 
         self._g.add_node(node.id, data=node)
         return node
@@ -78,6 +77,18 @@ class DelibGraph:
                 raise GraphConstraintError(
                     f"tradition attribution on {node.id!r} references unknown "
                     f"tradition leaf {t.tradition!r}"
+                )
+
+    def _validate_stakeholder_refs(self, node: ConsequenceNode) -> None:
+        # Distributional effects reference stakeholders; enforce once the
+        # registry is populated (so nodes stay buildable in isolation).
+        if len(self.stakeholders) == 0:
+            return
+        for e in node.distributional_effects:
+            if e.stakeholder_id not in self.stakeholders:
+                raise GraphConstraintError(
+                    f"distributional effect on {node.id!r} references unknown "
+                    f"stakeholder {e.stakeholder_id!r}"
                 )
 
     # --- Edges --------------------------------------------------------------

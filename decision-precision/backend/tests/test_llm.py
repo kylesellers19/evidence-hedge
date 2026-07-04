@@ -82,27 +82,49 @@ def test_schema_fail_raises_and_logs():
 _LEAVES = {"kantian_deontological", "utilitarian_aggregate"}
 
 
+_STAKEHOLDERS = {"incumbents", "newcomers"}
+
+
 def test_coder_rejects_unknown_tradition():
     bad = json.dumps({
         "registers": [{"register": "MARKET", "signature_marker": "priced out", "justification": "j"}],
         "traditions": [{"tradition": "phlogiston_ethics", "signature_marker": "m", "justification": "j"}],
+        "distributional_effects": [],
         "goal_relevance": 0.5,
     })
     fake = Fake(queue=[bad, bad, bad])
     with pytest.raises(LLMError):
-        _llm(fake).code_consequence("rents rise", _LEAVES)
+        _llm(fake).code_consequence("rents rise", _LEAVES, _STAKEHOLDERS)
+
+
+def test_coder_rejects_unknown_stakeholder_in_effect():
+    bad = json.dumps({
+        "registers": [],
+        "traditions": [],
+        "distributional_effects": [
+            {"stakeholder_id": "ghost", "effect_type": "FINANCIAL", "direction": -1, "magnitude_note": "n"},
+        ],
+        "goal_relevance": 0.5,
+    })
+    fake = Fake(queue=[bad, bad, bad])
+    with pytest.raises(LLMError):
+        _llm(fake).code_consequence("rents rise", _LEAVES, _STAKEHOLDERS)
 
 
 def test_coder_accepts_known_vocab():
     good = json.dumps({
         "registers": [{"register": "MARKET", "signature_marker": "rents rise", "justification": "j", "confidence": "HIGH"}],
         "traditions": [{"tradition": "utilitarian_aggregate", "signature_marker": "net welfare", "justification": "j"}],
+        "distributional_effects": [
+            {"stakeholder_id": "incumbents", "effect_type": "FINANCIAL", "direction": -1, "magnitude_note": "rent burden"},
+        ],
         "goal_relevance": 0.9,
     })
     fake = Fake(by_schema={"ConsequenceCoding": good})
-    out = _llm(fake).code_consequence("rents rise", _LEAVES)
+    out = _llm(fake).code_consequence("rents rise", _LEAVES, _STAKEHOLDERS)
     assert out.registers[0].register.value == "MARKET" and out.goal_relevance == 0.9
     assert out.traditions[0].tradition == "utilitarian_aggregate"
+    assert out.distributional_effects[0].effect_type.value == "FINANCIAL"
 
 
 # --- LLM generator through the Generator seam ------------------------------

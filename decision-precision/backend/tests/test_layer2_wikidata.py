@@ -10,13 +10,12 @@ from delib.layer2 import (
     SparqlCache,
     ThinkerEdge,
     WikidataClient,
-    link_frameworks,
+    link_traditions,
     project_influence,
 )
 from delib.layer2.bridge import BridgeAssignment
 from delib.layer2.enums import Provenance
 from delib.layer2.bridge import Thinker
-from delib.models.registries import Framework, FrameworkRegistry
 
 
 def _bindings(pairs):
@@ -52,25 +51,20 @@ def test_cache_prevents_refetch():
     assert calls["n"] == 1
 
 
-# --- framework -> tradition linkage -----------------------------------------
+# --- canonical tradition leaves -> map linkage ------------------------------
 
 
-def _frameworks() -> FrameworkRegistry:
-    reg = FrameworkRegistry()
-    reg.register(Framework(id="aggregate_utilitarian", name="Aggregate Utilitarian", rubric="r"))
-    reg.register(Framework(id="prioritarian", name="Prioritarian", rubric="r"))
-    return reg
-
-
-def test_link_frameworks_creates_unplaced_traditions():
+def test_link_traditions_creates_unplaced_leaves():
     m = Layer2Map()
-    added = link_frameworks(m, _frameworks())
-    assert set(added) == {"aggregate_utilitarian", "prioritarian"}
-    node = m.get_node("prioritarian")
+    added = link_traditions(m)
+    assert set(added) == {
+        "kantian_deontological", "virtue_ethical", "utilitarian_aggregate", "libertarian_nozickian",
+    }
+    node = m.get_node("utilitarian_aggregate")
     assert node.grain.value == "TRADITION"
     assert node.placement is Placement.UNPLACED
     # idempotent
-    assert link_frameworks(m, _frameworks()) == []
+    assert link_traditions(m) == []
 
 
 # --- projection through the bridge ------------------------------------------
@@ -78,23 +72,23 @@ def test_link_frameworks_creates_unplaced_traditions():
 
 def _map_with_bridge() -> Layer2Map:
     m = Layer2Map()
-    link_frameworks(m, _frameworks())
+    link_traditions(m)
     m.add_thinker(Thinker(id="bentham", label="Jeremy Bentham", wikidata_qid="Q_B", floruit_start=1780))
     m.add_thinker(Thinker(id="parfit", label="Derek Parfit", wikidata_qid="Q_P", floruit_start=1980))
-    m.add_bridge(BridgeAssignment(thinker_id="bentham", target_id="aggregate_utilitarian",
+    m.add_bridge(BridgeAssignment(thinker_id="bentham", target_id="utilitarian_aggregate",
                                   provenance=Provenance.MANUAL, confidence=0.9))
-    m.add_bridge(BridgeAssignment(thinker_id="parfit", target_id="prioritarian",
+    m.add_bridge(BridgeAssignment(thinker_id="parfit", target_id="kantian_deontological",
                                   provenance=Provenance.MANUAL, confidence=0.9))
     return m
 
 
 def test_project_influence_lifts_to_tradition_edge():
     m = _map_with_bridge()
-    # Bentham (aggregate_utilitarian) influenced Parfit (prioritarian)
+    # Bentham (utilitarian_aggregate) influenced Parfit (kantian_deontological)
     edges = project_influence(m, [ThinkerEdge(influencer_qid="Q_B", influenced_qid="Q_P", relation="influenced_by")])
     assert len(edges) == 1
     e = edges[0]
-    assert e.source == "aggregate_utilitarian" and e.target == "prioritarian"
+    assert e.source == "utilitarian_aggregate" and e.target == "kantian_deontological"
     assert e.period == 1780  # dated by the influencer's floruit
     assert e.provenance is Provenance.WIKIDATA
     # inserted into the map as an INFLUENCE edge

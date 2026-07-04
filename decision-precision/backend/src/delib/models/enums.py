@@ -46,6 +46,18 @@ class CodingStatus(str, Enum):
     HUMAN_VERIFIED = "HUMAN_VERIFIED"
 
 
+class EffectType(str, Enum):
+    """The kind of distributional effect a consequence has on a stakeholder.
+    DESCRIPTIVE / empirical — the who-bears-what layer, NOT a moral score."""
+
+    FINANCIAL = "FINANCIAL"
+    HEALTH = "HEALTH"
+    WELFARE = "WELFARE"
+    ACCESS = "ACCESS"
+    DISPLACEMENT = "DISPLACEMENT"
+    OTHER = "OTHER"
+
+
 class EdgeType(str, Enum):
     CAUSAL = "CAUSAL"
     DELIBERATIVE = "DELIBERATIVE"

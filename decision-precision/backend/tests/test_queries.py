@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from delib.models.enums import EvidenceGrade, LoopClass, Register
 from delib.queries import (
+    burden_index,
+    burden_indices,
     loop_inventory,
     path_confidence,
     register_clash_points,
@@ -103,3 +105,21 @@ def test_no_tension_where_absent(small_graph):
     tensions = tradition_tension_points(small_graph)
     assert all(c.node_id != "desirability" for c in clashes)
     assert all(t.source != "desirability" and t.target != "desirability" for t in tensions)
+
+
+# --- burden over distributional effects -------------------------------------
+
+
+def test_burden_weights_negative_effect_by_path_confidence(small_graph):
+    # displacement harms incumbents (DISPLACEMENT -1); seed->displacement weakest
+    # is CONTESTED (ordinal 1), weight 1/5 = 0.2; one negative effect -> 0.2
+    assert abs(burden_index(small_graph, "incumbents") - 0.2) < 1e-9
+
+
+def test_burden_zero_for_unaffected(small_graph):
+    # newcomers only receive a POSITIVE effect (capacity ACCESS +1) -> no burden
+    assert burden_index(small_graph, "newcomers") == 0.0
+
+
+def test_burden_indices_covers_registry(small_graph):
+    assert set(burden_indices(small_graph)) == {"incumbents", "newcomers"}

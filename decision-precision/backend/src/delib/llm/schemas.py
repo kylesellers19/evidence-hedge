@@ -12,7 +12,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.enums import Confidence, EvidenceGrade, Register
+from ..models.enums import Confidence, EffectType, EvidenceGrade, Register
 
 _STRICT = ConfigDict(extra="forbid")
 
@@ -61,10 +61,20 @@ class TraditionCoding(BaseModel):
     confidence: Confidence = Confidence.MODERATE
 
 
+class DistributionalEffectCoding(BaseModel):
+    model_config = _STRICT
+    stakeholder_id: str = Field(min_length=1)
+    effect_type: EffectType
+    direction: Literal[-1, 1]
+    magnitude_note: str = Field(min_length=1)
+    # evidence_claim_ref is populated by the Phase-5 evidence pass, not the coder.
+
+
 class ConsequenceCoding(BaseModel):
     model_config = _STRICT
     registers: list[RegisterEngagementCoding] = Field(default_factory=list)
     traditions: list[TraditionCoding] = Field(default_factory=list)
+    distributional_effects: list[DistributionalEffectCoding] = Field(default_factory=list)
     goal_relevance: float = Field(ge=0.0, le=1.0)
 
 
@@ -104,6 +114,7 @@ __all__ = [
     "SeedIntakeOutput",
     "RegisterEngagementCoding",
     "TraditionCoding",
+    "DistributionalEffectCoding",
     "ConsequenceCoding",
     "ProctorScoreCoding",
     "DecisionCoding",

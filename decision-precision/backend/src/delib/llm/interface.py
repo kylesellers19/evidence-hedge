@@ -132,6 +132,7 @@ class LLM:
         self,
         node_summary: str,
         tradition_leaves: set[str],
+        stakeholder_ids: set[str],
     ) -> ConsequenceCoding:
         user = (
             f"Consequence node:\n{node_summary}\n\n"
@@ -139,13 +140,21 @@ class LLM:
             "MARKET, INDUSTRIAL, CIVIC, DOMESTIC, INSPIRED, FAME, GREEN, PROJECTIVE — "
             "each with a quoted signature marker and a justification. Where a "
             f"normative tradition is clearly implicated (of {sorted(tradition_leaves)}), "
-            "add a tradition attribution, likewise with a signature marker."
+            "add a tradition attribution, likewise with a signature marker.\n"
+            f"Then extract distributional effects — for the affected stakeholders "
+            f"(of {sorted(stakeholder_ids)}) record effect_type "
+            "(FINANCIAL/HEALTH/WELFARE/ACCESS/DISPLACEMENT/OTHER), direction "
+            "(-1 harm / +1 benefit), and a prose magnitude_note. These are "
+            "DESCRIPTIVE empirical impacts, not moral scores."
         )
 
         def check(c: ConsequenceCoding) -> None:
             for t in c.traditions:
                 if t.tradition not in tradition_leaves:
                     raise ValueError(f"unknown tradition leaf: {t.tradition!r}")
+            for e in c.distributional_effects:
+                if e.stakeholder_id not in stakeholder_ids:
+                    raise ValueError(f"unknown stakeholder id: {e.stakeholder_id!r}")
 
         return self._structured(
             cfg.CODE, prompts.CODER_SYSTEM, user, ConsequenceCoding, post_validate=check

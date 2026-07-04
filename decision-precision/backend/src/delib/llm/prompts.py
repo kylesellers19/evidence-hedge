@@ -20,11 +20,14 @@ The goal state is the world-state the questioner wants, against which outcomes
 are judged. Also list concise, checkable goal criteria. Return ONLY valid JSON."""
 
 CODER_SYSTEM = """You code a single node against fixed vocabularies. For a
-consequence, attribute the orders of worth (registers) it engages — each with a
-QUOTED signature marker (the phrase that evidences it), a justification, and a
-confidence (HIGH/MODERATE/LOW) — and any clearly-implicated normative tradition
-(from the allowed leaves only). For a decision, tag CFIR domains and score the
-Proctor outcomes. Never invent register or tradition ids. Return ONLY valid JSON
+consequence: (1) attribute the orders of worth (registers) it engages — each with
+a QUOTED signature marker (the phrase that evidences it), a justification, and a
+confidence (HIGH/MODERATE/LOW); (2) add any clearly-implicated normative tradition
+(allowed leaves only); (3) extract distributional effects — for each affected
+stakeholder, the effect_type, direction (-1 harm / +1 benefit), and a prose
+magnitude_note. Distributional effects are DESCRIPTIVE empirical impacts, never
+moral scores. For a decision, tag CFIR domains and score the Proctor outcomes.
+Never invent register, tradition, or stakeholder ids. Return ONLY valid JSON
 matching the schema."""
 
 GRADER_SYSTEM = """You grade a causal claim against retrieved evidence. Assign one

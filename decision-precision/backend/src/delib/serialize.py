@@ -18,6 +18,7 @@ from .layout import radial_layout
 from .models.enums import EdgeType, EvidenceGrade, NodeType
 from .queries import (
     Loop,
+    burden_indices,
     loop_inventory,
     register_clash_points,
     resolution_subgraph,
@@ -143,6 +144,7 @@ def graph_view(g: DelibGraph, view: str = "full") -> GraphView:
     overlays: dict[str, Any] = {
         "register_clashes": [c.model_dump(mode="json") for c in clashes],
         "tradition_tensions": [t.model_dump(mode="json") for t in tensions],
+        "burden_index": burden_indices(g),
         "loops": [loop.model_dump(mode="json") for loop in loops],
         "resolution_node_ids": sorted(res_nodes),
         "closures": [

@@ -58,9 +58,7 @@ def grow_full(master: DelibGraph | None = None) -> DelibGraph:
 
     gen = MockGenerator(master)
     m = gen.master()
-    sh, fw = m.stakeholders, m.frameworks
-
-    live = DelibGraph(stakeholders=sh, frameworks=fw)
+    live = DelibGraph(stakeholders=m.stakeholders)
     seed = m.get_node(m.seed_id).model_copy(deep=True)  # type: ignore[arg-type]
     live.add_node(seed)
 

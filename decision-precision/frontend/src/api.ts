@@ -21,6 +21,21 @@ export type Register =
   | "PROJECTIVE";
 export type Confidence = "HIGH" | "MODERATE" | "LOW";
 export type CodingStatus = "PENDING" | "HUMAN_VERIFIED";
+export type EffectType =
+  | "FINANCIAL"
+  | "HEALTH"
+  | "WELFARE"
+  | "ACCESS"
+  | "DISPLACEMENT"
+  | "OTHER";
+
+export interface DistributionalEffect {
+  stakeholder_id: string;
+  effect_type: EffectType;
+  direction: -1 | 1;
+  magnitude_note: string;
+  evidence_claim_ref: string | null;
+}
 
 export interface RegisterEngagement {
   register: Register;
@@ -91,6 +106,7 @@ export interface TraditionTension {
 export interface Overlays {
   register_clashes: RegisterClash[];
   tradition_tensions: TraditionTension[];
+  burden_index: Record<string, number>;
   loops: LoopOverlay[];
   resolution_node_ids: string[];
   closures: { source: string; satisfies: string }[];

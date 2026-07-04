@@ -28,7 +28,7 @@ from .queries import (
 from .cache import SparqlCache
 from .wikidata import ThinkerEdge, WikidataClient
 from .project import project_influence
-from .registry_link import link_frameworks, traditions_from_frameworks
+from .registry_link import link_traditions, tradition_leaf_nodes
 
 __all__ = [
     # enums
@@ -63,6 +63,6 @@ __all__ = [
     "WikidataClient",
     "ThinkerEdge",
     "project_influence",
-    "link_frameworks",
-    "traditions_from_frameworks",
+    "link_traditions",
+    "tradition_leaf_nodes",
 ]

@@ -2,6 +2,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import type {
   CodingStatus,
   Confidence,
+  DistributionalEffect,
+  EffectType,
   NodeView,
   Overlays,
   Register,
@@ -30,6 +32,9 @@ const TRADITIONS = [
   "kantian_deontological", "virtue_ethical", "utilitarian_aggregate", "libertarian_nozickian",
 ];
 const CONFIDENCES: Confidence[] = ["HIGH", "MODERATE", "LOW"];
+const EFFECT_TYPES: EffectType[] = [
+  "FINANCIAL", "HEALTH", "WELFARE", "ACCESS", "DISPLACEMENT", "OTHER",
+];
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -46,6 +51,7 @@ export function SidePanel({ node, overlays, onEdit, onClose }: Props) {
   const [goalRelevance, setGoalRelevance] = useState<number>(node.goal_relevance ?? 0);
   const [registers, setRegisters] = useState<RegisterEngagement[]>([]);
   const [traditions, setTraditions] = useState<TraditionAttribution[]>([]);
+  const [effects, setEffects] = useState<DistributionalEffect[]>([]);
   const [coding, setCoding] = useState<CodingStatus | null>(node.coding_status);
   const [proctor, setProctor] = useState<Record<string, ProctorScore>>({});
   const [saving, setSaving] = useState(false);
@@ -56,6 +62,7 @@ export function SidePanel({ node, overlays, onEdit, onClose }: Props) {
     setGoalRelevance(node.goal_relevance ?? 0);
     setRegisters((data.registers as RegisterEngagement[]) ?? []);
     setTraditions((data.traditions as TraditionAttribution[]) ?? []);
+    setEffects((data.distributional_effects as DistributionalEffect[]) ?? []);
     setCoding(node.coding_status);
     setProctor((data.proctor_scores as Record<string, ProctorScore>) ?? {});
     setMsg(null);
@@ -71,6 +78,7 @@ export function SidePanel({ node, overlays, onEdit, onClose }: Props) {
       changes.goal_relevance = goalRelevance;
       changes.registers = registers;
       changes.traditions = traditions;
+      changes.distributional_effects = effects;
     }
     if (node.type === "DECISION") changes.proctor_scores = proctor;
     const ok = await onEdit(node.id, changes);
@@ -225,6 +233,61 @@ export function SidePanel({ node, overlays, onEdit, onClose }: Props) {
                 {!traditions.length && <div className="text-xs text-[var(--ink-muted)]">No traditions attributed.</div>}
               </div>
             </div>
+
+            {/* distributional effects — the who-bears-what table (descriptive) */}
+            <div>
+              <div className="mb-1 flex items-center justify-between">
+                <span className="text-[11px] uppercase tracking-wide text-[var(--ink-muted)]">
+                  Distributional effects
+                </span>
+                <button
+                  className="text-[11px] text-[var(--path-highlight)]"
+                  onClick={() => setEffects([...effects, {
+                    stakeholder_id: "", effect_type: "FINANCIAL", direction: -1,
+                    magnitude_note: "", evidence_claim_ref: null,
+                  }])}
+                >+ add</button>
+              </div>
+              <div className="space-y-2">
+                {effects.map((ef, i) => (
+                  <div key={i} className="rounded border border-[var(--hairline)] p-2">
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <input
+                        placeholder="stakeholder_id" value={ef.stakeholder_id}
+                        onChange={(e) => upd(effects, setEffects, i, { stakeholder_id: e.target.value })}
+                        className="flex-1 rounded border border-[var(--hairline)] bg-transparent px-1"
+                      />
+                      <select
+                        value={ef.effect_type}
+                        onChange={(e) => upd(effects, setEffects, i, { effect_type: e.target.value as EffectType })}
+                        className="rounded border border-[var(--hairline)] bg-transparent px-1"
+                      >
+                        {EFFECT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                      <select
+                        value={ef.direction}
+                        onChange={(e) => upd(effects, setEffects, i, { direction: Number(e.target.value) as -1 | 1 })}
+                        className="rounded border border-[var(--hairline)] bg-transparent px-1"
+                        style={{ color: ef.direction < 0 ? "var(--atlas-opposition)" : "var(--atlas-cobelief)" }}
+                      >
+                        <option value={-1}>− harm</option>
+                        <option value={1}>+ benefit</option>
+                      </select>
+                      <button className="text-[var(--ink-muted)]" onClick={() => rm(effects, setEffects, i)}>✕</button>
+                    </div>
+                    <input
+                      placeholder="magnitude note (prose)" value={ef.magnitude_note}
+                      onChange={(e) => upd(effects, setEffects, i, { magnitude_note: e.target.value })}
+                      className="mt-1 w-full rounded border border-[var(--hairline)] bg-transparent px-1 text-xs"
+                    />
+                  </div>
+                ))}
+                {!effects.length && <div className="text-xs text-[var(--ink-muted)]">No effects recorded.</div>}
+                <p className="text-[10px] text-[var(--ink-muted)]">
+                  Descriptive empirical impacts, not moral scores.
+                </p>
+              </div>
+            </div>
           </>
         )}
 
@@ -272,6 +335,21 @@ export function SidePanel({ node, overlays, onEdit, onClose }: Props) {
               <span className="text-[var(--ink-muted)]">Criteria:</span>{" "}
               {((data.goal_criteria as string[]) ?? []).join("; ")}
             </div>
+          </div>
+        )}
+
+        {/* graph-level distributional burden (from distributional_effects) */}
+        {Object.keys(overlays.burden_index).length > 0 && (
+          <div className="border-t border-[var(--hairline)] pt-3 text-xs text-[var(--ink-muted)]">
+            <div className="mb-1 uppercase tracking-wide">Stakeholder burden (exposure to harm)</div>
+            {Object.entries(overlays.burden_index)
+              .sort((a, b) => b[1] - a[1])
+              .map(([sid, val]) => (
+                <div key={sid} className="flex justify-between">
+                  <span>{sid}</span>
+                  <span className="font-mono">{val.toFixed(2)}</span>
+                </div>
+              ))}
           </div>
         )}
       </div>

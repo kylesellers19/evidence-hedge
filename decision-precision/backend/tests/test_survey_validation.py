@@ -10,7 +10,7 @@ import math
 import pytest
 
 from delib.layer2 import Layer2Map
-from delib.layer2.registry_link import link_frameworks
+from delib.layer2.registry_link import link_traditions
 from delib.layer2.survey import (
     DEFAULT_FIXTURE,
     CorrelationStore,
@@ -21,8 +21,6 @@ from delib.layer2.survey import (
     slugify,
     sqrt_distance,
 )
-from delib.models.registries import Framework, FrameworkRegistry
-
 REGISTRY_LEAVES = ("kantian_deontological", "virtue_ethical", "utilitarian_aggregate", "libertarian_nozickian")
 
 
@@ -55,11 +53,8 @@ def test_pca_targets_pending_response_data():
 
 
 def _linked_map() -> tuple[Layer2Map, dict]:
-    fw = FrameworkRegistry()
-    for leaf in REGISTRY_LEAVES:
-        fw.register(Framework(id=leaf, name=leaf.replace("_", " ").title(), rubric="r"))
     m = Layer2Map()
-    link_frameworks(m, fw)  # 4 UNPLACED TRADITION leaves
+    link_traditions(m)  # 4 UNPLACED TRADITION leaves (canonical vocabulary)
     store = CorrelationStore()
     data = load_fixture(store)
     ingest_survey_into_map(m, store.all(), tradition_map=REGISTRY_LEAF_BY_OPTION)

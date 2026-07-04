@@ -38,9 +38,7 @@ class Session:
         if master is None or master.seed_id is None:
             raise RuntimeError("generator has no seeded master to initialize from")
 
-        self.graph = DelibGraph(
-            stakeholders=master.stakeholders, frameworks=master.frameworks
-        )
+        self.graph = DelibGraph(stakeholders=master.stakeholders)
         self.graph.add_node(master.get_node(master.seed_id).model_copy(deep=True))
         # reveal ring-1 (progressive-disclosure initial render)
         apply_expansion(self.graph, self.generator.expand(self.graph, master.seed_id))

@@ -97,6 +97,8 @@ def test_full_expansion_surfaces_overlays(client):
     assert any(
         t["source"] == "rent" and t["target"] == "displacement" for t in ov["tradition_tensions"]
     )
+    # distributional burden resurrected: incumbents bear the most, developer none
+    assert ov["burden_index"]["incumbents"] > 0 and ov["burden_index"]["developer"] == 0.0
 
 
 def test_resolution_view_filters(client):

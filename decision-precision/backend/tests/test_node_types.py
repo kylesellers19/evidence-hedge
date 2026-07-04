@@ -148,6 +148,23 @@ def test_register_rejects_unknown_order():
         RegisterEngagement(register="NOT_AN_ORDER", signature_marker="m", justification="j")
 
 
+def test_distributional_effect_direction_must_be_plus_or_minus_one():
+    from delib.models.enums import EffectType
+    from delib.models.nodes import DistributionalEffect
+
+    DistributionalEffect(stakeholder_id="s", effect_type=EffectType.FINANCIAL, direction=-1, magnitude_note="n")
+    with pytest.raises(ValidationError):
+        DistributionalEffect(stakeholder_id="s", effect_type=EffectType.FINANCIAL, direction=0, magnitude_note="n")
+
+
+def test_distributional_effect_claim_ref_defaults_null():
+    from delib.models.enums import EffectType
+    from delib.models.nodes import DistributionalEffect
+
+    e = DistributionalEffect(stakeholder_id="s", effect_type=EffectType.HEALTH, direction=1, magnitude_note="n")
+    assert e.evidence_claim_ref is None  # nullable until Phase 5
+
+
 def test_proctor_score_out_of_range_raises():
     with pytest.raises(ValidationError):
         ProctorScore(score=6, justification="j")

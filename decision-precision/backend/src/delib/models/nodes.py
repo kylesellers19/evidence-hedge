@@ -13,7 +13,7 @@ from typing import Annotated, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .enums import CodingStatus, Confidence, NodeType, Register
+from .enums import CodingStatus, Confidence, EffectType, NodeType, Register
 
 _STRICT = ConfigDict(extra="forbid")
 
@@ -79,6 +79,21 @@ class TraditionAttribution(BaseModel):
     confidence: Confidence = Confidence.MODERATE
 
 
+class DistributionalEffect(BaseModel):
+    """Who bears what — a DESCRIPTIVE empirical effect of a consequence on a
+    stakeholder. NOT a moral score: it records a financial/health/welfare/access/
+    displacement impact and its direction, with a magnitude note in prose and an
+    optional reference to the evidence claim backing it (nullable until Phase 5).
+    ``stakeholder_id`` must reference a known stakeholder (validated at insert)."""
+
+    model_config = _STRICT
+    stakeholder_id: str = Field(min_length=1)
+    effect_type: EffectType
+    direction: Literal[-1, 1] = Field(description="-1 harms the stakeholder, +1 benefits.")
+    magnitude_note: str = Field(min_length=1, description="Prose scale/qualification.")
+    evidence_claim_ref: str | None = Field(default=None, description="claim_hash; null pre-Phase-5.")
+
+
 # --- Node types -------------------------------------------------------------
 
 
@@ -116,6 +131,7 @@ class ConsequenceNode(_NodeBase):
     type: Literal[NodeType.CONSEQUENCE] = NodeType.CONSEQUENCE
     registers: list[RegisterEngagement] = Field(default_factory=list)
     traditions: list[TraditionAttribution] = Field(default_factory=list)
+    distributional_effects: list[DistributionalEffect] = Field(default_factory=list)
     goal_relevance: float = Field(ge=0.0, le=1.0)
     expanded: bool = False
     unexpanded_child_estimate: int = Field(default=0, ge=0)
@@ -145,6 +161,7 @@ __all__ = [
     "CFIRTags",
     "RegisterEngagement",
     "TraditionAttribution",
+    "DistributionalEffect",
     "SeedNode",
     "DecisionNode",
     "ConsequenceNode",

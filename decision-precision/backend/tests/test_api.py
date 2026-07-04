@@ -21,6 +21,28 @@ def client():
     return TestClient(api.app)
 
 
+def test_atlas_503_when_cache_absent(client, tmp_path, monkeypatch):
+    api._atlas_cache.clear()
+    monkeypatch.setattr(api, "DEFAULT_CORR_DB", tmp_path / "missing.sqlite")
+    r = client.get("/api/atlas")
+    assert r.status_code == 503
+
+
+def test_atlas_serves_two_geometries(client, tmp_path, monkeypatch):
+    from delib.layer2.survey import CorrelationStore, load_fixture
+
+    db = tmp_path / "corr.sqlite"
+    load_fixture(CorrelationStore(str(db)))
+    api._atlas_cache.clear()
+    monkeypatch.setattr(api, "DEFAULT_CORR_DB", db)
+    body = client.get("/api/atlas").json()
+    assert {g["name"] for g in body["geometries"]} == {"attention", "polarity"}
+    assert body["n_positions"] >= 20
+    node = body["nodes"][0]
+    assert len(node["attention"]) == 2 and len(node["polarity"]) == 2
+    api._atlas_cache.clear()  # don't leak the fixture atlas into other tests
+
+
 def test_initial_graph_is_seed_plus_ring1(client):
     r = client.get("/api/graph")
     assert r.status_code == 200

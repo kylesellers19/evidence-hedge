@@ -7,15 +7,36 @@ edits are logged to the training-data store.
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from .layer2.cache import SparqlCache
+from .layer2.survey.atlas import AtlasView, build_atlas
+from .layer2.survey.scrape import CORRELATIONS_PATH, parse_variable_inventory
+from .layer2.survey.store import CorrelationStore, slugify
 from .queries import path_confidence
 from .serialize import GraphView, NodeView, graph_view
 from .session import Session
+
+DATA = Path(__file__).resolve().parents[3] / "data"
+DEFAULT_CORR_DB = DATA / "cache" / "correlations.sqlite"
+DEFAULT_PAGE_CACHE = DATA / "cache" / "philpeople_pages.sqlite"
+
+
+def _authoritative_position_ids() -> set[str] | None:
+    """The index inventory's variable slugs — the exact position set. None when
+    the page cache is absent (build_atlas then falls back to the prefix heuristic)."""
+    if not DEFAULT_PAGE_CACHE.exists():
+        return None
+    cache = SparqlCache(str(DEFAULT_PAGE_CACHE))
+    for url, html in cache.items():
+        if CORRELATIONS_PATH in url and "variable=" not in url:  # the index page
+            return {slugify(v) for v in parse_variable_inventory(html)}
+    return None
 
 app = FastAPI(title="DELIB", version="0.1.0")
 
@@ -97,6 +118,24 @@ def edit_node(node_id: str, body: EditRequest) -> NodeView:
 @app.get("/api/overlays")
 def overlays() -> dict[str, Any]:
     return _view("full").overlays
+
+
+# Atlas (Layer 2): the position map in two geometries, computed once from the
+# correlation cache and memoized in-process (heavy MDS/PCA off the request path
+# after first call). 503 if the cache store is absent (Stage A not yet scraped).
+_atlas_cache: dict[str, AtlasView] = {}
+
+
+@app.get("/api/atlas", response_model=AtlasView)
+def atlas() -> AtlasView:
+    if "view" not in _atlas_cache:
+        if not DEFAULT_CORR_DB.exists():
+            raise HTTPException(503, "correlation cache not found; run the Stage A scrape/reparse first")
+        store = CorrelationStore(str(DEFAULT_CORR_DB))
+        if store.count() == 0:
+            raise HTTPException(503, "correlation store is empty; run the Stage A scrape/reparse first")
+        _atlas_cache["view"] = build_atlas(store, position_ids=_authoritative_position_ids())
+    return _atlas_cache["view"]
 
 
 __all__ = ["app", "session"]

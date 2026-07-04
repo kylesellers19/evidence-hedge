@@ -14,9 +14,19 @@ from ..edges import EmpiricalCobeliefEdge, EmpiricalOppositionEdge, Layer2Edge
 from ..enums import Grain, Placement, Provenance
 from ..map import Layer2Map
 from ..nodes import MapNode
-from .store import CorrelationRow
+from .store import Cells, CorrelationRow
 
 DistanceFn = Callable[[float], float]
+
+
+def phi_from_cells(cells: Cells) -> float:
+    """Phi coefficient from a 2x2 contingency table — the tetrachoric-ish
+    estimator the survey pages' cells imply. Transpose-invariant, so it doesn't
+    depend on which variable is 'a'. Used to check parsed cells against the
+    page's published r."""
+    aa, ar, ra, rr = cells.aa, cells.ar, cells.ra, cells.rr
+    den = math.sqrt((aa + ar) * (ra + rr) * (aa + ra) * (ar + rr))
+    return (aa * rr - ar * ra) / den if den else 0.0
 
 
 def sqrt_distance(r: float) -> float:
@@ -97,6 +107,7 @@ __all__ = [
     "linear_distance",
     "DEFAULT_DISTANCE",
     "OPPOSITION_THRESHOLD",
+    "phi_from_cells",
     "route_sign",
     "ingest_survey_into_map",
 ]

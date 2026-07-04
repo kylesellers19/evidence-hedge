@@ -70,7 +70,7 @@ def _fake_evidence_service():
 
     def completion(**kw):
         return {"choices": [{"message": {"content": _json.dumps({
-            "per_study_designs": [{"ref": "10.1000/rent1", "design": "cohort study"}],
+            "per_study_designs": [{"ref": "10.1000/rent1", "design": "quasi-experiment"}],
             "consistency": "CONSISTENT_SUPPORT", "directness": "DIRECT", "transfer_note": None,
         })}}], "usage": {"total_tokens": 500}}
 

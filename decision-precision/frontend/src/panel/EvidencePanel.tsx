@@ -69,10 +69,12 @@ export function EvidencePanel({ edge, onRegrade, onClose }: Props) {
         {comps ? (
           <div className="space-y-1 rounded border border-[var(--hairline)] p-2 text-xs">
             <div className="mb-1 font-medium">Grade decomposition</div>
-            <Row k="design tier" v={comps.design_tier.toFixed(2)} />
+            <Row k="domain" v={comps.domain} />
+            <Row k="design tier (decides)" v={comps.design_tier_class} />
             <Row k="consistency" v={comps.consistency} />
             <Row k="directness" v={comps.directness} />
             <Row k="study designs" v={comps.per_study_designs.join(", ") || "—"} />
+            <Row k="normalized (display)" v={comps.design_tier.toFixed(2)} />
           </div>
         ) : (
           <div className="text-xs text-[var(--ink-muted)]">

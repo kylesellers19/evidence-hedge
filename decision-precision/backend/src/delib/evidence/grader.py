@@ -17,9 +17,8 @@ from .grading import (
     Consistency,
     Directness,
     GradeComponents,
-    canonical_design,
+    components_from,
     evidence_grade_from_components,
-    normalized_design_tier,
 )
 from .sources import MergedPaper
 
@@ -47,18 +46,15 @@ def grade_claim(
     """Grade one claim. With no papers, the components record NONE consistency
     (=> SPECULATIVE) without spending an LLM call."""
     if not papers:
-        comps = GradeComponents(
-            design_tier=0.0, consistency=Consistency.NONE, directness=Directness.NONE, per_study_designs=[]
-        )
+        comps = components_from(domain, [], Consistency.NONE, Directness.NONE)
         return comps, evidence_grade_from_components(comps)
 
     out = llm.grade_components(claim_text, summarize_papers(papers))
-    designs = [canonical_design(d.design) for d in out.per_study_designs]
-    comps = GradeComponents(
-        design_tier=normalized_design_tier(designs, domain),
-        consistency=Consistency(out.consistency),
-        directness=Directness(out.directness),
-        per_study_designs=designs,
+    comps = components_from(
+        domain,
+        [d.design for d in out.per_study_designs],
+        Consistency(out.consistency),
+        Directness(out.directness),
     )
     return comps, evidence_grade_from_components(comps)
 

@@ -141,7 +141,9 @@ export interface Citation {
 }
 
 export interface GradeComponents {
-  design_tier: number;
+  domain: "HEALTH" | "POLICY";
+  design_tier: number; // normalized ordinal — DISPLAY ONLY, not the decision variable
+  design_tier_class: "STRONG" | "MODERATE" | "INADEQUATE"; // the decision variable
   consistency: "CONSISTENT_SUPPORT" | "MIXED" | "CONSISTENT_CONTRA" | "NONE";
   directness: "DIRECT" | "ANALOGICAL" | "NONE";
   per_study_designs: string[];

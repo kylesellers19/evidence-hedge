@@ -20,7 +20,7 @@ import networkx as nx
 
 from .bridge import BridgeAssignment, Thinker
 from .edges import DescentEdge, Layer2Edge
-from .enums import GRAIN_ORDER, Layer2EdgeType
+from .enums import BRIDGE_PROVENANCE_PRIORITY, GRAIN_ORDER, Layer2EdgeType
 from .nodes import MapNode
 
 
@@ -126,6 +126,23 @@ class Layer2Map:
 
     def bridge(self) -> list[BridgeAssignment]:
         return list(self._bridge)
+
+    def resolved_bridge(self) -> list[BridgeAssignment]:
+        """One assignment per (thinker, target), keeping the highest-priority
+        provenance (manual override > empirical survey > wikidata). Ties keep
+        the higher confidence."""
+        best: dict[tuple[str, str], BridgeAssignment] = {}
+        for a in self._bridge:
+            key = (a.thinker_id, a.target_id)
+            cur = best.get(key)
+            if cur is None:
+                best[key] = a
+                continue
+            pa = BRIDGE_PROVENANCE_PRIORITY.get(a.provenance, 0)
+            pc = BRIDGE_PROVENANCE_PRIORITY.get(cur.provenance, 0)
+            if pa > pc or (pa == pc and a.confidence > cur.confidence):
+                best[key] = a
+        return list(best.values())
 
     def raw(self) -> nx.MultiDiGraph:
         return self._g

@@ -41,8 +41,21 @@ class Provenance(str, Enum):
     WIKIDATA = "wikidata"
     PHILPAPERS = "philpapers"
     PHILSURVEY = "philsurvey2020"
+    EMPIRICAL_SURVEY = "empirical_survey"  # A7: measured thinker<->position identification
     MANUAL = "manual"
     CURATED = "curated"
+
+
+# Bridge (thinker -> position/tradition) provenance priority: a manual override
+# beats measured survey evidence, which beats crowd-curated Wikidata claims.
+BRIDGE_PROVENANCE_PRIORITY: dict[Provenance, int] = {
+    Provenance.MANUAL: 3,
+    Provenance.EMPIRICAL_SURVEY: 2,
+    Provenance.WIKIDATA: 1,
+    Provenance.PHILPAPERS: 1,
+    Provenance.PHILSURVEY: 1,
+    Provenance.CURATED: 1,
+}
 
 
 class SourceTier(str, Enum):
@@ -65,6 +78,7 @@ __all__ = [
     "Placement",
     "Layer2EdgeType",
     "Provenance",
+    "BRIDGE_PROVENANCE_PRIORITY",
     "SourceTier",
     "TIER_PRIORITY",
 ]

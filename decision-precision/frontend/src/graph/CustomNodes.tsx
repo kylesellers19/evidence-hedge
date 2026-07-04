@@ -1,6 +1,6 @@
 import { Handle, Position, type NodeProps } from "@xyflow/react";
-import type { NodeView } from "../api";
-import { dominantValence, valenceVar } from "./semantics";
+import type { NodeView, RegisterEngagement, TraditionAttribution } from "../api";
+import { REGISTER_LABEL, confidenceOpacity, registerVar } from "./semantics";
 
 export interface NodeData {
   view: NodeView;
@@ -23,11 +23,16 @@ function CenterHandles() {
 
 function useCommon(data: unknown) {
   const d = data as NodeData;
+  const v = d.view;
+  const clash = v.register_clashes.length > 0;
+  const pending = v.coding_status === "PENDING";
   return {
     d,
-    v: d.view,
+    v,
+    clash,
     cls: [
-      d.view.is_divergence ? "divergence-glow" : "",
+      clash ? "register-clash" : "",
+      pending ? "coding-pending" : "",
       d.dimmed ? "opacity-30" : "",
       "transition-opacity",
     ].join(" "),
@@ -35,28 +40,75 @@ function useCommon(data: unknown) {
   };
 }
 
-function Badges({ v }: { v: NodeView }) {
+function registersOf(v: NodeView): RegisterEngagement[] {
+  return (v.data.registers as RegisterEngagement[] | undefined) ?? [];
+}
+function traditionsOf(v: NodeView): TraditionAttribution[] {
+  return (v.data.traditions as TraditionAttribution[] | undefined) ?? [];
+}
+
+/** Register chips + tradition tags, hung below the node. Confidence -> opacity.
+ *  Non-interactive so clicks fall through to the node itself. */
+function Attributions({ v }: { v: NodeView }) {
+  const regs = registersOf(v);
+  const trads = traditionsOf(v);
+  const clashed = new Set(v.register_clashes.flat());
+  if (!regs.length && !trads.length) return null;
   return (
-    <>
-      {v.halo && v.unexpanded_child_estimate ? (
-        <div
-          className="absolute -top-1 -right-1 rounded-full px-1.5 text-[10px] font-semibold leading-4 text-white"
-          style={{ background: "var(--node-border)" }}
-          title={`${v.unexpanded_child_estimate} hidden children — click to expand`}
-        >
-          {v.unexpanded_child_estimate}
+    <div className="pointer-events-none absolute left-1/2 top-full mt-1 flex -translate-x-1/2 flex-col items-center gap-0.5">
+      {regs.length > 0 && (
+        <div className="flex gap-0.5">
+          {regs.map((r, i) => (
+            <span
+              key={i}
+              className="inline-block h-2.5 w-2.5 rounded-sm"
+              style={{
+                background: registerVar(r.register),
+                opacity: confidenceOpacity(r.confidence),
+                outline: clashed.has(r.register) ? "1.5px solid var(--register-clash)" : undefined,
+              }}
+              title={`${REGISTER_LABEL[r.register]} (${r.confidence.toLowerCase()}) — “${r.signature_marker}”`}
+            />
+          ))}
         </div>
-      ) : null}
-      {v.is_divergence ? (
-        <div
-          className="absolute -bottom-1 -left-1 rounded-full px-1 text-[9px] font-bold leading-4 text-white"
-          style={{ background: "var(--divergence)" }}
-          title={`Divergence: ${v.divergence_kinds.join(", ")}`}
+      )}
+      {trads.map((t, i) => (
+        <span
+          key={i}
+          className="rounded-full border px-1 text-[8px] leading-3 text-[var(--ink-muted)]"
+          style={{ borderColor: "var(--hairline)", opacity: confidenceOpacity(t.confidence) }}
+          title={`${t.tradition} (${t.confidence.toLowerCase()}) — “${t.signature_marker}”`}
         >
-          ⚡
-        </div>
-      ) : null}
-    </>
+          {t.tradition.split("_")[0]}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function CountBadge({ v }: { v: NodeView }) {
+  if (!(v.halo && v.unexpanded_child_estimate)) return null;
+  return (
+    <div
+      className="absolute -top-1 -right-1 rounded-full px-1.5 text-[10px] font-semibold leading-4 text-white"
+      style={{ background: "var(--node-border)" }}
+      title={`${v.unexpanded_child_estimate} hidden children — click to expand`}
+    >
+      {v.unexpanded_child_estimate}
+    </div>
+  );
+}
+
+function PendingBadge({ v }: { v: NodeView }) {
+  if (v.coding_status !== "PENDING") return null;
+  return (
+    <div
+      className="absolute -bottom-1 -left-1 rounded-full px-1 text-[9px] font-bold leading-4 text-white"
+      style={{ background: "var(--coding-pending)" }}
+      title="Coding pending — not yet human-verified"
+    >
+      ⋯
+    </div>
   );
 }
 
@@ -92,7 +144,8 @@ export function DecisionNode({ data }: NodeProps) {
       >
         {d.semanticZoom ? "" : v.label}
       </div>
-      <Badges v={v} />
+      <CountBadge v={v} />
+      <PendingBadge v={v} />
       <CenterHandles />
     </div>
   );
@@ -100,24 +153,23 @@ export function DecisionNode({ data }: NodeProps) {
 
 export function ConsequenceNode({ data }: NodeProps) {
   const { v, cls, ring, d } = useCommon(data);
-  const dom = dominantValence(v);
-  const fill = dom === null ? "var(--node-consequence)" : valenceVar(dom);
-  const textOnFill = dom !== null && dom !== 0 ? "#ffffff" : "var(--ink)";
   return (
     <div className={`relative ${cls} ${v.halo ? "node-halo" : ""}`}>
       <div
         className="flex h-24 w-24 items-center justify-center rounded-full border-2 p-2 text-center text-[11px] font-medium leading-tight"
         style={{
-          background: fill,
+          background: "var(--node-consequence)",
           borderColor: "var(--node-border)",
-          color: textOnFill,
+          color: "var(--ink)",
           boxShadow: ring,
         }}
         title={v.label}
       >
         {d.semanticZoom ? "" : v.label}
       </div>
-      <Badges v={v} />
+      <CountBadge v={v} />
+      <PendingBadge v={v} />
+      <Attributions v={v} />
       <CenterHandles />
     </div>
   );

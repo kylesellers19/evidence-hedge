@@ -10,6 +10,32 @@ export type EvidenceGrade =
   | "ANALOGICAL"
   | "SPECULATIVE";
 
+export type Register =
+  | "MARKET"
+  | "INDUSTRIAL"
+  | "CIVIC"
+  | "DOMESTIC"
+  | "INSPIRED"
+  | "FAME"
+  | "GREEN"
+  | "PROJECTIVE";
+export type Confidence = "HIGH" | "MODERATE" | "LOW";
+export type CodingStatus = "PENDING" | "HUMAN_VERIFIED";
+
+export interface RegisterEngagement {
+  register: Register;
+  signature_marker: string;
+  justification: string;
+  confidence: Confidence;
+}
+
+export interface TraditionAttribution {
+  tradition: string;
+  signature_marker: string;
+  justification: string;
+  confidence: Confidence;
+}
+
 export interface NodeView {
   id: string;
   type: NodeType;
@@ -22,8 +48,8 @@ export interface NodeView {
   unexpanded_child_estimate: number | null;
   halo: boolean;
   goal_relevance: number | null;
-  is_divergence: boolean;
-  divergence_kinds: string[];
+  coding_status: CodingStatus | null;
+  register_clashes: [Register, Register][];
   on_resolution_path: boolean;
   data: Record<string, unknown>;
 }
@@ -48,20 +74,24 @@ export interface LoopOverlay {
   polarity_product: number;
 }
 
-export interface DivergencePoint {
+export interface RegisterClash {
   node_id: string;
-  kind: "across_frameworks" | "across_stakeholders";
-  fixed_id: string;
-  signs: Record<string, number>;
+  register_a: Register;
+  register_b: Register;
+}
+
+export interface TraditionTension {
+  source: string;
+  target: string;
+  tradition_a: string;
+  tradition_b: string;
+  about: string;
 }
 
 export interface Overlays {
-  divergence: {
-    across_frameworks: DivergencePoint[];
-    across_stakeholders: DivergencePoint[];
-  };
+  register_clashes: RegisterClash[];
+  tradition_tensions: TraditionTension[];
   loops: LoopOverlay[];
-  burden_index: Record<string, number>;
   resolution_node_ids: string[];
   closures: { source: string; satisfies: string }[];
 }

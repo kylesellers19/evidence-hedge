@@ -1,9 +1,8 @@
-const valence = [
-  ["var(--valence-neg2)", "−2"],
-  ["var(--valence-neg1)", "−1"],
-  ["var(--valence-0)", "0"],
-  ["var(--valence-pos1)", "+1"],
-  ["var(--valence-pos2)", "+2"],
+import type { Register } from "../api";
+import { REGISTER_LABEL, registerVar } from "../graph/semantics";
+
+const REGISTERS: Register[] = [
+  "MARKET", "INDUSTRIAL", "CIVIC", "DOMESTIC", "INSPIRED", "FAME", "GREEN", "PROJECTIVE",
 ];
 
 export function Legend() {
@@ -15,24 +14,31 @@ export function Legend() {
         <span className="ml-2 inline-block h-3 w-3 rounded-full border-2" style={{ borderColor: "var(--node-border)" }} />
         consequence
       </div>
-      <div className="flex items-center gap-1">
-        <span className="text-[var(--ink-muted)]">valence</span>
-        {valence.map(([c, l]) => (
-          <span key={l} className="flex h-4 w-6 items-center justify-center rounded-sm text-[9px] text-white" style={{ background: c }}>
-            {l}
-          </span>
-        ))}
+      <div>
+        <div className="mb-0.5 text-[var(--ink-muted)]">registers (opacity = confidence)</div>
+        <div className="grid grid-cols-4 gap-x-2 gap-y-0.5">
+          {REGISTERS.map((r) => (
+            <div key={r} className="flex items-center gap-1">
+              <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: registerVar(r) }} />
+              <span>{REGISTER_LABEL[r]}</span>
+            </div>
+          ))}
+        </div>
       </div>
       <div className="space-y-1">
         <Line dash={undefined} color="var(--grade-ink)" text="supported (solid)" />
         <Line dash="6 4" color="var(--grade-ink)" text="weak / analogical (dashed)" />
         <Line dash="6 4" color="var(--grade-contested)" text="contested" />
-        <Line dash="6 3" color="var(--grade-contradicted)" text="contradicted" />
         <Line dash="8 4" color="var(--closure)" text="closure → seed" />
       </div>
       <div className="flex items-center gap-2">
-        <span className="inline-block h-3 w-3 rounded-full" style={{ background: "var(--divergence)" }} />
-        ⚡ divergence · R⟳ reinforcing · B⟲ balancing
+        <span className="inline-block h-3 w-3 rounded-full" style={{ outline: "2px solid var(--register-clash)", outlineOffset: "1px" }} />
+        ◈ register clash
+        <span className="ml-1" style={{ color: "var(--tradition-tension)" }}>⚔ tradition tension</span>
+      </div>
+      <div className="flex items-center gap-2 text-[var(--ink-muted)]">
+        <span className="inline-block h-3 w-3 rounded-full" style={{ background: "var(--coding-pending)" }} />
+        ⋯ coding pending · R⟳ reinforcing · B⟲ balancing
       </div>
     </div>
   );

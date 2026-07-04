@@ -36,6 +36,8 @@ function DeliberationApp() {
       <Toolbar
         view={d.view}
         setView={d.setView}
+        excludeUncoded={d.excludeUncoded}
+        setExcludeUncoded={d.setExcludeUncoded}
         onReset={d.reset}
         corrections={d.corrections}
         overlays={d.graph?.overlays ?? null}
@@ -56,6 +58,7 @@ function DeliberationApp() {
                 graph={d.graph}
                 path={d.path}
                 selectedId={d.selectedId}
+                excludeUncoded={d.view === "resolution" && d.excludeUncoded}
                 onSelect={d.setSelectedId}
                 onExpand={d.expand}
                 onHover={d.hover}

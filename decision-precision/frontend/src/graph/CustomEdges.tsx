@@ -11,6 +11,7 @@ import { gradeStroke } from "./semantics";
 export interface EdgeData {
   view: EdgeView;
   loopClass?: string;
+  tension?: string; // curated tradition attack: the contested proposition (hover)
   onPath: boolean;
   dimmed: boolean;
   [key: string]: unknown;
@@ -32,6 +33,31 @@ function label(labelX: number, labelY: number, text: string, bg: string) {
   );
 }
 
+/** Tradition-tension underlay: a thick deep-red stroke beneath the edge plus a
+ *  hover-labeled ⚔ marker carrying the contested proposition. Visually distinct
+ *  from the register-clash node ring — this is the SECOND tension layer. */
+function TensionOverlay({ path, labelX, labelY, about }: {
+  path: string; labelX: number; labelY: number; about: string;
+}) {
+  return (
+    <>
+      <BaseEdge path={path} style={{ stroke: "var(--tradition-tension)", strokeWidth: 6, opacity: 0.28 }} />
+      <EdgeLabelRenderer>
+        <div
+          className="absolute cursor-help rounded px-1 text-[10px] font-bold text-white"
+          style={{
+            transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY - 12}px)`,
+            background: "var(--tradition-tension)",
+          }}
+          title={`Tradition tension — ${about}`}
+        >
+          ⚔
+        </div>
+      </EdgeLabelRenderer>
+    </>
+  );
+}
+
 export function CausalEdge(props: EdgeProps) {
   const { sourceX, sourceY, targetX, targetY, markerEnd } = props;
   const d = props.data as EdgeData;
@@ -40,6 +66,9 @@ export function CausalEdge(props: EdgeProps) {
   const hl = d.onPath;
   return (
     <>
+      {d.tension && !d.dimmed && (
+        <TensionOverlay path={path} labelX={labelX} labelY={labelY} about={d.tension} />
+      )}
       <BaseEdge
         path={path}
         markerEnd={markerEnd}
@@ -70,18 +99,23 @@ export function CausalEdge(props: EdgeProps) {
 export function DeliberativeEdge(props: EdgeProps) {
   const { sourceX, sourceY, targetX, targetY, markerEnd } = props;
   const d = props.data as EdgeData;
-  const [path] = getStraightPath({ sourceX, sourceY, targetX, targetY });
+  const [path, labelX, labelY] = getStraightPath({ sourceX, sourceY, targetX, targetY });
   return (
-    <BaseEdge
-      path={path}
-      markerEnd={markerEnd}
-      style={{
-        stroke: "var(--ink-muted)",
-        strokeWidth: 1.5,
-        strokeDasharray: "2 3",
-        opacity: d.dimmed ? 0.2 : 0.8,
-      }}
-    />
+    <>
+      {d.tension && !d.dimmed && (
+        <TensionOverlay path={path} labelX={labelX} labelY={labelY} about={d.tension} />
+      )}
+      <BaseEdge
+        path={path}
+        markerEnd={markerEnd}
+        style={{
+          stroke: "var(--ink-muted)",
+          strokeWidth: 1.5,
+          strokeDasharray: "2 3",
+          opacity: d.dimmed ? 0.2 : 0.8,
+        }}
+      />
+    </>
   );
 }
 

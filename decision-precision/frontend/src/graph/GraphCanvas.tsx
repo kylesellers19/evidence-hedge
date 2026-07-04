@@ -20,6 +20,7 @@ interface Props {
   graph: GraphView;
   path: PathState;
   selectedId: string | null;
+  excludeUncoded: boolean;
   onSelect: (id: string) => void;
   onExpand: (id: string) => void;
   onHover: (id: string) => void;
@@ -30,6 +31,7 @@ export function GraphCanvas({
   graph,
   path,
   selectedId,
+  excludeUncoded,
   onSelect,
   onExpand,
   onHover,
@@ -38,9 +40,16 @@ export function GraphCanvas({
   const [zoom, setZoom] = useState(1);
   const semanticZoom = zoom < SEMANTIC_ZOOM_THRESHOLD;
 
+  // exclude-uncoded (resolution view): drop PENDING nodes and their edges.
+  const visibleNodes = useMemo(
+    () => (excludeUncoded ? graph.nodes.filter((n) => n.coding_status !== "PENDING") : graph.nodes),
+    [graph.nodes, excludeUncoded],
+  );
+  const visibleIds = useMemo(() => new Set(visibleNodes.map((n) => n.id)), [visibleNodes]);
+
   const rfNodes: Node[] = useMemo(
     () =>
-      graph.nodes.map((v) => ({
+      visibleNodes.map((v) => ({
         id: v.id,
         type: v.type,
         position: { x: v.x, y: v.y },
@@ -52,31 +61,37 @@ export function GraphCanvas({
           dimmed: path.active && !path.nodeIds.has(v.id),
         },
       })),
-    [graph.nodes, semanticZoom, path, selectedId],
+    [visibleNodes, semanticZoom, path, selectedId],
   );
 
   const rfEdges: Edge[] = useMemo(() => {
     const loops = loopEdgeClasses(graph.overlays);
-    return graph.edges.map((e) => {
-      const onPath = path.active && path.pairs.has(`${e.source}->${e.target}`);
-      return {
-        id: e.id,
-        source: e.source,
-        target: e.target,
-        type: e.type,
-        markerEnd:
-          e.type === "FRAMES"
-            ? undefined
-            : { type: MarkerType.ArrowClosed, width: 12, height: 12, color: "#94a3b8" },
-        data: {
-          view: e,
-          loopClass: loops.get(e.id),
-          onPath,
-          dimmed: path.active && !onPath,
-        },
-      };
-    });
-  }, [graph.edges, graph.overlays, path]);
+    const tensionAbout = new Map(
+      graph.overlays.tradition_tensions.map((t) => [`${t.source}->${t.target}`, t.about] as const),
+    );
+    return graph.edges
+      .filter((e) => visibleIds.has(e.source) && visibleIds.has(e.target))
+      .map((e) => {
+        const onPath = path.active && path.pairs.has(`${e.source}->${e.target}`);
+        return {
+          id: e.id,
+          source: e.source,
+          target: e.target,
+          type: e.type,
+          markerEnd:
+            e.type === "FRAMES"
+              ? undefined
+              : { type: MarkerType.ArrowClosed, width: 12, height: 12, color: "#94a3b8" },
+          data: {
+            view: e,
+            loopClass: loops.get(e.id),
+            tension: tensionAbout.get(`${e.source}->${e.target}`),
+            onPath,
+            dimmed: path.active && !onPath,
+          },
+        };
+      });
+  }, [graph.edges, graph.overlays, path, visibleIds]);
 
   return (
     <ReactFlow

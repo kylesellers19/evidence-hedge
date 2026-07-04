@@ -49,7 +49,9 @@
   --grade-contested: #b45309; /* amber, dashed + label */
   --grade-contradicted: #dc2626; /* red, dashed + label */
 
-  --divergence: #c026d3;     /* fuchsia glow + badge */
+  --register-clash: #f59e0b;   /* amber ring: two orders of worth clash on a node */
+  --tradition-tension: #b91c1c; /* deep red: adjacent nodes' traditions attack */
+  --coding-pending: #94a3b8;   /* grey: not yet human-verified */
   --closure: #0d9488;        /* teal arc to center */
   --reinforcing: #ea580c;    /* loop marker R */
   --balancing: #2563eb;      /* loop marker B */
@@ -89,7 +91,9 @@
   --grade-contested: #f59e0b;
   --grade-contradicted: #f87171;
 
-  --divergence: #e879f9;
+  --register-clash: #fbbf24;
+  --tradition-tension: #ef4444;
+  --coding-pending: #64748b;
   --closure: #2dd4bf;
   --reinforcing: #fb923c;
   --balancing: #60a5fa;
@@ -122,13 +126,17 @@ html, body, #root {
   background: var(--surface);
 }
 
-/* divergence glow (used on nodes flagged is_divergence) */
-@keyframes divergence-pulse {
-  0%, 100% { filter: drop-shadow(0 0 3px var(--divergence)); }
-  50% { filter: drop-shadow(0 0 9px var(--divergence)); }
+/* register clash: two engaged orders of worth conflict on this node */
+.register-clash {
+  outline: 2px solid var(--register-clash);
+  outline-offset: 3px;
+  border-radius: 9999px;
 }
-.divergence-glow {
-  animation: divergence-pulse 2.2s ease-in-out infinite;
+
+/* not-yet-human-verified nodes read as provisional */
+.coding-pending {
+  opacity: 0.55;
+  filter: grayscale(0.35);
 }
 
 /* dotted halo for unexpanded nodes with hidden children */

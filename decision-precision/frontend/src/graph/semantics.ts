@@ -1,31 +1,27 @@
 // Meaning -> token variables. The ONLY place semantic colors are decided;
 // everything else references the CSS variables this returns.
 
-import type { EdgeView, EvidenceGrade, NodeView, Overlays } from "../api";
+import type { Confidence, EdgeView, EvidenceGrade, Overlays, Register } from "../api";
 
-/** CSS var for a valence sign in [-2, 2]. */
-export function valenceVar(sign: number): string {
-  const s = Math.max(-2, Math.min(2, Math.round(sign)));
-  return {
-    [-2]: "var(--valence-neg2)",
-    [-1]: "var(--valence-neg1)",
-    [0]: "var(--valence-0)",
-    [1]: "var(--valence-pos1)",
-    [2]: "var(--valence-pos2)",
-  }[s]!;
+/** CSS var (token) for a register — the 8 Boltanski–Thévenot orders of worth. */
+export function registerVar(register: Register): string {
+  return `var(--color-register-${register.toLowerCase()})`;
 }
 
-interface ValenceLike {
-  sign: number;
-}
+export const REGISTER_LABEL: Record<Register, string> = {
+  MARKET: "Market",
+  INDUSTRIAL: "Industrial",
+  CIVIC: "Civic",
+  DOMESTIC: "Domestic",
+  INSPIRED: "Inspired",
+  FAME: "Fame",
+  GREEN: "Green",
+  PROJECTIVE: "Projective",
+};
 
-/** Dominant valence of a consequence = clamped sum of its valence signs.
- *  null when the node carries no valences (e.g. decisions). */
-export function dominantValence(node: NodeView): number | null {
-  const vs = (node.data?.valences as ValenceLike[] | undefined) ?? [];
-  if (!vs.length) return null;
-  const sum = vs.reduce((a, v) => a + (v.sign ?? 0), 0);
-  return Math.max(-2, Math.min(2, sum));
+/** Confidence rendered as opacity (HIGH/MODERATE/LOW). */
+export function confidenceOpacity(confidence: Confidence): number {
+  return { HIGH: 1, MODERATE: 0.66, LOW: 0.38 }[confidence];
 }
 
 /** Edge stroke semantics: color + dash + width. Confidence is shown by line

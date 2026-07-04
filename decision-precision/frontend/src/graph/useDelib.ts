@@ -18,6 +18,7 @@ const EMPTY_PATH: PathState = {
 export function useDelib() {
   const [graph, setGraph] = useState<GraphView | null>(null);
   const [view, setView] = useState<"full" | "resolution">("full");
+  const [excludeUncoded, setExcludeUncoded] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [path, setPath] = useState<PathState>(EMPTY_PATH);
   const [corrections, setCorrections] = useState(0);
@@ -126,6 +127,8 @@ export function useDelib() {
     graph,
     view,
     setView,
+    excludeUncoded,
+    setExcludeUncoded,
     selectedId,
     setSelectedId,
     selected,

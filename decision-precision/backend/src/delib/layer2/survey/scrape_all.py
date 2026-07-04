@@ -68,10 +68,13 @@ def run_scrape(
         fetcher=fetcher, cache=page_cache, config=ScrapeConfig(min_interval_seconds=min_interval)
     )
 
+    # Always fetch (and cache) the index page — its <select> is the enumeration
+    # source and its markup is needed to reconcile parse_variable_inventory.
+    progress("Fetching index page…")
+    inventory = parse_variable_inventory(scraper.fetch(f"{PHILPEOPLE_BASE}{CORRELATIONS_PATH}"))
+    progress(f"  inventory: {len(inventory)} variables")
     if variables is None:
-        progress("Enumerating variable inventory from the index page…")
-        variables = parse_variable_inventory(scraper.fetch(f"{PHILPEOPLE_BASE}{CORRELATIONS_PATH}"))
-        progress(f"  {len(variables)} variables in inventory")
+        variables = inventory
     if limit is not None:
         variables = variables[:limit]
 

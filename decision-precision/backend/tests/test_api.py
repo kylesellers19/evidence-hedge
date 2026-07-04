@@ -40,7 +40,15 @@ def test_atlas_serves_two_geometries(client, tmp_path, monkeypatch):
     assert body["n_positions"] >= 20
     node = body["nodes"][0]
     assert len(node["attention"]) == 2 and len(node["polarity"]) == 2
+    assert "thinkers" in body and "traditions" in body
     api._atlas_cache.clear()  # don't leak the fixture atlas into other tests
+
+
+def test_atlas_project_stub_returns_empty(client):
+    r = client.post("/api/atlas/project", json={"graph_id": "demo"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["graph_id"] == "demo" and body["touched_node_ids"] == []
 
 
 def test_initial_graph_is_seed_plus_ring1(client):

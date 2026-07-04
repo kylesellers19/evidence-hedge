@@ -84,3 +84,47 @@ def test_atlas_edges_reference_atlas_nodes():
     # every edge endpoint that is a position is a known node (demographics gone)
     for e in atlas.edges:
         assert e.source in node_ids and e.target in node_ids
+
+
+def test_nodes_carry_neighbors_sorted_by_abs_r():
+    atlas = build_atlas(_store_with_a_demographic())
+    node = next(n for n in atlas.nodes if n.neighbors)
+    mags = [abs(x.r) for x in node.neighbors]
+    assert mags == sorted(mags, reverse=True)
+    assert len(node.neighbors) <= 6
+    # neighbor ids are atlas nodes (positions), never the demographic
+    ids = {n.id for n in atlas.nodes}
+    assert all(x.id in ids for x in node.neighbors)
+
+
+class _Ev:
+    def __init__(self, tid, tlabel, pid, r):
+        self.thinker_id, self.thinker_label, self.position_id, self.r = tid, tlabel, pid, r
+
+
+def test_thinker_layer_centroid_and_topk():
+    store = CorrelationStore()
+    load_fixture(store)
+    atlas0 = build_atlas(store)
+    a, b = atlas0.nodes[0].id, atlas0.nodes[1].id
+    bridge = [
+        _Ev("kant", "Kant", a, 0.6),
+        _Ev("kant", "Kant", b, 0.2),
+        _Ev("kant", "Kant", "aos-metaphysics", 0.9),  # not an atlas node -> dropped
+    ]
+    atlas = build_atlas(store, bridge_rows=bridge, thinker_k=6)
+    kant = next(t for t in atlas.thinkers if t.id == "kant")
+    # only the two atlas positions contribute; weighted centroid in x
+    ca = {n.id: n.attention for n in atlas.nodes}
+    wx = (0.6 * ca[a][0] + 0.2 * ca[b][0]) / 0.8
+    assert abs(kant.attention[0] - wx) < 1e-9
+    assert {e.position_id for e in kant.edges} == {a, b}  # demographic dropped
+
+
+def test_traditions_only_present_leaves():
+    # fixture positions include practical-reason-kantian etc. only if in the data;
+    # traditions list is a (possibly empty) list of leaves actually present
+    atlas = build_atlas(_store_with_a_demographic())
+    for t in atlas.traditions:
+        assert t.member_ids  # never an empty tradition
+        assert all(m in {n.id for n in atlas.nodes} for m in t.member_ids)

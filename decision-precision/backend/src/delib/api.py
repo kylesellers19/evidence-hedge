@@ -16,6 +16,7 @@ from pydantic import BaseModel
 
 from .layer2.cache import SparqlCache
 from .layer2.survey.atlas import AtlasView, build_atlas
+from .layer2.survey.bridge_evidence import BridgeEvidenceStore
 from .layer2.survey.scrape import CORRELATIONS_PATH, parse_variable_inventory
 from .layer2.survey.store import CorrelationStore, slugify
 from .queries import path_confidence
@@ -25,6 +26,7 @@ from .session import Session
 DATA = Path(__file__).resolve().parents[3] / "data"
 DEFAULT_CORR_DB = DATA / "cache" / "correlations.sqlite"
 DEFAULT_PAGE_CACHE = DATA / "cache" / "philpeople_pages.sqlite"
+DEFAULT_BRIDGE_DB = DATA / "cache" / "bridge_evidence.sqlite"
 
 
 def _authoritative_position_ids() -> set[str] | None:
@@ -134,8 +136,31 @@ def atlas() -> AtlasView:
         store = CorrelationStore(str(DEFAULT_CORR_DB))
         if store.count() == 0:
             raise HTTPException(503, "correlation store is empty; run the Stage A scrape/reparse first")
-        _atlas_cache["view"] = build_atlas(store, position_ids=_authoritative_position_ids())
+        bridge_rows = (
+            BridgeEvidenceStore(str(DEFAULT_BRIDGE_DB)).all() if DEFAULT_BRIDGE_DB.exists() else None
+        )
+        _atlas_cache["view"] = build_atlas(
+            store, position_ids=_authoritative_position_ids(), bridge_rows=bridge_rows
+        )
     return _atlas_cache["view"]
+
+
+class ProjectRequest(BaseModel):
+    graph_id: str
+
+
+class ProjectResponse(BaseModel):
+    graph_id: str
+    touched_node_ids: list[str]
+
+
+@app.post("/api/atlas/project", response_model=ProjectResponse)
+def atlas_project(body: ProjectRequest) -> ProjectResponse:
+    """Projection contract (STUB): map a DELIB deliberation graph onto the atlas —
+    return the atlas position ids its attributions touch, so the frontend can light
+    them and dim the rest. Nothing computes the mapping yet; the contract exists so
+    the convergence demo is a data change later, not a rebuild. Always [] for now."""
+    return ProjectResponse(graph_id=body.graph_id, touched_node_ids=[])
 
 
 __all__ = ["app", "session"]

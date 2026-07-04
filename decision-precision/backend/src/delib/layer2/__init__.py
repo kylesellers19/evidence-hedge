@@ -23,6 +23,10 @@ from .queries import (
     lineage_drift,
     node_distance,
 )
+from .cache import SparqlCache
+from .wikidata import ThinkerEdge, WikidataClient
+from .project import project_influence
+from .registry_link import link_frameworks, traditions_from_frameworks
 
 __all__ = [
     # enums
@@ -49,4 +53,11 @@ __all__ = [
     "DiagnosticReport",
     "lineage_drift",
     "LineageDrift",
+    # stage B: wikidata influence
+    "SparqlCache",
+    "WikidataClient",
+    "ThinkerEdge",
+    "project_influence",
+    "link_frameworks",
+    "traditions_from_frameworks",
 ]

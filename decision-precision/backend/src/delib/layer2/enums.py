@@ -21,6 +21,7 @@ GRAIN_ORDER: dict[Grain, int] = {Grain.TRADITION: 0, Grain.POSITION: 1, Grain.CL
 class Placement(str, Enum):
     """How a node got its coordinates. Estimates must declare themselves."""
 
+    UNPLACED = "UNPLACED"  # exists (has edges/bridge) but not yet on the metric
     SURVEY = "SURVEY"  # placed by the Bourget-Chalmers survey metric (ground truth)
     CALIBRATED = "CALIBRATED"  # placed by Procrustes-calibrated embedding (estimate)
     CORROBORATED = "CORROBORATED"  # survey/calibrated + independent instruments agree

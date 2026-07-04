@@ -30,6 +30,8 @@ class MapNode(BaseModel):
 
     @model_validator(mode="after")
     def _placement_backed_by_coords(self) -> "MapNode":
+        if self.placement is Placement.UNPLACED and (self.coords_survey or self.coords_calibrated):
+            raise ValueError("UNPLACED node must not carry coordinates")
         if self.placement is Placement.SURVEY and not self.coords_survey:
             raise ValueError("SURVEY placement requires coords_survey")
         if self.placement is Placement.CALIBRATED and not self.coords_calibrated:

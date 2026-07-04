@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
-import { api, type ClaimDomain, type ClaimRecord, type EdgeView } from "../api";
-import { GRADE_LABEL, gradeStroke } from "../graph/semantics";
+import { api, type ClaimDomain, type ClaimRecord, type EdgeView, type StudyDesign } from "../api";
+
+/** "systematic_review of [rct]" so synthesis strength is visible. */
+function fmtDesign(d: StudyDesign): string {
+  return d.synthesis_of.length ? `${d.design} of [${d.synthesis_of.join(", ")}]` : d.design;
+}
+import { GRADE_LABEL, consistencyWord, gradeStroke } from "../graph/semantics";
 
 interface Props {
   edge: EdgeView;
@@ -51,13 +56,20 @@ export function EvidencePanel({ edge, onRegrade, onClose }: Props) {
           <div className="mt-1">{claimText || <span className="text-[var(--ink-muted)]">—</span>}</div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span
             className="rounded px-2 py-0.5 text-xs font-semibold text-white"
             style={{ background: gradeStroke(grade ?? null).color }}
           >
             {grade ? GRADE_LABEL[grade] : "ungraded"}
           </span>
+          {/* consistency at the top level: the two CONTESTED flavors (mixed vs
+              contradicting) must be distinguishable at a glance */}
+          {comps && consistencyWord(comps.consistency) && (
+            <span className="rounded border border-[var(--hairline)] px-2 py-0.5 text-xs">
+              {consistencyWord(comps.consistency)}
+            </span>
+          )}
           {claim?.graded_at != null && (
             <span className="text-[11px] text-[var(--ink-muted)]">
               graded {new Date(claim.graded_at * 1000).toLocaleDateString()} (snapshot)
@@ -73,7 +85,7 @@ export function EvidencePanel({ edge, onRegrade, onClose }: Props) {
             <Row k="design tier (decides)" v={comps.design_tier_class} />
             <Row k="consistency" v={comps.consistency} />
             <Row k="directness" v={comps.directness} />
-            <Row k="study designs" v={comps.per_study_designs.join(", ") || "—"} />
+            <Row k="study designs" v={comps.per_study_designs.map(fmtDesign).join(", ") || "—"} />
             <Row k="normalized (display)" v={comps.design_tier.toFixed(2)} />
           </div>
         ) : (

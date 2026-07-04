@@ -182,8 +182,9 @@ class RegradeRequest(BaseModel):
     health_typed: bool = False
 
 
-def _apply_grade_to_edges(h: str, grade: str) -> int:
-    """Restyle every causal edge whose mechanism claim hashes to ``h``."""
+def _apply_grade_to_edges(h: str, grade: str, consistency: str | None) -> int:
+    """Restyle every causal edge whose mechanism claim hashes to ``h``, carrying
+    the consistency direction so an ANALOGICAL grade still reads as +/-/mixed."""
     g = session.graph
     updated = 0
     for e in g.edges():
@@ -191,7 +192,10 @@ def _apply_grade_to_edges(h: str, grade: str) -> int:
             continue
         edge: CausalEdge = e  # type: ignore[assignment]
         if claim_hash(edge.mechanism_text) == h:
-            new = edge.model_copy(update={"evidence_grade": EvidenceGrade(grade)})
+            new = edge.model_copy(update={
+                "evidence_grade": EvidenceGrade(grade),
+                "evidence_consistency": consistency,
+            })
             g.raw()[e.source][e.target][EdgeType.CAUSAL.value]["data"] = new
             updated += 1
     return updated
@@ -208,7 +212,8 @@ def regrade(body: RegradeRequest) -> dict[str, Any]:
         )
     except BudgetExceeded as exc:
         raise HTTPException(402, str(exc))
-    edges = _apply_grade_to_edges(rec.claim_hash, rec.evidence_grade) if rec.evidence_grade else 0
+    consistency = (rec.grade_components or {}).get("consistency")
+    edges = _apply_grade_to_edges(rec.claim_hash, rec.evidence_grade, consistency) if rec.evidence_grade else 0
     return {"claim": rec.model_dump(mode="json"), "edges_restyled": edges}
 
 

@@ -6,7 +6,7 @@ import {
   type EdgeProps,
 } from "@xyflow/react";
 import type { EdgeView } from "../api";
-import { gradeStroke } from "./semantics";
+import { consistencyWord, gradeStroke } from "./semantics";
 
 export interface EdgeData {
   view: EdgeView;
@@ -83,7 +83,15 @@ export function CausalEdge(props: EdgeProps) {
         ? label(labelX, labelY, "✕ contradicted", "var(--grade-contradicted)")
         : d.view.evidence_grade === "CONTESTED"
           ? label(labelX, labelY, "contested", "var(--grade-contested)")
-          : null}
+          : d.view.evidence_grade === "ANALOGICAL"
+            ? label(
+                labelX,
+                labelY,
+                // ANALOGICAL carries its consistency direction (no vocabulary change)
+                `≈ analogical${consistencyWord(d.view.evidence_consistency) ? ` (${consistencyWord(d.view.evidence_consistency)})` : ""}`,
+                "var(--grade-ink)",
+              )
+            : null}
       {d.loopClass && d.loopClass !== "UNDETERMINED"
         ? label(
             labelX,

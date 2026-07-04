@@ -11,14 +11,17 @@ from delib.evidence import (
     Consistency,
     DesignTier,
     Directness,
+    StudyDesign,
     components_from,
     decision_table,
     design_from_pubtypes,
     design_tier_class,
+    effective_band,
     evidence_grade_from_components,
     grade_from,
     normalized_design_tier,
 )
+from delib.evidence.grading import _POLICY_BAND
 from delib.evidence.grader import grade_and_store, grade_claim, summarize_papers
 from delib.evidence.sources import MergedPaper
 from delib.llm import LLM, LLMSettings
@@ -41,9 +44,43 @@ def test_design_from_pubtypes_picks_strongest():
 
 def test_class_is_domain_dependent_for_the_same_design():
     # a case report is unevidenced under Melnyk (VI) but counts as very-weak
-    # policy evidence (no clinical hierarchy demoting it)
+    # policy evidence (Maryland SMS 1) — its band is now EXPLICIT, not a fallback
     assert design_tier_class(["case_report"], HEALTH) is DesignTier.INADEQUATE
     assert design_tier_class(["case_report"], POLICY) is DesignTier.MODERATE
+    assert _POLICY_BAND["case_report"] == 1  # SMS 1, explicit in config
+
+
+# --- synthesis tier rule ----------------------------------------------------
+
+
+def _review(*constituents):
+    return StudyDesign(design="systematic_review", synthesis_of=list(constituents))
+
+
+def test_synthesis_tier_follows_strongest_constituent():
+    # a review of RCTs takes the STRONG path; a review of cross-sectional is MODERATE
+    for domain in (HEALTH, POLICY):
+        assert design_tier_class([_review("rct")], domain) is DesignTier.STRONG
+        assert design_tier_class([_review("cross-sectional")], domain) is DesignTier.MODERATE
+
+
+def test_review_of_rcts_grades_supported_both_domains():
+    for domain in (HEALTH, POLICY):
+        c = components_from(domain, [_review("rct")], SUPPORT, DIRECT)
+        assert evidence_grade_from_components(c).value == "SUPPORTED"
+
+
+def test_review_of_observational_never_strong_both_domains():
+    for domain in (HEALTH, POLICY):
+        c = components_from(domain, [_review("cross-sectional")], SUPPORT, DIRECT)
+        assert c.design_tier_class is DesignTier.MODERATE
+        assert evidence_grade_from_components(c).value == "WEAK"  # not SUPPORTED
+
+
+def test_review_with_unknown_constituents_is_moderate_not_strong():
+    for domain in (HEALTH, POLICY):
+        assert design_tier_class([_review()], domain) is DesignTier.MODERATE
+        assert effective_band(_review(), domain) == 3  # observational-review default
 
 
 def test_normalized_ordinal_is_display_only_not_the_decision():

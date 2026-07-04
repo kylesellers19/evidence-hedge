@@ -36,6 +36,9 @@ class CausalEdge(BaseModel):
     target: str = Field(min_length=1)
     mechanism_text: str = Field(min_length=1)
     evidence_grade: EvidenceGrade = EvidenceGrade.SPECULATIVE
+    # the graded claim's consistency direction — lets an ANALOGICAL grade still
+    # read as supporting / mixed / contradicting (set by the evidence re-grade).
+    evidence_consistency: str | None = None
     citations: list[Citation] = Field(default_factory=list)
     transfer_note: str | None = None
     # NOTE (flagged for confirmation): `polarity` is NOT in the brief's field

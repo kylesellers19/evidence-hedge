@@ -37,7 +37,10 @@ Two sub-tasks:
    publication-type tags where present; otherwise infer the design from the
    abstract. Prefer canonical labels (meta-analysis, systematic review, RCT,
    cohort, case-control, cross-sectional, case report, quasi-experiment,
-   difference-in-differences, modeling, expert opinion).
+   difference-in-differences, modeling, expert opinion). For a meta-analysis or
+   systematic review, ALSO record synthesis_of — the design classes it pools
+   (e.g. ["rct"] for a review of trials, ["cohort","cross-sectional"] for a
+   review of observational studies); its strength follows its constituents.
 2. consistency across the set — CONSISTENT_SUPPORT (evidence agrees the effect
    holds), MIXED (conflicting findings), CONSISTENT_CONTRA (evidence agrees the
    effect is absent/opposite), or NONE (no empirical evidence). Weigh contrasting

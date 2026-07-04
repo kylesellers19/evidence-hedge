@@ -17,6 +17,7 @@ from .grading import (
     Consistency,
     Directness,
     GradeComponents,
+    StudyDesign,
     components_from,
     evidence_grade_from_components,
 )
@@ -50,12 +51,8 @@ def grade_claim(
         return comps, evidence_grade_from_components(comps)
 
     out = llm.grade_components(claim_text, summarize_papers(papers))
-    comps = components_from(
-        domain,
-        [d.design for d in out.per_study_designs],
-        Consistency(out.consistency),
-        Directness(out.directness),
-    )
+    studies = [StudyDesign(design=d.design, synthesis_of=d.synthesis_of) for d in out.per_study_designs]
+    comps = components_from(domain, studies, Consistency(out.consistency), Directness(out.directness))
     return comps, evidence_grade_from_components(comps)
 
 

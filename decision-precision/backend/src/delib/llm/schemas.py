@@ -112,6 +112,10 @@ class StudyDesignClassification(BaseModel):
     model_config = _STRICT
     ref: str = Field(min_length=1, description="DOI or title identifying the paper.")
     design: str = Field(min_length=1, description="Study design (use the provided pub-type tags where present).")
+    synthesis_of: list[str] = Field(
+        default_factory=list,
+        description="For a meta-analysis / systematic review, the design classes it synthesizes.",
+    )
 
 
 class GradeComponentsOutput(BaseModel):

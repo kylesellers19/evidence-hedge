@@ -53,6 +53,7 @@ class EdgeView(BaseModel):
     target: str
     type: EdgeType
     evidence_grade: EvidenceGrade | None = None
+    evidence_consistency: str | None = None
     polarity: int | None = None
     satisfies: str | None = None
     justification: str | None = None
@@ -130,6 +131,7 @@ def graph_view(g: DelibGraph, view: str = "full") -> GraphView:
                 target=e.target,
                 type=e.type,
                 evidence_grade=grade,
+                evidence_consistency=getattr(e, "evidence_consistency", None),
                 polarity=getattr(e, "polarity", None),
                 satisfies=getattr(e, "satisfies", None).value
                 if getattr(e, "satisfies", None) is not None

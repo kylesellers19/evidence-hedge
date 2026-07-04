@@ -50,6 +50,20 @@ export function gradeStroke(grade: EvidenceGrade | null): {
   }
 }
 
+/** Consistency direction as a short word (for ANALOGICAL edges + the panel). */
+export function consistencyWord(consistency: string | null): string {
+  switch (consistency) {
+    case "CONSISTENT_SUPPORT":
+      return "supporting";
+    case "MIXED":
+      return "mixed";
+    case "CONSISTENT_CONTRA":
+      return "contradicting";
+    default:
+      return "";
+  }
+}
+
 export const GRADE_LABEL: Record<EvidenceGrade, string> = {
   SUPPORTED: "Supported",
   WEAK: "Weak",

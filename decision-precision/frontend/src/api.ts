@@ -75,6 +75,7 @@ export interface EdgeView {
   target: string;
   type: EdgeType;
   evidence_grade: EvidenceGrade | null;
+  evidence_consistency: string | null;
   polarity: number | null;
   satisfies: string | null;
   justification: string | null;
@@ -140,13 +141,20 @@ export interface Citation {
   citation_intent: string | null;
 }
 
+export type Consistency = "CONSISTENT_SUPPORT" | "MIXED" | "CONSISTENT_CONTRA" | "NONE";
+
+export interface StudyDesign {
+  design: string;
+  synthesis_of: string[];
+}
+
 export interface GradeComponents {
   domain: "HEALTH" | "POLICY";
   design_tier: number; // normalized ordinal — DISPLAY ONLY, not the decision variable
   design_tier_class: "STRONG" | "MODERATE" | "INADEQUATE"; // the decision variable
-  consistency: "CONSISTENT_SUPPORT" | "MIXED" | "CONSISTENT_CONTRA" | "NONE";
+  consistency: Consistency;
   directness: "DIRECT" | "ANALOGICAL" | "NONE";
-  per_study_designs: string[];
+  per_study_designs: StudyDesign[];
 }
 
 export interface ClaimRecord {

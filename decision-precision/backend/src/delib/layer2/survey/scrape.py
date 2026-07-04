@@ -31,7 +31,7 @@ from typing import Callable
 from pydantic import BaseModel
 
 from ..cache import SparqlCache
-from .store import Cells, CorrelationStore, SourceTier
+from .store import Cells, CorrelationStore, SourceTier, slugify
 
 PHILPEOPLE_BASE = "https://survey2020.philpeople.org"
 CORRELATIONS_PATH = "/survey/results/correlations"
@@ -118,9 +118,21 @@ class _PageParser(HTMLParser):
             self._depth = max(0, self._depth - 1)
 
 
+def _query(url: str) -> dict[str, list[str]]:
+    return urllib.parse.parse_qs(urllib.parse.urlparse(url).query)
+
+
 def _variable_from_href(href: str) -> str | None:
-    q = urllib.parse.urlparse(href).query
-    vals = urllib.parse.parse_qs(q).get("variable")
+    vals = _query(href).get("variable")
+    return vals[0] if vals else None
+
+
+def variable_from_url(url: str) -> str | None:
+    return _variable_from_href(url)
+
+
+def category_from_url(url: str) -> str | None:
+    vals = _query(url).get("category")
     return vals[0] if vals else None
 
 
@@ -183,6 +195,8 @@ class PhilPeopleScraper:
         self._fetch = fetcher or self._default_fetcher
         self._sleep = sleep_fn
         self._last_fetch: float | None = None
+        self.network_fetches = 0
+        self.cache_hits = 0
 
     def _default_fetcher(self, url: str) -> str:  # pragma: no cover - network
         req = urllib.request.Request(url, headers={"User-Agent": self.config.user_agent})
@@ -200,12 +214,17 @@ class PhilPeopleScraper:
         self._last_fetch = time.monotonic()
 
     def fetch(self, url: str) -> str:
+        """Return the page bytes, cache-resumable. Raw HTML is cached
+        UNCONDITIONALLY — the moment it's fetched, before any parsing — so a
+        parse failure never loses the capture and reparse_from_cache can re-run."""
         cached = self.cache.get(url)
         if cached is not None:
+            self.cache_hits += 1
             return cached
         self._throttle()
         html = self._fetch(url)
-        self.cache.put(url, html)
+        self.cache.put(url, html)  # unconditional: independent of parse outcome
+        self.network_fetches += 1
         return html
 
     def inventory(self, category: str = DEFAULT_CATEGORY) -> list[str]:
@@ -223,22 +242,32 @@ class PhilPeopleScraper:
         different r across the two pages is reported as an inconsistency."""
         seen: dict[str, float] = {}
         inconsistencies: list[Inconsistency] = []
-        from .store import slugify
-
         for variable in variables:
             html = self.fetch(build_correlation_url(variable, category))
-            for row in parse_correlations(html, variable):
-                key = "|".join(sorted((slugify(row.label_a), slugify(row.label_b))))
-                if key in seen and abs(seen[key] - row.r) > r_tolerance:
-                    inconsistencies.append(
-                        Inconsistency(pair_key=key, r_first=seen[key], r_second=row.r)
-                    )
-                seen[key] = row.r
-                store.add(
-                    row.label_a, row.label_b, row.r, row.n, SourceTier.SITE_SCRAPE,
-                    cells=row.cells, p_value=row.p_value,
-                )
+            inconsistencies += ingest_page(store, variable, html, seen, r_tolerance)
         return inconsistencies
+
+
+def ingest_page(
+    store: CorrelationStore,
+    page_variable: str,
+    html: str,
+    seen: dict[str, float],
+    r_tolerance: float = 0.01,
+) -> list[Inconsistency]:
+    """Parse one already-fetched page into the store; track cross-page r
+    agreement via ``seen`` (pair_key -> r). Reused by scrape and reparse."""
+    inconsistencies: list[Inconsistency] = []
+    for row in parse_correlations(html, page_variable):
+        key = "|".join(sorted((slugify(row.label_a), slugify(row.label_b))))
+        if key in seen and abs(seen[key] - row.r) > r_tolerance:
+            inconsistencies.append(Inconsistency(pair_key=key, r_first=seen[key], r_second=row.r))
+        seen[key] = row.r
+        store.add(
+            row.label_a, row.label_b, row.r, row.n, SourceTier.SITE_SCRAPE,
+            cells=row.cells, p_value=row.p_value,
+        )
+    return inconsistencies
 
 
 __all__ = [
@@ -251,5 +280,8 @@ __all__ = [
     "parse_correlations",
     "parse_variable_inventory",
     "build_correlation_url",
+    "variable_from_url",
+    "category_from_url",
+    "ingest_page",
     "PhilPeopleScraper",
 ]

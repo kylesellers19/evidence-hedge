@@ -24,5 +24,11 @@ class SparqlCache:
         self._conn.execute("INSERT OR REPLACE INTO kv (key, value) VALUES (?, ?)", (key, value))
         self._conn.commit()
 
+    def items(self) -> list[tuple[str, str]]:
+        return [(r[0], r[1]) for r in self._conn.execute("SELECT key, value FROM kv").fetchall()]
+
+    def count(self) -> int:
+        return int(self._conn.execute("SELECT COUNT(*) FROM kv").fetchone()[0])
+
 
 __all__ = ["SparqlCache"]

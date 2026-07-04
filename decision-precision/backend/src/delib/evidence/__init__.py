@@ -9,5 +9,31 @@ gates the whole thing.
 """
 
 from .claims import Citation, ClaimRecord, ClaimStore, claim_hash, normalize_claim
+from .retrieve import MultiplexerRetriever
+from .sources import (
+    EvidenceSource,
+    MergedPaper,
+    OpenAlexSource,
+    PubMedSource,
+    RetrievedPaper,
+    SemanticScholarSource,
+    merge_on_doi,
+    normalize_doi,
+)
 
-__all__ = ["Citation", "ClaimRecord", "ClaimStore", "claim_hash", "normalize_claim"]
+__all__ = [
+    "Citation",
+    "ClaimRecord",
+    "ClaimStore",
+    "claim_hash",
+    "normalize_claim",
+    "EvidenceSource",
+    "OpenAlexSource",
+    "SemanticScholarSource",
+    "PubMedSource",
+    "RetrievedPaper",
+    "MergedPaper",
+    "merge_on_doi",
+    "normalize_doi",
+    "MultiplexerRetriever",
+]

@@ -1,0 +1,8 @@
+{
+  "data": [
+    { "intents": ["result", "supporting"], "isInfluential": true },
+    { "intents": ["background"], "isInfluential": false },
+    { "intents": ["contrasting"], "isInfluential": true },
+    { "intents": ["methodology"], "isInfluential": false }
+  ]
+}

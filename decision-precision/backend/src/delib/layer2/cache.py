@@ -27,6 +27,10 @@ class SparqlCache:
     def items(self) -> list[tuple[str, str]]:
         return [(r[0], r[1]) for r in self._conn.execute("SELECT key, value FROM kv").fetchall()]
 
+    def delete(self, key: str) -> None:
+        self._conn.execute("DELETE FROM kv WHERE key = ?", (key,))
+        self._conn.commit()
+
     def count(self) -> int:
         return int(self._conn.execute("SELECT COUNT(*) FROM kv").fetchone()[0])
 

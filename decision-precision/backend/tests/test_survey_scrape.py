@@ -13,10 +13,12 @@ import pytest
 from delib.layer2.cache import SparqlCache
 from delib.layer2.survey import CorrelationStore, SourceTier, load_fixture, phi_from_cells
 from delib.layer2.survey.scrape import (
+    CATEGORY_LABELS,
     ChallengeError,
     PhilPeopleScraper,
     ScrapeConfig,
     build_correlation_url,
+    derive_philosophers,
     ingest_page,
     is_challenge,
     parse_correlations,
@@ -98,10 +100,29 @@ def test_page_variable_as_column_does_not_self_pair():
 # --- enumeration ------------------------------------------------------------
 
 
-def test_inventory_from_dropdown():
+def test_inventory_drops_the_9_category_labels():
     inv = parse_variable_inventory(_cap("correlations_index.html"))
-    assert len(inv) > 200
+    assert len(inv) == 237  # 246 dropdown items minus 9 category labels
     assert "Mind: physicalism" in inv and "Consciousness: dualism" in inv
+    assert not (set(inv) & CATEGORY_LABELS)
+
+
+def test_category_labels_never_appear_as_variables():
+    # the paired-variable cross-check that validates the filter
+    rows = _physicalism() + parse_correlations(_cap("philosopher_kant.html"))
+    seen = {r.label_a for r in rows} | {r.label_b for r in rows}
+    assert not (seen & CATEGORY_LABELS)
+
+
+def test_derive_philosophers_from_category_page():
+    scraper = PhilPeopleScraper(
+        fetcher=lambda url: _cap("philosopher_kant.html"),  # any Philosopher page carries the dropdown
+        config=ScrapeConfig(min_interval_seconds=0.0), sleep_fn=lambda s: None,
+    )
+    phils = derive_philosophers(scraper)
+    assert len(phils) == 60
+    assert "Kant" in phils and "Aristotle" in phils and "Wollstonecraft" in phils
+    assert not (set(phils) & CATEGORY_LABELS)
 
 
 def test_build_correlation_url_encodes_params():

@@ -20,6 +20,7 @@ from pydantic import BaseModel
 from ..cache import SparqlCache
 from .bridge_evidence import BridgeEvidenceStore, PHILOSOPHER_CATEGORY, ingest_philosopher_page
 from .scrape import (
+    CATEGORY_LABELS,
     CORRELATIONS_PATH,
     DEFAULT_CATEGORY,
     PHILPEOPLE_BASE,
@@ -28,8 +29,8 @@ from .scrape import (
     ScrapeConfig,
     build_correlation_url,
     category_from_url,
+    derive_philosophers,
     ingest_page,
-    parse_correlations,
     parse_variable_inventory,
     variable_from_url,
 )
@@ -96,6 +97,10 @@ def run_scrape(
 
     bridge_rows = 0
     if philosophers:
+        if philosophers == ["all"]:
+            progress("Deriving philosopher list from the Philosopher category…")
+            philosophers = derive_philosophers(scraper)
+            progress(f"  {len(philosophers)} philosophers")
         if limit is not None:
             philosophers = philosophers[:limit]
         store = bridge_store or BridgeEvidenceStore()
@@ -160,6 +165,18 @@ def run_reparse(
     return summary
 
 
+def purge_bogus(page_cache: SparqlCache, progress: Callable[[str], None] = print) -> list[str]:
+    """Delete cached pages fetched for a bogus 'variable' — the sentinel ``all``
+    and the 9 category labels (enumeration artifacts, never real variables).
+    After purging, re-run reparse to rebuild clean stores."""
+    bogus = set(CATEGORY_LABELS) | {"all"}
+    removed = [url for url, _ in page_cache.items() if variable_from_url(url) in bogus]
+    for url in removed:
+        page_cache.delete(url)
+    progress(f"purged {len(removed)} bogus cached pages")
+    return removed
+
+
 def _print_summary(progress: Callable[[str], None], s: ScrapeSummary) -> None:
     progress("--- summary ---")
     if s.pages_reparsed:
@@ -199,11 +216,18 @@ def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI
     rp.add_argument("--corr-db", default=str(DEFAULT_CORR_DB))
     rp.add_argument("--bridge-db", default=str(DEFAULT_BRIDGE_DB))
 
+    pg = sub.add_parser("purge", help="delete bogus cached pages (all / category labels)")
+    pg.add_argument("--page-cache", default=str(DEFAULT_PAGE_CACHE))
+
     args = p.parse_args(argv)
     page_cache = SparqlCache(args.page_cache)
+
+    if args.cmd == "purge":
+        purge_bogus(page_cache)
+        return
+
     corr_store = CorrelationStore(args.corr_db)
     bridge_store = BridgeEvidenceStore(args.bridge_db)
-
     if args.cmd == "scrape":
         run_scrape(
             page_cache=page_cache, corr_store=corr_store, category=args.category,
@@ -218,4 +242,4 @@ if __name__ == "__main__":  # pragma: no cover
     main()
 
 
-__all__ = ["ScrapeSummary", "run_scrape", "run_reparse", "main"]
+__all__ = ["ScrapeSummary", "run_scrape", "run_reparse", "purge_bogus", "main"]

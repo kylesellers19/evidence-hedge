@@ -45,6 +45,15 @@ from .store import Cells, CorrelationStore, SourceTier, slugify
 PHILPEOPLE_BASE = "https://survey2020.philpeople.org"
 CORRELATIONS_PATH = "/survey/results/correlations"
 DEFAULT_CATEGORY = "Philosophical questions"
+PHILOSOPHER_CATEGORY = "Philosopher"
+
+# The category selector's own options — they appear in EVERY page's dropdown
+# (constant across pages) and are NOT survey variables. Dropped from enumeration.
+# Validated: none ever appears as a paired variable in real correlation data.
+CATEGORY_LABELS = frozenset({
+    "Philosophical questions", "Philosopher", "AOS", "Region of affiliation",
+    "Region of nationality", "Region of PhD", "Gender", "Tradition", "Other demographics",
+})
 
 _R = re.compile(r"r:\s*(-?\d*\.?\d+)")
 _INT = re.compile(r"^-?\d+$")
@@ -213,15 +222,25 @@ def parse_correlations(html: str, page_variable: str | None = None) -> list[Pars
 
 
 def parse_variable_inventory(html: str) -> list[str]:
-    """The variables from the dropdown-item picker (deduped, order preserved)."""
+    """The variables from the dropdown-item picker (deduped, order preserved).
+    The 9 category-selector labels are dropped — they are not survey variables."""
     out: list[str] = []
     seen: set[str] = set()
     for raw in _DROPDOWN.findall(html):
         label = re.sub(r"<[^>]+>", "", _html.unescape(raw)).strip()
-        if label and label.lower() != "select a variable" and label not in seen:
+        if not label or label.lower() == "select a variable" or label in CATEGORY_LABELS:
+            continue
+        if label not in seen:
             seen.add(label)
             out.append(label)
     return out
+
+
+def derive_philosophers(scraper: "PhilPeopleScraper") -> list[str]:
+    """The ~60 philosopher names from the Philosopher category's dropdown (any
+    category=Philosopher page carries it; category labels already filtered out)."""
+    html = scraper.fetch(f"{PHILPEOPLE_BASE}{CORRELATIONS_PATH}?category={urllib.parse.quote(PHILOSOPHER_CATEGORY)}")
+    return parse_variable_inventory(html)
 
 
 def build_correlation_url(variable: str, category: str = DEFAULT_CATEGORY, base: str = PHILPEOPLE_BASE) -> str:
@@ -337,6 +356,9 @@ __all__ = [
     "PHILPEOPLE_BASE",
     "CORRELATIONS_PATH",
     "DEFAULT_CATEGORY",
+    "PHILOSOPHER_CATEGORY",
+    "CATEGORY_LABELS",
+    "derive_philosophers",
     "ScrapeConfig",
     "ParsedCorrelation",
     "Inconsistency",

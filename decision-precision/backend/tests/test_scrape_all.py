@@ -8,8 +8,13 @@ from pathlib import Path
 from delib.layer2.cache import SparqlCache
 from delib.layer2.survey import CorrelationStore
 from delib.layer2.survey.bridge_evidence import BridgeEvidenceStore
-from delib.layer2.survey.scrape import CORRELATIONS_PATH, category_from_url
-from delib.layer2.survey.scrape_all import run_reparse, run_scrape
+from delib.layer2.survey.scrape import (
+    CORRELATIONS_PATH,
+    PHILOSOPHER_CATEGORY,
+    build_correlation_url,
+    category_from_url,
+)
+from delib.layer2.survey.scrape_all import purge_bogus, run_reparse, run_scrape
 
 CAP = Path(__file__).resolve().parents[2] / "data" / "fixtures" / "site_captures"
 
@@ -74,6 +79,16 @@ def test_philosophers_pass_fills_bridge_store():
     assert summary.bridge_rows == 70
     assert any(e.thinker_id == "kant" and e.position_id == "practical-reason-kantian"
                for e in bridge.all())
+
+
+def test_purge_removes_bogus_pages_only():
+    cache = SparqlCache()
+    cache.put(build_correlation_url("Mind: physicalism"), "<real>")
+    cache.put(build_correlation_url("all", PHILOSOPHER_CATEGORY), "<bogus all>")
+    cache.put(build_correlation_url("AOS"), "<bogus category label>")
+    removed = purge_bogus(cache, progress=lambda m: None)
+    assert len(removed) == 2 and cache.count() == 1
+    assert cache.get(build_correlation_url("Mind: physicalism")) == "<real>"
 
 
 def test_reparse_from_cache_reproduces_without_network():

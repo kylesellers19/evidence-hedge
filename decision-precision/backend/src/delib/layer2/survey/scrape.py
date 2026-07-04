@@ -96,9 +96,12 @@ class Inconsistency(BaseModel):
 
 
 class _PageParser(HTMLParser):
-    """Segments each ``<table class="table">`` correlation block, collecting its
-    text, its links, and — precisely — the integer <td>s inside <tbody> (the 2x2
-    contingency cells, in document/reading order aa, ar, ra, rr)."""
+    """Segments each ``<table class="table">`` correlation block, collecting BOTH
+    variable labels from the block itself — the ``.colname <a>`` (column variable)
+    and the ``td.rowlabel.rowname`` (row variable) — plus r and the integer <td>s
+    inside <tbody> (the 2x2 cells, reading order aa, ar, ra, rr with rows = the row
+    variable, cols = the column variable). Reading both endpoints from the block
+    means orientation is never assumed (the page variable may be row OR column)."""
 
     def __init__(self) -> None:
         super().__init__()
@@ -110,12 +113,13 @@ class _PageParser(HTMLParser):
         self._a_href = ""
         self._td: str | None = None
         self._td_in_body = False
+        self._td_is_rowname = False
 
     def handle_starttag(self, tag, attrs):
         if tag == "table":
             self._depth += 1
             if self._depth == 1:
-                self._cur = {"text": "", "links": [], "cells": []}
+                self._cur = {"text": "", "links": [], "cells": [], "rowname": ""}
         if self._cur is None:
             return
         if tag == "tbody":
@@ -126,6 +130,7 @@ class _PageParser(HTMLParser):
         elif tag == "td":
             self._td = ""
             self._td_in_body = self._in_tbody
+            self._td_is_rowname = "rowname" in (dict(attrs).get("class", "") or "")
 
     def handle_data(self, data):
         if self._cur is not None:
@@ -145,7 +150,9 @@ class _PageParser(HTMLParser):
             self._a = None
         elif tag == "td" and self._td is not None:
             t = self._td.strip()
-            if self._td_in_body and _INT.match(t):
+            if self._td_is_rowname:
+                self._cur["rowname"] = t  # the row variable label
+            elif self._td_in_body and _INT.match(t):
                 self._cur["cells"].append(int(t))
             self._td = None
         elif tag == "table":
@@ -173,34 +180,30 @@ def category_from_url(url: str) -> str | None:
     return vals[0] if vals else None
 
 
-def parse_correlations(html: str, page_variable: str) -> list[ParsedCorrelation]:
-    """Parse one page-variable's correlation blocks. n is derived as the sum of
-    the four contingency cells (the page shows no separate n); p is not shown
-    per block (all significant at p<0.0001) and is left null."""
+def parse_correlations(html: str, page_variable: str | None = None) -> list[ParsedCorrelation]:
+    """Parse a page's correlation blocks. Each block fully specifies its pair —
+    ``label_a`` = row variable, ``label_b`` = column variable — so orientation is
+    read, never assumed (this eliminates self-pairs when the page variable lands
+    in the column). ``page_variable`` is accepted for API compatibility but not
+    used for pairing. n is the cell sum; p is not shown per block (all p<0.0001)."""
     parser = _PageParser()
     parser.feed(html)
     out: list[ParsedCorrelation] = []
     for block in parser.blocks:
         mr = _R.search(block["text"])
-        if not mr:
+        row_label = block["rowname"].strip()
+        col = next(((t, h) for t, h in block["links"] if "variable=" in h), None)
+        cl = block["cells"]
+        if not mr or not row_label or col is None or len(cl) != 4:
             continue
-        # the paired variable is the block's link whose href carries ?variable=
-        paired = next(((t, h) for t, h in block["links"] if "variable=" in h), None)
-        if paired is None:
-            continue
-        label_b, href = paired
-        cells_list = block["cells"]
-        cells = (
-            Cells(aa=cells_list[0], ar=cells_list[1], ra=cells_list[2], rr=cells_list[3])
-            if len(cells_list) == 4 else None
-        )
-        n = (cells.aa + cells.ar + cells.ra + cells.rr) if cells else 0
+        col_label, href = col
+        cells = Cells(aa=cl[0], ar=cl[1], ra=cl[2], rr=cl[3])  # rows=row, cols=col
         out.append(
             ParsedCorrelation(
-                label_a=page_variable,
-                label_b=label_b,
+                label_a=row_label,
+                label_b=col_label,
                 r=float(mr.group(1)),
-                n=n,
+                n=cells.aa + cells.ar + cells.ra + cells.rr,
                 p_value=None,
                 cells=cells,
                 paired_variable_id=_variable_from_href(href),

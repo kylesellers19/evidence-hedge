@@ -22,6 +22,7 @@ from .scrape import DEFAULT_CATEGORY, PhilPeopleScraper, build_correlation_url, 
 from .store import Cells, CorrelationStore, slugify
 
 PHILOSOPHER_CATEGORY = "Philosopher"
+PHILOSOPHER_PREFIX = "Philosopher: "  # the survey prefixes the identification row label
 
 
 class BridgeEvidence(BaseModel):
@@ -109,9 +110,25 @@ def scrape_bridge_evidence(
     added = 0
     for philosopher in philosophers:
         html = scraper.fetch(build_correlation_url(philosopher, category))
-        for row in parse_correlations(html, philosopher):
-            store.add(row.label_a, row.label_b, row.r, row.n, p_value=row.p_value, cells=row.cells)
-            added += 1
+        added += ingest_philosopher_page(store, html)
+    return added
+
+
+def ingest_philosopher_page(store: BridgeEvidenceStore, html: str) -> int:
+    """Parse one Philosopher-category page into thinker<->position evidence. One
+    endpoint of each block is ``Philosopher: X`` (the thinker); strip the prefix
+    and orient the cells to (thinker, position). Non-thinker blocks (demographic
+    rows) are skipped. Reused by the scraper and by reparse-from-cache."""
+    added = 0
+    for row in parse_correlations(html):
+        if row.label_a.startswith(PHILOSOPHER_PREFIX):
+            thinker, position, cells = row.label_a[len(PHILOSOPHER_PREFIX):], row.label_b, row.cells
+        elif row.label_b.startswith(PHILOSOPHER_PREFIX):
+            thinker, position, cells = row.label_b[len(PHILOSOPHER_PREFIX):], row.label_a, row.cells.transposed()
+        else:
+            continue
+        store.add(thinker, position, row.r, row.n, p_value=row.p_value, cells=cells)
+        added += 1
     return added
 
 
@@ -144,5 +161,6 @@ __all__ = [
     "BridgeEvidence",
     "BridgeEvidenceStore",
     "scrape_bridge_evidence",
+    "ingest_philosopher_page",
     "ingest_bridge_evidence_into_map",
 ]

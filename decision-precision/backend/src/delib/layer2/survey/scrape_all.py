@@ -18,7 +18,7 @@ from typing import Callable
 from pydantic import BaseModel
 
 from ..cache import SparqlCache
-from .bridge_evidence import BridgeEvidenceStore, PHILOSOPHER_CATEGORY
+from .bridge_evidence import BridgeEvidenceStore, PHILOSOPHER_CATEGORY, ingest_philosopher_page
 from .scrape import (
     CORRELATIONS_PATH,
     DEFAULT_CATEGORY,
@@ -103,10 +103,8 @@ def run_scrape(
         for i, name in enumerate(philosophers, 1):
             url = build_correlation_url(name, PHILOSOPHER_CATEGORY)
             try:
-                html = scraper.fetch(url)
-                for row in parse_correlations(html, name):
-                    store.add(row.label_a, row.label_b, row.r, row.n, p_value=row.p_value, cells=row.cells)
-                progress(f"  [{i}/{len(philosophers)}] {name}")
+                n_rows = ingest_philosopher_page(store, scraper.fetch(url))
+                progress(f"  [{i}/{len(philosophers)}] {name} ({n_rows} rows)")
             except Exception as e:
                 errors.append(url)
                 progress(f"  [{i}/{len(philosophers)}] PARSE FAIL {name}: {e}")
@@ -146,8 +144,7 @@ def run_reparse(
         pages += 1
         try:
             if category_from_url(url) == PHILOSOPHER_CATEGORY:
-                for row in parse_correlations(html, variable):
-                    bridge_store.add(row.label_a, row.label_b, row.r, row.n, p_value=row.p_value, cells=row.cells)
+                ingest_philosopher_page(bridge_store, html)
             else:
                 inconsistencies += ingest_page(corr_store, variable, html, seen)
         except Exception:

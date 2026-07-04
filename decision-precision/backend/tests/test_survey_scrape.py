@@ -69,6 +69,32 @@ def test_cell_mapping_validated_by_sign_and_band():
     assert max(diffs) < 0.15  # observed ~0.10
 
 
+# --- orientation: both endpoints read from the block (self-pair regression) --
+
+
+def _block(row, col, r, aa, ar, ra, rr):
+    return f"""<table class="table"><thead>
+      <tr class="meta-heading"><th class="rcell"><div> r: {r} </div></th>
+      <th class="collabel"><span class="colname"><a href="/x?category=Q&amp;variable={col} "> {col} </a></span></th></tr>
+      <tr><td class="rowlabel rowname">{row}</td><th>Accept</th><th>Reject</th></tr></thead>
+      <tbody><tr><th>Accept</th><td>{aa}</td><td>{ar}</td></tr><tr><th>Reject</th><td>{ra}</td><td>{rr}</td></tr></tbody></table>"""
+
+
+def test_page_variable_as_column_does_not_self_pair():
+    # the exact RC case: the page variable is the COLUMN, another variable the ROW
+    rc = "Semantic content: radical contextualism (most or all)"
+    rows = parse_correlations(
+        _block("True contradictions: impossible", rc, -0.24, 100, 200, 300, 400),
+        page_variable=rc,
+    )
+    assert len(rows) == 1
+    r = rows[0]
+    assert r.label_a == "True contradictions: impossible" and r.label_b == rc
+    assert r.label_a != r.label_b  # NOT a self-pair (the bug that caused 20 "inconsistencies")
+    assert (r.cells.aa, r.cells.ar, r.cells.ra, r.cells.rr) == (100, 200, 300, 400)
+    assert r.n == 1000
+
+
 # --- enumeration ------------------------------------------------------------
 
 

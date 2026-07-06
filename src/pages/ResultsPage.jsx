@@ -3,6 +3,8 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext.jsx'
 import PatternSection from '../components/results/PatternSection.jsx'
 import DistributionBar from '../components/results/DistributionBar.jsx'
+import DocumentSignals from '../components/results/DocumentSignals.jsx'
+import RubricProvenance from '../components/results/RubricProvenance.jsx'
 
 // The one-page evidence brief — a standalone editorial report, three layers
 // top to bottom, serving three readers at once:
@@ -16,7 +18,7 @@ export default function ResultsPage() {
   if (!state.result) return <Navigate to="/" replace />
 
   const { result, rubric } = state
-  const { summary, patterns } = result
+  const { summary, patterns, signals } = result
   const { flagCounts } = summary
   const flaggedTotal = flagCounts['unsupported-assertion'] + flagCounts.overconfident
 
@@ -38,6 +40,7 @@ export default function ResultsPage() {
         <p className="label-tag">Evidence brief</p>
         <p className="label-tag text-gray-400">
           Judged as <span className="text-navy">{rubric.label}</span>
+          {result.posture && <span> · <span className="text-gray-600 capitalize">{result.posture}</span></span>}
           {rubric.stub && ' · draft rubric'}
         </p>
       </div>
@@ -51,6 +54,11 @@ export default function ResultsPage() {
         <span><span className="text-gray-900 font-medium font-mono">{summary.strongClaims}</span> read as strong</span>
         <span><span className="text-gray-900 font-medium font-mono">{flaggedTotal}</span> flagged</span>
       </div>
+
+      <hr className="brief-rule" />
+
+      {/* ── Document signals — a layer of their own, above per-claim patterns ── */}
+      <DocumentSignals signals={signals || []} />
 
       <hr className="brief-rule" />
 
@@ -80,6 +88,9 @@ export default function ResultsPage() {
         How this document's claims spread across the {rubric.label.toLowerCase()} ladder,
         strongest evidence to unsourced.
       </p>
+
+      {/* ── Rubric provenance — always visible footer ────────────────────── */}
+      <RubricProvenance provenance={rubric.provenance} rubricLabel={rubric.label} />
     </main>
   )
 }

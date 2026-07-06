@@ -1,0 +1,28 @@
+[
+  {
+    "text": "Our platform is the #1 best-in-class solution and is unmatched in the industry.",
+    "flag": "unsupported-assertion",
+    "tierAsserted": {
+      "key": "absolute",
+      "weight": 4
+    },
+    "rungReached": {
+      "key": "unsourced",
+      "rank": 0
+    },
+    "ceiling": 1
+  },
+  {
+    "text": "Our internal data proves customers always see world-class results.",
+    "flag": "overconfident",
+    "tierAsserted": {
+      "key": "absolute",
+      "weight": 4
+    },
+    "rungReached": {
+      "key": "self-reported",
+      "rank": 2
+    },
+    "ceiling": 2
+  }
+]

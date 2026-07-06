@@ -36,9 +36,10 @@ function BranchRoute() {
   const rubrics = listRubrics()
   const detectedId = autodetect(state.document)
 
-  const onConfirm = (rubricId) => {
+  // The CONFIRMED posture travels with the confirmed rubric into the pipeline.
+  const onConfirm = (rubricId, posture) => {
     const rubric = getRubric(rubricId)
-    const result = analyze(state.document, rubric)
+    const result = analyze(state.document, rubric, posture)
     dispatch({ type: 'SET_ANALYSIS', payload: { rubric, result } })
     navigate('/results')
   }
@@ -51,6 +52,7 @@ function BranchRoute() {
     <RubricBranch
       rubrics={rubrics}
       detectedId={detectedId}
+      text={state.document}
       onConfirm={onConfirm}
       onBack={onBack}
     />

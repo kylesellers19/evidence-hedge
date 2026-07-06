@@ -62,12 +62,15 @@ if (!existsSync(OUT)) {
     console.error('REFUSING TO WRITE BASELINE — fixture no longer yields 1 unsupported + 1 overconfident:', counts)
     process.exit(1)
   }
-  writeFileSync(OUT, JSON.stringify(actual, null, 2) + '\n')
+  writeFileSync(OUT, JSON.stringify({ flags: actual }, null, 2) + '\n')
   console.log('WROTE baseline-output.json (' + actual.length + ' flagged claims):', counts)
   process.exit(0)
 }
 
-const expected = JSON.parse(readFileSync(OUT, 'utf8'))
+// baseline-output.json is now an object { flags, score } (score frozen by
+// score-invariants.mjs). Older array-shaped files are still read correctly.
+const parsed = JSON.parse(readFileSync(OUT, 'utf8'))
+const expected = Array.isArray(parsed) ? parsed : parsed.flags
 const errors = []
 if (expected.length !== actual.length) {
   errors.push(`flag count changed: baseline ${expected.length}, now ${actual.length}`)

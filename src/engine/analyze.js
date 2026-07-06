@@ -18,6 +18,7 @@ import { detectMismatch } from './detectMismatch.js'
 import { PATTERN_META, FLAG_ORDER } from './patterns.js'
 import { runSignals } from './signals/index.js'
 import { isDisclosedAbsence } from './disclosure.js'
+import { scoreDocument } from './scoreDocument.js'
 
 /** @typedef {import('./types.js').RubricConfig} RubricConfig */
 /** @typedef {import('./types.js').AnalysisResult} AnalysisResult */
@@ -107,11 +108,15 @@ export function analyze(document, rubric, posture = rubric.defaultPosture) {
     }
   }
 
+  // ── Overall document score (computed last) ────────────────────────────────
+  const documentScore = scoreDocument({ claims, signals, posture, rubric })
+
   return {
     claims,
     patterns,
     signals,
     posture,
+    documentScore,
     summary: {
       verdict,
       totalClaims: claims.length,

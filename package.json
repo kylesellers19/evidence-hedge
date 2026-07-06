@@ -11,7 +11,8 @@
     "check:regression": "node checks/regression-baseline.mjs",
     "check:posture": "node checks/posture-classifier.test.mjs",
     "check:nullseverity": "node checks/nullseverity-invariants.mjs",
-    "check": "npm run check:rubrics && npm run check:regression && npm run check:posture && npm run check:nullseverity"
+    "check:rightofreply": "node checks/right-of-reply.test.mjs",
+    "check": "npm run check:rubrics && npm run check:regression && npm run check:posture && npm run check:nullseverity && npm run check:rightofreply"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.7",

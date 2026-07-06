@@ -11,6 +11,7 @@
 
 import { listRubrics } from '../src/rubrics/index.js'
 import { severityRank, SEVERITY } from '../src/engine/nullSeverity.js'
+import { SIGNAL_REGISTRY } from '../src/engine/signals/index.js'
 
 const errors = []
 const fail = (rubricId, msg) => errors.push(`[${rubricId}] ${msg}`)
@@ -141,9 +142,13 @@ for (const r of listRubrics()) {
     }
   }
 
-  // ── documentSignals ───────────────────────────────────────────────────────
+  // ── documentSignals (each must resolve to a registered signal) ────────────
   if (!isStringArray(r.documentSignals)) {
     fail(id, `"documentSignals" must be a string[]`)
+  } else {
+    for (const name of r.documentSignals) {
+      if (!(name in SIGNAL_REGISTRY)) fail(id, `documentSignals["${name}"] is not a registered signal`)
+    }
   }
 
   // ── Provenance ────────────────────────────────────────────────────────────

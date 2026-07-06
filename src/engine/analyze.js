@@ -16,6 +16,8 @@ import { measureAssertiveness } from './measureAssertiveness.js'
 import { gradeEvidence } from './gradeEvidence.js'
 import { detectMismatch } from './detectMismatch.js'
 import { PATTERN_META, FLAG_ORDER } from './patterns.js'
+import { runSignals } from './signals/index.js'
+import { isDisclosedAbsence } from './disclosure.js'
 
 /** @typedef {import('./types.js').RubricConfig} RubricConfig */
 /** @typedef {import('./types.js').AnalysisResult} AnalysisResult */
@@ -37,14 +39,33 @@ export function analyze(document, rubric, posture = rubric.defaultPosture) {
     const tier = measureAssertiveness(c, rubric)
     const rung = gradeEvidence(c, rubric.ladder)
     const mismatch = detectMismatch({ tier, rung }, rubric.tolerance, posture)
-    return {
-      ...c,
-      tier,
-      rung,
-      flag: mismatch ? mismatch.flag : null,
-      explanation: mismatch ? mismatch.explanation : null,
+    let flag = mismatch ? mismatch.flag : null
+    let explanation = mismatch ? mismatch.explanation : null
+
+    // Disclosed-absence: an openly hedged/stated absence (right-of-reply, "we
+    // did not verify", "in my experience") is honest hedging, not a hidden gap.
+    // Suppress the unsupported-assertion penalty when the disclosed nullSeverity
+    // falls below 'flag'. (Baseline claims disclose nothing → no change.)
+    const disclosed = isDisclosedAbsence(c.text, rubric)
+    if (flag === 'unsupported-assertion' && disclosed) {
+      const tierIndex = rubric.tiers.findIndex(t => t.key === tier.key)
+      const sev = rubric.tolerance.nullSeverity(tierIndex, posture, true)
+      if (sev === 'none' || sev === 'note') { flag = null; explanation = null }
     }
+
+    return { ...c, tier, rung, flag, explanation, disclosed }
   })
+
+  // ── Document-level signals (Part C) ───────────────────────────────────────
+  const citations = claims.flatMap(c => c.citations)
+  const signals = runSignals(document, claims, citations, posture, rubric)
+
+  // posture-gate: experiential writing with no authority markers makes no
+  // expert claims → zero flags, a first-class "no obligation" verdict.
+  const gate = signals.find(s => s.gate)
+  if (gate) {
+    for (const c of claims) { c.flag = null; c.explanation = null }
+  }
 
   // ── Layer 2: named patterns with verbatim examples ────────────────────────
   const patterns = FLAG_ORDER.flatMap(flag => {
@@ -74,17 +95,22 @@ export function analyze(document, rubric, posture = rubric.defaultPosture) {
   const strongClaims = claims.filter(c => c.tier.weight >= STRONG_WEIGHT).length
 
   // ── Layer 1: plain-language verdict ───────────────────────────────────────
-  const verdict = buildVerdict({
-    rubric,
-    totalClaims: claims.length,
-    strongClaims,
-    flagCounts,
-  })
+  let verdict
+  if (gate) {
+    verdict = `This ${rubric.documentNoun || 'document'} makes no expert claims — there is no evidence obligation to assess.`
+  } else {
+    verdict = buildVerdict({ rubric, totalClaims: claims.length, strongClaims, flagCounts })
+    // Platitude density lowers the earned-confidence budget: name the filler.
+    const plat = signals.find(s => s.id === 'platitude-density')
+    if (plat) {
+      verdict += ` It also leans on ${plat.count} content-free ${plat.count === 1 ? 'platitude' : 'platitudes'}, which carry no checkable claim.`
+    }
+  }
 
   return {
     claims,
     patterns,
-    signals: [], // populated in Part C (document-level signals)
+    signals,
     posture,
     summary: {
       verdict,

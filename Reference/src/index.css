@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream text-gray-900 font-sans antialiased;
+    min-height: 100dvh;
+    overscroll-behavior-y: none;
+  }
+
+  input, select, textarea {
+    @apply font-sans;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gray-900 text-white font-sans text-xs tracking-editorial uppercase px-8 py-4 hover:bg-gray-700 active:bg-gray-900 transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .btn-outline {
+    @apply border border-gray-900 text-gray-900 font-sans text-xs tracking-editorial uppercase px-8 py-4 hover:bg-gray-900 hover:text-white active:bg-gray-800 transition-colors duration-200;
+  }
+
+  .btn-ghost {
+    @apply text-gray-900 font-sans text-xs tracking-editorial uppercase px-4 py-3 hover:bg-linen active:bg-border transition-colors duration-200;
+  }
+
+  .label-tag {
+    @apply font-sans text-[10px] tracking-widest uppercase text-muted;
+  }
+
+  .editorial-heading {
+    @apply font-serif text-2xl font-medium leading-tight tracking-tight;
+  }
+
+  .card {
+    @apply bg-white border border-border;
+  }
+
+  .field-input {
+    @apply w-full border-b border-border bg-transparent py-3 text-sm font-sans text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-900 transition-colors duration-200;
+  }
+
+  .field-select {
+    @apply w-full border-b border-border bg-transparent py-3 text-sm font-sans text-gray-900 focus:outline-none focus:border-gray-900 transition-colors duration-200 appearance-none cursor-pointer;
+  }
+
+  .page-enter {
+    animation: fadeSlideUp 0.35s ease forwards;
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0eb 25%, #e8e8e3 50%, #f0f0eb 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite;
+}
+
+/* Masonry grid using CSS columns */
+.masonry-grid {
+  column-count: 2;
+  column-gap: 12px;
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 12px;
+}
+
+@media (min-width: 640px) {
+  .masonry-grid {
+    column-count: 3;
+    column-gap: 16px;
+  }
+  .masonry-item {
+    margin-bottom: 16px;
+  }
+}
+
+/* Hide scrollbar but keep scrollable */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Safe area insets for mobile */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}

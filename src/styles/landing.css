@@ -1,0 +1,332 @@
+/* Evidence Hedge — landing & branch screens.
+   Register: true white, cool near-black ink, hairline rules, square corners,
+   whisper shadows as the emphasis mechanism, single institutional navy accent
+   (branch cards carry the four rubric hues that map to the mark's offshoots).
+
+   Tokens (--eh-*) and the three font families live once in src/index.css :root.
+   This file only consumes them. */
+
+/* ═══════════════ LANDING — "a single question in a white room" ═══════════════
+   First paint contains ONLY: name whisper, the mark, one italic serif question,
+   and the near-invisible input panel. Nothing else. */
+
+.eh-landing {
+  min-height: 100vh;
+  background: var(--eh-paper);
+  color: var(--eh-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+}
+
+.eh-landing-inner {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The name is a whisper ABOVE the mark; the mark is the identity. */
+.eh-microlabel {
+  font-family: var(--eh-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--eh-ink-soft);
+  margin: 0 0 20px;
+  text-align: center;
+}
+
+/* The one prominent line on the page: the question, large italic display serif. */
+.eh-question {
+  font-family: var(--eh-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(27px, 5vw, 43px);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  color: var(--eh-ink);
+  text-align: center;
+  margin: 26px 0 40px;
+  max-width: 15ch;
+  /* Barely-there lift — survives the halving test. */
+  text-shadow: 0 1px 1px rgba(23, 24, 26, 0.04);
+}
+
+/* Input panel: no visible border at rest — only a hardly-discernible shadow.
+   Focus-within reveals a hairline + a slightly deeper (still whisper) shadow. */
+.eh-input-panel {
+  width: 100%;
+  background: var(--eh-paper);
+  border: 1px solid transparent;
+  box-shadow: var(--eh-shadow-rest);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.eh-input-panel:focus-within {
+  border-color: var(--eh-hairline);
+  box-shadow: var(--eh-shadow-lift);
+}
+
+/* Two small text buttons above the field — not a full-width tab bar. */
+.eh-toggle {
+  display: flex;
+  gap: 18px;
+  padding: 14px 16px 4px;
+}
+
+.eh-toggle button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  padding: 0 0 3px;
+  font-family: var(--eh-sans);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--eh-ink-soft);
+  cursor: pointer;
+}
+
+.eh-toggle button.is-active {
+  color: var(--eh-ink);
+  border-bottom-color: var(--eh-navy);
+}
+
+.eh-notice {
+  font-family: var(--eh-sans);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--eh-ink-soft);
+  background: transparent;
+  border-top: 1px solid var(--eh-hairline);
+  margin: 10px 16px 0;
+  padding: 10px 0 0;
+}
+
+.eh-textarea,
+.eh-urlinput {
+  width: 100%;
+  border: 0;
+  padding: 14px 16px;
+  font-family: var(--eh-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--eh-ink);
+  background: transparent;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.eh-textarea::placeholder,
+.eh-urlinput::placeholder {
+  color: var(--eh-ink-soft);
+  opacity: 0.7;
+}
+
+.eh-textarea:focus,
+.eh-urlinput:focus {
+  outline: none; /* the panel's focus-within treatment is the signal */
+}
+
+/* Submit: navy, compact, content-width — right-aligned within the panel. */
+.eh-submit-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: 4px 16px 16px;
+}
+
+.eh-submit {
+  display: inline-block;
+  width: auto;
+  appearance: none;
+  border: 0;
+  background: var(--eh-navy);
+  color: #fff;
+  font-family: var(--eh-sans);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  cursor: pointer;
+  box-shadow: var(--eh-shadow-rest);
+  transition: box-shadow 0.18s ease;
+}
+
+.eh-submit:hover:not(:disabled) {
+  box-shadow: var(--eh-shadow-lift);
+}
+
+.eh-submit:disabled {
+  background: var(--eh-hairline);
+  color: var(--eh-ink-soft);
+  cursor: default;
+  box-shadow: none;
+}
+
+/* Shared focus ring. */
+.eh-toggle button:focus-visible,
+.eh-submit:focus-visible,
+.eh-rubric-card:focus-visible,
+.eh-backlink:focus-visible {
+  outline: 2px solid var(--eh-navy);
+  outline-offset: 2px;
+}
+
+/* ═══════════════ BRANCH — denser, same type + shadow language ═══════════════ */
+
+.eh-branch {
+  min-height: 100vh;
+  background: var(--eh-paper);
+  color: var(--eh-ink);
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 56px 24px 72px;
+}
+
+.eh-branch-head {
+  border-bottom: 1px solid var(--eh-hairline);
+  padding-bottom: 24px;
+  margin-bottom: 28px;
+}
+
+.eh-backlink {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font-family: var(--eh-sans);
+  font-size: 12px;
+  color: var(--eh-ink-soft);
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.eh-branch-head .eh-microlabel {
+  margin: 0 0 10px;
+  text-align: left;
+  letter-spacing: 0.22em;
+}
+
+.eh-branch-title {
+  font-family: var(--eh-serif);
+  font-weight: 600;
+  font-size: clamp(24px, 4vw, 32px);
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+}
+
+.eh-branch-sub {
+  font-family: var(--eh-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--eh-ink-soft);
+  max-width: 56ch;
+  margin: 0;
+}
+
+.eh-branch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.eh-rubric-card {
+  appearance: none;
+  text-align: left;
+  background: var(--eh-paper);
+  border: 1px solid var(--eh-hairline);
+  border-top: 3px solid var(--branch, var(--eh-ink));
+  padding: 16px 16px 14px;
+  cursor: pointer;
+  font-family: var(--eh-sans);
+  color: var(--eh-ink);
+  box-shadow: var(--eh-shadow-rest);
+  transition: box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.eh-rubric-card.is-selected {
+  border-color: var(--branch, var(--eh-ink));
+  box-shadow: var(--eh-shadow-lift), inset 0 0 0 1px var(--branch, var(--eh-ink));
+}
+
+.eh-rubric-cardtop {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.eh-rubric-name {
+  font-family: var(--eh-serif);
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.eh-tag {
+  font-family: var(--eh-sans);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--eh-ink-soft);
+  border: 1px solid var(--eh-hairline);
+  padding: 2px 6px;
+}
+
+.eh-tag-detected {
+  color: #fff;
+  background: var(--branch, var(--eh-navy));
+  border-color: var(--branch, var(--eh-navy));
+}
+
+.eh-rubric-desc {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--eh-ink-soft);
+  margin: 0 0 12px;
+}
+
+.eh-rubric-criteria {
+  margin: 0;
+  border-top: 1px solid var(--eh-hairline);
+  padding-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.eh-rubric-criteria dt {
+  font-family: var(--eh-sans);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--eh-ink-soft);
+  margin-bottom: 2px;
+}
+
+.eh-rubric-criteria dd {
+  margin: 0;
+  font-size: 13px;
+}
+
+/* Numbers are the evidence — set the figures in mono so they read as data. */
+.eh-num {
+  font-family: var(--eh-mono);
+  font-size: 12.5px;
+  letter-spacing: 0;
+  color: var(--eh-ink);
+}
+
+.eh-branch-actions {
+  margin-top: 28px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.eh-branch-actions .eh-submit {
+  padding: 14px 36px;
+}

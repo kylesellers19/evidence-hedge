@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── The single token source for every screen ──────────────────────────────
+   Register: true white, cool near-black ink, hairline rules, square corners,
+   one institutional navy accent, whisper shadows. Three font families only. */
+:root {
+  --eh-paper: #ffffff;
+  --eh-ink: #17181a;
+  --eh-ink-soft: #4b4e54;
+  --eh-hairline: #d9dce0;
+  --eh-navy: #1b2a4a;
+
+  --eh-serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --eh-sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --eh-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Whisper shadows — the emphasis mechanism. Never darker than ~0.08 alpha. */
+  --eh-shadow-rest: 0 1px 2px rgba(23, 24, 26, 0.05);
+  --eh-shadow-lift: 0 2px 8px rgba(23, 24, 26, 0.07);
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply text-gray-900 font-sans antialiased;
+    background: var(--eh-paper);
+    color: var(--eh-ink);
+    min-height: 100dvh;
+  }
+
+  input, select, textarea {
+    @apply font-sans;
+  }
+}
+
+@layer components {
+  /* ── Buttons (carried from Reference) ───────────────────────────────── */
+  .btn-primary {
+    @apply bg-gray-900 text-white font-sans text-xs tracking-editorial uppercase px-8 py-4 hover:bg-gray-700 active:bg-gray-900 transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+  .btn-outline {
+    @apply border border-gray-900 text-gray-900 font-sans text-xs tracking-editorial uppercase px-8 py-4 hover:bg-gray-900 hover:text-white active:bg-gray-800 transition-colors duration-200;
+  }
+  .btn-ghost {
+    @apply text-gray-900 font-sans text-xs tracking-editorial uppercase px-4 py-3 hover:bg-linen active:bg-border transition-colors duration-200;
+  }
+
+  /* ── The ubiquitous tracked uppercase micro-label ───────────────────── */
+  .label-tag {
+    @apply font-sans text-[10px] tracking-widest uppercase text-muted;
+  }
+
+  .editorial-heading {
+    @apply font-serif text-2xl font-medium leading-tight tracking-tight;
+  }
+
+  .card {
+    @apply bg-white border border-border;
+  }
+
+  /* ── Underline-style inputs (carried from Reference) ────────────────── */
+  .field-input {
+    @apply w-full border-b border-border bg-transparent py-3 text-sm font-sans text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-900 transition-colors duration-200;
+  }
+
+  /* ── Analysis additions — evidence-grade & mismatch badges ──────────── */
+  /* emerald / amber / gray status tints, reserved per the binding:        */
+  /* supported · partially-supported/overconfident · unsourced/unsupported */
+  .grade-badge {
+    @apply inline-block font-sans text-[9px] tracking-widest uppercase font-medium px-1.5 py-0.5 border whitespace-nowrap;
+  }
+  .grade-supported    { @apply bg-emerald-50 text-emerald-700 border-emerald-200; }
+  .grade-partial      { @apply bg-amber-50 text-amber-700 border-amber-200; }
+  .grade-overconfident{ @apply bg-amber-50 text-amber-700 border-amber-200; }
+  .grade-unsupported  { @apply bg-gray-50 text-gray-500 border-border; }
+
+  /* ── Flagged example line — active claim = left navy border highlight ── */
+  .example-line {
+    @apply border-l-2 border-navy pl-4 py-1 font-serif italic text-[15px] leading-relaxed text-gray-800;
+  }
+
+  /* ── Hairline rule between the brief's three layers ─────────────────── */
+  .brief-rule {
+    @apply border-0 border-t border-border my-10;
+  }
+
+  /* ── Evidence-ladder rung (config-driven; navy focus glint on hover) ── */
+  .ladder-rung {
+    @apply flex items-center justify-between border border-border bg-white px-4 py-2.5 transition-colors duration-200 hover:border-navy;
+  }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: fadeSlideUp 0.35s ease forwards;
+}

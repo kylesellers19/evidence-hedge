@@ -7,12 +7,18 @@
 // so unsourced/anecdotal lines are allowed only the most hedged phrasing.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { makeNullSeverity } from '../engine/nullSeverity.js'
+
 /** @type {import('../engine/types.js').RubricConfig} */
 export const research = {
   id: 'research',
   label: 'Research',
   description: 'Academic & scientific writing — papers, reviews, preprints, theses.',
   documentNoun: 'research paper',
+
+  postures: ['standard'],
+  defaultPosture: 'standard',
+  documentSignals: ['limitations-absent', 'abstract-body-confidence-delta', 'secondary-evidence-dominance'],
 
   // Evidence-strength ladder, bottom (rank 0, unsourced) → top.
   ladder: [
@@ -65,9 +71,43 @@ export const research = {
     },
   },
 
-  // ceilings[rank] = strongest tier weight this evidence grade may assert.
+  // ceilings[posture][rank] = strongest tier weight this evidence grade may
+  // assert. Research has a single 'standard' posture, so only 'default' is needed.
   tolerance: {
-    ceilings: [1, 2, 3, 4, 4],
-    nearNullRank: 0,
+    ceilings: {
+      default: [1, 2, 3, 4, 4],   // migrated (unchanged)
+      standard: [1, 2, 3, 4, 4],  // sole posture — same as default
+    },
+    nullSeverity: makeNullSeverity({
+      default: ['none', 'note', 'flag', 'critical'],  // PROVISIONAL — not ratified
+      standard: ['none', 'note', 'flag', 'critical'], // PROVISIONAL — not ratified
+    }),
   },
+
+  provenance: [
+    {
+      criterion: 'certainty-of-evidence framework',
+      standard: 'GRADE Working Group',
+      citation: 'GRADE Working Group — certainty-of-evidence framework.',
+      url: 'https://www.gradeworkinggroup.org/',
+    },
+    {
+      criterion: 'evidence-ladder rung placement',
+      standard: 'OCEBM Levels of Evidence',
+      citation: 'OCEBM Levels of Evidence, Centre for Evidence-Based Medicine, University of Oxford.',
+      url: 'https://www.cebm.ox.ac.uk/resources/levels-of-evidence/oxford-centre-for-evidence-based-medicine-levels-of-evidence-march-2009',
+    },
+    {
+      criterion: 'critical appraisal of study quality',
+      standard: 'CASP Checklists',
+      citation: 'CASP Checklists, Critical Appraisal Skills Programme.',
+      url: 'https://casp-uk.net/casp-tools-checklists/',
+    },
+    {
+      criterion: 'gray-literature rung placement',
+      standard: 'AACODS Checklist',
+      citation: 'Tyndall, J. AACODS Checklist (gray literature appraisal), Flinders University.',
+      url: 'https://dspace.flinders.edu.au/xmlui/handle/2328/3326',
+    },
+  ],
 }

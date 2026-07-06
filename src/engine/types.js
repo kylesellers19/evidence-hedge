@@ -31,13 +31,30 @@
  * @property {string[]} cues
  */
 
+/** @typedef {'none'|'note'|'flag'|'critical'} NullSeverity */
+
 /**
  * How much asserted strength a given evidence rank is *allowed* before it is a
- * mismatch. ceilings[rank] = max tier.weight permitted at that rung.
- * @typedef  {Object} ToleranceCurve
- * @property {number[]} ceilings         indexed by rung.rank
- * @property {number}   nearNullRank     at/below this rank an over-assertion is
- *                                        an unsupported-assertion, not overconfident
+ * mismatch — now posture-aware, and paired with a nullSeverity function that
+ * replaces the old scalar `nearNullRank`.
+ * @typedef  {Object} ToleranceConfig
+ * @property {Object.<string, number[]>} ceilings
+ *   key 'default' REQUIRED; posture keys override it wholesale (explicit tables,
+ *   no arithmetic offsets). Same rank-indexed direction as before —
+ *   ceilings[posture][rung.rank] = max tier.weight permitted at that rung. Every
+ *   array's length must equal the ladder length.
+ * @property {(tierIndex:number, posture:string, disclosed:boolean) => NullSeverity} nullSeverity
+ *   severity of an ABSENCE of evidence at the asserted tier under the posture;
+ *   `disclosed` = the absence is openly hedged/stated (honest hedging rewarded).
+ */
+
+/**
+ * One grounding of a rubric criterion in an external standard.
+ * @typedef  {Object} ProvenanceEntry
+ * @property {string} criterion   which rubric criterion this standard grounds
+ * @property {string} standard    name of the external standard
+ * @property {string} citation    human-readable citation
+ * @property {string} url         may be '' for print-only citations (e.g. Hyland)
  */
 
 /**
@@ -49,17 +66,28 @@
  */
 
 /**
- * A pluggable rubric — the four fields, plus identity for the entry card.
+ * Posture unions (documented values; the validator enforces membership):
+ *   corporate:  'marketing' | 'thought-leadership' | 'research-like'
+ *   general:    'experiential' | 'authoritative'
+ *   journalism: 'news' | 'opinion' | 'sponsored' | 'unlabeled'
+ *   research:   'standard'
+ *
+ * A pluggable rubric.
  * @typedef  {Object} RubricConfig
  * @property {string}           id
  * @property {string}           label
  * @property {string}           description
- * @property {boolean}          [stub]   true = shape complete, values are drafts
+ * @property {string}           documentNoun    was undocumented; now contractual
+ * @property {boolean}          [stub]          true = shape complete, values are drafts
  * @property {Rung[]}           ladder
  * @property {Tier[]}           tiers
- * @property {string}           defaultTier   tier.key used when no cues match
+ * @property {string}           defaultTier     tier.key used when no cues match
  * @property {ExtractionConfig} extraction
- * @property {ToleranceCurve}   tolerance
+ * @property {ToleranceConfig}  tolerance
+ * @property {string[]}         postures        valid posture keys for this rubric
+ * @property {string}           defaultPosture  ∈ postures
+ * @property {string[]}         documentSignals signal names (registered in signals/)
+ * @property {ProvenanceEntry[]} provenance
  */
 
 /**
@@ -75,6 +103,7 @@
  * @property {Tier}        tierAsserted
  * @property {Rung}        rungReached
  * @property {number}      ceiling
+ * @property {string}      posture       active posture key at flag time
  */
 
 /** @typedef {'unsupported-assertion'|'overconfident'} FlagType */
@@ -101,9 +130,21 @@
  */
 
 /**
+ * A DOCUMENT-level signal — feeds the verdict and renders in its own results
+ * section; never attaches to a sentence. Distinct from per-claim flags.
+ * @typedef  {Object} Signal
+ * @property {string}            id
+ * @property {'note'|'flag'}     severity
+ * @property {string}            summary
+ * @property {string[]}          evidence   matched text spans (auditable)
+ */
+
+/**
  * @typedef  {Object} AnalysisResult
  * @property {Claim[]}   claims
  * @property {Pattern[]} patterns
+ * @property {Signal[]}  signals               document-level signals (Part C)
+ * @property {string}    posture               active posture the analysis ran under
  * @property {Object}    summary
  * @property {string}    summary.verdict        plain-language headline sentence(s)
  * @property {number}    summary.totalClaims

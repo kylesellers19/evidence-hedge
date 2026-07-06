@@ -7,6 +7,8 @@
 // Filling this in is config-only — no engine changes.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { makeNullSeverity } from '../engine/nullSeverity.js'
+
 /** @type {import('../engine/types.js').RubricConfig} */
 export const journalism = {
   id: 'journalism',
@@ -14,6 +16,10 @@ export const journalism = {
   description: 'Reporting & opinion — articles, op-eds, newsletters.',
   documentNoun: 'article',
   stub: true,
+
+  postures: ['news', 'opinion', 'sponsored', 'unlabeled'],
+  defaultPosture: 'news',
+  documentSignals: ['per-claim-sourcing', 'label-transparency', 'method-disclosure', 'perspective-plurality', 'right-of-reply', 'anonymous-sourcing'],
 
   ladder: [
     { key: 'unsourced',  label: 'Unsourced',          rank: 0, tint: 'unsupported' },
@@ -45,7 +51,40 @@ export const journalism = {
   },
 
   tolerance: {
-    ceilings: [1, 2, 3, 4, 4],
-    nearNullRank: 0,
+    ceilings: {
+      default: [1, 2, 3, 4, 4],     // migrated
+      news: [1, 2, 3, 4, 4],        // PROVISIONAL — not ratified
+      opinion: [2, 3, 4, 4, 4],     // PROVISIONAL — not ratified (opinion tolerated more)
+      sponsored: [1, 2, 3, 4, 4],   // PROVISIONAL — not ratified
+      unlabeled: [1, 2, 3, 4, 4],   // PROVISIONAL — not ratified
+    },
+    nullSeverity: makeNullSeverity({
+      default: ['none', 'note', 'flag', 'critical'],   // PROVISIONAL — not ratified
+      news: ['none', 'note', 'flag', 'critical'],      // PROVISIONAL — not ratified
+      opinion: ['none', 'none', 'note', 'critical'],   // PROVISIONAL — not ratified
+      sponsored: ['none', 'note', 'flag', 'critical'], // PROVISIONAL — not ratified
+      unlabeled: ['none', 'note', 'flag', 'critical'], // PROVISIONAL — not ratified
+    }),
   },
+
+  provenance: [
+    {
+      criterion: 'per-claim sourcing, labels, method disclosure, plurality',
+      standard: 'The Trust Project — 8 Trust Indicators',
+      citation: 'The Trust Project — 8 Trust Indicators.',
+      url: 'https://thetrustproject.org/trust-indicators/',
+    },
+    {
+      criterion: 'credibility & transparency weighting',
+      standard: 'NewsGuard',
+      citation: 'NewsGuard — nine credibility and transparency criteria.',
+      url: 'https://www.newsguardtech.com/ratings/rating-process-criteria/',
+    },
+    {
+      criterion: 'sourcing & attribution ethics',
+      standard: 'SPJ Code of Ethics',
+      citation: 'Society of Professional Journalists — Code of Ethics.',
+      url: 'https://www.spj.org/ethicscode.asp',
+    },
+  ],
 }

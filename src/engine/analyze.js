@@ -26,16 +26,17 @@ const STRONG_WEIGHT = 3 // tier weight at/above which a claim reads as "strong"
 /**
  * @param {string} document   raw pasted text
  * @param {RubricConfig} rubric
+ * @param {string} [posture]  active posture; defaults to rubric.defaultPosture
  * @returns {AnalysisResult}
  */
-export function analyze(document, rubric) {
+export function analyze(document, rubric, posture = rubric.defaultPosture) {
   // ── The four steps ────────────────────────────────────────────────────────
   const raw = extractClaims(document, rubric.extraction)
   /** @type {Claim[]} */
   const claims = raw.map(c => {
     const tier = measureAssertiveness(c, rubric)
     const rung = gradeEvidence(c, rubric.ladder)
-    const mismatch = detectMismatch({ tier, rung }, rubric.tolerance)
+    const mismatch = detectMismatch({ tier, rung }, rubric.tolerance, posture)
     return {
       ...c,
       tier,
@@ -83,6 +84,8 @@ export function analyze(document, rubric) {
   return {
     claims,
     patterns,
+    signals: [], // populated in Part C (document-level signals)
+    posture,
     summary: {
       verdict,
       totalClaims: claims.length,

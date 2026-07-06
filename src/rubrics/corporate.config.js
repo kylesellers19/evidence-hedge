@@ -8,12 +8,18 @@
 // unsupported assertions.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { makeNullSeverity } from '../engine/nullSeverity.js'
+
 /** @type {import('../engine/types.js').RubricConfig} */
 export const corporate = {
   id: 'corporate',
   label: 'Corporate',
   description: 'Marketing, investor & annual-report writing — decks, sites, filings.',
   documentNoun: 'corporate document',
+
+  postures: ['marketing', 'thought-leadership', 'research-like'],
+  defaultPosture: 'marketing',
+  documentSignals: ['platitude-density', 'self-citation-dominance', 'register-mismatch'],
 
   ladder: [
     { key: 'unsourced', label: 'Unsourced', rank: 0, tint: 'unsupported' },
@@ -63,10 +69,39 @@ export const corporate = {
     },
   },
 
-  // Slightly more lenient at the top than research, but self-reported metrics
-  // (rank 2) stay capped at "measured" so confident self-claims get caught.
+  // Ceilings are rank-indexed (ladder rank 0→4) and posture-keyed. The migrated
+  // provisional [1,2,2,3,4] becomes both the default and the research-like path
+  // ("marketing in a lab coat" is held to the strictest bar). Marketing and
+  // thought-leadership are looser, because assertive marketing copy is expected.
   tolerance: {
-    ceilings: [1, 2, 2, 3, 4],
-    nearNullRank: 0,
+    ceilings: {
+      default: [1, 2, 2, 3, 4],               // PROVISIONAL — not ratified (migrated)
+      'research-like': [1, 2, 2, 3, 4],        // PROVISIONAL — not ratified (migrated)
+      'thought-leadership': [2, 3, 3, 4, 4],   // PROVISIONAL — not ratified
+      marketing: [2, 3, 4, 4, 4],              // PROVISIONAL — not ratified
+    },
+    // Undisclosed severity of an evidence-absence per tier (hedged→absolute).
+    // Marketing stays none/note below the top tier; top tier is always critical.
+    nullSeverity: makeNullSeverity({
+      default: ['none', 'note', 'flag', 'critical'],              // PROVISIONAL — not ratified
+      'research-like': ['none', 'note', 'flag', 'critical'],      // PROVISIONAL — not ratified
+      'thought-leadership': ['none', 'note', 'note', 'critical'], // PROVISIONAL — not ratified
+      marketing: ['none', 'none', 'note', 'critical'],            // PROVISIONAL — not ratified
+    }),
   },
+
+  provenance: [
+    {
+      criterion: 'assertiveness tiers (hedges / boosters)',
+      standard: 'Hyland — Metadiscourse',
+      citation: 'Hyland, K. (2005). Metadiscourse: Exploring Interaction in Writing.',
+      url: '',
+    },
+    {
+      criterion: 'uncertainty / modal word lists',
+      standard: 'Loughran–McDonald Master Dictionary',
+      citation: 'Loughran, T. & McDonald, B. (2011). "When Is a Liability Not a Liability?" Journal of Finance.',
+      url: 'https://sraf.nd.edu/loughranmcdonald-master-dictionary/',
+    },
+  ],
 }

@@ -6,7 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check:rubrics": "node checks/validate-rubrics.mjs",
+    "check:regression": "node checks/regression-baseline.mjs",
+    "check:posture": "node checks/posture-classifier.test.mjs",
+    "check:nullseverity": "node checks/nullseverity-invariants.mjs",
+    "check": "npm run check:rubrics && npm run check:regression && npm run check:posture && npm run check:nullseverity"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.7",

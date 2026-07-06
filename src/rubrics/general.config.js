@@ -6,6 +6,8 @@
 // catches the confident, link-free assertion. Filling this in is config-only.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { makeNullSeverity } from '../engine/nullSeverity.js'
+
 /** @type {import('../engine/types.js').RubricConfig} */
 export const general = {
   id: 'general',
@@ -13,6 +15,10 @@ export const general = {
   description: 'Blogs, marketing pages & general explainer content.',
   documentNoun: 'page',
   stub: true,
+
+  postures: ['experiential', 'authoritative'],
+  defaultPosture: 'experiential',
+  documentSignals: ['posture-gate'],
 
   ladder: [
     { key: 'unsourced', label: 'Unsourced',        rank: 0, tint: 'unsupported' },
@@ -43,9 +49,27 @@ export const general = {
     },
   },
 
-  // Most lenient ladder ceilings of the four rubrics.
+  // Most lenient ladder ceilings of the four rubrics. Experiential writing carries
+  // no evidence obligation; authoritative (prescriptive + YMYL) is held stricter.
   tolerance: {
-    ceilings: [2, 3, 3, 4, 4],
-    nearNullRank: 0,
+    ceilings: {
+      default: [2, 3, 3, 4, 4],        // migrated
+      experiential: [2, 3, 3, 4, 4],    // PROVISIONAL — not ratified
+      authoritative: [1, 2, 3, 4, 4],   // PROVISIONAL — not ratified (stricter for YMYL)
+    },
+    nullSeverity: makeNullSeverity({
+      default: ['none', 'none', 'note', 'critical'],       // PROVISIONAL — not ratified
+      experiential: ['none', 'none', 'note', 'critical'],  // PROVISIONAL — not ratified (none for low tiers)
+      authoritative: ['none', 'note', 'flag', 'critical'], // PROVISIONAL — not ratified
+    }),
   },
+
+  provenance: [
+    {
+      criterion: 'E-E-A-T and YMYL authority thresholds',
+      standard: 'Google Search Quality Rater Guidelines',
+      citation: 'Google Search Quality Rater Guidelines — E-E-A-T and YMYL.',
+      url: 'https://developers.google.com/search/docs/fundamentals/creating-helpful-content',
+    },
+  ],
 }

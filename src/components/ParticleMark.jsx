@@ -10,10 +10,17 @@ import { useEffect, useRef } from "react";
  * Pure canvas, no assets, loops forever. Respects prefers-reduced-motion
  * by rendering a single static frame.
  *
- * Props:
+ * Props (ALL default to the current landing behavior — pass nothing and the
+ * landing render is unchanged):
  *   size          px, default 300
- *   ink           particle color, default near-black
- *   offshoots     array of CSS colors, one stream each
+ *   ink           sphere particle color (rgb string), default near-black
+ *   offshoots     array of CSS colors, one stream each (four-color default)
+ *   hue           single rubric accent hex; when set, all streams take it
+ *                 (default null → the four-color offshoots, i.e. landing)
+ *   intensity     0–1, interpolates stream color from near-gray (0) to the full
+ *                 hue (1) in the render path (default 1 → exact hue = landing)
+ *   coherence     0–1, 1 = fibonacci lattice as-is; →0 disperses particles from
+ *                 their lattice positions, deterministically (default 1 = landing)
  */
 
 const DEFAULT_OFFSHOOTS = [
@@ -23,10 +30,15 @@ const DEFAULT_OFFSHOOTS = [
   "#2F6B4F", // general — forest
 ];
 
+const DISP_AMP = 0.6; // PROVISIONAL — dispersion reach in lattice units at coherence 0
+
 export default function ParticleMark({
   size = 300,
   ink = "23, 24, 26",
   offshoots = DEFAULT_OFFSHOOTS,
+  hue = null,
+  intensity = 1,
+  coherence = 1,
 }) {
   const canvasRef = useRef(null);
 
@@ -38,6 +50,17 @@ export default function ParticleMark({
     canvas.width = size * dpr;
     canvas.height = size * dpr;
     ctx.scale(dpr, dpr);
+
+    // Single-hue streams when a rubric hue is given; else the four-color default.
+    const effectiveOffshoots = hue
+      ? Array.from({ length: DEFAULT_OFFSHOOTS.length }, () => hue)
+      : offshoots;
+
+    // Deterministic RNG for coherence dispersion (seeded → same coherence value
+    // always yields the same dispersion). Independent of the Math.random() draws
+    // that drive turbulence, so the default code path is unchanged.
+    const drand = mulberry32(0x9e3779b9);
+    const disp = (1 - coherence) * DISP_AMP;
 
     // ---- sphere points (fibonacci lattice) ----
     const N = 2200;
@@ -56,6 +79,10 @@ export default function ParticleMark({
         ph: Math.random() * Math.PI * 2,
         amp: 0.02 + Math.pow(Math.random(), 3) * 0.22,
         sz: 0.5 + Math.random() * 0.9,
+        // seeded dispersion direction (applied only when coherence < 1)
+        ox: drand() * 2 - 1,
+        oy: drand() * 2 - 1,
+        oz: drand() * 2 - 1,
       };
     }
 
@@ -63,7 +90,7 @@ export default function ParticleMark({
     // Each stream has an anchor direction on the sphere and a bundle of
     // particles at different progress values along a curved outward path.
     const STREAM_LEN = size * 0.34;
-    const streams = offshoots.map((color, s) => {
+    const streams = effectiveOffshoots.map((color, s) => {
       const phi = (s / offshoots.length) * Math.PI * 2 + 0.7;
       const tilt = s % 2 === 0 ? 0.45 : -0.35;
       const anchor = {
@@ -79,7 +106,9 @@ export default function ParticleMark({
         jitter: (Math.random() - 0.5) * 0.16,
         sz: 0.6 + Math.random() * 1.0,
       }));
-      return { color, anchor, perp, parts };
+      // Intensity interpolates the stream color toward gray in the render path
+      // (so the streams participate — not a CSS filter). intensity 1 → exact hue.
+      return { rgb: applyIntensity(color, intensity), anchor, perp, parts };
     });
 
     const f = size * 0.9; // perspective focal length
@@ -100,9 +129,14 @@ export default function ParticleMark({
       // sphere body
       for (let i = 0; i < N; i++) {
         const pt = pts[i];
+        // coherence dispersion — pushes particles off their lattice positions as
+        // coherence → 0 (disp === 0 at coherence 1, so positions are unchanged).
+        const bx = pt.x + pt.ox * disp;
+        const by = pt.y + pt.oy * disp;
+        const bz = pt.z + pt.oz * disp;
         // turbulence along the normal — breathes like the reference
         const w = 1 + Math.sin(t * 1.3 + pt.ph + pt.y * 3.1) * pt.amp;
-        let x = pt.x * w, y = pt.y * w, z = pt.z * w;
+        let x = bx * w, y = by * w, z = bz * w;
         // rotate Y then X
         let x1 = x * cosy - z * siny;
         let z1 = x * siny + z * cosy;
@@ -141,7 +175,7 @@ export default function ParticleMark({
           const px = cx + x * s;
           const py = cy + y * s;
           const a = arc * 0.75 * (0.35 + ((z / R + 1) / 2) * 0.65);
-          ctx.fillStyle = hexA(st.color, Math.max(a, 0));
+          ctx.fillStyle = rgbA(st.rgb, Math.max(a, 0));
           const d = q.sz * (0.6 + (1 - p) * 0.8);
           ctx.fillRect(px, py, d, d);
         }
@@ -154,7 +188,7 @@ export default function ParticleMark({
     };
     frame();
     return () => cancelAnimationFrame(raf);
-  }, [size, ink, offshoots]);
+  }, [size, ink, offshoots, hue, intensity, coherence]);
 
   return (
     <canvas
@@ -181,7 +215,29 @@ function rot(v, cosy, siny, cosx, sinx) {
   const z1 = v.y * sinx + z0 * cosx;
   return { x: x1, y: y1, z: z1 };
 }
-function hexA(hex, a) {
+// Seeded PRNG (mulberry32) — deterministic dispersion given the same coherence.
+function mulberry32(a) {
+  return function () {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function hexToRgb(hex) {
   const n = parseInt(hex.slice(1), 16);
-  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a.toFixed(3)})`;
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+// Interpolate a hue toward its own luma-gray by (1 - intensity). At intensity 1
+// this returns the exact hue channels, so the landing render is unchanged.
+function applyIntensity(hex, t) {
+  const { r, g, b } = hexToRgb(hex);
+  if (t >= 1) return { r, g, b };
+  const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+  const lerp = (c) => Math.round(gray + (c - gray) * t);
+  return { r: lerp(r), g: lerp(g), b: lerp(b) };
+}
+function rgbA(rgb, a) {
+  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a.toFixed(3)})`;
 }

@@ -5,6 +5,7 @@ import PatternSection from '../components/results/PatternSection.jsx'
 import DistributionBar from '../components/results/DistributionBar.jsx'
 import DocumentSignals from '../components/results/DocumentSignals.jsx'
 import RubricProvenance from '../components/results/RubricProvenance.jsx'
+import VerdictMark from '../components/results/VerdictMark.jsx'
 
 // The one-page evidence brief — a standalone editorial report, three layers
 // top to bottom, serving three readers at once:
@@ -36,6 +37,12 @@ export default function ResultsPage() {
       >
         ← New document
       </button>
+
+      {/* ── Verdict mark — the top layer: the quality-encoding sphere ────── */}
+      {result.documentScore && (
+        <VerdictMark score={result.documentScore} rubricId={rubric.id} />
+      )}
+
       <div className="flex items-baseline justify-between gap-3">
         <p className="label-tag">Evidence brief</p>
         <p className="label-tag text-gray-400">

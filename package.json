@@ -14,7 +14,8 @@
     "check:rightofreply": "node checks/right-of-reply.test.mjs",
     "check:score": "node checks/score-invariants.mjs",
     "check:verdict": "node checks/verdict-binding.test.mjs",
-    "check": "npm run check:rubrics && npm run check:regression && npm run check:posture && npm run check:nullseverity && npm run check:rightofreply && npm run check:score && npm run check:verdict"
+    "check:filter": "node checks/nonclaim-filter.test.mjs",
+    "check": "npm run check:rubrics && npm run check:regression && npm run check:posture && npm run check:nullseverity && npm run check:rightofreply && npm run check:score && npm run check:verdict && npm run check:filter"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.7",

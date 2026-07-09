@@ -7,6 +7,8 @@
 // assertive/declarative enough to clear the rubric's extraction sensitivity.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { isDropped, demotionPenalty } from './nonClaimFilter.js'
+
 /** @typedef {import('./types.js').ExtractionConfig} ExtractionConfig */
 /** @typedef {import('./types.js').Citation} Citation */
 
@@ -72,15 +74,20 @@ function claimLikelihood(sentence) {
 /**
  * @param {string} text
  * @param {ExtractionConfig} extraction
+ * @param {{ rubricId?: string }} [options]  rubricId gates posture-specific filter rules
  * @returns {Array<{ id:number, text:string, citations:Citation[] }>}
  */
-export function extractClaims(text, extraction) {
+export function extractClaims(text, extraction, options = {}) {
+  const { rubricId } = options
   const sentences = splitSentences(text || '')
   const claims = []
   let id = 0
   for (const sentence of sentences) {
     if (sentence.length < extraction.minClaimLength) continue
-    if (claimLikelihood(sentence) < extraction.sensitivity) continue
+    // Non-claim filter — DROP hard exclusions, then DEMOTE via the likelihood.
+    if (isDropped(sentence)) continue
+    const likelihood = claimLikelihood(sentence) - demotionPenalty(sentence, rubricId)
+    if (likelihood < extraction.sensitivity) continue
     claims.push({ id: id++, text: sentence, citations: detectCitations(sentence) })
   }
   return claims

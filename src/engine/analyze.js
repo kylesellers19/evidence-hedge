@@ -34,7 +34,7 @@ const STRONG_WEIGHT = 3 // tier weight at/above which a claim reads as "strong"
  */
 export function analyze(document, rubric, posture = rubric.defaultPosture) {
   // ── The four steps ────────────────────────────────────────────────────────
-  const raw = extractClaims(document, rubric.extraction)
+  const raw = extractClaims(document, rubric.extraction, { rubricId: rubric.id })
   /** @type {Claim[]} */
   const claims = raw.map(c => {
     const tier = measureAssertiveness(c, rubric)

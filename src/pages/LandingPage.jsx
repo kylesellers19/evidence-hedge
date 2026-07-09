@@ -13,10 +13,47 @@ import "../styles/landing.css";
  * Props:
  *   onAnalyze(text, meta)  — meta: { sourceUrl?: string }
  *
- * Link mode fetches client-side and degrades gracefully: most sites block
- * cross-origin reads (CORS), in which case we say so plainly and switch the
- * person into paste mode. The deferred-backend decision stands.
+ * A pasted link (in Paste link mode, or a bare URL pasted into the text box) is
+ * fetched through the Jina Reader service (r.jina.ac), which returns readable
+ * article text. On any failure the person is asked to paste the article text —
+ * a designed fallback state, not an error toast.
  */
+
+const FETCH_TIMEOUT_MS = 15000;
+
+// A value is a URL if it has no internal whitespace and either starts with
+// http(s):// or reads as a bare domain (example.com, sub.example.co.uk/path).
+function looksLikeUrl(value) {
+  const s = value.trim();
+  if (!s || /\s/.test(s)) return false;
+  if (/^https?:\/\/\S+\.\S+/i.test(s)) return true;
+  return /^([a-z0-9-]+\.)+[a-z]{2,}(\/\S*)?$/i.test(s);
+}
+
+function normalizeUrl(value) {
+  const s = value.trim();
+  return /^https?:\/\//i.test(s) ? s : "https://" + s;
+}
+
+// Fetch article text through Jina Reader. Returns { ok, text, sourceUrl } or
+// { ok:false, reason } for the three designed failure states.
+async function fetchViaJina(rawUrl) {
+  const target = normalizeUrl(rawUrl);
+  const endpoint = "https://r.jina.ac/" + encodeURIComponent(target);
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  try {
+    const res = await fetch(endpoint, { signal: controller.signal });
+    if (!res.ok) return { ok: false, reason: `status ${res.status}` };
+    const body = (await res.text()).trim();
+    if (!body) return { ok: false, reason: "empty" };
+    return { ok: true, text: body, sourceUrl: target };
+  } catch (e) {
+    return { ok: false, reason: e && e.name === "AbortError" ? "timeout" : "network" };
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 export default function LandingPage({ onAnalyze }) {
   const [mode, setMode] = useState("text"); // "text" | "link"
@@ -29,31 +66,32 @@ export default function LandingPage({ onAnalyze }) {
 
   async function handleSubmit() {
     setNotice(null);
-    if (mode === "text") {
-      onAnalyze(text.trim(), {});
+    const raw = (mode === "text" ? text : url).trim();
+    if (!raw) return;
+
+    // Link mode always fetches; text mode fetches only if the value is a lone URL.
+    const isUrl = mode === "link" || looksLikeUrl(raw);
+    if (!isUrl) {
+      onAnalyze(raw, {});
       return;
     }
-    // link mode — attempt a client-side read
-    let target = url.trim();
-    if (!/^https?:\/\//i.test(target)) target = "https://" + target;
+
     setBusy(true);
-    try {
-      const res = await fetch(target);
-      if (!res.ok) throw new Error(`status ${res.status}`);
-      const html = await res.text();
-      const doc = new DOMParser().parseFromString(html, "text/html");
-      doc.querySelectorAll("script, style, nav, footer, noscript").forEach((n) => n.remove());
-      const extracted = (doc.body?.innerText || "").replace(/\n{3,}/g, "\n\n").trim();
-      if (extracted.length < 200) throw new Error("too little readable text");
-      onAnalyze(extracted, { sourceUrl: target });
-    } catch {
-      setMode("text");
-      setNotice(
-        "That address can't be read from the browser — most sites block cross-origin requests. Paste the document text instead; the switch above is already set."
-      );
-    } finally {
-      setBusy(false);
+    const result = await fetchViaJina(raw);
+    setBusy(false);
+
+    if (result.ok) {
+      onAnalyze(result.text, { sourceUrl: result.sourceUrl });
+      return;
     }
+
+    // Designed fallback: route the person to paste the article text.
+    setMode("text");
+    setNotice(
+      result.reason === "timeout"
+        ? "The reader timed out on that link. Paste the article text here instead."
+        : "Couldn't pull readable text from that link. Paste the article text here instead."
+    );
   }
 
   return (
@@ -110,15 +148,44 @@ export default function LandingPage({ onAnalyze }) {
             />
           )}
 
+          {/* Loading state — a plain mono line, no colored spinner. */}
+          {busy && (
+            <p
+              style={{
+                fontFamily: "var(--eh-mono)",
+                fontSize: "12px",
+                color: "var(--eh-ink-soft)",
+                margin: "10px 16px 0",
+              }}
+              aria-live="polite"
+            >
+              fetching…
+            </p>
+          )}
+
           <div className="eh-submit-row">
             <button
               className="eh-submit"
               disabled={!canSubmit || busy}
               onClick={handleSubmit}
             >
-              {busy ? "Reading the page…" : "Weigh the evidence"}
+              {busy ? "Fetching…" : "Weigh the evidence"}
             </button>
           </div>
+
+          {/* Disclosure: URL fetches route through a third-party reader. */}
+          <p
+            style={{
+              fontFamily: "var(--eh-sans)",
+              fontSize: "11px",
+              lineHeight: 1.5,
+              color: "var(--eh-ink-soft)",
+              margin: "0 16px 14px",
+              opacity: 0.85,
+            }}
+          >
+            Links are fetched through r.jina.ac, a third-party reader service.
+          </p>
         </div>
       </div>
     </main>

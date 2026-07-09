@@ -13,7 +13,8 @@
     "check:nullseverity": "node checks/nullseverity-invariants.mjs",
     "check:rightofreply": "node checks/right-of-reply.test.mjs",
     "check:score": "node checks/score-invariants.mjs",
-    "check": "npm run check:rubrics && npm run check:regression && npm run check:posture && npm run check:nullseverity && npm run check:rightofreply && npm run check:score"
+    "check:verdict": "node checks/verdict-binding.test.mjs",
+    "check": "npm run check:rubrics && npm run check:regression && npm run check:posture && npm run check:nullseverity && npm run check:rightofreply && npm run check:score && npm run check:verdict"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.7",

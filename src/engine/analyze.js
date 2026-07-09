@@ -128,7 +128,13 @@ export function analyze(document, rubric, posture = rubric.defaultPosture) {
 }
 
 // One or two sentences a non-expert can act on.
-function buildVerdict({ rubric, totalClaims, strongClaims, flagCounts }) {
+//
+// Binding rule: EVERY number refers to the population it describes. flagCounts
+// are document-wide (over all extracted claims), and strongClaims is likewise a
+// subset of the whole — so both denominators are `totalClaims`. (Previously the
+// flag clauses read "N of them…" where "them" was the strong subpopulation,
+// mis-binding a document-wide numerator to the strong-claim denominator.)
+export function buildVerdict({ rubric, totalClaims, strongClaims, flagCounts }) {
   const noun = rubric.documentNoun || 'document'
   if (totalClaims === 0) {
     return `No assertive claims were detected in this ${noun}.`
@@ -137,20 +143,23 @@ function buildVerdict({ rubric, totalClaims, strongClaims, flagCounts }) {
   const unsupported = flagCounts['unsupported-assertion']
   const overconfident = flagCounts.overconfident
 
-  const lead = `This ${noun} makes ${strongClaims} strong ${plural(strongClaims, 'claim')}`
+  // Lead: total claims, with the strong count as an explicit subset of the total.
+  const lead = `This ${noun} makes ${totalClaims} ${plural(totalClaims, 'claim')}, ${strongClaims} of them strongly stated`
 
+  // Flag clauses: counts over ALL claims → "of these" (= the total), not the
+  // strong subpopulation.
   const clauses = []
   if (unsupported > 0) {
-    clauses.push(`${unsupported} of them ${unsupported === 1 ? 'rests' : 'rest'} on no cited evidence`)
+    clauses.push(`${unsupported} ${unsupported === 1 ? 'rests' : 'rest'} on no cited evidence`)
   }
   if (overconfident > 0) {
     clauses.push(`${overconfident} ${overconfident === 1 ? 'cites' : 'cite'} sources too weak to carry them`)
   }
 
   if (clauses.length === 0) {
-    return `${lead} — each backed by evidence in proportion to its confidence.`
+    return `${lead}, each backed by evidence in proportion to its confidence.`
   }
-  return `${lead}; ${joinClauses(clauses)}.`
+  return `${lead}; of these, ${joinClauses(clauses)}.`
 }
 
 const plural = (n, word) => (n === 1 ? word : word + 's')

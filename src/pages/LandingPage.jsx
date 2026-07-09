@@ -1,5 +1,9 @@
 import { useState } from "react";
 import ParticleMark from "../components/ParticleMark.jsx";
+import FileDropZone from "../components/FileDropZone.jsx";
+import { extractFile, messageFor } from "../ingest/extractFile.js";
+import { ExtractionError } from "../ingest/errors.js";
+import { normalizeText } from "../ingest/normalizer.js";
 import "../styles/landing.css";
 
 /**
@@ -61,6 +65,8 @@ export default function LandingPage({ onAnalyze }) {
   const [url, setUrl] = useState("");
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState(null);
+  const [extracting, setExtracting] = useState(false);
+  const [filename, setFilename] = useState(null);
 
   const canSubmit = mode === "text" ? text.trim().length > 0 : url.trim().length > 0;
 
@@ -72,7 +78,8 @@ export default function LandingPage({ onAnalyze }) {
     // Link mode always fetches; text mode fetches only if the value is a lone URL.
     const isUrl = mode === "link" || looksLikeUrl(raw);
     if (!isUrl) {
-      onAnalyze(raw, {});
+      // Pasted text runs through the SAME normalizer as extracted files.
+      onAnalyze(normalizeText(raw), {});
       return;
     }
 
@@ -81,7 +88,7 @@ export default function LandingPage({ onAnalyze }) {
     setBusy(false);
 
     if (result.ok) {
-      onAnalyze(result.text, { sourceUrl: result.sourceUrl });
+      onAnalyze(normalizeText(result.text), { sourceUrl: result.sourceUrl });
       return;
     }
 
@@ -92,6 +99,23 @@ export default function LandingPage({ onAnalyze }) {
         ? "The reader timed out on that link. Paste the article text here instead."
         : "Couldn't pull readable text from that link. Paste the article text here instead."
     );
+  }
+
+  // File upload → extract → normalize → hand to the pipeline as if pasted.
+  async function handleFile(file) {
+    setNotice(null);
+    setFilename(file.name);
+    setExtracting(true);
+    try {
+      const extracted = await extractFile(file);
+      if (!extracted.trim()) throw new ExtractionError("empty");
+      onAnalyze(extracted, { source: "file", filename: file.name });
+    } catch (err) {
+      const kind = err instanceof ExtractionError ? err.kind : "corrupt";
+      setExtracting(false);
+      setMode("text");
+      setNotice(messageFor(kind));
+    }
   }
 
   return (
@@ -166,11 +190,22 @@ export default function LandingPage({ onAnalyze }) {
           <div className="eh-submit-row">
             <button
               className="eh-submit"
-              disabled={!canSubmit || busy}
+              disabled={!canSubmit || busy || extracting}
               onClick={handleSubmit}
             >
               {busy ? "Fetching…" : "Weigh the evidence"}
             </button>
+          </div>
+
+          {/* File upload — drop or browse. Filename renders in mono. */}
+          <div style={{ borderTop: "1px solid var(--eh-hairline)", margin: "0 16px", padding: "12px 0 4px" }}>
+            <FileDropZone onFile={handleFile} disabled={extracting || busy} />
+            {extracting && (
+              <p style={{ margin: "10px 0 0", fontSize: "12px" }} aria-live="polite">
+                <span style={{ fontFamily: "var(--eh-mono)", color: "var(--eh-ink)" }}>{filename}</span>
+                <span style={{ fontFamily: "var(--eh-mono)", color: "var(--eh-ink-soft)" }}> — reading…</span>
+              </p>
+            )}
           </div>
 
           {/* Disclosure: URL fetches route through a third-party reader. */}

@@ -1,0 +1,23 @@
+{
+  "total": 2,
+  "data": [
+    {
+      "paperId": "s2paper000000000000000000000000000000001",
+      "title": "Rising rents and residential displacement: a longitudinal study",
+      "year": 2019,
+      "abstract": "Rent increases are associated with elevated displacement risk.",
+      "venue": "Journal of Urban Economics",
+      "externalIds": { "DOI": "10.1000/rent1" },
+      "publicationTypes": ["JournalArticle", "Review"]
+    },
+    {
+      "paperId": "s2paper000000000000000000000000000000002",
+      "title": "Do rent controls prevent displacement? A meta-analysis",
+      "year": 2022,
+      "abstract": "Across studies the effect of rent regulation on displacement is mixed.",
+      "venue": "Housing Policy Debate",
+      "externalIds": { "DOI": "10.1000/rent2" },
+      "publicationTypes": ["JournalArticle", "Meta-Analysis"]
+    }
+  ]
+}

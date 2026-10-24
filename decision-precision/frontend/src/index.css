@@ -1,0 +1,147 @@
+@import "tailwindcss";
+@import "@xyflow/react/dist/style.css";
+
+/*
+ * Register tokens (Boltanski–Thévenot orders of worth). The 8 registers are the
+ * semantic color layer for the deliberation canvas (Item 1 chips) and the Atlas
+ * tradition tint. Anything encoding register meaning reads these tokens, never a
+ * raw Tailwind color. NOTE: hues are distinct but not yet CVD-validated — the
+ * dataviz validator pass lands with the Item 1 register chips.
+ */
+@theme {
+  --color-register-market: #0ea5e9;      /* sky — the market order */
+  --color-register-industrial: #64748b;  /* steel — efficiency/technical */
+  --color-register-civic: #2563eb;       /* blue — collective/civic */
+  --color-register-domestic: #b45309;    /* umber — tradition/hierarchy */
+  --color-register-inspired: #9333ea;    /* violet — inspiration/grace */
+  --color-register-fame: #db2777;        /* magenta — renown/opinion */
+  --color-register-green: #16a34a;       /* green — the ecological order */
+  --color-register-projective: #0d9488;  /* teal — the projective/network */
+}
+
+/*
+ * Graph-semantic token layer.
+ * All graph marks (node fills, edge strokes, glows) read from these CSS
+ * variables — never hard-coded colors — so the semantic palette is centralized
+ * and swappable, and the renderer stays dumb about meaning.
+ *
+ * Valence is a DIVERGING encoding: orange (harm) <-> gray (neutral) <-> blue
+ * (benefit), the CVD-safe pair (validated). Status colors (amber CONTESTED, red
+ * CONTRADICTED) are RESERVED and always shipped with dash + label, never color
+ * alone. Divergence uses fuchsia as a spatial glow; closure uses teal.
+ */
+:root {
+  --surface: #f7f8fa;
+  --surface-raised: #ffffff;
+  --ink: #0f172a;
+  --ink-muted: #64748b;
+  --hairline: #e2e8f0;
+
+  /* diverging valence ramp (-2..+2) */
+  --valence-neg2: #c2410c;
+  --valence-neg1: #f97316;
+  --valence-0: #cbd5e1;
+  --valence-pos1: #3b82f6;
+  --valence-pos2: #1d4ed8;
+
+  /* evidence grade: hue only for the two reserved status grades */
+  --grade-ink: #475569;      /* SUPPORTED/WEAK/ANALOGICAL/SPECULATIVE stroke */
+  --grade-contested: #b45309; /* amber, dashed + label */
+  --grade-contradicted: #dc2626; /* red, dashed + label */
+
+  --register-clash: #f59e0b;   /* amber ring: two orders of worth clash on a node */
+  --tradition-tension: #b91c1c; /* deep red: adjacent nodes' traditions attack */
+  --coding-pending: #94a3b8;   /* grey: not yet human-verified */
+  --closure: #0d9488;        /* teal arc to center */
+  --reinforcing: #ea580c;    /* loop marker R */
+  --balancing: #2563eb;      /* loop marker B */
+
+  --node-decision: #ffffff;
+  --node-consequence: #ffffff;
+  --node-border: #94a3b8;
+  --seed: #0f172a;
+
+  --path-highlight: #0ea5e9;
+
+  /* Atlas marks: empirical edges are tinted (sign), curated are bold. Rivalry is
+     the Atlas's signature highlight (near + negative). Thinkers are the bridge. */
+  --atlas-node: #334155;
+  --atlas-opposition: #ef4444;   /* red-tinted, thin */
+  --atlas-cobelief: #22c55e;     /* green-tinted, thin */
+  --atlas-attack: #dc2626;       /* bold red, curated */
+  --atlas-compat: #15803d;       /* green, curated */
+  --atlas-rivalry: #f59e0b;      /* amber live-rivalry halo */
+  --atlas-thinker: #7c3aed;      /* violet bridge markers */
+}
+
+.dark {
+  --surface: #0b1020;
+  --surface-raised: #131a2c;
+  --ink: #e6edf6;
+  --ink-muted: #94a3b8;
+  --hairline: #24304a;
+
+  --valence-neg2: #ea580c;
+  --valence-neg1: #fb923c;
+  --valence-0: #475569;
+  --valence-pos1: #60a5fa;
+  --valence-pos2: #3b82f6;
+
+  --grade-ink: #94a3b8;
+  --grade-contested: #f59e0b;
+  --grade-contradicted: #f87171;
+
+  --register-clash: #fbbf24;
+  --tradition-tension: #ef4444;
+  --coding-pending: #64748b;
+  --closure: #2dd4bf;
+  --reinforcing: #fb923c;
+  --balancing: #60a5fa;
+
+  --node-decision: #172033;
+  --node-consequence: #172033;
+  --node-border: #46567a;
+  --seed: #e6edf6;
+
+  --path-highlight: #38bdf8;
+
+  --atlas-node: #94a3b8;
+  --atlas-opposition: #f87171;
+  --atlas-cobelief: #4ade80;
+  --atlas-attack: #ef4444;
+  --atlas-compat: #22c55e;
+  --atlas-rivalry: #fbbf24;
+  --atlas-thinker: #a78bfa;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+/* React Flow surface should use our tokens */
+.react-flow {
+  background: var(--surface);
+}
+
+/* register clash: two engaged orders of worth conflict on this node */
+.register-clash {
+  outline: 2px solid var(--register-clash);
+  outline-offset: 3px;
+  border-radius: 9999px;
+}
+
+/* not-yet-human-verified nodes read as provisional */
+.coding-pending {
+  opacity: 0.55;
+  filter: grayscale(0.35);
+}
+
+/* dotted halo for unexpanded nodes with hidden children */
+.node-halo {
+  outline: 2px dotted var(--node-border);
+  outline-offset: 4px;
+  border-radius: 9999px;
+}

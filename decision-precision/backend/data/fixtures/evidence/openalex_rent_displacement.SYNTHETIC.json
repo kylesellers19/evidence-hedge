@@ -1,0 +1,25 @@
+{
+  "meta": { "count": 2, "per_page": 10 },
+  "results": [
+    {
+      "id": "https://openalex.org/W2000000001",
+      "doi": "https://doi.org/10.1000/rent1",
+      "display_name": "Rising rents and residential displacement: a longitudinal study",
+      "publication_year": 2019,
+      "type": "article",
+      "primary_location": { "source": { "display_name": "Journal of Urban Economics" } },
+      "abstract_inverted_index": {
+        "Rent": [0], "increases": [1], "are": [2], "associated": [3], "with": [4], "displacement": [5]
+      }
+    },
+    {
+      "id": "https://openalex.org/W2000000002",
+      "doi": null,
+      "display_name": "Housing supply and neighborhood change",
+      "publication_year": 2021,
+      "type": "article",
+      "primary_location": { "source": { "display_name": "Urban Studies" } },
+      "abstract_inverted_index": null
+    }
+  ]
+}

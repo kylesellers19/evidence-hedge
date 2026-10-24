@@ -1,0 +1,29 @@
+{
+  "result": {
+    "uids": ["30000001", "30000002"],
+    "30000001": {
+      "uid": "30000001",
+      "title": "Housing instability and health outcomes: a systematic review",
+      "pubdate": "2020 Mar",
+      "source": "Am J Public Health",
+      "fulljournalname": "American Journal of Public Health",
+      "pubtype": ["Systematic Review", "Journal Article"],
+      "articleids": [
+        { "idtype": "pubmed", "value": "30000001" },
+        { "idtype": "doi", "value": "10.2000/health1" }
+      ]
+    },
+    "30000002": {
+      "uid": "30000002",
+      "title": "Eviction and emergency department utilization: a cohort study",
+      "pubdate": "2018",
+      "source": "Health Aff",
+      "fulljournalname": "Health Affairs",
+      "pubtype": ["Journal Article"],
+      "articleids": [
+        { "idtype": "pubmed", "value": "30000002" },
+        { "idtype": "doi", "value": "10.2000/health2" }
+      ]
+    }
+  }
+}

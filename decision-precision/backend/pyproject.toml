@@ -2,7 +2,6 @@
 name = "delib"
 version = "0.1.0"
 description = "DELIB — typed causal-deliberative graph tool for consequence mapping"
-readme = "../README.md"
 requires-python = ">=3.11"
 dependencies = [
     "pydantic>=2.7",

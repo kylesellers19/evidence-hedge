@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// base matches the GitHub Pages project path (https://<user>.github.io/evidence-hedge/).
+// base is the domain root: the site is served at https://evidencehedge.org/.
 export default defineConfig({
-  base: '/evidence-hedge/',
+  base: '/',
   plugins: [react()],
   server: {
     port: 5174,

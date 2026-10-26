@@ -14,3 +14,8 @@ dist/
 # Editor
 .vscode/
 .idea/
+
+# Env / secrets
+.env*
+!.env.example
+**/.claude/settings.local.json

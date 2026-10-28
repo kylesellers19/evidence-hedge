@@ -4,6 +4,7 @@ import FileDropZone from "../components/FileDropZone.jsx";
 import { extractFile, messageFor } from "../ingest/extractFile.js";
 import { ExtractionError } from "../ingest/errors.js";
 import { normalizeText } from "../ingest/normalizer.js";
+import { fetchLink, looksLikeUrl } from "../ingest/fetchLink.js";
 import "../styles/landing.css";
 
 /**
@@ -18,45 +19,20 @@ import "../styles/landing.css";
  *   onAnalyze(text, meta)  — meta: { sourceUrl?: string }
  *
  * A pasted link (in Paste link mode, or a bare URL pasted into the text box) is
- * fetched through the Jina Reader service (r.jina.ac), which returns readable
- * article text. On any failure the person is asked to paste the article text —
- * a designed fallback state, not an error toast.
+ * fetched by ingest/fetchLink.js: a PDF/DOCX/TXT/MD the host lets the browser
+ * download runs through the upload extractors; everything else is read through
+ * the Jina Reader service (r.jina.ai). On any failure the person is asked to
+ * paste the article text — a designed fallback state, not an error toast.
  */
 
-const FETCH_TIMEOUT_MS = 15000;
-
-// A value is a URL if it has no internal whitespace and either starts with
-// http(s):// or reads as a bare domain (example.com, sub.example.co.uk/path).
-function looksLikeUrl(value) {
-  const s = value.trim();
-  if (!s || /\s/.test(s)) return false;
-  if (/^https?:\/\/\S+\.\S+/i.test(s)) return true;
-  return /^([a-z0-9-]+\.)+[a-z]{2,}(\/\S*)?$/i.test(s);
-}
-
-function normalizeUrl(value) {
-  const s = value.trim();
-  return /^https?:\/\//i.test(s) ? s : "https://" + s;
-}
-
-// Fetch article text through Jina Reader. Returns { ok, text, sourceUrl } or
-// { ok:false, reason } for the three designed failure states.
-async function fetchViaJina(rawUrl) {
-  const target = normalizeUrl(rawUrl);
-  const endpoint = "https://r.jina.ac/" + encodeURIComponent(target);
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-  try {
-    const res = await fetch(endpoint, { signal: controller.signal });
-    if (!res.ok) return { ok: false, reason: `status ${res.status}` };
-    const body = (await res.text()).trim();
-    if (!body) return { ok: false, reason: "empty" };
-    return { ok: true, text: body, sourceUrl: target };
-  } catch (e) {
-    return { ok: false, reason: e && e.name === "AbortError" ? "timeout" : "network" };
-  } finally {
-    clearTimeout(timer);
+// Designed fallback copy for a link that couldn't be read.
+function linkNotice(result) {
+  if (result.reason === "extract") return messageFor(result.kind);
+  if (result.reason === "timeout") return "The reader timed out on that link. Paste the article text here instead.";
+  if (result.reason === "rate-limited") {
+    return "The link reader is busy right now. Wait a minute and try again, or paste the article text here instead.";
   }
+  return "Couldn't pull readable text from that link. Paste the article text here instead.";
 }
 
 export default function LandingPage({ onAnalyze }) {
@@ -84,21 +60,18 @@ export default function LandingPage({ onAnalyze }) {
     }
 
     setBusy(true);
-    const result = await fetchViaJina(raw);
+    const result = await fetchLink(raw);
     setBusy(false);
 
     if (result.ok) {
-      onAnalyze(normalizeText(result.text), { sourceUrl: result.sourceUrl });
+      // fetchLink has already run the text through the shared normalizer.
+      onAnalyze(result.text, { sourceUrl: result.sourceUrl });
       return;
     }
 
     // Designed fallback: route the person to paste the article text.
     setMode("text");
-    setNotice(
-      result.reason === "timeout"
-        ? "The reader timed out on that link. Paste the article text here instead."
-        : "Couldn't pull readable text from that link. Paste the article text here instead."
-    );
+    setNotice(linkNotice(result));
   }
 
   // File upload → extract → normalize → hand to the pipeline as if pasted.
@@ -219,7 +192,8 @@ export default function LandingPage({ onAnalyze }) {
               opacity: 0.85,
             }}
           >
-            Links are fetched through r.jina.ac, a third-party reader service.
+            Links are read through r.jina.ai, a third-party reader service, unless they point to a PDF
+            or DOCX the site lets your browser download directly.
           </p>
         </div>
       </div>

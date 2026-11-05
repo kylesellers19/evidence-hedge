@@ -4,7 +4,8 @@ Every conflict between groups is classified by what would resolve it, following
 Structured Decision Making's separation of facts from values (Gregory et al. 2012):
 
   FACTUAL  groups believe different things about the same effect on the same
-           people. Resolved by evidence -> steps 7 and 10.
+           people. Resolved by evidence: edge disputes -> step 7; estimate
+           disputes -> step 10, which says whether resolving them is worth it.
   VALUE    groups weigh objectives differently. Resolved by deliberation over
            tradeoffs, never by more data -> step 9.
   FRAME    groups are solving different problems: an objective or option one
@@ -163,7 +164,7 @@ def disagreements(
                     break
         out.append(Disagreement(
             kind=DisagreementKind.FACTUAL, subject=f"cell ({cell.alternative_id}, {cell.objective_id})",
-            groups=sorted(conflicts), route_to_step=7, decision_relevant=rel,
+            groups=sorted(conflicts), route_to_step=10, decision_relevant=rel,
             detail="Group estimates have non-overlapping P05-P95 intervals"
                    + (" and substituting one group's estimate changes a group's top choice." if rel else "."),
             cell=cell.ref(),

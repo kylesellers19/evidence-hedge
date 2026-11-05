@@ -99,6 +99,12 @@ def ratification_table() -> list[RatificationRow]:
                       "interval on weak evidence is stated precision the evidence does not carry.",
         ),
         RatificationRow(
+            constant="MEASURED estimates", value="adequate evidence; no basis edges required", status=p,
+            rationale="A measured current value (typically the status quo) is an observation, not a "
+                      "predicted effect, so the causal evidence floor does not apply. Measurement quality "
+                      "itself is not graded here.",
+        ),
+        RatificationRow(
             constant="LATENT_WEIGHT_GAP", value=f"{LATENT_WEIGHT_GAP} (normalized weight)", status=p,
             rationale="Reports value disagreements that do not change the current choice but could "
                       "under a different alternative set.",

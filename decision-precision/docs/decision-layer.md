@@ -29,8 +29,8 @@ interval resting on weak evidence is flagged as an overconfident interval.
 2. **Facts and values stay apart.** Every interview statement is typed as a value
    (objective, means, constraint), a fact (causal belief, fact claim,
    uncertainty), an option, or out of frame. Factual disagreements route to
-   evidence; value disagreements route to tradeoffs; frame disagreements route
-   back to framing.
+   evidence (edge disputes to step 7, estimate disputes to step 10); value
+   disagreements route to tradeoffs; frame disagreements route back to framing.
 3. **Heterogeneity is not disagreement.** Two groups reporting opposite effects
    on themselves are recorded as effect differences on the edge, not a dispute.
 4. **Interview beliefs are hypotheses.** An edge whose only basis is elicited
@@ -129,6 +129,7 @@ Every row is PROVISIONAL — not ratified.
 | `ADEQUATE_GRADE` | WEAK (ordinal 4) | Weakest-link floor a decision-sensitive cell needs to land in MONITOR rather than INVESTIGATE. Reuses DELIB's ratified grade ordinal; the cut point is new. |
 | `REQUIRE_TRANSPORT_FOR_LITERATURE` | True | Literature evidence counts as adequate for this site only when transport was assessed LIKELY_HOLDS. False would let well-graded but untransported evidence settle a cell. |
 | `NARROW_INTERVAL_FRACTION` | 0.05 of attribute range | Evidence Hedge's proportionality test applied to estimates: a tight P05-P95 interval on weak evidence is stated precision the evidence does not carry. |
+| `MEASURED estimates` | adequate evidence; no basis edges required | A measured current value (typically the status quo) is an observation, not a predicted effect, so the causal evidence floor does not apply. Measurement quality itself is not graded here. |
 | `LATENT_WEIGHT_GAP` | 0.15 (normalized weight) | Reports value disagreements that do not change the current choice but could under a different alternative set. |
 | `SWAP_INCONSISTENCY_FACTOR` | 2.0x | Cross-check between two elicitation methods (even swaps vs swing weights). A factor-of-two gap is a common practitioner tolerance, not a published standard. |
 | `Value function default` | linear between attribute worst and best | Used when no value_points are elicited. Linear is the standard first approximation; risk attitude and diminishing returns need elicited points. |

@@ -1,5 +1,6 @@
 import { ReactFlowProvider } from "@xyflow/react";
 import { AtlasRoute } from "./atlas/AtlasRoute";
+import { DecisionRoute } from "./decision/DecisionRoute";
 import { GraphCanvas } from "./graph/GraphCanvas";
 import { useDelib } from "./graph/useDelib";
 import { EvidencePanel } from "./panel/EvidencePanel";
@@ -26,6 +27,7 @@ function Nav({ route, go }: { route: Route; go: (r: Route) => void }) {
       <span className="mr-2 text-sm font-semibold">DELIB</span>
       {tab("canvas", "Deliberation")}
       {tab("atlas", "Atlas")}
+      {tab("decision", "Decision")}
     </nav>
   );
 }
@@ -102,7 +104,7 @@ export default function App() {
   return (
     <div className="flex h-screen flex-col">
       <Nav route={route} go={go} />
-      {route === "atlas" ? <AtlasRoute /> : <DeliberationApp />}
+      {route === "atlas" ? <AtlasRoute /> : route === "decision" ? <DecisionRoute /> : <DeliberationApp />}
     </div>
   );
 }

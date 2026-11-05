@@ -386,3 +386,19 @@ def test_record_is_tied_to_the_analysis_it_was_made_on():
     changed = DecisionModel.model_validate(d)
     dq2 = {e.element: e for e in analyze(changed, toy_graph()).decision_quality}
     assert not next(c for c in dq2["Commitment to action"].checks if c.check.startswith("recorded against")).ok
+
+
+def test_measured_values_need_no_causal_basis():
+    m = single_objective_model({"a": (50, 50, 50), "b": (0, 40, 100)})
+    d = m.model_dump(mode="json")
+    d["cells"][0]["estimate"]["method"] = "MEASURED"
+    rows = {r.cell.alternative_id: r for r in precision_report(DecisionModel.model_validate(d), toy_graph())}
+    assert rows["a"].adequate and rows["a"].quadrant is Quadrant.SETTLED
+    assert rows["a"].flags == ["measured, not predicted"]
+
+
+def test_estimate_disputes_route_to_value_of_information():
+    d = toy_model_dict()
+    d["cells"][2]["group_estimates"] = {"g1": est(85, 90, 100), "g2": est(30, 40, 50)}
+    f = [x for x in _dis(DecisionModel.model_validate(d)) if x.cell is not None]
+    assert f[0].route_to_step == 10

@@ -36,6 +36,15 @@ frontend/   Vite + React + React Flow          (added in Phase 3)
 - **Phase 4** — Real LLM integration (generator / coder / grader).
 - **Phase 5** — Evidence multiplexer.
 
+## Decision layer
+
+`backend/src/delib/decision/` turns the consequence map into a decision: frame,
+user-group interviews, objectives, alternatives, edge evidence, a consequence
+table, per-group tradeoffs, value of information, robustness, and a decision
+record. API under `/api/decision`; UI at `#/decision`. Spec, twelve steps, and
+the ratification table: `docs/decision-layer.md`. Authoring schema:
+`docs/decision-model.schema.json`.
+
 ## Backend dev
 
 ```bash

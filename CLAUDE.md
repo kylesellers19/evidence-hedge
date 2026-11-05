@@ -34,6 +34,8 @@ Every Vite config sets `strictPort: true`, so a busy port fails instead of movin
 
 ## Notes
 
+- DELIB's decision layer (`decision-precision/backend/src/delib/decision/`) is specified in `decision-precision/docs/decision-layer.md`. Its judgment constants live in `decision/config.py`, are marked `PROVISIONAL — not ratified`, and are listed by `ratification_table()`; a test fails if the spec's table drifts from the code.
+
 - The repo is public: anything pushed is published.
 - DELIB's `data/cache/` (~440 MB of SQLite) is ignored only by `decision-precision/.gitignore`; the root `.gitignore` does not cover `*.sqlite`, `.env` or `.venv`.
 - The relocation spec (`DELIB_MERGE.md`) was not present at relocation time. When added, it belongs at `decision-precision/docs/DELIB_MERGE.md`.

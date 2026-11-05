@@ -30,7 +30,7 @@ from .config import (
     REQUIRE_TRANSPORT_FOR_LITERATURE,
     WEIGHT_MARGIN,
 )
-from .models import CellRef, DecisionModel, Estimate, Objective
+from .models import CellRef, DecisionModel, Estimate, EstimateMethod, Objective
 from .tradeoffs import Feasibility, constraint_screen, group_ranking, value_matrix
 
 
@@ -308,6 +308,9 @@ def precision_report(model: DecisionModel, graph: DelibGraph | None) -> list[Pre
         flags: list[str] = []
         if c is None:
             return False, None, ["no cell"]
+        if c.estimate is not None and c.estimate.method is EstimateMethod.MEASURED:
+            # an observed value, not a predicted effect: it needs no causal basis
+            return True, None, ["measured, not predicted"]
         f = evidence_floor(model, graph, c)
         if f.untraced:
             flags.append("untraced: no basis edges recorded")

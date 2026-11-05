@@ -307,8 +307,11 @@ def analyze(model: DecisionModel, graph: DelibGraph) -> DecisionAnalysis:
     step(9, bool(model.weights), f"{len(ranks)} group ranking(s), {len(dom)} dominance relation(s)",
          w_gaps + ([] if ranks or not model.weights else ["rankings blocked: complete the consequence table"]))
     q_counts = {q: sum(1 for r in prec if r.quadrant is q) for q in Quadrant}
-    step(10, bool(voi), " · ".join(f"{q.value} {n}" for q, n in q_counts.items()),
-         [f"{r.cell.alternative_id}|{r.cell.objective_id}: INVESTIGATE (EVPPI {r.max_evppi:.1f})" for r in investigate]
+    step(10, bool(voi),
+         f"{q_counts[Quadrant.INVESTIGATE]} to investigate, {q_counts[Quadrant.MONITOR]} to monitor, "
+         f"{q_counts[Quadrant.TOLERATE]} to tolerate, {q_counts[Quadrant.SETTLED]} settled",
+         [f"({r.cell.alternative_id}, {r.cell.objective_id}) could change the choice (EVPPI {r.max_evppi:.1f} points) "
+          "but rests on weak evidence" for r in investigate]
          + ([] if voi else ["blocked: needs rankings"]))
     step(11, bool(model.assumptions) or bool(cands),
          f"{len(lb)} load-bearing of {len(model.assumptions)} assumption(s); {len(cands)} candidate(s)",

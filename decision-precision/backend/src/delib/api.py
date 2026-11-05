@@ -15,6 +15,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from .decision import api as decision_api
 from .evidence.budget import BudgetExceeded
 from .evidence.claims import claim_hash
 from .evidence.grading import ClaimDomain
@@ -62,6 +63,10 @@ app.add_middleware(
 
 # Single-process prototype session. A real backend would key these per user.
 session = Session()
+
+# Decision layer (docs/decision-layer.md): reads the live deliberation graph.
+decision_api.configure(lambda: session.graph)
+app.include_router(decision_api.router)
 
 
 class EditRequest(BaseModel):

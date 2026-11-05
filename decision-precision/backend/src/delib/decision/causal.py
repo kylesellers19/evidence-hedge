@@ -21,7 +21,6 @@ from .models import (
     ConfounderStatus,
     ConsequenceCell,
     DecisionModel,
-    Direction,
     EdgeRef,
     EvidenceBasis,
     Transport,

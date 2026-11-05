@@ -1,0 +1,1721 @@
+{
+  "$defs": {
+    "AggregationRole": {
+      "description": "COMPENSATORY objectives trade off against others through weights.\nCONSTRAINT objectives are thresholds: failing one is not offset by doing\nwell elsewhere (the non-compensatory treatment for values that resist a\ncommon measure).",
+      "enum": [
+        "COMPENSATORY",
+        "CONSTRAINT"
+      ],
+      "title": "AggregationRole",
+      "type": "string"
+    },
+    "Alternative": {
+      "additionalProperties": false,
+      "description": "One row of the strategy table: an option chosen for each focus decision.",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/AlternativeKind",
+          "default": "ACTION"
+        },
+        "choices": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "DecisionNode id -> one of that node's alternatives.",
+          "title": "Choices",
+          "type": "object"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "statement_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Statement Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "title": "Alternative",
+      "type": "object"
+    },
+    "AlternativeKind": {
+      "enum": [
+        "ACTION",
+        "STATUS_QUO",
+        "DEFER"
+      ],
+      "title": "AlternativeKind",
+      "type": "string"
+    },
+    "Assumption": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "refs": {
+          "$ref": "#/$defs/AssumptionRefs"
+        },
+        "vulnerable": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Could plausibly fail within the horizon. None = unassessed.",
+          "title": "Vulnerable"
+        },
+        "signposts": {
+          "items": {
+            "$ref": "#/$defs/Signpost"
+          },
+          "title": "Signposts",
+          "type": "array"
+        },
+        "shaping_actions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Shaping Actions",
+          "type": "array"
+        },
+        "hedging_actions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Hedging Actions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "title": "Assumption",
+      "type": "object"
+    },
+    "AssumptionRefs": {
+      "additionalProperties": false,
+      "properties": {
+        "cells": {
+          "items": {
+            "$ref": "#/$defs/CellRef"
+          },
+          "title": "Cells",
+          "type": "array"
+        },
+        "edges": {
+          "items": {
+            "$ref": "#/$defs/EdgeRef"
+          },
+          "title": "Edges",
+          "type": "array"
+        },
+        "weights": {
+          "items": {
+            "$ref": "#/$defs/WeightRef"
+          },
+          "title": "Weights",
+          "type": "array"
+        }
+      },
+      "title": "AssumptionRefs",
+      "type": "object"
+    },
+    "Attribute": {
+      "additionalProperties": false,
+      "description": "The measure for a fundamental objective, with the range swing weights are\nelicited over. ``value_points`` optionally define a piecewise-linear value\nfunction as (x, v) pairs with v in [0, 1]; otherwise value is linear.",
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/AttributeKind"
+        },
+        "direction": {
+          "$ref": "#/$defs/Direction"
+        },
+        "worst": {
+          "title": "Worst",
+          "type": "number"
+        },
+        "best": {
+          "title": "Best",
+          "type": "number"
+        },
+        "value_points": {
+          "anyOf": [
+            {
+              "items": {
+                "maxItems": 2,
+                "minItems": 2,
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "type": "array"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value Points"
+        }
+      },
+      "required": [
+        "name",
+        "unit",
+        "kind",
+        "direction",
+        "worst",
+        "best"
+      ],
+      "title": "Attribute",
+      "type": "object"
+    },
+    "AttributeKind": {
+      "description": "Keeney & Gregory (2005): natural, constructed, or proxy measures.",
+      "enum": [
+        "NATURAL",
+        "CONSTRUCTED",
+        "PROXY"
+      ],
+      "title": "AttributeKind",
+      "type": "string"
+    },
+    "CausalForm": {
+      "description": "Whether a belief is about intervening (do-X) or about co-occurrence.",
+      "enum": [
+        "INTERVENTIONAL",
+        "ASSOCIATIONAL",
+        "UNCLEAR"
+      ],
+      "title": "CausalForm",
+      "type": "string"
+    },
+    "CellRef": {
+      "additionalProperties": false,
+      "properties": {
+        "alternative_id": {
+          "minLength": 1,
+          "title": "Alternative Id",
+          "type": "string"
+        },
+        "objective_id": {
+          "minLength": 1,
+          "title": "Objective Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "alternative_id",
+        "objective_id"
+      ],
+      "title": "CellRef",
+      "type": "object"
+    },
+    "CodedBy": {
+      "description": "Who produced a coding. MACHINE codings are suggestions until verified.",
+      "enum": [
+        "HUMAN",
+        "MACHINE"
+      ],
+      "title": "CodedBy",
+      "type": "string"
+    },
+    "ConfounderStatus": {
+      "enum": [
+        "ADDRESSED",
+        "UNADDRESSED",
+        "NOT_A_CONFOUNDER"
+      ],
+      "title": "ConfounderStatus",
+      "type": "string"
+    },
+    "ConsequenceCell": {
+      "additionalProperties": false,
+      "description": "Alternative x fundamental objective. ``estimate`` None means explicitly\nMISSING, which blocks ranking rather than being silently imputed.",
+      "properties": {
+        "alternative_id": {
+          "minLength": 1,
+          "title": "Alternative Id",
+          "type": "string"
+        },
+        "objective_id": {
+          "minLength": 1,
+          "title": "Objective Id",
+          "type": "string"
+        },
+        "estimate": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Estimate"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "basis_edges": {
+          "items": {
+            "$ref": "#/$defs/EdgeRef"
+          },
+          "title": "Basis Edges",
+          "type": "array"
+        },
+        "group_estimates": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Estimate"
+          },
+          "description": "Per-group estimates before reconciliation.",
+          "title": "Group Estimates",
+          "type": "object"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "alternative_id",
+        "objective_id"
+      ],
+      "title": "ConsequenceCell",
+      "type": "object"
+    },
+    "DecisionFrame": {
+      "additionalProperties": false,
+      "description": "What is being decided, by whom, and where the boundary sits.\n\nDecision hierarchy (Spetzler, Winter & Meyer 2016): ``givens`` are already\nsettled, ``focus`` is decided now, ``deferred`` is decided later.\nBoundary fields follow Ulrich's (1983) four boundary categories: motivation\n(``beneficiary``), power (``owner``), knowledge (``expertise``), and\nlegitimacy (``affected_not_involved``).",
+      "properties": {
+        "decision_statement": {
+          "minLength": 1,
+          "title": "Decision Statement",
+          "type": "string"
+        },
+        "owner": {
+          "description": "Who has authority to decide.",
+          "minLength": 1,
+          "title": "Owner",
+          "type": "string"
+        },
+        "seed_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Seed Id"
+        },
+        "beneficiary": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whose purposes the decision ought to serve.",
+          "title": "Beneficiary"
+        },
+        "expertise": {
+          "description": "Whose knowledge counts, and why.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Expertise",
+          "type": "array"
+        },
+        "affected_not_involved": {
+          "description": "Parties affected but not interviewed.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Affected Not Involved",
+          "type": "array"
+        },
+        "givens": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Givens",
+          "type": "array"
+        },
+        "focus": {
+          "description": "DecisionNode ids decided now.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Focus",
+          "type": "array"
+        },
+        "deferred": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Deferred",
+          "type": "array"
+        },
+        "horizon": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Horizon"
+        },
+        "questions": {
+          "items": {
+            "$ref": "#/$defs/TypedQuestion"
+          },
+          "title": "Questions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "decision_statement",
+        "owner"
+      ],
+      "title": "DecisionFrame",
+      "type": "object"
+    },
+    "DecisionRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "chosen_alternative_id": {
+          "minLength": 1,
+          "title": "Chosen Alternative Id",
+          "type": "string"
+        },
+        "decided_by": {
+          "minLength": 1,
+          "title": "Decided By",
+          "type": "string"
+        },
+        "decided_on": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Decided On"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "positions": {
+          "items": {
+            "$ref": "#/$defs/GroupPosition"
+          },
+          "title": "Positions",
+          "type": "array"
+        },
+        "premortem": {
+          "items": {
+            "$ref": "#/$defs/PremortemEntry"
+          },
+          "title": "Premortem",
+          "type": "array"
+        },
+        "review_trigger_signpost_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Review Trigger Signpost Ids",
+          "type": "array"
+        },
+        "analysis_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Hash of the model the analysis ran on, set when recorded.",
+          "title": "Analysis Hash"
+        }
+      },
+      "required": [
+        "chosen_alternative_id",
+        "decided_by",
+        "rationale"
+      ],
+      "title": "DecisionRecord",
+      "type": "object"
+    },
+    "Direction": {
+      "enum": [
+        "MAXIMIZE",
+        "MINIMIZE"
+      ],
+      "title": "Direction",
+      "type": "string"
+    },
+    "EdgeEvidenceCard": {
+      "additionalProperties": false,
+      "description": "Decision-layer annotation of one causal edge. The literature grade stays\non the CausalEdge (Layer 1's ratified grading); this card adds what a\ndecision needs on top: where the belief comes from, whether it is about\nintervening, what else could explain it, whom it differs for, and whether\nit transports to this site.",
+      "properties": {
+        "edge": {
+          "$ref": "#/$defs/EdgeRef"
+        },
+        "basis": {
+          "items": {
+            "$ref": "#/$defs/EvidenceBasis"
+          },
+          "minItems": 1,
+          "title": "Basis",
+          "type": "array"
+        },
+        "causal_form": {
+          "$ref": "#/$defs/CausalForm",
+          "default": "UNCLEAR"
+        },
+        "confounder_prompt_answered": {
+          "default": false,
+          "description": "Someone was asked 'what else causes both?' and the answer is recorded.",
+          "title": "Confounder Prompt Answered",
+          "type": "boolean"
+        },
+        "confounders": {
+          "items": {
+            "$ref": "#/$defs/NamedConfounder"
+          },
+          "title": "Confounders",
+          "type": "array"
+        },
+        "group_effects": {
+          "items": {
+            "$ref": "#/$defs/GroupEffect"
+          },
+          "title": "Group Effects",
+          "type": "array"
+        },
+        "support_factors": {
+          "items": {
+            "$ref": "#/$defs/SupportFactor"
+          },
+          "title": "Support Factors",
+          "type": "array"
+        },
+        "transport": {
+          "$ref": "#/$defs/Transport",
+          "default": "NOT_ASSESSED"
+        },
+        "statement_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Statement Ids",
+          "type": "array"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "edge",
+        "basis"
+      ],
+      "title": "EdgeEvidenceCard",
+      "type": "object"
+    },
+    "EdgeRef": {
+      "additionalProperties": false,
+      "description": "A reference to a CAUSAL edge in the deliberation graph.",
+      "properties": {
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "target": {
+          "minLength": 1,
+          "title": "Target",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "target"
+      ],
+      "title": "EdgeRef",
+      "type": "object"
+    },
+    "Estimate": {
+      "additionalProperties": false,
+      "description": "Three quantiles in the attribute's units (see config.PT_WEIGHTS).",
+      "properties": {
+        "p05": {
+          "title": "P05",
+          "type": "number"
+        },
+        "p50": {
+          "title": "P50",
+          "type": "number"
+        },
+        "p95": {
+          "title": "P95",
+          "type": "number"
+        },
+        "method": {
+          "$ref": "#/$defs/EstimateMethod"
+        },
+        "source_note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Note"
+        }
+      },
+      "required": [
+        "p05",
+        "p50",
+        "p95",
+        "method"
+      ],
+      "title": "Estimate",
+      "type": "object"
+    },
+    "EstimateMethod": {
+      "enum": [
+        "ELICITED",
+        "MODELED",
+        "LITERATURE",
+        "MEASURED"
+      ],
+      "title": "EstimateMethod",
+      "type": "string"
+    },
+    "EvenSwap": {
+      "additionalProperties": false,
+      "description": "Hammond, Keeney & Raiffa (1998): change one alternative on two objectives\nso that the group judges the result equally attractive.",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "group_id": {
+          "minLength": 1,
+          "title": "Group Id",
+          "type": "string"
+        },
+        "alternative_id": {
+          "minLength": 1,
+          "title": "Alternative Id",
+          "type": "string"
+        },
+        "give": {
+          "$ref": "#/$defs/SwapLeg"
+        },
+        "get": {
+          "$ref": "#/$defs/SwapLeg"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "id",
+        "group_id",
+        "alternative_id",
+        "give",
+        "get"
+      ],
+      "title": "EvenSwap",
+      "type": "object"
+    },
+    "EvidenceBasis": {
+      "enum": [
+        "LITERATURE",
+        "SITE_DATA",
+        "ELICITED_BELIEF",
+        "MECHANISM_ONLY"
+      ],
+      "title": "EvidenceBasis",
+      "type": "string"
+    },
+    "FactorStatus": {
+      "enum": [
+        "PRESENT",
+        "ABSENT",
+        "UNKNOWN"
+      ],
+      "title": "FactorStatus",
+      "type": "string"
+    },
+    "GroupEffect": {
+      "additionalProperties": false,
+      "description": "Effect heterogeneity: the edge's direction for one group's members.",
+      "properties": {
+        "group_id": {
+          "minLength": 1,
+          "title": "Group Id",
+          "type": "string"
+        },
+        "direction": {
+          "enum": [
+            -1,
+            0,
+            1
+          ],
+          "title": "Direction",
+          "type": "integer"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "group_id",
+        "direction"
+      ],
+      "title": "GroupEffect",
+      "type": "object"
+    },
+    "GroupPosition": {
+      "additionalProperties": false,
+      "properties": {
+        "group_id": {
+          "minLength": 1,
+          "title": "Group Id",
+          "type": "string"
+        },
+        "preferred_alternative_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Preferred Alternative Id"
+        },
+        "dissent_note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dissent Note"
+        }
+      },
+      "required": [
+        "group_id"
+      ],
+      "title": "GroupPosition",
+      "type": "object"
+    },
+    "Interview": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "group_id": {
+          "minLength": 1,
+          "title": "Group Id",
+          "type": "string"
+        },
+        "mode": {
+          "$ref": "#/$defs/InterviewMode"
+        },
+        "held_on": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Held On"
+        },
+        "interviewer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Interviewer"
+        },
+        "redaction_confirmed": {
+          "default": false,
+          "description": "Identifying and confidential details removed from quotes.",
+          "title": "Redaction Confirmed",
+          "type": "boolean"
+        },
+        "individual_first": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "GROUP/WORKSHOP only: were estimates and objectives collected individually before discussion (Hemming et al. 2018)? None = not recorded.",
+          "title": "Individual First"
+        }
+      },
+      "required": [
+        "id",
+        "group_id",
+        "mode"
+      ],
+      "title": "Interview",
+      "type": "object"
+    },
+    "InterviewMode": {
+      "enum": [
+        "INDIVIDUAL",
+        "GROUP",
+        "WORKSHOP",
+        "SURVEY_OPEN_TEXT"
+      ],
+      "title": "InterviewMode",
+      "type": "string"
+    },
+    "LoopTreatment": {
+      "additionalProperties": false,
+      "description": "How a feedback loop inside the decision-relevant subgraph is handled.\nInfluence diagrams and backdoor analysis need acyclic structure.",
+      "properties": {
+        "nodes": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "title": "Nodes",
+          "type": "array"
+        },
+        "treatment": {
+          "$ref": "#/$defs/LoopTreatmentKind"
+        },
+        "cut_edge": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EdgeRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "nodes",
+        "treatment"
+      ],
+      "title": "LoopTreatment",
+      "type": "object"
+    },
+    "LoopTreatmentKind": {
+      "enum": [
+        "UNROLL_IN_TIME",
+        "CUT_EDGE_FOR_ANALYSIS",
+        "QUALITATIVE_ONLY"
+      ],
+      "title": "LoopTreatmentKind",
+      "type": "string"
+    },
+    "NamedConfounder": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "node_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Node Id"
+        },
+        "status": {
+          "$ref": "#/$defs/ConfounderStatus",
+          "default": "UNADDRESSED"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "NamedConfounder",
+      "type": "object"
+    },
+    "Objective": {
+      "additionalProperties": false,
+      "description": "A fundamental objective (an end, organized in a hierarchy) or a means\nobjective (matters because it serves fundamental ones) \u2014 Keeney 1992.",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ObjectiveKind"
+        },
+        "parent_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "FUNDAMENTAL hierarchy parent.",
+          "title": "Parent Id"
+        },
+        "serves": {
+          "description": "MEANS: fundamental objective ids served.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Serves",
+          "type": "array"
+        },
+        "attribute": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "role": {
+          "$ref": "#/$defs/AggregationRole",
+          "default": "COMPENSATORY"
+        },
+        "threshold": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "CONSTRAINT: the acceptable limit.",
+          "title": "Threshold"
+        },
+        "registers": {
+          "description": "Orders of worth this objective expresses.",
+          "items": {
+            "$ref": "#/$defs/Register"
+          },
+          "title": "Registers",
+          "type": "array"
+        },
+        "consequence_ids": {
+          "description": "Graph CONSEQUENCE/STATE nodes this attribute measures.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Consequence Ids",
+          "type": "array"
+        },
+        "statement_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Statement Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "kind"
+      ],
+      "title": "Objective",
+      "type": "object"
+    },
+    "ObjectiveKind": {
+      "enum": [
+        "FUNDAMENTAL",
+        "MEANS"
+      ],
+      "title": "ObjectiveKind",
+      "type": "string"
+    },
+    "PremortemEntry": {
+      "additionalProperties": false,
+      "description": "Klein (2007): assume it failed; say why.",
+      "properties": {
+        "failure_story": {
+          "minLength": 1,
+          "title": "Failure Story",
+          "type": "string"
+        },
+        "causes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Causes",
+          "type": "array"
+        },
+        "mitigation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mitigation"
+        }
+      },
+      "required": [
+        "failure_story"
+      ],
+      "title": "PremortemEntry",
+      "type": "object"
+    },
+    "QuestionKind": {
+      "description": "What a seed question is, once the unit of analysis is a decision.\n\n\"What if we do X?\" is an ALTERNATIVE to compare; \"Will X happen?\" is an\nUNCERTAINTY to model; \"How do we protect Y?\" is an OBJECTIVE to measure.",
+      "enum": [
+        "ALTERNATIVE",
+        "UNCERTAINTY",
+        "OBJECTIVE"
+      ],
+      "title": "QuestionKind",
+      "type": "string"
+    },
+    "Register": {
+      "description": "Boltanski & Th\u00e9venot orders of worth \u2014 the evaluative registers a\nconsequence can engage. Replaces the (stakeholder, framework, sign) valence:\nan engagement is UNSIGNED (it names the order of worth invoked, evidenced by\na signature marker), and tension comes from the curated clash table, not a\nper-attribution sign.",
+      "enum": [
+        "MARKET",
+        "INDUSTRIAL",
+        "CIVIC",
+        "DOMESTIC",
+        "INSPIRED",
+        "FAME",
+        "GREEN",
+        "PROJECTIVE"
+      ],
+      "title": "Register",
+      "type": "string"
+    },
+    "Signpost": {
+      "additionalProperties": false,
+      "description": "Dewar (2002): an observable that warns a load-bearing assumption is failing.",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "indicator": {
+          "minLength": 1,
+          "title": "Indicator",
+          "type": "string"
+        },
+        "threshold": {
+          "minLength": 1,
+          "title": "Threshold",
+          "type": "string"
+        },
+        "cadence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cadence"
+        }
+      },
+      "required": [
+        "id",
+        "indicator",
+        "threshold"
+      ],
+      "title": "Signpost",
+      "type": "object"
+    },
+    "StatedConfidence": {
+      "description": "How confidently the speaker asserted it (hedges and boosters, Hyland 2005).\nHuman-coded in this change set.",
+      "enum": [
+        "HEDGED",
+        "UNMARKED",
+        "BOOSTED"
+      ],
+      "title": "StatedConfidence",
+      "type": "string"
+    },
+    "Statement": {
+      "additionalProperties": false,
+      "description": "One coded unit of an interview, anchored to the quote it came from.",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "interview_id": {
+          "minLength": 1,
+          "title": "Interview Id",
+          "type": "string"
+        },
+        "quote": {
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        },
+        "span_start": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Span Start"
+        },
+        "span_end": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Span End"
+        },
+        "type": {
+          "$ref": "#/$defs/StatementType"
+        },
+        "coded_by": {
+          "$ref": "#/$defs/CodedBy",
+          "default": "HUMAN"
+        },
+        "verified": {
+          "default": false,
+          "title": "Verified",
+          "type": "boolean"
+        },
+        "stated_confidence": {
+          "$ref": "#/$defs/StatedConfidence",
+          "default": "UNMARKED"
+        },
+        "objective_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Objective Id"
+        },
+        "alternative_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Alternative Id"
+        },
+        "edge": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EdgeRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "node_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Node Id"
+        },
+        "polarity": {
+          "anyOf": [
+            {
+              "enum": [
+                -1,
+                0,
+                1
+              ],
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Polarity"
+        },
+        "causal_form": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CausalForm"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "population": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whom the believed effect falls on: a group id, or 'ALL'. None = unspecified.",
+          "title": "Population"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "id",
+        "interview_id",
+        "quote",
+        "type"
+      ],
+      "title": "Statement",
+      "type": "object"
+    },
+    "StatementType": {
+      "description": "Step 3 partitions on this: values (OBJECTIVE, MEANS, CONSTRAINT), facts\n(CAUSAL_BELIEF, FACT_CLAIM, UNCERTAINTY), options (ALTERNATIVE), and the\nframe (OUT_OF_FRAME).",
+      "enum": [
+        "OBJECTIVE",
+        "MEANS",
+        "CONSTRAINT",
+        "CAUSAL_BELIEF",
+        "FACT_CLAIM",
+        "UNCERTAINTY",
+        "ALTERNATIVE",
+        "OUT_OF_FRAME"
+      ],
+      "title": "StatementType",
+      "type": "string"
+    },
+    "SupportFactor": {
+      "additionalProperties": false,
+      "properties": {
+        "factor": {
+          "minLength": 1,
+          "title": "Factor",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/FactorStatus"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "factor",
+        "status"
+      ],
+      "title": "SupportFactor",
+      "type": "object"
+    },
+    "SwapLeg": {
+      "additionalProperties": false,
+      "properties": {
+        "objective_id": {
+          "minLength": 1,
+          "title": "Objective Id",
+          "type": "string"
+        },
+        "new_value": {
+          "title": "New Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "objective_id",
+        "new_value"
+      ],
+      "title": "SwapLeg",
+      "type": "object"
+    },
+    "SwingWeights": {
+      "additionalProperties": false,
+      "description": "Swing weighting (von Winterfeldt & Edwards 1986): the most valued\nworst-to-best swing scores 100; the others are rated relative to it.",
+      "properties": {
+        "group_id": {
+          "minLength": 1,
+          "title": "Group Id",
+          "type": "string"
+        },
+        "points": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Points",
+          "type": "object"
+        },
+        "elicited_on": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Elicited On"
+        },
+        "preferential_independence_checked": {
+          "default": false,
+          "title": "Preferential Independence Checked",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "group_id",
+        "points"
+      ],
+      "title": "SwingWeights",
+      "type": "object"
+    },
+    "Transport": {
+      "description": "Will the causal principle evidenced elsewhere hold here? (Cartwright & Hardie 2012)",
+      "enum": [
+        "LIKELY_HOLDS",
+        "UNCERTAIN",
+        "UNLIKELY",
+        "NOT_ASSESSED"
+      ],
+      "title": "Transport",
+      "type": "string"
+    },
+    "TypedQuestion": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "kind": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QuestionKind"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "confirmed": {
+          "default": false,
+          "title": "Confirmed",
+          "type": "boolean"
+        },
+        "suggested_by": {
+          "$ref": "#/$defs/CodedBy",
+          "default": "HUMAN"
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Matched pattern, when machine-suggested.",
+          "title": "Evidence"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "TypedQuestion",
+      "type": "object"
+    },
+    "UserGroup": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "stakeholder_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional link to the graph's stakeholder registry.",
+          "title": "Stakeholder Id"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "title": "UserGroup",
+      "type": "object"
+    },
+    "WeightRef": {
+      "additionalProperties": false,
+      "properties": {
+        "group_id": {
+          "minLength": 1,
+          "title": "Group Id",
+          "type": "string"
+        },
+        "objective_id": {
+          "minLength": 1,
+          "title": "Objective Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "group_id",
+        "objective_id"
+      ],
+      "title": "WeightRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Everything a decision needs, cross-validated as a unit.",
+  "properties": {
+    "frame": {
+      "$ref": "#/$defs/DecisionFrame"
+    },
+    "groups": {
+      "items": {
+        "$ref": "#/$defs/UserGroup"
+      },
+      "title": "Groups",
+      "type": "array"
+    },
+    "interviews": {
+      "items": {
+        "$ref": "#/$defs/Interview"
+      },
+      "title": "Interviews",
+      "type": "array"
+    },
+    "statements": {
+      "items": {
+        "$ref": "#/$defs/Statement"
+      },
+      "title": "Statements",
+      "type": "array"
+    },
+    "objectives": {
+      "items": {
+        "$ref": "#/$defs/Objective"
+      },
+      "title": "Objectives",
+      "type": "array"
+    },
+    "alternatives": {
+      "items": {
+        "$ref": "#/$defs/Alternative"
+      },
+      "title": "Alternatives",
+      "type": "array"
+    },
+    "loop_treatments": {
+      "items": {
+        "$ref": "#/$defs/LoopTreatment"
+      },
+      "title": "Loop Treatments",
+      "type": "array"
+    },
+    "edge_cards": {
+      "items": {
+        "$ref": "#/$defs/EdgeEvidenceCard"
+      },
+      "title": "Edge Cards",
+      "type": "array"
+    },
+    "cells": {
+      "items": {
+        "$ref": "#/$defs/ConsequenceCell"
+      },
+      "title": "Cells",
+      "type": "array"
+    },
+    "weights": {
+      "items": {
+        "$ref": "#/$defs/SwingWeights"
+      },
+      "title": "Weights",
+      "type": "array"
+    },
+    "even_swaps": {
+      "items": {
+        "$ref": "#/$defs/EvenSwap"
+      },
+      "title": "Even Swaps",
+      "type": "array"
+    },
+    "assumptions": {
+      "items": {
+        "$ref": "#/$defs/Assumption"
+      },
+      "title": "Assumptions",
+      "type": "array"
+    },
+    "record": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DecisionRecord"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "frame"
+  ],
+  "title": "DecisionModel",
+  "type": "object"
+}

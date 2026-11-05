@@ -217,3 +217,14 @@ def test_every_provisional_constant_is_in_the_ratification_table():
     listed = {r.constant for r in ratification_table()}
     assert marked and set(marked) <= listed
     assert all(r.status == "PROVISIONAL — not ratified" for r in ratification_table())
+
+
+def test_published_schema_and_spec_match_the_code():
+    import json
+
+    docs = Path(__file__).resolve().parents[2] / "docs"
+    schema = json.loads((docs / "decision-model.schema.json").read_text())
+    assert schema == DecisionModel.model_json_schema(), "regenerate docs/decision-model.schema.json"
+    spec = (docs / "decision-layer.md").read_text()
+    missing = [r.constant for r in ratification_table() if f"`{r.constant}`" not in spec]
+    assert not missing, f"docs/decision-layer.md ratification table is stale: {missing}"

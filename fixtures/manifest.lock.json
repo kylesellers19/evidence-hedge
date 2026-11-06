@@ -5,7 +5,7 @@
     "sha256": "24e4562c88a4e2f01b7a7057ce8f12bfe92f1b7f201b8c3f1634ae9f7f70109f",
     "rawChars": 59171,
     "retrievedAt": "2026-11-06T03:07:57.686Z",
-    "chars": 58299
+    "chars": 57370
   },
   "hsph-press-2015": {
     "source": "reader",
@@ -13,7 +13,7 @@
     "sha256": "cdf3c6e4c946b3d1152564beccddec93bdfbb430ef5fe509b818f86a10ca4ed4",
     "rawChars": 4759,
     "retrievedAt": "2026-11-06T03:08:01.497Z",
-    "chars": 4327
+    "chars": 4277
   },
   "sciencedaily-2015": {
     "source": "reader",
@@ -21,7 +21,7 @@
     "sha256": "710cf6e19824b8d7160cd4199dfb6dfc9c053a31631a70378e2b31718d5a294d",
     "rawChars": 10727,
     "retrievedAt": "2026-11-06T03:08:06.420Z",
-    "chars": 10328
+    "chars": 10244
   },
   "gba-news-2015": {
     "source": "reader",
@@ -29,7 +29,7 @@
     "sha256": "e5b55dcfd376d8df5078ab9580ef9d2f32dc2cf8abb0c3fd18ef5ef43f7bbe5d",
     "rawChars": 11242,
     "retrievedAt": "2026-11-06T03:08:10.292Z",
-    "chars": 10242
+    "chars": 9634
   },
   "bdc-blog-allen": {
     "source": "reader",
@@ -37,7 +37,7 @@
     "sha256": "5699cad2b721d8c57c1defd230f9f60ab9b18c985373195887489ecdfd38afac",
     "rawChars": 4604,
     "retrievedAt": "2026-11-06T03:08:14.352Z",
-    "chars": 4329
+    "chars": 4135
   },
   "naava-allen": {
     "source": "reader",
@@ -45,7 +45,7 @@
     "sha256": "057991d57e9a865a68b110617c11c725753193833e50fc0a77970d44df38f97e",
     "rawChars": 2977,
     "retrievedAt": "2026-11-06T03:08:18.161Z",
-    "chars": 2824
+    "chars": 2784
   },
   "gensler-gws-2024": {
     "source": "reader",
@@ -53,7 +53,7 @@
     "sha256": "26e5815467186ae4d5db9ebf59f6d0528aeb5feeed56e783ef67ba86ef941b3a",
     "rawChars": 5390,
     "retrievedAt": "2026-11-06T03:08:21.958Z",
-    "chars": 4802
+    "chars": 4529
   },
   "gensler-press-2024": {
     "source": "reader",
@@ -61,7 +61,7 @@
     "sha256": "00416f9d0935e772134fa23bf8faa5bb9115c5f81dc375e9a124d11d8de65838",
     "rawChars": 6861,
     "retrievedAt": "2026-11-06T03:08:25.688Z",
-    "chars": 6385
+    "chars": 6122
   },
   "bdc-gensler-news-2024": {
     "source": "reader",
@@ -69,7 +69,7 @@
     "sha256": "ab2678c321fb388ae6d40961f436f3ca1ce0882ea1f51ae92fae9f6e83165f8e",
     "rawChars": 6530,
     "retrievedAt": "2026-11-06T03:08:29.458Z",
-    "chars": 6251
+    "chars": 6081
   },
   "co2meter-plants": {
     "source": "reader",
@@ -77,7 +77,7 @@
     "sha256": "c3d93f680f6322587fe56917db8a0d652c6499b7470762e977347b7941a69a29",
     "rawChars": 18351,
     "retrievedAt": "2026-11-06T03:08:33.411Z",
-    "chars": 17215
+    "chars": 16679
   },
   "jcu-timber-pilot": {
     "source": "reader",
@@ -91,7 +91,7 @@
     "source": "committed",
     "path": "fixtures/cadre-neuroarchitecture-normalized.txt",
     "sha256": "565e5f7dad509656554767c72521c0c9d3656633998462a6089f31358f870f5f",
-    "chars": 133367
+    "chars": 133368
   },
   "fixture-b-pew-html": {
     "source": "committed",

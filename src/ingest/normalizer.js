@@ -11,7 +11,9 @@
 //   c. strips bare page numbers / page-number pairs ("02 03", "12", "Page 4 of
 //      30") as standalone lines, leading/trailing tokens, or fused mid-sentence;
 //   d. collapses soft line breaks inside paragraphs, preserving true paragraph
-//      breaks (blank-line heuristic).
+//      breaks (blank-line heuristic);
+//   e. un-splices a URL that a margin column wedged into the middle of a word
+//      ("princihttp://www.neuro-architecture.com/ ples" → "principles http://…").
 // Pure functions, independently testable. No DOM, no async.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -88,6 +90,26 @@ export function collapseSoftBreaks(text) {
     .join('\n\n')
 }
 
+// ── (e) mid-word URL splice ──────────────────────────────────────────────────
+// Letters never legitimately abut "http": "envihttps://x.org/ ronment" means a
+// margin URL was read into the gap of a broken word. Rejoin the word with the
+// first following token that continues it — a lowercase fragment within the
+// next two tokens, or (for a capitalized stem, e.g. "Neuro" + "Image") the very
+// next capitalized token — and move the URL after it.
+const URL_SPLICE = /([A-Za-z][A-Za-z-]*?)(https?:\/\/\S+)((?:\s+\S+){1,2})/g
+
+export function unspliceUrls(text) {
+  return text.replace(URL_SPLICE, (whole, stem, url, tail) => {
+    const parts = tail.match(/\s+\S+/g) // each token with its own leading whitespace
+    const tokens = parts.map((p) => p.trim())
+    let k = tokens.findIndex((t) => /^[a-z]/.test(t) && !/^https?:/.test(t))
+    if (k < 0 && /^[A-Z]/.test(stem) && /^[A-Z][a-z]/.test(tokens[0])) k = 0
+    if (k < 0) return `${stem} ${url}${tail}`
+    const rest = parts.filter((_, i) => i !== k).join('')
+    return `${stem}${tokens[k]} ${url}${rest}`
+  })
+}
+
 // ── core single-blob normalizer (paste, txt/md, and post page-join) ──────────
 export function normalizeText(text) {
   if (!text) return ''
@@ -96,6 +118,7 @@ export function normalizeText(text) {
   t = stripPageLines(t.split('\n')).join('\n')
   t = collapseSoftBreaks(t)
   t = stripFusedPageNumbers(t) // fused numbers surface after lines are joined
+  t = unspliceUrls(t)
   t = t.replace(/[ \t]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n').trim()
   return t
 }

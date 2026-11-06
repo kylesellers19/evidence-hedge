@@ -8,6 +8,7 @@
 
 import { ExtractionError } from './errors.js'
 import { normalizeText, normalizeDocument } from './normalizer.js'
+import { validateText } from './validateText.js'
 
 export const ACCEPTED_EXTS = ['.pdf', '.docx', '.txt', '.md']
 export const ACCEPT_ATTR = ACCEPTED_EXTS.join(',')
@@ -22,6 +23,14 @@ export function extOf(name) {
  * @returns {Promise<string>} normalized plain text ready for the pipeline
  */
 export async function extractFile(file) {
+  const text = await extractText(file)
+  // A saved bot-check page or reader error body is not a document (validateText).
+  const check = validateText(text, { path: 'file' })
+  if (!check.ok && check.reason !== 'empty') throw new ExtractionError(check.reason)
+  return text
+}
+
+async function extractText(file) {
   const ext = extOf(file.name)
 
   if (ext === '.doc') throw new ExtractionError('legacy-doc')
@@ -39,16 +48,3 @@ export async function extractFile(file) {
   }
   throw new ExtractionError('unsupported-type')
 }
-
-// Designed failure states (not error toasts) — shown inline, routing the person
-// to paste when extraction can't proceed.
-export const FAILURE_MESSAGES = {
-  'legacy-doc': 'Legacy .doc files aren’t supported — re-save as .docx and try again.',
-  encrypted: 'This PDF is password-protected. Remove the protection, or paste the text instead.',
-  scanned: 'This looks like a scanned or image-only PDF. OCR isn’t supported — paste the text instead.',
-  corrupt: 'That file couldn’t be read — it may be corrupt. Paste the text instead.',
-  empty: 'No readable text was found in that file. Paste the text instead.',
-  'unsupported-type': 'Unsupported file type. Use PDF, DOCX, TXT, or MD — or paste the text.',
-}
-
-export const messageFor = (kind) => FAILURE_MESSAGES[kind] || FAILURE_MESSAGES.corrupt

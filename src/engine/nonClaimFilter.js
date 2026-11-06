@@ -26,7 +26,8 @@ import { IMPERATIVE_ADVICE } from './lexicons/imperative-advice.js'
 import { YMYL_TERMS } from './lexicons/ymyl.js'
 
 // A permissive finite-verb probe for the nav-chrome rule (a true nav item has none).
-const FINITE_VERB =
+// Shared with the reader's site-chrome line stripper (src/ingest/chromeLines.js).
+export const FINITE_VERB =
   /\b(?:is|are|was|were|be|will|would|can|cannot|can't|does|do|did|has|have|had|shows?|proves?|makes?|found|reported|said|grew|rose|fell|reduced|increased|caused|leads?|means?|offers?|provides?)\b/i
 const TERMINAL = /[.!?]["')]?$/
 

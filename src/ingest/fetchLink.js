@@ -9,13 +9,20 @@
 //      document whose host blocks cross-origin reads: Jina extracts PDF/DOCX text
 //      server-side. Free tier, no key: 20 requests per minute per IP.
 //
-// Returns { ok: true, text, sourceUrl, via } or { ok: false, reason, kind? }.
-// Failures are designed states the landing page turns into a paste prompt.
+// Reader text has its site-chrome lines stripped (chromeLines.js) before the
+// normalizer, and every result is checked by validateText: a reader error body,
+// a bot-check wall or a too-short page is a failure, never a document.
+//
+// Returns { ok: true, text, sourceUrl, via } or { ok: false, reason, kind?,
+// detail?, host }. Failures are designed states; failureCopy.js turns each
+// reason into one actionable sentence on the landing page.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { extractFile, extOf } from './extractFile.js'
 import { ExtractionError } from './errors.js'
 import { normalizeText } from './normalizer.js'
+import { stripChromeLines } from './chromeLines.js'
+import { validateText, readerErrorOf } from './validateText.js'
 
 export const READER = 'https://r.jina.ai/'
 const HEADERS_TIMEOUT_MS = 8000 // direct attempt: give up if the host hasn't answered
@@ -48,6 +55,19 @@ export function looksLikeUrl(value) {
 export function normalizeUrl(value) {
   const s = value.trim()
   return /^https?:\/\//i.test(s) ? s : 'https://' + s
+}
+
+function hostOf(url) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '')
+  } catch {
+    return ''
+  }
+}
+
+// Reader body → document text: drop site-chrome lines, then the shared normalizer.
+export function readerBodyToText(body) {
+  return normalizeText(stripChromeLines(body).text)
 }
 
 function lastSegment(url) {
@@ -105,10 +125,17 @@ async function readViaJina(url, signal) {
       },
     })
     if (res.status === 429) return { ok: false, reason: 'rate-limited' }
-    if (!res.ok) return { ok: false, reason: `status ${res.status}` }
     const body = (await res.text()).trim()
+    // The reader reports its own refusals as a JSON envelope (e.g. 403
+    // AbuseAlleviationError); name it rather than collapsing to a bare status.
+    const err = readerErrorOf(body)
+    if (err) return { ok: false, reason: 'reader-error', detail: err }
+    if (!res.ok) return { ok: false, reason: 'status', detail: { status: res.status } }
     if (!body) return { ok: false, reason: 'empty' }
-    return { ok: true, text: normalizeText(body), sourceUrl: url, via: 'reader' }
+    const text = readerBodyToText(body)
+    const check = validateText(text, { path: 'link' })
+    if (!check.ok) return { ok: false, reason: check.reason, detail: check.detail }
+    return { ok: true, text, sourceUrl: url, via: 'reader' }
   } catch (e) {
     return { ok: false, reason: e && e.name === 'AbortError' ? 'timeout' : 'network' }
   }
@@ -117,10 +144,11 @@ async function readViaJina(url, signal) {
 /**
  * @param {string} rawUrl  as typed or pasted (scheme optional)
  * @returns {Promise<{ok: true, text: string, sourceUrl: string, via: 'download'|'reader'}
- *                 | {ok: false, reason: string, kind?: string}>}
+ *                 | {ok: false, reason: string, kind?: string, detail?: object, host: string}>}
  */
 export async function fetchLink(rawUrl) {
   const url = normalizeUrl(rawUrl)
+  const host = hostOf(url)
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
   try {
@@ -129,12 +157,15 @@ export async function fetchLink(rawUrl) {
       try {
         const text = await extractFile(file)
         if (!text.trim()) throw new ExtractionError('empty')
+        const check = validateText(text, { path: 'link' })
+        if (!check.ok) return { ok: false, reason: check.reason, detail: check.detail, host }
         return { ok: true, text, sourceUrl: url, via: 'download' }
       } catch (err) {
-        return { ok: false, reason: 'extract', kind: err instanceof ExtractionError ? err.kind : 'corrupt' }
+        return { ok: false, reason: 'extract', kind: err instanceof ExtractionError ? err.kind : 'corrupt', host }
       }
     }
-    return await readViaJina(url, controller.signal)
+    const result = await readViaJina(url, controller.signal)
+    return result.ok ? result : { ...result, host }
   } finally {
     clearTimeout(timer)
   }

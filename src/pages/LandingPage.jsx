@@ -1,10 +1,12 @@
 import { useState } from "react";
 import ParticleMark from "../components/ParticleMark.jsx";
 import FileDropZone from "../components/FileDropZone.jsx";
-import { extractFile, messageFor } from "../ingest/extractFile.js";
+import { extractFile } from "../ingest/extractFile.js";
 import { ExtractionError } from "../ingest/errors.js";
 import { normalizeText } from "../ingest/normalizer.js";
 import { fetchLink, looksLikeUrl } from "../ingest/fetchLink.js";
+import { failureCopy } from "../ingest/failureCopy.js";
+import { validateText } from "../ingest/validateText.js";
 import "../styles/landing.css";
 
 /**
@@ -21,19 +23,10 @@ import "../styles/landing.css";
  * A pasted link (in Paste link mode, or a bare URL pasted into the text box) is
  * fetched by ingest/fetchLink.js: a PDF/DOCX/TXT/MD the host lets the browser
  * download runs through the upload extractors; everything else is read through
- * the Jina Reader service (r.jina.ai). On any failure the person is asked to
- * paste the article text — a designed fallback state, not an error toast.
+ * the Jina Reader service (r.jina.ai). On any failure the person sees one
+ * actionable sentence for that reason (ingest/failureCopy.js) — a designed
+ * fallback state, not an error toast.
  */
-
-// Designed fallback copy for a link that couldn't be read.
-function linkNotice(result) {
-  if (result.reason === "extract") return messageFor(result.kind);
-  if (result.reason === "timeout") return "The reader timed out on that link. Paste the article text here instead.";
-  if (result.reason === "rate-limited") {
-    return "The link reader is busy right now. Wait a minute and try again, or paste the article text here instead.";
-  }
-  return "Couldn't pull readable text from that link. Paste the article text here instead.";
-}
 
 export default function LandingPage({ onAnalyze }) {
   const [mode, setMode] = useState("text"); // "text" | "link"
@@ -55,7 +48,10 @@ export default function LandingPage({ onAnalyze }) {
     const isUrl = mode === "link" || looksLikeUrl(raw);
     if (!isUrl) {
       // Pasted text runs through the SAME normalizer as extracted files.
-      onAnalyze(normalizeText(raw), {});
+      const pasted = normalizeText(raw);
+      const check = validateText(pasted, { path: "paste" });
+      if (!check.ok) { setNotice(failureCopy(check)); return; }
+      onAnalyze(pasted, {});
       return;
     }
 
@@ -71,7 +67,7 @@ export default function LandingPage({ onAnalyze }) {
 
     // Designed fallback: route the person to paste the article text.
     setMode("text");
-    setNotice(linkNotice(result));
+    setNotice(failureCopy(result));
   }
 
   // File upload → extract → normalize → hand to the pipeline as if pasted.
@@ -87,7 +83,7 @@ export default function LandingPage({ onAnalyze }) {
       const kind = err instanceof ExtractionError ? err.kind : "corrupt";
       setExtracting(false);
       setMode("text");
-      setNotice(messageFor(kind));
+      setNotice(failureCopy({ reason: "extract", kind }));
     }
   }
 

@@ -84,7 +84,8 @@ for (const doc of loadCorpus()) {
       else if (ok && existsSync(txtPath)) { copyFileSync(txtPath, join(COMMITTED, `${doc.id}.txt`)); committed = ' (committed)' }
       else committed = ` (NOT committed: "${doc.commitIf}" notice absent)`
     }
-    lines.push(`OK   ${doc.id} — ${loaded.text.length} chars via ${loaded.via}${committed}`)
+    const chrome = loaded.chromeDropped ? ` · ${loaded.chromeDropped.length} chrome lines dropped` : ''
+    lines.push(`OK   ${doc.id} — ${loaded.text.length} chars via ${loaded.via}${chrome}${committed}`)
   } catch (e) {
     lines.push(`SKIP ${doc.id} — ${e.name}: ${e.message}`)
   }

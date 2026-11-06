@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { useApp } from './context/AppContext.jsx'
 import { listRubrics, getRubric, autodetect } from './rubrics/index.js'
 import { analyze } from './engine/analyze.js'
+import { validateText } from './ingest/validateText.js'
 import LandingPage from './pages/LandingPage.jsx'
 import RubricBranch from './pages/RubricBranch.jsx'
 import ResultsPage from './pages/ResultsPage.jsx'
@@ -30,8 +31,12 @@ function BranchRoute() {
   const { state, dispatch } = useApp()
   const navigate = useNavigate()
 
-  // Route guard: no document in state → back to the landing page.
+  // Route guard: no document in state → back to the landing page. A reader
+  // error body or a bot-check wall is not a document and never reaches analyze()
+  // (the landing page already refuses both; this holds for any other route in).
   if (!state.document) return <Navigate to="/" replace />
+  const check = validateText(state.document)
+  if (!check.ok) return <Navigate to="/" replace />
 
   const rubrics = listRubrics()
   const detectedId = autodetect(state.document)

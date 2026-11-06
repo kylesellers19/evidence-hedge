@@ -8,7 +8,9 @@
         "provenance": "peer-reviewed-journal",
         "design": "controlled-experiment"
       },
-      "words": 8888,
+      "words": 8729,
+      "chromeDropped": 45,
+      "validation": "ok",
       "route": {
         "rubric": "research"
       },
@@ -16,9 +18,9 @@
         "research": {
           "posture": "standard",
           "score": 8,
-          "claims": 316,
+          "claims": 313,
           "strong": 35,
-          "unsupported": 202,
+          "unsupported": 199,
           "overconfident": 4,
           "gate": false,
           "signals": []
@@ -26,9 +28,9 @@
         "corporate": {
           "posture": "research-like",
           "score": 6.4,
-          "claims": 322,
+          "claims": 318,
           "strong": 15,
-          "unsupported": 258,
+          "unsupported": 254,
           "overconfident": 2,
           "gate": false,
           "signals": [
@@ -38,9 +40,9 @@
         "journalism": {
           "posture": "news",
           "score": 5.5,
-          "claims": 316,
+          "claims": 313,
           "strong": 35,
-          "unsupported": 257,
+          "unsupported": 254,
           "overconfident": 0,
           "gate": false,
           "signals": [
@@ -52,9 +54,9 @@
         "general": {
           "posture": "authoritative",
           "score": 8.1,
-          "claims": 322,
+          "claims": 318,
           "strong": 34,
-          "unsupported": 200,
+          "unsupported": 196,
           "overconfident": 0,
           "gate": false,
           "signals": []
@@ -70,7 +72,9 @@
         "design": "controlled-experiment",
         "designInherited": true
       },
-      "words": 640,
+      "words": 632,
+      "chromeDropped": 5,
+      "validation": "ok",
       "route": {
         "rubric": "general"
       },
@@ -88,14 +92,16 @@
           ]
         },
         "corporate": {
-          "posture": "marketing",
-          "score": 9.8,
+          "posture": "research-like",
+          "score": 6.2,
           "claims": 14,
           "strong": 1,
-          "unsupported": 1,
+          "unsupported": 12,
           "overconfident": 0,
           "gate": false,
-          "signals": []
+          "signals": [
+            "register-mismatch"
+          ]
         },
         "journalism": {
           "posture": "news",
@@ -122,7 +128,7 @@
           "signals": []
         }
       },
-      "spread": 4.6
+      "spread": 4.4
     },
     "sciencedaily-2015": {
       "gold": {
@@ -132,7 +138,9 @@
         "design": "controlled-experiment",
         "designInherited": true
       },
-      "words": 1484,
+      "words": 1472,
+      "chromeDropped": 3,
+      "validation": "ok",
       "route": {
         "rubric": "research"
       },
@@ -194,17 +202,19 @@
         "design": "controlled-experiment",
         "designInherited": true
       },
-      "words": 1609,
+      "words": 1506,
+      "chromeDropped": 34,
+      "validation": "ok",
       "route": {
         "rubric": "general"
       },
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 7.3,
-          "claims": 43,
+          "score": 7.2,
+          "claims": 44,
           "strong": 10,
-          "unsupported": 29,
+          "unsupported": 30,
           "overconfident": 0,
           "gate": false,
           "signals": [
@@ -213,8 +223,8 @@
         },
         "corporate": {
           "posture": "marketing",
-          "score": 9.1,
-          "claims": 43,
+          "score": 9.2,
+          "claims": 44,
           "strong": 6,
           "unsupported": 6,
           "overconfident": 0,
@@ -226,9 +236,9 @@
         "journalism": {
           "posture": "news",
           "score": 5.5,
-          "claims": 43,
+          "claims": 44,
           "strong": 10,
-          "unsupported": 36,
+          "unsupported": 37,
           "overconfident": 0,
           "gate": false,
           "signals": [
@@ -239,15 +249,15 @@
         "general": {
           "posture": "authoritative",
           "score": 8,
-          "claims": 43,
+          "claims": 44,
           "strong": 10,
-          "unsupported": 27,
+          "unsupported": 28,
           "overconfident": 0,
           "gate": false,
           "signals": []
         }
       },
-      "spread": 3.6
+      "spread": 3.7
     },
     "bdc-blog-allen": {
       "gold": {
@@ -257,7 +267,9 @@
         "design": "controlled-experiment",
         "designInherited": true
       },
-      "words": 656,
+      "words": 620,
+      "chromeDropped": 11,
+      "validation": "ok",
       "route": {
         "rubric": "research"
       },
@@ -265,9 +277,9 @@
         "research": {
           "posture": "standard",
           "score": 7.1,
-          "claims": 20,
+          "claims": 21,
           "strong": 7,
-          "unsupported": 13,
+          "unsupported": 14,
           "overconfident": 0,
           "gate": false,
           "signals": [
@@ -275,9 +287,9 @@
           ]
         },
         "corporate": {
-          "posture": "marketing",
+          "posture": "thought-leadership",
           "score": 9.1,
-          "claims": 21,
+          "claims": 22,
           "strong": 7,
           "unsupported": 7,
           "overconfident": 0,
@@ -287,9 +299,9 @@
         "journalism": {
           "posture": "unlabeled",
           "score": 4.1,
-          "claims": 20,
+          "claims": 21,
           "strong": 7,
-          "unsupported": 18,
+          "unsupported": 19,
           "overconfident": 0,
           "gate": false,
           "signals": [
@@ -302,7 +314,7 @@
         "general": {
           "posture": "experiential",
           "score": 9.5,
-          "claims": 21,
+          "claims": 22,
           "strong": 7,
           "unsupported": 4,
           "overconfident": 0,
@@ -320,7 +332,9 @@
         "design": "controlled-experiment",
         "designInherited": true
       },
-      "words": 399,
+      "words": 394,
+      "chromeDropped": 4,
+      "validation": "ok",
       "route": {
         "rubric": "research"
       },
@@ -382,17 +396,19 @@
         "provenance": "firm-vendor",
         "design": "cross-sectional"
       },
-      "words": 697,
+      "words": 661,
+      "chromeDropped": 23,
+      "validation": "ok",
       "route": {
         "rubric": "research"
       },
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 7.5,
-          "claims": 30,
+          "score": 7.6,
+          "claims": 29,
           "strong": 3,
-          "unsupported": 20,
+          "unsupported": 19,
           "overconfident": 0,
           "gate": false,
           "signals": [
@@ -402,9 +418,9 @@
         "corporate": {
           "posture": "research-like",
           "score": 5.8,
-          "claims": 30,
+          "claims": 29,
           "strong": 3,
-          "unsupported": 29,
+          "unsupported": 28,
           "overconfident": 0,
           "gate": false,
           "signals": [
@@ -414,9 +430,9 @@
         "journalism": {
           "posture": "unlabeled",
           "score": 4.1,
-          "claims": 30,
+          "claims": 29,
           "strong": 7,
-          "unsupported": 30,
+          "unsupported": 29,
           "overconfident": 0,
           "gate": false,
           "signals": [
@@ -429,7 +445,7 @@
         "general": {
           "posture": "experiential",
           "score": 7.5,
-          "claims": 30,
+          "claims": 29,
           "strong": 3,
           "unsupported": 0,
           "overconfident": 0,
@@ -439,7 +455,7 @@
           ]
         }
       },
-      "spread": 3.4
+      "spread": 3.5
     },
     "gensler-press-2024": {
       "gold": {
@@ -448,7 +464,9 @@
         "provenance": "firm-vendor",
         "design": "cross-sectional"
       },
-      "words": 955,
+      "words": 920,
+      "chromeDropped": 22,
+      "validation": "ok",
       "route": {
         "rubric": "corporate"
       },
@@ -456,9 +474,9 @@
         "research": {
           "posture": "standard",
           "score": 6.9,
-          "claims": 33,
+          "claims": 32,
           "strong": 8,
-          "unsupported": 25,
+          "unsupported": 24,
           "overconfident": 0,
           "gate": false,
           "signals": [
@@ -468,9 +486,9 @@
         "corporate": {
           "posture": "research-like",
           "score": 5.9,
-          "claims": 35,
+          "claims": 34,
           "strong": 5,
-          "unsupported": 30,
+          "unsupported": 29,
           "overconfident": 1,
           "gate": false,
           "signals": [
@@ -480,9 +498,9 @@
         "journalism": {
           "posture": "news",
           "score": 4.5,
-          "claims": 33,
+          "claims": 32,
           "strong": 10,
-          "unsupported": 31,
+          "unsupported": 30,
           "overconfident": 0,
           "gate": false,
           "signals": [
@@ -494,7 +512,7 @@
         "general": {
           "posture": "experiential",
           "score": 9.3,
-          "claims": 35,
+          "claims": 34,
           "strong": 9,
           "unsupported": 9,
           "overconfident": 0,
@@ -512,17 +530,19 @@
         "design": "cross-sectional",
         "designInherited": true
       },
-      "words": 911,
+      "words": 879,
+      "chromeDropped": 9,
+      "validation": "ok",
       "route": {
         "rubric": "general"
       },
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 7.2,
-          "claims": 32,
-          "strong": 7,
-          "unsupported": 23,
+          "score": 7.1,
+          "claims": 33,
+          "strong": 8,
+          "unsupported": 24,
           "overconfident": 0,
           "gate": false,
           "signals": [
@@ -530,21 +550,23 @@
           ]
         },
         "corporate": {
-          "posture": "marketing",
-          "score": 9.7,
-          "claims": 32,
+          "posture": "research-like",
+          "score": 5.8,
+          "claims": 33,
           "strong": 3,
-          "unsupported": 3,
+          "unsupported": 32,
           "overconfident": 0,
           "gate": false,
-          "signals": []
+          "signals": [
+            "register-mismatch"
+          ]
         },
         "journalism": {
           "posture": "unlabeled",
-          "score": 4.3,
-          "claims": 32,
-          "strong": 9,
-          "unsupported": 29,
+          "score": 4.2,
+          "claims": 33,
+          "strong": 10,
+          "unsupported": 30,
           "overconfident": 0,
           "gate": false,
           "signals": [
@@ -557,8 +579,8 @@
         "general": {
           "posture": "experiential",
           "score": 7.5,
-          "claims": 32,
-          "strong": 7,
+          "claims": 33,
+          "strong": 8,
           "unsupported": 0,
           "overconfident": 0,
           "gate": true,
@@ -567,7 +589,7 @@
           ]
         }
       },
-      "spread": 5.4
+      "spread": 3.3
     },
     "co2meter-plants": {
       "gold": {
@@ -576,7 +598,9 @@
         "provenance": "firm-vendor",
         "design": "none-reported"
       },
-      "words": 2611,
+      "words": 2529,
+      "chromeDropped": 42,
+      "validation": "ok",
       "route": {
         "rubric": "journalism"
       },
@@ -584,9 +608,9 @@
         "research": {
           "posture": "standard",
           "score": 7.2,
-          "claims": 111,
+          "claims": 110,
           "strong": 11,
-          "unsupported": 101,
+          "unsupported": 100,
           "overconfident": 0,
           "gate": false,
           "signals": []
@@ -594,7 +618,7 @@
         "corporate": {
           "posture": "marketing",
           "score": 9.5,
-          "claims": 112,
+          "claims": 110,
           "strong": 12,
           "unsupported": 12,
           "overconfident": 0,
@@ -604,9 +628,9 @@
         "journalism": {
           "posture": "news",
           "score": 5,
-          "claims": 111,
+          "claims": 110,
           "strong": 12,
-          "unsupported": 106,
+          "unsupported": 105,
           "overconfident": 0,
           "gate": false,
           "signals": [
@@ -618,9 +642,9 @@
         "general": {
           "posture": "authoritative",
           "score": 7.1,
-          "claims": 137,
+          "claims": 135,
           "strong": 15,
-          "unsupported": 129,
+          "unsupported": 127,
           "overconfident": 0,
           "gate": false,
           "signals": []
@@ -636,6 +660,8 @@
         "design": "pre-post-uncontrolled"
       },
       "words": 10525,
+      "chromeDropped": 0,
+      "validation": "ok",
       "route": {
         "rubric": "research"
       },
@@ -693,7 +719,8 @@
         "provenance": "nonprofit-research",
         "design": "narrative-review"
       },
-      "words": 19165,
+      "words": 19166,
+      "validation": "ok",
       "route": {
         "rubric": "research"
       },
@@ -755,6 +782,7 @@
         "design": "cross-sectional"
       },
       "words": 1351,
+      "validation": "ok",
       "route": {
         "rubric": "research"
       },
@@ -818,6 +846,7 @@
         "design": "cross-sectional"
       },
       "words": 8503,
+      "validation": "ok",
       "route": {
         "rubric": "research"
       },

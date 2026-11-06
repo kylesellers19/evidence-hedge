@@ -32,6 +32,7 @@ for (const doc of loadCorpus()) {
   if (loaded.status !== 'ok') { console.log(`SKIP ${doc.id} — ${loaded.reason}`); continue }
   const text = loaded.text
   const row = { gold: doc.gold, words: text.trim().split(/\s+/).length }
+  if (loaded.chromeDropped) row.chromeDropped = loaded.chromeDropped.length
   if (validateText) {
     const v = validateText(text, { path: loaded.via === 'reader' ? 'link' : 'paste' })
     row.validation = v.ok ? 'ok' : v.reason

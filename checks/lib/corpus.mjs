@@ -27,11 +27,13 @@ export function loadCorpus() {
 // The app's reader pipeline, if this build has one; plain normalize otherwise.
 async function readerPipeline() {
   const mod = await import('../../src/ingest/fetchLink.js')
-  return mod.readerBodyToText || ((body) => normalizeText(body))
+  if (!mod.readerBodyToText) return { toText: (body) => normalizeText(body), chromeDrops: () => [] }
+  const { stripChromeLines } = await import('../../src/ingest/chromeLines.js')
+  return { toText: mod.readerBodyToText, chromeDrops: (body) => stripChromeLines(body).dropped }
 }
 
 /**
- * @returns {Promise<{status:'ok', text:string, via:string, file:string} | {status:'skip', reason:string}>}
+ * @returns {Promise<{status:'ok', text:string, via:string, file:string, chromeDropped?:string[]} | {status:'skip', reason:string}>}
  */
 export async function loadDocText(doc) {
   if (doc.source === 'committed') {
@@ -42,8 +44,9 @@ export async function loadDocText(doc) {
   if (doc.source === 'reader') {
     for (const p of [join(COMMITTED, `${doc.id}.raw.txt`), join(CACHE, `${doc.id}.raw.txt`)]) {
       if (existsSync(p)) {
-        const toText = await readerPipeline()
-        return { status: 'ok', text: toText(readFileSync(p, 'utf8')), via: 'reader', file: p.slice(ROOT.length + 1) }
+        const { toText, chromeDrops } = await readerPipeline()
+        const body = readFileSync(p, 'utf8')
+        return { status: 'ok', text: toText(body), via: 'reader', file: p.slice(ROOT.length + 1), chromeDropped: chromeDrops(body) }
       }
     }
     return { status: 'skip', reason: 'not fetched — run npm run fixtures:fetch' }

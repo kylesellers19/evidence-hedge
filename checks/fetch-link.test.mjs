@@ -29,7 +29,10 @@ const respond = (body, type, status = 200) =>
   new Response(body, { status, headers: type ? { 'content-type': type } : {} })
 const readerText = (body) => () => respond(body, 'text/plain; charset=utf-8')
 
-const ARTICLE = 'Our platform is the #1 best-in-class solution and is unmatched in the industry.'
+// A link must return ≥ 150 words (validateText MIN_LINK_WORDS) to count as a
+// document, so the routing mocks carry a long-enough body.
+const ARTICLE = Array(20).fill('Our platform is the #1 best-in-class solution and is unmatched in the industry.').join(' ')
+const LONG_TXT = Array(30).fill('Line one of the report.').join(' ') + '\n\nLine two.'
 
 // 1. Web page, CORS blocked → reader, plain-text mode, on r.jina.ai.
 mock({ direct: corsBlocked, reader: readerText(ARTICLE) })
@@ -47,13 +50,13 @@ r = await fetchLink('https://example.com/post')
 log('CORS-readable HTML page still goes to the reader', r.ok && r.via === 'reader')
 
 // 3. Downloadable document → upload extractors, no reader call.
-mock({ direct: () => respond('Line one of the report.\n\nLine two.', 'text/plain'), reader: readerText('WRONG') })
+mock({ direct: () => respond(LONG_TXT, 'text/plain'), reader: readerText('WRONG') })
 r = await fetchLink('https://example.com/report.txt')
 log('downloadable TXT goes through the upload extractor', r.ok && r.via === 'download', JSON.stringify(r.text))
 log('no reader call when the download works', !calls.some((c) => c.url.startsWith(READER)))
 
 // 4. Generic content type → judged by the URL's extension.
-mock({ direct: () => respond('# Title\n\nBody text here.', 'application/octet-stream'), reader: readerText('WRONG') })
+mock({ direct: () => respond('# Title\n\n' + LONG_TXT, 'application/octet-stream'), reader: readerText('WRONG') })
 r = await fetchLink('https://example.com/notes.md')
 log('octet-stream .md link is treated as a document', r.ok && r.via === 'download')
 
@@ -68,7 +71,10 @@ r = await fetchLink('https://example.com/post')
 log('reader 429 → rate-limited', !r.ok && r.reason === 'rate-limited', r.reason)
 mock({ direct: corsBlocked, reader: () => respond('{"code":422}', 'application/json', 422) })
 r = await fetchLink('https://no-such-host.example/')
-log('reader 422 → status failure', !r.ok && r.reason === 'status 422', r.reason)
+log('reader 422 JSON envelope → reader-error', !r.ok && r.reason === 'reader-error' && r.detail?.code === 422, r.reason)
+mock({ direct: corsBlocked, reader: () => respond('Bad gateway', 'text/plain', 502) })
+r = await fetchLink('https://example.com/post')
+log('reader 502 without an envelope → status failure', !r.ok && r.reason === 'status' && r.detail?.status === 502, JSON.stringify(r))
 mock({ direct: corsBlocked, reader: readerText('   ') })
 r = await fetchLink('https://example.com/post')
 log('empty reader body → empty', !r.ok && r.reason === 'empty', r.reason)

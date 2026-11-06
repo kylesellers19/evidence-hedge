@@ -82,7 +82,7 @@ export const journalism = {
       criterion: 'sourcing & attribution ethics',
       standard: 'SPJ Code of Ethics',
       citation: 'Society of Professional Journalists — Code of Ethics.',
-      url: 'https://www.spj.org/ethicscode.asp',
+      url: 'https://www.spj.org/spj-code-of-ethics/', // was /ethicscode.asp (now a not-found page that redirects), checked 2026-11-06
     },
     ...SHARED_PROVENANCE,
   ],

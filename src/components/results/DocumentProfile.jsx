@@ -25,7 +25,7 @@ const humanize = (s) => s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, ' '
 
 function Row({ term, value, spans = [] }) {
   return (
-    <div className="grid grid-cols-[9rem_1fr] gap-x-4 py-3 border-t border-border">
+    <div className="grid grid-cols-[6.5rem_1fr] sm:grid-cols-[9rem_1fr] gap-x-4 py-3 border-t border-border">
       <dt className="font-sans text-[11px] tracking-wide uppercase text-gray-400 pt-0.5">{term}</dt>
       <dd>
         <p className="text-sm text-gray-900 leading-relaxed">{value}</p>
@@ -48,7 +48,7 @@ export default function DocumentProfile({ profile, referenceCount = 0 }) {
   const self = provenance.selfCitation
   return (
     <section>
-      <div className="flex items-baseline justify-between mb-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 mb-4">
         <h2 className="label-tag">Document profile</h2>
         <span className="label-tag text-gray-400">same under every rubric</span>
       </div>

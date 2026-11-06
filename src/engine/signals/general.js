@@ -18,8 +18,9 @@ export const GATE_MIN_WORDS = 150      // PROVISIONAL — not ratified
 const GATE_BLOCKED_PROVENANCE = new Set(['firm-vendor', 'news-outlet', 'trade-press', 'academic-press-office'])
 const FIRST_PERSON_SIGNALS = new Set(['anecdote framing', 'first-person narrative', 'first-person-singular density'])
 
+// The gate reads the TEXT, not the selected posture, so the score stays
+// genre-invariant (D1): overriding the posture cannot open or shut it.
 function postureGate(doc, claims, citations, posture, ctx = {}) {
-  if (posture !== 'experiential') return null
   const words = doc.trim() ? doc.trim().split(/\s+/).length : 0
   if (words < GATE_MIN_WORDS) return null
   if (GATE_BLOCKED_PROVENANCE.has(ctx.profile?.provenance?.kind)) return null

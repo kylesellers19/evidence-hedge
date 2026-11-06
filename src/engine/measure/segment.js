@@ -28,7 +28,8 @@ const compile = (list) => list.map((src) => new RegExp(src, 'iu'))
 const CUES = Object.fromEntries(Object.entries(REFERENCE_CUES).map(([k, v]) => [k, compile(v)]))
 // Author lists are case-sensitive (capitalized surnames + initials).
 CUES.authorList = REFERENCE_CUES.authorList.map((src) => new RegExp(src, 'u'))
-const FRONT = Object.entries(FRONT_MATTER).map(([rule, list]) => [rule, rule === 'correspondence' || rule === 'license' || rule === 'contributors' || rule === 'dates' ? compile(list) : list.map((s) => new RegExp(s, 'u'))])
+const CASE_FREE = new Set(['correspondence', 'license', 'contributors', 'dates', 'chartNote'])
+const FRONT = Object.entries(FRONT_MATTER).map(([rule, list]) => [rule, CASE_FREE.has(rule) ? compile(list) : list.map((s) => new RegExp(s, 'u'))])
 const HEADING_RE = new RegExp(`\\b(?:${REFERENCE_HEADINGS.map(escapeRe).join('|')})\\b`, 'g')
 const PROSE_AFTER = /^\s*(?:to|of|for|in|on|and|from|are|is|were|was|that|which|cited|section|below|above|list)\b/i
 // A table-of-contents line: the heading followed on the same line by a page or range.
@@ -71,6 +72,35 @@ export function segmentDocument(text) {
 const INSTITUTION = /\b(?:Department|School|Program(?:me)?|Institute|Center|Centre|Laboratory|University|College|Division|Faculty)\s+(?:of|for)\b|\bUniversity\b/
 function isAffiliationFragment(s) {
   return INSTITUTION.test(s) && (s.match(/,/g) || []).length >= 2 && !FINITE_VERB.test(s)
+}
+
+// ── Sections (IMRaD and report equivalents) ─────────────────────────────────
+// A heading may stand alone or lead the next sentence in reader/PDF text
+// ("Results Green Building and Cognitive Function The TVOC levels were …").
+// PROVISIONAL — not ratified.
+const SECTION_HEADINGS = [
+  ['method', /^(?:\d+(?:\.\d+)*\.?\s+)?(?:Materials\s+and\s+Methods|Methods?|Methodology|Study\s+(?:Design|Population|Setting|Participants)|Participants|Procedures?|Statistical\s+Analys[ie]s|Data\s+(?:and\s+Methods|Collection|Analysis)|Measures|Environmental\s+Monitoring|Cognitive\s+Function\s+Assessment|How\s+we\s+did\s+this|About\s+(?:this|the)\s+(?:survey|report|data|study)|Terminology|Acknowledg(?:e)?ments?)\b/],
+  ['result', /^(?:\d+(?:\.\d+)*\.?\s+)?(?:Results?|Findings|Key\s+findings)\b/],
+  ['discussion', /^(?:\d+(?:\.\d+)*\.?\s+)?(?:Discussion|Conclusions?|Implications|Strengths\s+and\s+Limitations|Limitations|Interpretation)\b/],
+  ['introduction', /^(?:\d+(?:\.\d+)*\.?\s+)?(?:Introduction|Background|Literature\s+Review|Related\s+Work)\b/],
+]
+// "Results:" in a structured abstract is a label, not a section.
+const ABSTRACT_LABEL = /^(?:Background|Objectives?|Methods?|Results?|Conclusions?|Discussion)\s*:/
+
+/** @returns {'method'|'result'|'discussion'|'introduction'|null} the section a sentence opens */
+// A heading ends the line, takes a colon, or runs straight into a capitalized
+// title or sentence ("Results Satisfaction with …") — never into a lowercase
+// verb ("Results indicate that …", "Participants spent …" are sentences).
+const AFTER_HEADING = /^(?:\s*$|\s*:|\s+(?:&|and)\s+[A-Z]|\s+[A-Z(“"])/
+
+export function sectionOpenedBy(s) {
+  const t = s.trim()
+  if (ABSTRACT_LABEL.test(t)) return null
+  for (const [section, re] of SECTION_HEADINGS) {
+    const m = t.match(re)
+    if (m && AFTER_HEADING.test(t.slice(m[0].length))) return section
+  }
+  return null
 }
 
 /** @returns {string|null} the rule that drops this sentence, or null */

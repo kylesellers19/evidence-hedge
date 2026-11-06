@@ -62,3 +62,11 @@ export const BACKGROUND = [
   `\\b(?:it\\s+is|it['’]s)\\s+(?:well[- ])?(?:known|established|documented|recognized|accepted)\\b`,
   '\\baccording\\s+to\\b|\\bet\\s+al\\.?',
 ]
+
+// A survey report's statements about its population ARE its results: "Most
+// workers say …", "Workers in lower-income jobs are less likely to …".
+// Applied only when the document's own design is a survey.
+export const SURVEY_RESULT = [
+  '\\b(?:workers|respondents|employees|adults|americans|people|users|consumers|leaders|executives|managers|parents|students|occupants|members|staff|those)\\b[^.]{0,80}\\b(?:say|says|said|report|reported|are|were|have|had|feel|felt|think|thought|use|used|expect|prefer|want|agree|describe|rate|trust|worry)\\b',
+  '\\b(?:most|many|few|some|half|majority|minority|third|quarter|fifth|share|shares|one-in-\\w+|\\d+(?:\\.\\d+)?\\s?%)\\b[^.]{0,60}\\b(?:of|among)\\s+(?:all\\s+|U\\.S\\.\\s+)?(?:\\w+\\s+){0,2}(?:workers|respondents|employees|adults|americans|people|users)\\b',
+]

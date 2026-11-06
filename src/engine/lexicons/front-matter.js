@@ -54,4 +54,10 @@ export const FRONT_MATTER = {
     '\\b(?:declare|declares|declared)\\s+(?:that\\s+)?(?:they\\s+have\\s+)?no\\s+(?:actual\\s+or\\s+potential\\s+)?(?:competing|conflicts?)\\b',
     '^\\s*Citation\\s*:',
   ],
+  // Chart and table apparatus: source lines, notes, "not shown" disclaimers.
+  chartNote: [
+    '^\\s*(?:Notes?|Sources?|Data\\s+source)\\s*:',
+    '\\b(?:who\\s+(?:did\\s+not|didn[\'’]t)\\s+(?:offer\\s+an\\s+)?answer|responded\\s+[“"]?\\s*N\\s?ot\\s+sure)[^.]{0,40}\\bnot\\s+shown\\b',
+    '\\bfigures\\s+may\\s+not\\s+add\\s+to\\s+100\\b',
+  ],
 }

@@ -98,10 +98,13 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
   /** @type {Claim[]} */
   const claims = raw.map(c0 => {
     const c = { ...c0, citations: markOwnSiteUrls(c0.citations, profile.provenance) }
-    const m = measureClaim(c)
+    const m = measureClaim(c, { design: profile.design.inherited ? 'none-reported' : profile.design.design })
     // ── Judgment (the rubric's) ─────────────────────────────────────────────
     const tier = measureAssertiveness(c, rubric, m.certainty.tier)
+    const cited = gradeEvidence(c, rubric.ladder)
     const rung = gradeEvidence(c, rubric.ladder, { inDocumentRung: m.function === 'own-result' ? rubric.ownResultRung : null })
+    // Did the rung come from the document's own evidence rather than a citation?
+    const inDocument = rung.key !== cited.key
     // A method statement reports what was done, not a claim — never flagged.
     const mismatch = m.function === 'method' ? null : detectMismatch({ tier, rung }, rubric.tolerance, posture)
     let flag = mismatch ? mismatch.flag : null
@@ -119,7 +122,7 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
     }
 
     return {
-      ...c, tier, rung, flag, explanation, disclosed,
+      ...c, tier, rung, citedRung: cited, inDocument, flag, explanation, disclosed,
       certainty: m.certainty, function: m.function, register: m.register, recommendation: m.recommendation,
       overreach: overreachOf(m, profile.design, posture, c.text),
     }

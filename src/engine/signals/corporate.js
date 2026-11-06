@@ -1,6 +1,7 @@
 // Corporate document-level signals.
 import { spansFor, phraseRe } from './util.js'
 import { PLATITUDES } from '../lexicons/platitudes.js'
+import { researchLikeRegister } from '../classifyPosture.js'
 
 /** @typedef {import('../types.js').Signal} Signal */
 
@@ -41,13 +42,14 @@ function selfCitationDominance(doc, claims, citations) {
   return null
 }
 
-// 6. register-mismatch — research-like posture, but at least half the top-tier
-//    claims fall short of independent evidence. The "marketing in a lab coat"
-//    verdict input. (It once needed EVERY top claim to miss, so a single claim
-//    carrying any URL defeated it.)
+// 6. register-mismatch — a research-like register (read from the TEXT, so the
+//    selected posture cannot switch it on or off), but at least half the
+//    top-tier claims fall short of independent evidence. The "marketing in a
+//    lab coat" verdict input. (It once needed EVERY top claim to miss, so a
+//    single claim carrying any URL defeated it.)
 export const REGISTER_MISMATCH_SHARE = 0.5 // PROVISIONAL — not ratified
-function registerMismatch(doc, claims, citations, posture) {
-  if (posture !== 'research-like') return null
+function registerMismatch(doc, claims) {
+  if (!researchLikeRegister(doc)) return null
   const top = claims.filter((c) => c.tier.weight >= 3)
   if (top.length === 0) return null
   const short = top.filter((c) => c.rung.rank < 3) // below third-party / audited

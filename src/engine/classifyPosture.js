@@ -81,6 +81,13 @@ const CORP_THOUGHT = [
   { signal: 'future-trend vocabulary', re: /\b(future of|the next (decade|era|generation)|emerging trend|paradigm shift|what's next)\b/i, weight: 2 },
 ]
 
+// Research vocabulary in the text itself (register-mismatch reads this, not the
+// selected posture). PROVISIONAL — not ratified.
+export const RESEARCH_REGISTER_MIN = 4
+export function researchLikeRegister(text) {
+  return scoreGroups(text || '', CORP_RESEARCH_LIKE).score >= RESEARCH_REGISTER_MIN
+}
+
 function classifyCorporate(text) {
   const rl = scoreGroups(text, CORP_RESEARCH_LIKE)
   const mk = scoreGroups(text, CORP_MARKETING)
@@ -158,6 +165,12 @@ const J_ATTRIBUTION = [
 const J_FIRST_PERSON_ARG = [
   { signal: 'first-person argument', re: /\b(I argue|we argue|in my view|I believe|I think|my view)\b/i, weight: 2 },
 ]
+
+// An explicit Opinion / Analysis / Sponsored kicker in headline position.
+export function hasJournalismLabel(text) {
+  const head = (text || '').slice(0, 120)
+  return J_LABELS.some((l) => spansFor(head, l.re).length > 0)
+}
 
 function classifyJournalism(text) {
   // Explicit labels in headline/kicker position (first ~120 chars) win outright.

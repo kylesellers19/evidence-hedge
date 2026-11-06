@@ -20,11 +20,11 @@
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 8.4,
+          "score": 8.2,
           "claims": 228,
           "strong": 7,
-          "unsupported": 89,
-          "overconfident": 1,
+          "unsupported": 40,
+          "overconfident": 0,
           "causalOverreach": 0,
           "gate": false,
           "signals": [
@@ -33,11 +33,11 @@
         },
         "corporate": {
           "posture": "research-like",
-          "score": 7.2,
+          "score": 6.9,
           "claims": 228,
           "strong": 7,
-          "unsupported": 88,
-          "overconfident": 2,
+          "unsupported": 41,
+          "overconfident": 1,
           "causalOverreach": 0,
           "gate": false,
           "signals": [
@@ -47,15 +47,16 @@
         },
         "journalism": {
           "posture": "news",
-          "score": 6.4,
+          "score": 5.5,
           "claims": 228,
           "strong": 7,
-          "unsupported": 96,
+          "unsupported": 49,
           "overconfident": 0,
           "causalOverreach": 0,
           "gate": false,
           "signals": [
             "per-claim-sourcing",
+            "label-transparency",
             "method-disclosure",
             "perspective-plurality",
             "completeness-gaps"
@@ -63,10 +64,10 @@
         },
         "general": {
           "posture": "authoritative",
-          "score": 8.7,
+          "score": 8.4,
           "claims": 228,
           "strong": 7,
-          "unsupported": 71,
+          "unsupported": 34,
           "overconfident": 0,
           "causalOverreach": 0,
           "gate": false,
@@ -75,7 +76,7 @@
           ]
         }
       },
-      "spread": 2.3
+      "spread": 2.9
     },
     "hsph-press-2015": {
       "gold": {
@@ -97,7 +98,7 @@
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 7.8,
+          "score": 4.7,
           "claims": 22,
           "strong": 0,
           "unsupported": 14,
@@ -110,7 +111,7 @@
         },
         "corporate": {
           "posture": "press-release",
-          "score": 8,
+          "score": 4.4,
           "claims": 22,
           "strong": 0,
           "unsupported": 16,
@@ -121,7 +122,7 @@
         },
         "journalism": {
           "posture": "news",
-          "score": 7.2,
+          "score": 3.2,
           "claims": 22,
           "strong": 0,
           "unsupported": 16,
@@ -129,13 +130,14 @@
           "causalOverreach": 0,
           "gate": false,
           "signals": [
+            "label-transparency",
             "method-disclosure",
             "perspective-plurality"
           ]
         },
         "general": {
           "posture": "authoritative",
-          "score": 8.2,
+          "score": 5.1,
           "claims": 22,
           "strong": 0,
           "unsupported": 14,
@@ -145,7 +147,7 @@
           "signals": []
         }
       },
-      "spread": 1
+      "spread": 1.9
     },
     "sciencedaily-2015": {
       "gold": {
@@ -167,8 +169,8 @@
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 7.7,
-          "claims": 42,
+          "score": 4.3,
+          "claims": 41,
           "strong": 0,
           "unsupported": 28,
           "overconfident": 0,
@@ -180,8 +182,8 @@
         },
         "corporate": {
           "posture": "press-release",
-          "score": 8,
-          "claims": 42,
+          "score": 4.4,
+          "claims": 41,
           "strong": 0,
           "unsupported": 30,
           "overconfident": 0,
@@ -191,22 +193,23 @@
         },
         "journalism": {
           "posture": "news",
-          "score": 7.2,
-          "claims": 42,
+          "score": 3.2,
+          "claims": 41,
           "strong": 0,
           "unsupported": 30,
           "overconfident": 0,
           "causalOverreach": 0,
           "gate": false,
           "signals": [
+            "label-transparency",
             "method-disclosure",
             "perspective-plurality"
           ]
         },
         "general": {
           "posture": "authoritative",
-          "score": 8.1,
-          "claims": 42,
+          "score": 4.7,
+          "claims": 41,
           "strong": 0,
           "unsupported": 28,
           "overconfident": 0,
@@ -215,7 +218,7 @@
           "signals": []
         }
       },
-      "spread": 0.9
+      "spread": 1.5
     },
     "gba-news-2015": {
       "gold": {
@@ -237,7 +240,7 @@
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 7.9,
+          "score": 4.9,
           "claims": 41,
           "strong": 0,
           "unsupported": 25,
@@ -250,7 +253,7 @@
         },
         "corporate": {
           "posture": "marketing",
-          "score": 9.6,
+          "score": 4.7,
           "claims": 41,
           "strong": 0,
           "unsupported": 0,
@@ -263,7 +266,7 @@
         },
         "journalism": {
           "posture": "news",
-          "score": 7.8,
+          "score": 4.3,
           "claims": 41,
           "strong": 0,
           "unsupported": 26,
@@ -271,12 +274,13 @@
           "causalOverreach": 0,
           "gate": false,
           "signals": [
+            "label-transparency",
             "method-disclosure"
           ]
         },
         "general": {
           "posture": "authoritative",
-          "score": 8.5,
+          "score": 5.9,
           "claims": 41,
           "strong": 0,
           "unsupported": 22,
@@ -286,7 +290,7 @@
           "signals": []
         }
       },
-      "spread": 1.8
+      "spread": 1.6
     },
     "bdc-blog-allen": {
       "gold": {
@@ -308,7 +312,7 @@
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 7.8,
+          "score": 4.6,
           "claims": 20,
           "strong": 0,
           "unsupported": 13,
@@ -321,7 +325,7 @@
         },
         "corporate": {
           "posture": "research-like",
-          "score": 8.2,
+          "score": 5,
           "claims": 20,
           "strong": 0,
           "unsupported": 13,
@@ -332,7 +336,7 @@
         },
         "journalism": {
           "posture": "unlabeled",
-          "score": 6.8,
+          "score": 3.4,
           "claims": 20,
           "strong": 0,
           "unsupported": 14,
@@ -347,7 +351,7 @@
         },
         "general": {
           "posture": "authoritative",
-          "score": 8.5,
+          "score": 5.8,
           "claims": 20,
           "strong": 0,
           "unsupported": 11,
@@ -357,7 +361,7 @@
           "signals": []
         }
       },
-      "spread": 1.7
+      "spread": 2.4
     },
     "naava-allen": {
       "gold": {
@@ -379,7 +383,7 @@
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 7.4,
+          "score": 3.8,
           "claims": 11,
           "strong": 0,
           "unsupported": 7,
@@ -393,7 +397,7 @@
         },
         "corporate": {
           "posture": "research-like",
-          "score": 7.8,
+          "score": 4.2,
           "claims": 11,
           "strong": 0,
           "unsupported": 7,
@@ -406,7 +410,7 @@
         },
         "journalism": {
           "posture": "unlabeled",
-          "score": 6.6,
+          "score": 3,
           "claims": 11,
           "strong": 0,
           "unsupported": 7,
@@ -422,7 +426,7 @@
         },
         "general": {
           "posture": "authoritative",
-          "score": 8.1,
+          "score": 4.9,
           "claims": 11,
           "strong": 0,
           "unsupported": 6,
@@ -434,7 +438,7 @@
           ]
         }
       },
-      "spread": 1.5
+      "spread": 1.9
     },
     "gensler-gws-2024": {
       "gold": {
@@ -455,12 +459,12 @@
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 6.8,
+          "score": 1.4,
           "claims": 29,
           "strong": 0,
-          "unsupported": 25,
+          "unsupported": 23,
           "overconfident": 0,
-          "causalOverreach": 2,
+          "causalOverreach": 3,
           "gate": false,
           "signals": [
             "limitations-absent",
@@ -469,12 +473,12 @@
         },
         "corporate": {
           "posture": "research-like",
-          "score": 7.1,
+          "score": 1.5,
           "claims": 29,
           "strong": 0,
-          "unsupported": 26,
+          "unsupported": 24,
           "overconfident": 0,
-          "causalOverreach": 2,
+          "causalOverreach": 3,
           "gate": false,
           "signals": [
             "completeness-gaps"
@@ -482,12 +486,12 @@
         },
         "journalism": {
           "posture": "unlabeled",
-          "score": 5.9,
+          "score": 1,
           "claims": 29,
           "strong": 0,
-          "unsupported": 26,
+          "unsupported": 24,
           "overconfident": 0,
-          "causalOverreach": 2,
+          "causalOverreach": 3,
           "gate": false,
           "signals": [
             "label-transparency",
@@ -498,19 +502,19 @@
         },
         "general": {
           "posture": "authoritative",
-          "score": 8,
+          "score": 3.7,
           "claims": 29,
           "strong": 0,
-          "unsupported": 17,
+          "unsupported": 16,
           "overconfident": 0,
-          "causalOverreach": 2,
+          "causalOverreach": 3,
           "gate": false,
           "signals": [
             "completeness-gaps"
           ]
         }
       },
-      "spread": 2.1
+      "spread": 2.7
     },
     "gensler-press-2024": {
       "gold": {
@@ -531,7 +535,7 @@
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 7.7,
+          "score": 3.5,
           "claims": 31,
           "strong": 0,
           "unsupported": 21,
@@ -544,7 +548,7 @@
         },
         "corporate": {
           "posture": "press-release",
-          "score": 8.3,
+          "score": 4.4,
           "claims": 31,
           "strong": 0,
           "unsupported": 19,
@@ -555,7 +559,7 @@
         },
         "journalism": {
           "posture": "news",
-          "score": 7.3,
+          "score": 2.7,
           "claims": 31,
           "strong": 0,
           "unsupported": 21,
@@ -563,13 +567,14 @@
           "causalOverreach": 2,
           "gate": false,
           "signals": [
+            "label-transparency",
             "method-disclosure",
             "perspective-plurality"
           ]
         },
         "general": {
           "posture": "authoritative",
-          "score": 8.3,
+          "score": 4.4,
           "claims": 31,
           "strong": 0,
           "unsupported": 19,
@@ -579,7 +584,7 @@
           "signals": []
         }
       },
-      "spread": 1
+      "spread": 1.7
     },
     "bdc-gensler-news-2024": {
       "gold": {
@@ -601,12 +606,12 @@
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 7.2,
+          "score": 3.3,
           "claims": 33,
           "strong": 0,
-          "unsupported": 23,
+          "unsupported": 18,
           "overconfident": 0,
-          "causalOverreach": 0,
+          "causalOverreach": 2,
           "gate": false,
           "signals": [
             "limitations-absent",
@@ -615,12 +620,12 @@
         },
         "corporate": {
           "posture": "research-like",
-          "score": 7.6,
+          "score": 3.5,
           "claims": 33,
           "strong": 0,
-          "unsupported": 24,
+          "unsupported": 19,
           "overconfident": 0,
-          "causalOverreach": 0,
+          "causalOverreach": 2,
           "gate": false,
           "signals": [
             "completeness-gaps"
@@ -628,14 +633,15 @@
         },
         "journalism": {
           "posture": "news",
-          "score": 6.8,
+          "score": 2.3,
           "claims": 33,
           "strong": 0,
-          "unsupported": 24,
+          "unsupported": 19,
           "overconfident": 0,
-          "causalOverreach": 0,
+          "causalOverreach": 2,
           "gate": false,
           "signals": [
+            "label-transparency",
             "method-disclosure",
             "perspective-plurality",
             "completeness-gaps"
@@ -643,19 +649,19 @@
         },
         "general": {
           "posture": "authoritative",
-          "score": 8.2,
+          "score": 4.6,
           "claims": 33,
           "strong": 0,
-          "unsupported": 16,
+          "unsupported": 14,
           "overconfident": 0,
-          "causalOverreach": 0,
+          "causalOverreach": 2,
           "gate": false,
           "signals": [
             "completeness-gaps"
           ]
         }
       },
-      "spread": 1.4
+      "spread": 2.3
     },
     "co2meter-plants": {
       "gold": {
@@ -676,7 +682,7 @@
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 7.3,
+          "score": 1.8,
           "claims": 110,
           "strong": 4,
           "unsupported": 100,
@@ -687,7 +693,7 @@
         },
         "corporate": {
           "posture": "marketing",
-          "score": 9.8,
+          "score": 1.8,
           "claims": 110,
           "strong": 4,
           "unsupported": 4,
@@ -698,7 +704,7 @@
         },
         "journalism": {
           "posture": "news",
-          "score": 5.2,
+          "score": 1,
           "claims": 110,
           "strong": 4,
           "unsupported": 101,
@@ -707,13 +713,14 @@
           "gate": false,
           "signals": [
             "per-claim-sourcing",
+            "label-transparency",
             "method-disclosure",
             "perspective-plurality"
           ]
         },
         "general": {
           "posture": "authoritative",
-          "score": 7.3,
+          "score": 2,
           "claims": 110,
           "strong": 4,
           "unsupported": 99,
@@ -723,7 +730,7 @@
           "signals": []
         }
       },
-      "spread": 4.6
+      "spread": 1
     },
     "jcu-timber-pilot": {
       "gold": {
@@ -744,12 +751,12 @@
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 7.8,
+          "score": 4.9,
           "claims": 311,
           "strong": 11,
-          "unsupported": 155,
+          "unsupported": 92,
           "overconfident": 0,
-          "causalOverreach": 12,
+          "causalOverreach": 35,
           "gate": false,
           "signals": [
             "completeness-gaps",
@@ -758,12 +765,12 @@
         },
         "corporate": {
           "posture": "research-like",
-          "score": 6.5,
+          "score": 3.5,
           "claims": 311,
           "strong": 11,
-          "unsupported": 161,
+          "unsupported": 97,
           "overconfident": 3,
-          "causalOverreach": 12,
+          "causalOverreach": 35,
           "gate": false,
           "signals": [
             "register-mismatch",
@@ -773,15 +780,16 @@
         },
         "journalism": {
           "posture": "news",
-          "score": 6.1,
+          "score": 2.8,
           "claims": 311,
           "strong": 11,
-          "unsupported": 160,
+          "unsupported": 96,
           "overconfident": 0,
-          "causalOverreach": 12,
+          "causalOverreach": 35,
           "gate": false,
           "signals": [
             "per-claim-sourcing",
+            "label-transparency",
             "method-disclosure",
             "completeness-gaps",
             "self-disclaimed-causality"
@@ -789,12 +797,12 @@
         },
         "general": {
           "posture": "authoritative",
-          "score": 7.9,
+          "score": 5.3,
           "claims": 311,
           "strong": 11,
-          "unsupported": 136,
+          "unsupported": 79,
           "overconfident": 0,
-          "causalOverreach": 12,
+          "causalOverreach": 35,
           "gate": false,
           "signals": [
             "completeness-gaps",
@@ -802,7 +810,7 @@
           ]
         }
       },
-      "spread": 1.8
+      "spread": 2.5
     },
     "fixture-a-cadre": {
       "gold": {
@@ -822,23 +830,23 @@
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 8,
+          "score": 2.3,
           "claims": 242,
           "strong": 37,
-          "unsupported": 146,
-          "overconfident": 13,
-          "causalOverreach": 17,
+          "unsupported": 145,
+          "overconfident": 2,
+          "causalOverreach": 16,
           "gate": false,
           "signals": []
         },
         "corporate": {
           "posture": "research-like",
-          "score": 6.8,
+          "score": 1,
           "claims": 242,
           "strong": 37,
-          "unsupported": 149,
-          "overconfident": 14,
-          "causalOverreach": 17,
+          "unsupported": 148,
+          "overconfident": 3,
+          "causalOverreach": 16,
           "gate": false,
           "signals": [
             "register-mismatch"
@@ -846,31 +854,32 @@
         },
         "journalism": {
           "posture": "news",
-          "score": 7,
+          "score": 1,
           "claims": 242,
           "strong": 37,
           "unsupported": 165,
           "overconfident": 0,
-          "causalOverreach": 17,
+          "causalOverreach": 16,
           "gate": false,
           "signals": [
+            "label-transparency",
             "method-disclosure",
             "perspective-plurality"
           ]
         },
         "general": {
           "posture": "authoritative",
-          "score": 8.2,
+          "score": 2.5,
           "claims": 242,
           "strong": 37,
-          "unsupported": 142,
+          "unsupported": 141,
           "overconfident": 0,
-          "causalOverreach": 17,
+          "causalOverreach": 16,
           "gate": false,
           "signals": []
         }
       },
-      "spread": 1.4
+      "spread": 1.5
     },
     "fixture-b-pew-html": {
       "gold": {
@@ -890,12 +899,12 @@
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 8.4,
+          "score": 7.3,
           "claims": 40,
           "strong": 1,
-          "unsupported": 11,
+          "unsupported": 5,
           "overconfident": 0,
-          "causalOverreach": 0,
+          "causalOverreach": 1,
           "gate": false,
           "signals": [
             "limitations-absent",
@@ -904,12 +913,12 @@
         },
         "corporate": {
           "posture": "marketing",
-          "score": 9.2,
+          "score": 6.7,
           "claims": 40,
           "strong": 1,
           "unsupported": 0,
           "overconfident": 0,
-          "causalOverreach": 0,
+          "causalOverreach": 1,
           "gate": false,
           "signals": [
             "self-citation-dominance",
@@ -918,14 +927,15 @@
         },
         "journalism": {
           "posture": "news",
-          "score": 7.9,
+          "score": 6.1,
           "claims": 40,
           "strong": 1,
-          "unsupported": 13,
+          "unsupported": 7,
           "overconfident": 0,
-          "causalOverreach": 0,
+          "causalOverreach": 1,
           "gate": false,
           "signals": [
+            "label-transparency",
             "method-disclosure",
             "perspective-plurality",
             "completeness-gaps"
@@ -933,19 +943,19 @@
         },
         "general": {
           "posture": "authoritative",
-          "score": 8.9,
+          "score": 7.9,
           "claims": 40,
           "strong": 1,
-          "unsupported": 10,
+          "unsupported": 4,
           "overconfident": 0,
-          "causalOverreach": 0,
+          "causalOverreach": 1,
           "gate": false,
           "signals": [
             "completeness-gaps"
           ]
         }
       },
-      "spread": 1.3
+      "spread": 1.8
     },
     "fixture-b-pew-report": {
       "gold": {
@@ -965,12 +975,12 @@
       "rubrics": {
         "research": {
           "posture": "standard",
-          "score": 8,
-          "claims": 257,
-          "strong": 5,
-          "unsupported": 109,
+          "score": 7.3,
+          "claims": 231,
+          "strong": 4,
+          "unsupported": 9,
           "overconfident": 0,
-          "causalOverreach": 1,
+          "causalOverreach": 3,
           "gate": false,
           "signals": [
             "limitations-absent",
@@ -979,12 +989,12 @@
         },
         "corporate": {
           "posture": "research-like",
-          "score": 6.7,
-          "claims": 257,
-          "strong": 5,
-          "unsupported": 116,
-          "overconfident": 4,
-          "causalOverreach": 1,
+          "score": 5.9,
+          "claims": 231,
+          "strong": 4,
+          "unsupported": 12,
+          "overconfident": 3,
+          "causalOverreach": 3,
           "gate": false,
           "signals": [
             "self-citation-dominance",
@@ -994,14 +1004,15 @@
         },
         "journalism": {
           "posture": "news",
-          "score": 7.1,
-          "claims": 257,
-          "strong": 5,
-          "unsupported": 115,
+          "score": 6,
+          "claims": 231,
+          "strong": 4,
+          "unsupported": 12,
           "overconfident": 0,
-          "causalOverreach": 1,
+          "causalOverreach": 3,
           "gate": false,
           "signals": [
+            "label-transparency",
             "method-disclosure",
             "perspective-plurality",
             "anonymous-sourcing",
@@ -1010,19 +1021,19 @@
         },
         "general": {
           "posture": "authoritative",
-          "score": 8.8,
-          "claims": 257,
-          "strong": 5,
-          "unsupported": 78,
+          "score": 7.8,
+          "claims": 231,
+          "strong": 4,
+          "unsupported": 8,
           "overconfident": 0,
-          "causalOverreach": 1,
+          "causalOverreach": 3,
           "gate": false,
           "signals": [
             "completeness-gaps"
           ]
         }
       },
-      "spread": 2.1
+      "spread": 1.9
     }
   }
 }

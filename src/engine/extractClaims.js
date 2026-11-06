@@ -10,7 +10,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { isDropped, demotionPenalty } from './nonClaimFilter.js'
-import { nonClaimRule } from './measure/segment.js'
+import { nonClaimRule, sectionOpenedBy } from './measure/segment.js'
 
 /** @typedef {import('./types.js').ExtractionConfig} ExtractionConfig */
 /** @typedef {import('./types.js').Citation} Citation */
@@ -40,7 +40,8 @@ const CITATION_PATTERNS = [
   { type: 'doi',         re: /\b(?:doi:\s*)?10\.\d{4,}\/\S+|doi\.org\/\S+/gi },
   { type: 'url',         re: /https?:\/\/[^\s)]+/gi },
   { type: 'numeric',     re: /\[\d+(?:\s*[-,]\s*\d+)*\]/g },
-  { type: 'author-year', re: /\([A-Z][A-Za-z.'-]+(?:\s+(?:et al\.?|and|&)\s+[A-Z][A-Za-z.'-]+)?,?\s*\d{4}[a-z]?\)/g },
+  // "(Allen 2016)", "(Allen et al. 2016)", "(Allen & Ma, 2016; Satish et al. 2012)"
+  { type: 'author-year', re: /\([A-Z][\p{L}.'’-]+(?:\s+(?:et al\.?|and|&)(?:\s+[A-Z][\p{L}.'’-]+)?)?,?\s*(?:19|20)\d{2}[a-z]?(?:[;,][^()]{0,120})?\)/gu },
   { type: 'year',        re: /\((?:19|20)\d{2}[a-z]?\)/g },
   // Attribution phrases that signal a cited source even without a formal ref.
   { type: 'phrase',      re: /\b(?:according to|cited in|as reported by|per the|source:|published in|data from|drawn from|based on (?:a|the|our)|et al\.?)\b[^.;]*/gi },
@@ -79,14 +80,17 @@ function claimLikelihood(sentence) {
  * @param {ExtractionConfig} extraction
  * @param {{ rubricId?: string, onDrop?: (sentence:string, rule:string) => void }} [options]
  *   rubricId gates the journalism heading exemption; onDrop sees apparatus drops
- * @returns {Array<{ id:number, text:string, citations:Citation[] }>}
+ * @returns {Array<{ id:number, text:string, citations:Citation[], section:string|null }>}
  */
 export function extractClaims(text, extraction, options = {}) {
   const { rubricId, onDrop } = options
   const sentences = splitSentences(text || '')
   const claims = []
   let id = 0
+  let section = null
   for (const sentence of sentences) {
+    // Track the IMRaD section a claim sits in (headings are often too short to be claims).
+    section = sectionOpenedBy(sentence) || section
     if (sentence.length < extraction.minClaimLength) continue
     // Non-claim filter — DROP hard exclusions, then DEMOTE via the likelihood.
     if (isDropped(sentence)) continue
@@ -94,7 +98,7 @@ export function extractClaims(text, extraction, options = {}) {
     if (rule) { if (onDrop) onDrop(sentence, rule); continue }
     const likelihood = claimLikelihood(sentence) - demotionPenalty(sentence, rubricId)
     if (likelihood < extraction.sensitivity) continue
-    claims.push({ id: id++, text: sentence, citations: detectCitations(sentence) })
+    claims.push({ id: id++, text: sentence, citations: detectCitations(sentence), section })
   }
   return claims
 }

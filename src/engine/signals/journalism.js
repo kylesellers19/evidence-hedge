@@ -2,6 +2,7 @@
 // Project indicators (provenance in the journalism rubric config).
 import { spansFor } from './util.js'
 import { RIGHT_OF_REPLY } from '../disclosure.js'
+import { hasJournalismLabel } from '../classifyPosture.js'
 
 /** @typedef {import('../types.js').Signal} Signal */
 
@@ -20,9 +21,11 @@ function perClaimSourcing(doc, claims) {
   }
 }
 
-// 8. label-transparency — an unlabeled piece sets no reader expectation.
-function labelTransparency(doc, claims, citations, posture) {
-  if (posture !== 'unlabeled') return null
+// 8. label-transparency — an unlabeled piece sets no reader expectation. Read
+//    from the TEXT (no Opinion / Analysis / Sponsored kicker), not from the
+//    selected posture, so overriding the posture cannot hide or add it.
+function labelTransparency(doc) {
+  if (hasJournalismLabel(doc)) return null
   return {
     id: 'label-transparency',
     severity: 'note',

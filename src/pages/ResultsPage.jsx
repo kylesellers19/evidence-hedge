@@ -54,6 +54,11 @@ export default function ResultsPage() {
         </p>
       </div>
 
+      {/* Genre note — the one line the posture changes; the score does not move. */}
+      {result.documentScore?.genreNote && (
+        <p className="text-[12px] text-muted mt-2 leading-relaxed">{result.documentScore.genreNote}</p>
+      )}
+
       {/* ── Layer 1: Verdict ─────────────────────────────────────────────── */}
       <h1 className="font-serif text-3xl sm:text-4xl font-medium leading-tight tracking-tight text-gray-900 mt-4">
         {summary.verdict}

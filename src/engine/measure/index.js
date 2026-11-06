@@ -27,12 +27,14 @@ export const SHARED_EXTRACTION = {
 }
 
 /**
- * @param {{ text: string, citations?: {type:string, raw:string}[] }} claim
+ * @param {{ text: string, citations?: {type:string, raw:string}[], section?: string|null }} claim
+ * @param {{ design?: string }} [doc]  document-level measurement (profile design)
  */
-export function measureClaim(claim) {
+export function measureClaim(claim, doc = {}) {
   const certainty = measureCertainty(claim.text)
   const recommendation = recommendationStrength(claim.text)
-  const fn = claimFunction(claim.text, { citations: claim.citations, recommendation })
+  // A derivative document's sections are not its own study's.
+  const fn = claimFunction(claim.text, { citations: claim.citations, recommendation, section: claim.section, design: doc.design })
   const register = causalRegister(claim.text)
   return { certainty, function: fn, register, recommendation }
 }

@@ -18,7 +18,7 @@
 import { HABER_ROOT_STRENGTH } from '../lexicons/haber-2022.js'
 import {
   RATED_PATTERNS, EXTRA_CAUSAL, EXTRA_STRENGTH, CONDITIONING, CHANGE_ROOTS, CHANGE_NOUNS,
-  VERBAL_CHANGE_STRENGTH, NOMINAL_CHANGE_STRENGTH, NO_FINDING, PURPOSE, CAUSAL_DISCLAIMER,
+  VERBAL_CHANGE_STRENGTH, NOMINAL_CHANGE_STRENGTH, NO_FINDING, PURPOSE, CAUSAL_DISCLAIMER, REPORTED_BELIEF,
 } from '../lexicons/causal-register.js'
 import { phraseRe } from '../signals/util.js'
 
@@ -37,6 +37,14 @@ const CHANGE_NOUN_RE = new RegExp(`\\b(?:${CHANGE_NOUNS})\\s+(?:in|of)\\b`, 'i')
 const NO_FINDING_RES = [...NO_FINDING, ...CAUSAL_DISCLAIMER].map((src) => new RegExp(src, 'i'))
 export const CAUSAL_DISCLAIMER_RES = CAUSAL_DISCLAIMER.map((src) => new RegExp(src, 'i'))
 const PURPOSE_RE = new RegExp(PURPOSE, 'i')
+const BELIEF_RE = new RegExp(REPORTED_BELIEF, 'gi')
+
+// Where the reported-belief clause ends: cues after it are the respondents' words.
+function beliefStart(text) {
+  const m = BELIEF_RE.exec(text)
+  BELIEF_RE.lastIndex = 0
+  return m ? m.index + m[0].length : -1
+}
 // Lowercase "may"/"can" only: the month and sentence-initial "Can" questions are not hedges.
 const CONDITIONING_RES = CONDITIONING.map((c) => (c === 'may' || c === 'can' ? /\b(?:may|can)\b/ : phraseRe(c)))
 
@@ -46,7 +54,7 @@ const VERBAL_BEFORE = /\b(?:can|cannot|could|may|might|will|would|to|does|did|do
 const NOMINAL_BEFORE = /\b(?:the|a|an|with|of|and|or|in|for|from|among|by|at|on|than|to|their|its|his|her|our|is|are|was|were|be|been|being|has|have|had|significantly|statistically)\s+$/i
 // After a passive "was reduced", only an agent ("by …") makes it causal.
 const BE_BEFORE = /\b(?:is|are|was|were|be|been|being)\s+(?:\w+ly\s+)?$/i
-const AFTER_OBJECT = /^\s+(?!in\b|of\b|by\b|from\b|with\b|among\b|after\b|during\b|over\b|at\b|risks?\b|odds\b|likelihood\b|rates?\b|levels?\b|and\b|or\b|[.,;:)])\S/i
+const AFTER_OBJECT = /^\s+(?!(?:in|of|by|from|with|among|after|during|over|at|and|or)\b(?!-)|(?:risks?|odds|likelihood|rates?|levels?)\b|[.,;:)])\S/i
 
 function verbalChange(text, m) {
   const before = text.slice(Math.max(0, m.index - 40), m.index)
@@ -65,8 +73,11 @@ function verbalChange(text, m) {
  */
 export function causalRegister(text) {
   const cues = []
+  const belief = beliefStart(text)
+  const reported = (i) => belief >= 0 && i >= belief
   for (const c of CUES) {
     for (const m of text.matchAll(c.re)) {
+      if (reported(m.index)) continue
       if (PURPOSE_RE.test(text.slice(Math.max(0, m.index - 40), m.index))) continue
       cues.push({ root: c.root, strength: c.strength })
       break
@@ -75,6 +86,7 @@ export function causalRegister(text) {
   for (const c of CHANGE) {
     let best = null
     for (const m of text.matchAll(c.re)) {
+      if (reported(m.index)) continue
       const verbal = verbalChange(text, m)
       if (verbal === null) continue
       const s = verbal ? Math.max(HABER_ROOT_STRENGTH[c.root] ?? 0, VERBAL_CHANGE_STRENGTH)

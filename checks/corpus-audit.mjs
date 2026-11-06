@@ -24,7 +24,7 @@ const FREEZE = process.argv.includes('--before')
 // Optional modules that later builds add; absent in the before-snapshot.
 const optional = async (path, name) => { try { return (await import(path))[name] } catch { return null } }
 const validateText = await optional('../src/ingest/validateText.js', 'validateText')
-const routeDocument = await optional('../src/engine/profile/route.js', 'routeDocument')
+const routeDocument = await optional('../src/rubrics/route.js', 'routeDocument')
 
 const out = { engine: process.env.ENGINE_VERSION || 'working-tree', docs: {} }
 for (const doc of loadCorpus()) {
@@ -39,7 +39,7 @@ for (const doc of loadCorpus()) {
     if (!v.ok) { out.docs[doc.id] = row; console.log(`${doc.id}: ${v.reason} — not analyzed`); continue }
   }
   if (routeDocument) {
-    const route = routeDocument(text)
+    const route = routeDocument(text, { sourceUrl: doc.url || '' })
     row.route = { rubric: route.rubric, posture: route.posture, provenance: route.profile.provenance.kind, design: route.profile.design.design }
   } else {
     row.route = { rubric: autodetect(text) }

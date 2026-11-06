@@ -4,6 +4,8 @@ import { useApp } from '../context/AppContext.jsx'
 import PatternSection from '../components/results/PatternSection.jsx'
 import DistributionBar from '../components/results/DistributionBar.jsx'
 import DocumentSignals from '../components/results/DocumentSignals.jsx'
+import DocumentProfile from '../components/results/DocumentProfile.jsx'
+import { ENGINE_VERSION } from '../engine/version.js'
 import RubricProvenance from '../components/results/RubricProvenance.jsx'
 import VerdictMark from '../components/results/VerdictMark.jsx'
 
@@ -64,6 +66,14 @@ export default function ResultsPage() {
 
       <hr className="brief-rule" />
 
+      {/* ── Document profile — provenance, design and its ceiling ─────────── */}
+      {result.profile && (
+        <>
+          <DocumentProfile profile={result.profile} referenceCount={result.references?.length || 0} />
+          <hr className="brief-rule" />
+        </>
+      )}
+
       {/* ── Document signals — a layer of their own, above per-claim patterns ── */}
       <DocumentSignals signals={signals || []} />
 
@@ -98,6 +108,7 @@ export default function ResultsPage() {
 
       {/* ── Rubric provenance — always visible footer ────────────────────── */}
       <RubricProvenance provenance={rubric.provenance} rubricLabel={rubric.label} />
+      <p className="font-mono text-[11px] text-gray-400 mt-10">Engine {ENGINE_VERSION}</p>
     </main>
   )
 }

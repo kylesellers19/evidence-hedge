@@ -9,6 +9,10 @@
 //   posture     ∈ rubric.postures
 //   confidence  0–1 (1 for the single-posture research rubric)
 //   evidence    [{ signal, span }]
+//   zeroSignal  true when no posture signal matched: the document is then held
+//               to the rubric's STRICTEST posture (rubric.strictestPosture),
+//               never the most lenient one
+//   note        branch-screen text for the zero-signal case
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { YMYL_TERMS } from './lexicons/ymyl.js'
@@ -63,6 +67,15 @@ const CORP_MARKETING = [
   { signal: 'call to action', re: /\b(contact us|learn more|get started|sign up|buy now|request a demo|try (it )?free|book a call)\b/i, weight: 3 },
   { signal: 'uncompared superlative', re: /\b(#1|best-in-class|world-class|unmatched|unrivaled|the best|industry-leading|revolutionary)\b/i, weight: 1 },
 ]
+// Press release: a dated, issued announcement (university press office or firm).
+const CORP_PRESS = [
+  { signal: 'release line', re: /\bfor (?:immediate )?release\b/i, weight: 3 },
+  { signal: 'republished release', re: /\bstory source:|\bmaterials provided by\b/i, weight: 3 },
+  { signal: 'announcement', re: /\b(?:today announced|announced today)\b/i, weight: 2 },
+  { signal: 'press-release label', re: /\b(?:press|news) release\b/i, weight: 2 },
+  { signal: 'media contact', re: /\bmedia (?:contacts?|inquiries)\b/i, weight: 2 },
+  { signal: 'dateline', re: /(?:^|\n)\s*[A-Z][A-Za-z.]+(?:[ ,]+[A-Z][A-Za-z.]+){0,3}\s+[—–-]\s+(?:The\s+)?[A-Z]/, weight: 2 },
+]
 const CORP_THOUGHT = [
   { signal: 'first-person-plural opinion', re: /\b(we believe|in our view|we think|our view is|we see a)\b/i, weight: 2 },
   { signal: 'future-trend vocabulary', re: /\b(future of|the next (decade|era|generation)|emerging trend|paradigm shift|what's next)\b/i, weight: 2 },
@@ -72,24 +85,33 @@ function classifyCorporate(text) {
   const rl = scoreGroups(text, CORP_RESEARCH_LIKE)
   const mk = scoreGroups(text, CORP_MARKETING)
   const tl = scoreGroups(text, CORP_THOUGHT)
+  const pr = scoreGroups(text, CORP_PRESS)
 
   // Structure nudges from density.
   const numeric = density(text, /\b\d[\d.,%]*\b/)
   const secondPerson = density(text, /\b(you|your)\b/i)
   if (numeric > 0.06) { rl.score += 2; rl.evidence.push({ signal: 'high numeric density', span: `${(numeric * 100).toFixed(1)}% of words` }) }
-  if (numeric < 0.02) tl.score += 1
+  if (numeric < 0.02 && tl.score > 0) tl.score += 1
   if (secondPerson > 0.03) { mk.score += 2; mk.evidence.push({ signal: 'second-person density', span: `${(secondPerson * 100).toFixed(1)}% of words` }) }
 
+  // A press release that reports a study carries research vocabulary too; the
+  // release markers decide the genre once they clear PRESS_MIN.
   const ranked = [
+    { posture: 'press-release', ...pr },
     { posture: 'research-like', ...rl },
     { posture: 'marketing', ...mk },
     { posture: 'thought-leadership', ...tl },
   ].sort((a, b) => b.score - a.score)
 
+  if (pr.score >= PRESS_MIN && ranked[0].posture !== 'press-release') {
+    const second = ranked[0]
+    return { posture: 'press-release', confidence: confidenceFrom(pr.score, second.score), evidence: pr.evidence }
+  }
   const [top, second] = ranked
-  if (top.score === 0) return { posture: 'marketing', confidence: 0, evidence: [] }
+  if (top.score === 0) return null
   return { posture: top.posture, confidence: confidenceFrom(top.score, second.score), evidence: top.evidence }
 }
+export const PRESS_MIN = 4 // PROVISIONAL — not ratified
 
 // ── General ──────────────────────────────────────────────────────────────────
 const GEN_EXPERIENTIAL = [
@@ -118,7 +140,7 @@ function classifyGeneral(text) {
       ],
     }
   }
-  if (exp.score === 0) return { posture: 'experiential', confidence: 0, evidence: [] }
+  if (exp.score === 0) return null
   return { posture: 'experiential', confidence: confidenceFrom(exp.score, 0), evidence: exp.evidence }
 }
 
@@ -128,8 +150,10 @@ const J_LABELS = [
   { re: /\b(analysis)\b/i, posture: 'opinion', signal: 'analysis label' },
   { re: /\b(sponsored|paid post|advertorial|promoted)\b/i, posture: 'sponsored', signal: 'sponsored label' },
 ]
+// Present-tense attribution counts as much as past: trade and science news
+// write "says", "notes", "explains".
 const J_ATTRIBUTION = [
-  { signal: 'attribution verb', re: /\b(said|according to|told|stated|reported|spokesperson)\b/i, weight: 2 },
+  { signal: 'attribution verb', re: /\b(said|says|according to|told|stated|states|reported|notes|noted|observes|explains|explained|adds|added|writes|wrote|spokesperson)\b/i, weight: 2 },
 ]
 const J_FIRST_PERSON_ARG = [
   { signal: 'first-person argument', re: /\b(I argue|we argue|in my view|I believe|I think|my view)\b/i, weight: 2 },
@@ -150,7 +174,7 @@ function classifyJournalism(text) {
   if (opinion.score > 0) {
     return { posture: 'opinion', confidence: confidenceFrom(opinion.score, news.score), evidence: opinion.evidence }
   }
-  return { posture: 'unlabeled', confidence: 0, evidence: [] }
+  return null
 }
 
 // ── dispatch ─────────────────────────────────────────────────────────────────
@@ -166,12 +190,15 @@ const CLASSIFIERS = {
  * @param {RubricConfig} rubric
  * @returns {{ posture:string, confidence:number, evidence:{signal:string, span:string}[] }}
  */
+export const ZERO_SIGNAL_NOTE = 'No posture signals — held to the strictest standard'
+
 export function classifyPosture(text, rubric) {
   const fn = CLASSIFIERS[rubric?.id]
-  const result = fn ? fn(text || '') : { posture: rubric?.defaultPosture, confidence: 0, evidence: [] }
-  // Guard: never return a posture the rubric doesn't declare.
-  if (!rubric?.postures?.includes(result.posture)) {
-    return { posture: rubric.defaultPosture, confidence: 0, evidence: result.evidence || [] }
+  const result = fn ? fn(text || '') : null
+  // No signal at all → the strictest posture, never the most lenient default.
+  if (!result || !rubric?.postures?.includes(result.posture)) {
+    const strictest = rubric?.strictestPosture || rubric?.defaultPosture
+    return { posture: strictest, confidence: 0, evidence: result?.evidence || [], zeroSignal: true, note: ZERO_SIGNAL_NOTE }
   }
-  return result
+  return { ...result, zeroSignal: false }
 }

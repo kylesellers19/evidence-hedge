@@ -157,12 +157,13 @@
       "gold": {
         "rubric": "research",
         "posture": "standard",
-        "provenance": "verify-venue",
+        "provenance": "peer-reviewed-journal",
         "design": "pre-post-uncontrolled"
       },
       "license": "repository copy — venue and licence unverified; cache only",
       "commit": false,
-      "expect": "timber"
+      "expect": "timber",
+      "note": "Venue verified 2026-11-06: Scientific Reports (2025) 15:39480, doi 10.1038/s41598-025-229…; the repository PDF carries the journal running header. Gold provenance resolved from \"verify venue\" to peer-reviewed-journal."
     },
     {
       "id": "hks-human-potential",

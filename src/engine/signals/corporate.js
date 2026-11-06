@@ -41,19 +41,22 @@ function selfCitationDominance(doc, claims, citations) {
   return null
 }
 
-// 6. register-mismatch — research-like posture, but no top-tier claim reaches
-//    independent evidence. The "marketing in a lab coat" verdict input.
+// 6. register-mismatch — research-like posture, but at least half the top-tier
+//    claims fall short of independent evidence. The "marketing in a lab coat"
+//    verdict input. (It once needed EVERY top claim to miss, so a single claim
+//    carrying any URL defeated it.)
+export const REGISTER_MISMATCH_SHARE = 0.5 // PROVISIONAL — not ratified
 function registerMismatch(doc, claims, citations, posture) {
   if (posture !== 'research-like') return null
   const top = claims.filter((c) => c.tier.weight >= 3)
   if (top.length === 0) return null
-  const reached = top.some((c) => c.rung.rank >= 3) // third-party or audited
-  if (reached) return null
+  const short = top.filter((c) => c.rung.rank < 3) // below third-party / audited
+  if (short.length / top.length < REGISTER_MISMATCH_SHARE) return null
   return {
     id: 'register-mismatch',
     severity: 'flag',
-    summary: 'Adopts a research-like register, yet no top-tier claim reaches independent (third-party or audited) evidence — marketing in a lab coat.',
-    evidence: top.slice(0, 3).map((c) => c.text),
+    summary: `Adopts a research-like register, yet ${short.length} of ${top.length} top-tier claims fall short of independent (third-party or audited) evidence — marketing in a lab coat.`,
+    evidence: short.slice(0, 3).map((c) => c.text),
   }
 }
 

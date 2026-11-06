@@ -143,6 +143,7 @@ export default function RubricBranch({ rubrics = [], detectedId, text = "", onCo
                   ({Math.round(classification.confidence * 100)}%)
                 </span>
               )}
+              {classification.zeroSignal && ` · ${classification.note}`}
               {postureOverride && postureOverride !== classification.posture && " · overridden"}
             </span>
           </div>

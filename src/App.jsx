@@ -1,7 +1,8 @@
 import React from 'react'
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { useApp } from './context/AppContext.jsx'
-import { listRubrics, getRubric, autodetect } from './rubrics/index.js'
+import { listRubrics, getRubric } from './rubrics/index.js'
+import { routeDocument } from './rubrics/route.js'
 import { analyze } from './engine/analyze.js'
 import { validateText } from './ingest/validateText.js'
 import LandingPage from './pages/LandingPage.jsx'
@@ -39,12 +40,14 @@ function BranchRoute() {
   if (!check.ok) return <Navigate to="/" replace />
 
   const rubrics = listRubrics()
-  const detectedId = autodetect(state.document)
+  // Routing: provenance first (the link's host when there is one), then genre.
+  const sourceUrl = state.meta?.sourceUrl || ''
+  const detectedId = routeDocument(state.document, { sourceUrl }).rubric
 
   // The CONFIRMED posture travels with the confirmed rubric into the pipeline.
   const onConfirm = (rubricId, posture) => {
     const rubric = getRubric(rubricId)
-    const result = analyze(state.document, rubric, posture)
+    const result = analyze(state.document, rubric, posture, { sourceUrl })
     dispatch({ type: 'SET_ANALYSIS', payload: { rubric, result } })
     navigate('/results')
   }

@@ -38,4 +38,7 @@ export const NOT_ADVICE = [
   '\\b(?:future|further|larger|longer|additional|more)\\s+(?:\\w+\\s+){0,3}(?:studies|research|work|trials?|investigations?)\\b',
   '\\b(?:results?|findings?|data|these)\\s+should\\s+be\\s+interpreted\\b',
   '\\bshould\\s+be\\s+noted\\b',
+  // meta-statements about the text itself
+  '\\b(?:one|readers?|you)\\s+should\\s+(?:bear|keep)\\s+in\\s+mind\\b',
+  '\\bit\\s+is\\s+(?:important|necessary|worth)\\s+(?:to\\s+)?(?:note|noting|clarify|emphasi[sz]e|acknowledge|recogni[sz]e|remember|mention|stress|point\\s+out)\\b',
 ]

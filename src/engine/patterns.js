@@ -16,6 +16,13 @@ export const PATTERN_META = {
       'cites little or nothing. The confidence is rhetorical, not evidential — ' +
       'the line carries no backing a reader could check.',
   },
+  'causal-overreach': {
+    name: 'Causal overreach',
+    description:
+      'The claim asserts more cause — or gives firmer advice — than the study ' +
+      'design behind it can license. A survey or uncontrolled comparison can ' +
+      'show that things move together, not that one produces the other.',
+  },
   overconfident: {
     name: 'Overconfident relative to source',
     description:
@@ -28,4 +35,5 @@ export const PATTERN_META = {
 export const FLAG_ORDER = /** @type {FlagType[]} */ ([
   'unsupported-assertion',
   'overconfident',
+  'causal-overreach',
 ])

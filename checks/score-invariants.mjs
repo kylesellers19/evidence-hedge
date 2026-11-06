@@ -58,11 +58,15 @@ log('(b) monotonicity — adding a flag signal never raises score',
 log('(b) monotonicity — adding a note signal never raises score',
   worseNote.score <= base.score, `${base.score} → ${worseNote.score}`)
 
-// posture-gate special case must read as 'carried', not low.
-const gateDoc = 'In my experience, mornings are the hardest. When I started journaling I felt calmer, and for me that small habit changed the day.'
+// posture-gate special case must read as 'carried', not low. The gate needs
+// ≥ 150 words (GATE_MIN_WORDS), so the passage is repeated to length.
+const gateText = 'In my experience, mornings are the hardest. When I started journaling I felt calmer, and for me that small habit changed the day.'
+const gateDoc = Array(7).fill(gateText).join(' ')
 const gate = analyze(gateDoc, getRubric('general'), 'experiential').documentScore
 log("posture-gate scores 'carried' (not low), with its own summary",
   gate.band === 'carried' && /no expert claims/.test(gate.summary), `score=${gate.score} band=${gate.band}`)
+const shortGate = analyze(gateText, getRubric('general'), 'experiential').signals.some((s) => s.gate)
+log('posture-gate stays shut under 150 words', !shortGate)
 
 // ── (c) frozen baseline score ────────────────────────────────────────────────
 const baselineScore = a1.documentScore

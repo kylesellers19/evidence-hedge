@@ -15,6 +15,10 @@ import { extractClaims } from './extractClaims.js'
 import { measureAssertiveness } from './measureAssertiveness.js'
 import { measureClaim } from './measure/index.js'
 import { segmentDocument } from './measure/segment.js'
+import { registerRank } from './measure/causalRegister.js'
+import { strengthRank } from './measure/recommendation.js'
+import { profileDocument } from './profile/index.js'
+import { hostOf } from './profile/provenance.js'
 import { gradeEvidence } from './gradeEvidence.js'
 import { detectMismatch } from './detectMismatch.js'
 import { PATTERN_META, FLAG_ORDER } from './patterns.js'
@@ -27,6 +31,51 @@ import { scoreDocument } from './scoreDocument.js'
 /** @typedef {import('./types.js').Claim} Claim */
 
 const STRONG_WEIGHT = 3 // tier weight at/above which a claim reads as "strong"
+// Claim functions checked against the design ceiling (a method statement or a
+// background claim about others' work is not this document's causal claim).
+const CEILING_FUNCTIONS = new Set(['own-result', 'interpretation', 'recommendation'])
+
+// A URL on the publisher's own site is self-reported evidence, not third-party.
+function markOwnSiteUrls(citations, provenance) {
+  const host = provenance.publisherHost
+  const org = provenance.org.map((t) => t.toLowerCase())
+  return citations.map((c) => {
+    if (c.type !== 'url') return c
+    const h = hostOf(c.raw)
+    const own = (host && (h === host || h.endsWith('.' + host) || host.endsWith('.' + h))) || org.some((t) => /^[a-z0-9-]+$/.test(t) && h.split('.').includes(t))
+    return own ? { ...c, type: 'url-own' } : c
+  })
+}
+
+// causal-overreach: the claim's causal register or advice strength above what
+// the design licenses. Disclosure-invariant — hedging or a limitations
+// paragraph does not suppress it (self-disclaimed-causality is a zero-weight note).
+// A quoted, attributed statement is the source's claim, reported — not this
+// document's (the echo of an overreaching source is a known gap, not a flag).
+const QUOTED = /[“"][^”"]{25,}[”"]/
+const ATTRIBUTED = /\b(?:said|says|states|stated|adds|added|notes|noted|observes|explains|writes|wrote|told|according to)\b/i
+
+function overreachOf(m, design, posture, text) {
+  if (!CEILING_FUNCTIONS.has(m.function)) return null
+  if (QUOTED.test(text) && ATTRIBUTED.test(text)) return null
+  const ceiling = design.ceiling
+  const registerOver = registerRank(m.register.register) - registerRank(ceiling.maxRegister)
+  const adviceOver = strengthRank(m.recommendation.strength) - strengthRank(ceiling.maxRecommendation)
+  const distance = Math.max(registerOver, adviceOver)
+  if (distance <= 0) return null
+  return {
+    flag: 'causal-overreach',
+    distance,
+    explanation: {
+      causalRegister: m.register.register,
+      recommendation: m.recommendation.strength,
+      designCeiling: ceiling,
+      design: design.design,
+      designEvidence: design.evidence.slice(0, 2).map((e) => e.span),
+      posture,
+    },
+  }
+}
 
 /**
  * @param {string} document   raw pasted text
@@ -34,8 +83,10 @@ const STRONG_WEIGHT = 3 // tier weight at/above which a claim reads as "strong"
  * @param {string} [posture]  active posture; defaults to rubric.defaultPosture
  * @returns {AnalysisResult}
  */
-export function analyze(document, rubric, posture = rubric.defaultPosture) {
+export function analyze(document, rubric, posture = rubric.defaultPosture, options = {}) {
   // ── Measurement (rubric-invariant) ────────────────────────────────────────
+  // Who is speaking and what study stands behind the text (profile/).
+  const profile = profileDocument(document, { sourceUrl: options.sourceUrl || '' })
   // The reference list after its heading, and reference entries anywhere, are
   // apparatus: they go to `references`, never to claims. No linking.
   const { body, references: listed } = segmentDocument(document)
@@ -45,7 +96,8 @@ export function analyze(document, rubric, posture = rubric.defaultPosture) {
     onDrop: (text, rule) => { if (rule === 'reference-entry') references.push({ text, via: 'pattern' }) },
   })
   /** @type {Claim[]} */
-  const claims = raw.map(c => {
+  const claims = raw.map(c0 => {
+    const c = { ...c0, citations: markOwnSiteUrls(c0.citations, profile.provenance) }
     const m = measureClaim(c)
     // ── Judgment (the rubric's) ─────────────────────────────────────────────
     const tier = measureAssertiveness(c, rubric, m.certainty.tier)
@@ -69,23 +121,25 @@ export function analyze(document, rubric, posture = rubric.defaultPosture) {
     return {
       ...c, tier, rung, flag, explanation, disclosed,
       certainty: m.certainty, function: m.function, register: m.register, recommendation: m.recommendation,
+      overreach: overreachOf(m, profile.design, posture, c.text),
     }
   })
 
   // ── Document-level signals (Part C) ───────────────────────────────────────
   const citations = claims.flatMap(c => c.citations)
-  const signals = runSignals(document, claims, citations, posture, rubric)
+  const signals = runSignals(document, claims, citations, posture, rubric, profile)
 
   // posture-gate: experiential writing with no authority markers makes no
   // expert claims → zero flags, a first-class "no obligation" verdict.
   const gate = signals.find(s => s.gate)
   if (gate) {
-    for (const c of claims) { c.flag = null; c.explanation = null }
+    for (const c of claims) { c.flag = null; c.explanation = null; c.overreach = null }
   }
 
   // ── Layer 2: named patterns with verbatim examples ────────────────────────
+  const flaggedAs = (flag) => claims.filter(c => (flag === 'causal-overreach' ? !!c.overreach : c.flag === flag))
   const patterns = FLAG_ORDER.flatMap(flag => {
-    const hits = claims.filter(c => c.flag === flag)
+    const hits = flaggedAs(flag)
     if (hits.length === 0) return []
     return [{
       key: flag,
@@ -105,8 +159,9 @@ export function analyze(document, rubric, posture = rubric.defaultPosture) {
 
   // ── Summary counts ────────────────────────────────────────────────────────
   const flagCounts = {
-    'unsupported-assertion': claims.filter(c => c.flag === 'unsupported-assertion').length,
-    overconfident: claims.filter(c => c.flag === 'overconfident').length,
+    'unsupported-assertion': flaggedAs('unsupported-assertion').length,
+    overconfident: flaggedAs('overconfident').length,
+    'causal-overreach': flaggedAs('causal-overreach').length,
   }
   const strongClaims = claims.filter(c => c.tier.weight >= STRONG_WEIGHT).length
 
@@ -124,11 +179,12 @@ export function analyze(document, rubric, posture = rubric.defaultPosture) {
   }
 
   // ── Overall document score (computed last) ────────────────────────────────
-  const documentScore = scoreDocument({ claims, signals, posture, rubric })
+  const documentScore = scoreDocument({ claims, signals, posture, rubric, profile })
 
   return {
     claims,
     references,
+    profile,
     patterns,
     signals,
     posture,
@@ -170,6 +226,10 @@ export function buildVerdict({ rubric, totalClaims, strongClaims, flagCounts }) 
   }
   if (overconfident > 0) {
     clauses.push(`${overconfident} ${overconfident === 1 ? 'cites' : 'cite'} sources too weak to carry them`)
+  }
+  const overreach = flagCounts['causal-overreach'] || 0
+  if (overreach > 0) {
+    clauses.push(`${overreach} ${overreach === 1 ? 'claims' : 'claim'} more cause than the study design supports`)
   }
 
   if (clauses.length === 0) {

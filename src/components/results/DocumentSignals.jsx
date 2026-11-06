@@ -18,6 +18,11 @@ const TITLES = {
   'right-of-reply': 'Right of reply',
   'anonymous-sourcing': 'Anonymous sourcing',
   'posture-gate': 'No expert claims',
+  'completeness-gaps': 'Reporting gaps',
+  'equivalence-from-nonsignificance': 'Equivalence from non-significance',
+  'subgroup-selection': 'Subgroup selection',
+  'covariate-inconsistency': 'Covariate-set inconsistency',
+  'self-disclaimed-causality': 'Causality disclaimed',
 }
 
 const titleFor = (s) => TITLES[s.id] || s.id.replace(/-/g, ' ')

@@ -1,0 +1,251 @@
+{
+  "documents": 14,
+  "rubric": 13,
+  "posture": 11,
+  "provenance": 14,
+  "design": 14,
+  "confusion": {
+    "research": {
+      "research": 4,
+      "corporate": 0,
+      "journalism": 0,
+      "general": 0
+    },
+    "corporate": {
+      "research": 1,
+      "corporate": 6,
+      "journalism": 0,
+      "general": 0
+    },
+    "journalism": {
+      "research": 0,
+      "corporate": 0,
+      "journalism": 3,
+      "general": 0
+    },
+    "general": {
+      "research": 0,
+      "corporate": 0,
+      "journalism": 0,
+      "general": 0
+    }
+  },
+  "rows": [
+    {
+      "id": "allen-ehp-2016",
+      "gold": {
+        "rubric": "research",
+        "posture": "standard",
+        "provenance": "peer-reviewed-journal",
+        "design": "controlled-experiment"
+      },
+      "got": {
+        "rubric": "research",
+        "posture": "standard",
+        "provenance": "peer-reviewed-journal",
+        "design": "controlled-experiment"
+      }
+    },
+    {
+      "id": "hsph-press-2015",
+      "gold": {
+        "rubric": "corporate",
+        "posture": "press-release",
+        "provenance": "academic-press-office",
+        "design": "controlled-experiment",
+        "designInherited": true
+      },
+      "got": {
+        "rubric": "corporate",
+        "posture": "press-release",
+        "provenance": "academic-press-office",
+        "design": "controlled-experiment"
+      }
+    },
+    {
+      "id": "sciencedaily-2015",
+      "gold": {
+        "rubric": "corporate",
+        "posture": "press-release",
+        "provenance": "academic-press-office",
+        "design": "controlled-experiment",
+        "designInherited": true
+      },
+      "got": {
+        "rubric": "corporate",
+        "posture": "press-release",
+        "provenance": "academic-press-office",
+        "design": "controlled-experiment"
+      }
+    },
+    {
+      "id": "gba-news-2015",
+      "gold": {
+        "rubric": "journalism",
+        "posture": "news",
+        "provenance": "trade-press",
+        "design": "controlled-experiment",
+        "designInherited": true
+      },
+      "got": {
+        "rubric": "journalism",
+        "posture": "news",
+        "provenance": "trade-press",
+        "design": "controlled-experiment"
+      }
+    },
+    {
+      "id": "bdc-blog-allen",
+      "gold": {
+        "rubric": "journalism",
+        "posture": "opinion",
+        "provenance": "trade-press",
+        "design": "controlled-experiment",
+        "designInherited": true
+      },
+      "got": {
+        "rubric": "journalism",
+        "posture": "unlabeled",
+        "provenance": "trade-press",
+        "design": "controlled-experiment"
+      }
+    },
+    {
+      "id": "naava-allen",
+      "gold": {
+        "rubric": "corporate",
+        "posture": "marketing",
+        "provenance": "firm-vendor",
+        "design": "controlled-experiment",
+        "designInherited": true
+      },
+      "got": {
+        "rubric": "corporate",
+        "posture": "research-like",
+        "provenance": "firm-vendor",
+        "design": "controlled-experiment"
+      }
+    },
+    {
+      "id": "gensler-gws-2024",
+      "gold": {
+        "rubric": "corporate",
+        "posture": "research-like",
+        "provenance": "firm-vendor",
+        "design": "cross-sectional"
+      },
+      "got": {
+        "rubric": "corporate",
+        "posture": "research-like",
+        "provenance": "firm-vendor",
+        "design": "cross-sectional"
+      }
+    },
+    {
+      "id": "gensler-press-2024",
+      "gold": {
+        "rubric": "corporate",
+        "posture": "press-release",
+        "provenance": "firm-vendor",
+        "design": "cross-sectional"
+      },
+      "got": {
+        "rubric": "corporate",
+        "posture": "press-release",
+        "provenance": "firm-vendor",
+        "design": "cross-sectional"
+      }
+    },
+    {
+      "id": "bdc-gensler-news-2024",
+      "gold": {
+        "rubric": "journalism",
+        "posture": "news",
+        "provenance": "trade-press",
+        "design": "cross-sectional",
+        "designInherited": true
+      },
+      "got": {
+        "rubric": "journalism",
+        "posture": "news",
+        "provenance": "trade-press",
+        "design": "cross-sectional"
+      }
+    },
+    {
+      "id": "co2meter-plants",
+      "gold": {
+        "rubric": "corporate",
+        "posture": "marketing",
+        "provenance": "firm-vendor",
+        "design": "none-reported"
+      },
+      "got": {
+        "rubric": "corporate",
+        "posture": "marketing",
+        "provenance": "firm-vendor",
+        "design": "none-reported"
+      }
+    },
+    {
+      "id": "jcu-timber-pilot",
+      "gold": {
+        "rubric": "research",
+        "posture": "standard",
+        "provenance": "peer-reviewed-journal",
+        "design": "pre-post-uncontrolled"
+      },
+      "got": {
+        "rubric": "research",
+        "posture": "standard",
+        "provenance": "peer-reviewed-journal",
+        "design": "pre-post-uncontrolled"
+      }
+    },
+    {
+      "id": "fixture-a-cadre",
+      "gold": {
+        "rubric": "corporate",
+        "posture": "research-like",
+        "provenance": "nonprofit-research",
+        "design": "narrative-review"
+      },
+      "got": {
+        "rubric": "research",
+        "posture": "standard",
+        "provenance": "nonprofit-research",
+        "design": "narrative-review"
+      }
+    },
+    {
+      "id": "fixture-b-pew-html",
+      "gold": {
+        "rubric": "research",
+        "posture": "standard",
+        "provenance": "nonprofit-research",
+        "design": "cross-sectional"
+      },
+      "got": {
+        "rubric": "research",
+        "posture": "standard",
+        "provenance": "nonprofit-research",
+        "design": "cross-sectional"
+      }
+    },
+    {
+      "id": "fixture-b-pew-report",
+      "gold": {
+        "rubric": "research",
+        "posture": "standard",
+        "provenance": "nonprofit-research",
+        "design": "cross-sectional"
+      },
+      "got": {
+        "rubric": "research",
+        "posture": "standard",
+        "provenance": "nonprofit-research",
+        "design": "cross-sectional"
+      }
+    }
+  ]
+}

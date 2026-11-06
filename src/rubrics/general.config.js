@@ -8,6 +8,7 @@
 
 import { makeNullSeverity } from '../engine/nullSeverity.js'
 import { SHARED_EXTRACTION, TIERS, DEFAULT_TIER } from '../engine/measure/index.js'
+import { SHARED_PROVENANCE } from '../engine/profile/standards.js'
 
 /** @type {import('../engine/types.js').RubricConfig} */
 export const general = {
@@ -19,14 +20,16 @@ export const general = {
 
   postures: ['experiential', 'authoritative'],
   defaultPosture: 'experiential',
-  documentSignals: ['posture-gate'],
+  // A document with no posture signal is held to this.
+  strictestPosture: 'authoritative', // PROVISIONAL — not ratified
+  documentSignals: ['posture-gate', 'completeness-gaps', 'equivalence-from-nonsignificance', 'subgroup-selection', 'covariate-inconsistency', 'self-disclaimed-causality'],
 
   ladder: [
     { key: 'unsourced', label: 'Unsourced',        rank: 0, tint: 'unsupported' },
     { key: 'asserted',  label: 'Bare assertion',   rank: 1, tint: 'partial',
       match: { keywords: ['everyone knows', 'it is well known', 'studies show', 'experts agree'] } },
     { key: 'linked',    label: 'Linked source',    rank: 2, tint: 'partial',
-      match: { types: ['url', 'phrase'], keywords: ['according to', 'source:', 'via'] } },
+      match: { types: ['url', 'url-own', 'phrase'], keywords: ['according to', 'source:', 'via'] } },
     { key: 'cited',     label: 'Cited reference',   rank: 3, tint: 'supported',
       match: { types: ['author-year', 'year', 'numeric'], keywords: ['study', 'report', 'survey', 'data'] } },
     { key: 'primary',   label: 'Primary / verified', rank: 4, tint: 'supported',
@@ -66,5 +69,6 @@ export const general = {
       citation: 'Google Search Quality Rater Guidelines — E-E-A-T and YMYL.',
       url: 'https://developers.google.com/search/docs/fundamentals/creating-helpful-content',
     },
+    ...SHARED_PROVENANCE,
   ],
 }

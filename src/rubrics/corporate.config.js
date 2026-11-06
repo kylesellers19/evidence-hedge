@@ -10,6 +10,7 @@
 
 import { makeNullSeverity } from '../engine/nullSeverity.js'
 import { SHARED_EXTRACTION, TIERS, DEFAULT_TIER } from '../engine/measure/index.js'
+import { SHARED_PROVENANCE } from '../engine/profile/standards.js'
 
 /** @type {import('../engine/types.js').RubricConfig} */
 export const corporate = {
@@ -18,9 +19,11 @@ export const corporate = {
   description: 'Marketing, investor & annual-report writing — decks, sites, filings.',
   documentNoun: 'corporate document',
 
-  postures: ['marketing', 'thought-leadership', 'research-like'],
+  postures: ['marketing', 'thought-leadership', 'research-like', 'press-release'],
   defaultPosture: 'marketing',
-  documentSignals: ['platitude-density', 'self-citation-dominance', 'register-mismatch'],
+  // A document with no posture signal is held to this, never to marketing.
+  strictestPosture: 'research-like', // PROVISIONAL — not ratified
+  documentSignals: ['platitude-density', 'self-citation-dominance', 'register-mismatch', 'completeness-gaps', 'equivalence-from-nonsignificance', 'subgroup-selection', 'covariate-inconsistency', 'self-disclaimed-causality'],
 
   ladder: [
     { key: 'unsourced', label: 'Unsourced', rank: 0, tint: 'unsupported' },
@@ -34,13 +37,17 @@ export const corporate = {
     {
       key: 'self-reported', label: 'Self-reported metric', rank: 2, tint: 'partial',
       match: {
+        // A link to the publisher's own site is the company's own voice.
+        types: ['url-own'],
         keywords: ['our data', 'internal data', 'our results', 'we measured', 'company data', 'our analysis', 'year over year', 'our customers report', 'internal study'],
       },
     },
     {
       key: 'third-party', label: 'Third-party / analyst', rank: 3, tint: 'supported',
       match: {
-        types: ['url'],
+        // [n] and author-year citations point at outside work; a URL counts only
+        // when its host is not the publisher's (own-site URLs are self-reported).
+        types: ['url', 'numeric', 'author-year'],
         keywords: ['independent', 'third-party', 'third party', 'external', 'gartner', 'forrester', 'mckinsey', 'survey by', 'analyst', 'industry report'],
       },
     },
@@ -74,6 +81,9 @@ export const corporate = {
       'research-like': [1, 2, 2, 3, 4],        // PROVISIONAL — not ratified (migrated)
       'thought-leadership': [2, 3, 3, 4, 4],   // PROVISIONAL — not ratified
       marketing: [2, 3, 4, 4, 4],              // PROVISIONAL — not ratified
+      // A press release reports a study to the public: held to the research-
+      // like bar, since its own results are self-reported until cited.
+      'press-release': [1, 2, 2, 3, 4],        // PROVISIONAL — not ratified
     },
     // Undisclosed severity of an evidence-absence per tier (hedged→absolute).
     // Marketing stays none/note below the top tier; top tier is always critical.
@@ -82,6 +92,7 @@ export const corporate = {
       'research-like': ['none', 'note', 'flag', 'critical'],      // PROVISIONAL — not ratified
       'thought-leadership': ['none', 'note', 'note', 'critical'], // PROVISIONAL — not ratified
       marketing: ['none', 'none', 'note', 'critical'],            // PROVISIONAL — not ratified
+      'press-release': ['none', 'note', 'flag', 'critical'],      // PROVISIONAL — not ratified
     }),
   },
 
@@ -98,5 +109,6 @@ export const corporate = {
       citation: 'Loughran, T. & McDonald, B. (2011). "When Is a Liability Not a Liability?" Journal of Finance.',
       url: 'https://sraf.nd.edu/loughranmcdonald-master-dictionary/',
     },
+    ...SHARED_PROVENANCE,
   ],
 }

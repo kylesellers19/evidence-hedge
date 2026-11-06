@@ -113,6 +113,12 @@ export const NO_FINDING = [
   '\\b(?:future|further|larger|longer|additional|more)\\s+(?:\\w+\\s+){0,3}(?:studies|research|work|trials?|investigations?|data|follow-up)\\b',
   '\\bwarrants?\\b', '\\bmerits?\\b', '\\bremains?\\s+(?:unclear|unknown|to\\s+be)\\b', '\\byet\\s+to\\s+be\\b',
 ]
+// A survey finding about what people BELIEVE ("32% of workers think AI will
+// lead to fewer jobs") measures an attitude; the causal language belongs to
+// the respondents, not the document. A population subject (or a share) followed
+// by a belief/report verb, with the cue after it, is reported belief.
+export const REPORTED_BELIEF = '(?:\\b(?:workers|respondents|employees|adults|americans|people|participants|users|consumers|leaders|executives|managers|staff|parents|teachers|students|occupants|members|public)\\b|\\d+(?:\\.\\d+)?\\s?%|\\b(?:most|many|few|some|half|majority|minority|third|quarter|fifth|share)\\b)[^.;]{0,80}?\\b(?:say|says|said|think|thinks|thought|believe|believes|expect|expects|feel|feels|felt|agree|agrees|report|reports|reported|worry|worried|predict|predicts|anticipate|fear|fears|hope|hopes)\\b'
+
 // A sentence that disclaims causation states no causal claim; profile/design.js
 // reads the same language as selfDisclaimsCausality.
 export const CAUSAL_DISCLAIMER = [

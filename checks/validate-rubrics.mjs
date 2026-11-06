@@ -78,6 +78,15 @@ for (const r of listRubrics()) {
     fail(id, `defaultPosture "${r.defaultPosture}" not in postures [${r.postures.join(', ')}]`)
   }
   const postures = Array.isArray(r.postures) ? r.postures : []
+  // strictestPosture: where a zero-signal document is held — a declared posture
+  // whose ceilings are no looser than any other's.
+  if (!postures.includes(r.strictestPosture)) {
+    fail(id, `strictestPosture "${r.strictestPosture}" not in postures`)
+  } else if (r.tolerance?.ceilings) {
+    const sum = (p) => (r.tolerance.ceilings[p] || r.tolerance.ceilings.default || []).reduce((a, b) => a + b, 0)
+    const min = Math.min(...postures.map(sum))
+    if (sum(r.strictestPosture) !== min) fail(id, `strictestPosture "${r.strictestPosture}" (ceiling sum ${sum(r.strictestPosture)}) is not the strictest (${min})`)
+  }
 
   // ── Tolerance: ceilings (posture-keyed, rank-indexed) ─────────────────────
   const tol = r.tolerance

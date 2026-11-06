@@ -9,6 +9,7 @@
 
 import { makeNullSeverity } from '../engine/nullSeverity.js'
 import { SHARED_EXTRACTION, TIERS, DEFAULT_TIER } from '../engine/measure/index.js'
+import { SHARED_PROVENANCE } from '../engine/profile/standards.js'
 
 /** @type {import('../engine/types.js').RubricConfig} */
 export const research = {
@@ -19,7 +20,9 @@ export const research = {
 
   postures: ['standard'],
   defaultPosture: 'standard',
-  documentSignals: ['limitations-absent', 'abstract-body-confidence-delta', 'secondary-evidence-dominance'],
+  // A document with no posture signal is held to this.
+  strictestPosture: 'standard', // PROVISIONAL — not ratified
+  documentSignals: ['limitations-absent', 'abstract-body-confidence-delta', 'secondary-evidence-dominance', 'completeness-gaps', 'equivalence-from-nonsignificance', 'subgroup-selection', 'covariate-inconsistency', 'self-disclaimed-causality'],
 
   // Evidence-strength ladder, bottom (rank 0, unsourced) → top.
   ladder: [
@@ -34,7 +37,7 @@ export const research = {
     {
       key: 'secondary', label: 'Secondary source', rank: 2, tint: 'partial',
       match: {
-        types: ['url'],
+        types: ['url', 'url-own'],
         keywords: ['as reported', 'news', 'magazine', 'review article', 'textbook', 'press release'],
       },
     },
@@ -99,11 +102,7 @@ export const research = {
       citation: 'CASP Checklists, Critical Appraisal Skills Programme.',
       url: 'https://casp-uk.net/casp-tools-checklists/',
     },
-    {
-      criterion: 'gray-literature rung placement',
-      standard: 'AACODS Checklist',
-      citation: 'Tyndall, J. AACODS Checklist (gray literature appraisal), Flinders University.',
-      url: 'https://dspace.flinders.edu.au/xmlui/handle/2328/3326',
-    },
+    // AACODS moved to the shared document-provenance criterion (profile/standards.js).
+    ...SHARED_PROVENANCE,
   ],
 }

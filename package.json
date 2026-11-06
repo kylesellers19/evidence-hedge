@@ -16,12 +16,16 @@
     "check:verdict": "node checks/verdict-binding.test.mjs",
     "check:filter": "node checks/nonclaim-filter.test.mjs",
     "check:normalizer": "node checks/normalizer.mjs",
-    "check": "npm run check:rubrics && npm run check:regression && npm run check:posture && npm run check:nullseverity && npm run check:rightofreply && npm run check:score && npm run check:verdict && npm run check:filter && npm run check:normalizer && npm run check:pdfcolumns && npm run check:fetchlink && npm run check:ingest && npm run check:invariance",
+    "check": "npm run check:rubrics && npm run check:regression && npm run check:posture && npm run check:nullseverity && npm run check:rightofreply && npm run check:score && npm run check:verdict && npm run check:filter && npm run check:normalizer && npm run check:pdfcolumns && npm run check:fetchlink && npm run check:ingest && npm run check:invariance && npm run check:register && npm run check:design && npm run check:routing && npm run check:corpus",
     "check:pdfcolumns": "node checks/pdf-column-fix.mjs",
     "check:fetchlink": "node checks/fetch-link.test.mjs",
     "fixtures:fetch": "node scripts/fetch-corpus.mjs",
     "check:ingest": "node checks/ingest.test.mjs",
-    "check:invariance": "node checks/rubric-invariance.mjs"
+    "check:invariance": "node checks/rubric-invariance.mjs",
+    "check:register": "node checks/register.test.mjs",
+    "check:design": "node checks/design.test.mjs",
+    "check:routing": "node checks/routing.test.mjs",
+    "check:corpus": "node checks/corpus.test.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.7",

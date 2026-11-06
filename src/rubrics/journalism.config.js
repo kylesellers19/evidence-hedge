@@ -9,6 +9,7 @@
 
 import { makeNullSeverity } from '../engine/nullSeverity.js'
 import { SHARED_EXTRACTION, TIERS, DEFAULT_TIER } from '../engine/measure/index.js'
+import { SHARED_PROVENANCE } from '../engine/profile/standards.js'
 
 /** @type {import('../engine/types.js').RubricConfig} */
 export const journalism = {
@@ -20,7 +21,9 @@ export const journalism = {
 
   postures: ['news', 'opinion', 'sponsored', 'unlabeled'],
   defaultPosture: 'news',
-  documentSignals: ['per-claim-sourcing', 'label-transparency', 'method-disclosure', 'perspective-plurality', 'right-of-reply', 'anonymous-sourcing'],
+  // A document with no posture signal is held to this.
+  strictestPosture: 'unlabeled', // PROVISIONAL — not ratified
+  documentSignals: ['per-claim-sourcing', 'label-transparency', 'method-disclosure', 'perspective-plurality', 'right-of-reply', 'anonymous-sourcing', 'completeness-gaps', 'equivalence-from-nonsignificance', 'subgroup-selection', 'covariate-inconsistency', 'self-disclaimed-causality'],
 
   ladder: [
     { key: 'unsourced',  label: 'Unsourced',          rank: 0, tint: 'unsupported' },
@@ -29,7 +32,7 @@ export const journalism = {
     { key: 'named',      label: 'Named attribution',  rank: 2, tint: 'partial',
       match: { types: ['phrase'], keywords: ['said', 'told', 'according to', 'stated'] } },
     { key: 'documented', label: 'Documented record',  rank: 3, tint: 'supported',
-      match: { types: ['url', 'numeric'], keywords: ['records show', 'filing', 'transcript', 'data show'] } },
+      match: { types: ['url', 'url-own', 'numeric'], keywords: ['records show', 'filing', 'transcript', 'data show'] } },
     { key: 'verified',   label: 'Independently verified', rank: 4, tint: 'supported',
       match: { types: ['doi'], keywords: ['verified', 'corroborated', 'confirmed by multiple'] } },
   ],
@@ -81,5 +84,6 @@ export const journalism = {
       citation: 'Society of Professional Journalists — Code of Ethics.',
       url: 'https://www.spj.org/ethicscode.asp',
     },
+    ...SHARED_PROVENANCE,
   ],
 }

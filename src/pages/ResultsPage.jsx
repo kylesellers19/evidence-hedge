@@ -5,12 +5,15 @@ import PatternSection from '../components/results/PatternSection.jsx'
 import DistributionBar from '../components/results/DistributionBar.jsx'
 import DocumentSignals from '../components/results/DocumentSignals.jsx'
 import DocumentProfile from '../components/results/DocumentProfile.jsx'
+import JudgmentBasis from '../components/results/JudgmentBasis.jsx'
+import { getRubric } from '../rubrics/index.js'
 import { ENGINE_VERSION } from '../engine/version.js'
 import RubricProvenance from '../components/results/RubricProvenance.jsx'
 import VerdictMark from '../components/results/VerdictMark.jsx'
 
 // The one-page evidence brief — a standalone editorial report, three layers
-// top to bottom, serving three readers at once:
+// top to bottom, serving three readers at once (with how it was judged — the
+// genre reading and the standard it set — between the verdict and the profile):
 //   1. Verdict       — plain-language, Newsreader display-serif headline
 //   2. Patterns      — named patterns + verbatim examples (the heart)
 //   3. Distribution  — the structural ladder view, understated (the analyst)
@@ -20,7 +23,9 @@ export default function ResultsPage() {
   const navigate = useNavigate()
   if (!state.result) return <Navigate to="/" replace />
 
-  const { result, rubric } = state
+  const { result, rubric, reading } = state
+  // A hybrid's ladder, hue and noun come from its standard (rubrics/hybrids.js).
+  const standard = getRubric(rubric.base || rubric.id)
   const { summary, patterns, signals } = result
   const { flagCounts } = summary
   const flaggedTotal = flagCounts['unsupported-assertion'] + flagCounts.overconfident
@@ -42,13 +47,14 @@ export default function ResultsPage() {
 
       {/* ── Verdict mark — the top layer: the quality-encoding sphere ────── */}
       {result.documentScore && (
-        <VerdictMark score={result.documentScore} rubricId={rubric.id} />
+        <VerdictMark score={result.documentScore} rubricId={standard.id} />
       )}
 
-      <div className="flex items-baseline justify-between gap-3">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
         <p className="label-tag">Evidence brief</p>
         <p className="label-tag text-gray-400">
           Judged as <span className="text-navy">{rubric.label}</span>
+          {rubric.hybrid && <span> · held to <span className="text-gray-600">{standard.label}</span></span>}
           {result.posture && <span> · <span className="text-gray-600 capitalize">{result.posture}</span></span>}
           {rubric.stub && ' · draft rubric'}
         </p>
@@ -70,6 +76,14 @@ export default function ResultsPage() {
       </div>
 
       <hr className="brief-rule" />
+
+      {/* ── How it was judged — genre roles, standard, added audits ───────── */}
+      {result.profile?.genre && (
+        <>
+          <JudgmentBasis rubric={rubric} profile={result.profile} reading={reading} />
+          <hr className="brief-rule" />
+        </>
+      )}
 
       {/* ── Document profile — provenance, design and its ceiling ─────────── */}
       {result.profile && (
@@ -107,7 +121,7 @@ export default function ResultsPage() {
       <h2 className="label-tag mb-4">Evidence distribution</h2>
       <DistributionBar distribution={summary.distribution} />
       <p className="text-[11px] text-gray-400 mt-4 leading-relaxed max-w-prose">
-        How this document's claims spread across the {rubric.label.toLowerCase()} ladder,
+        How this document's claims spread across the {standard.label.toLowerCase()} ladder,
         strongest evidence to unsourced.
       </p>
 

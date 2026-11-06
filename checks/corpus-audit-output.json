@@ -6,7 +6,10 @@
         "rubric": "research",
         "posture": "standard",
         "provenance": "peer-reviewed-journal",
-        "design": "controlled-experiment"
+        "design": "controlled-experiment",
+        "genres": [
+          "research"
+        ]
       },
       "words": 8729,
       "chromeDropped": 45,
@@ -84,7 +87,12 @@
         "posture": "press-release",
         "provenance": "academic-press-office",
         "design": "controlled-experiment",
-        "designInherited": true
+        "designInherited": true,
+        "genres": [
+          "corporate",
+          "research"
+        ],
+        "hybrid": "press-release-study"
       },
       "words": 958,
       "chromeDropped": 0,
@@ -155,7 +163,12 @@
         "posture": "press-release",
         "provenance": "academic-press-office",
         "design": "controlled-experiment",
-        "designInherited": true
+        "designInherited": true,
+        "genres": [
+          "corporate",
+          "research"
+        ],
+        "hybrid": "press-release-study"
       },
       "words": 1472,
       "chromeDropped": 3,
@@ -226,7 +239,12 @@
         "posture": "news",
         "provenance": "trade-press",
         "design": "controlled-experiment",
-        "designInherited": true
+        "designInherited": true,
+        "genres": [
+          "journalism",
+          "research"
+        ],
+        "hybrid": "science-news"
       },
       "words": 1506,
       "chromeDropped": 34,
@@ -298,7 +316,12 @@
         "posture": "opinion",
         "provenance": "trade-press",
         "design": "controlled-experiment",
-        "designInherited": true
+        "designInherited": true,
+        "genres": [
+          "journalism",
+          "research"
+        ],
+        "hybrid": "science-news"
       },
       "words": 620,
       "chromeDropped": 11,
@@ -369,7 +392,13 @@
         "posture": "marketing",
         "provenance": "firm-vendor",
         "design": "controlled-experiment",
-        "designInherited": true
+        "designInherited": true,
+        "genres": [
+          "corporate",
+          "general",
+          "research"
+        ],
+        "hybrid": "vendor-study"
       },
       "words": 394,
       "chromeDropped": 4,
@@ -439,7 +468,12 @@
         "rubric": "corporate",
         "posture": "research-like",
         "provenance": "firm-vendor",
-        "design": "cross-sectional"
+        "design": "cross-sectional",
+        "genres": [
+          "corporate",
+          "research"
+        ],
+        "hybrid": "firm-research"
       },
       "words": 661,
       "chromeDropped": 23,
@@ -515,7 +549,12 @@
         "rubric": "corporate",
         "posture": "press-release",
         "provenance": "firm-vendor",
-        "design": "cross-sectional"
+        "design": "cross-sectional",
+        "genres": [
+          "corporate",
+          "research"
+        ],
+        "hybrid": "press-release-study"
       },
       "words": 920,
       "chromeDropped": 22,
@@ -586,7 +625,13 @@
         "posture": "news",
         "provenance": "trade-press",
         "design": "cross-sectional",
-        "designInherited": true
+        "designInherited": true,
+        "genres": [
+          "journalism",
+          "corporate",
+          "research"
+        ],
+        "hybrid": "firm-sourced-news"
       },
       "words": 879,
       "chromeDropped": 9,
@@ -656,7 +701,12 @@
         "rubric": "corporate",
         "posture": "marketing",
         "provenance": "firm-vendor",
-        "design": "none-reported"
+        "design": "none-reported",
+        "genres": [
+          "corporate",
+          "general"
+        ],
+        "hybrid": "content-marketing"
       },
       "words": 2529,
       "chromeDropped": 42,
@@ -725,7 +775,10 @@
         "rubric": "research",
         "posture": "standard",
         "provenance": "peer-reviewed-journal",
-        "design": "pre-post-uncontrolled"
+        "design": "pre-post-uncontrolled",
+        "genres": [
+          "research"
+        ]
       },
       "words": 10525,
       "chromeDropped": 0,
@@ -805,13 +858,18 @@
         "rubric": "corporate",
         "posture": "research-like",
         "provenance": "nonprofit-research",
-        "design": "narrative-review"
+        "design": "narrative-review",
+        "genres": [
+          "research",
+          "corporate"
+        ],
+        "hybrid": "firm-research"
       },
       "words": 19166,
       "validation": "ok",
       "route": {
-        "rubric": "research",
-        "posture": "standard",
+        "rubric": "corporate",
+        "posture": "research-like",
         "provenance": "nonprofit-research",
         "design": "narrative-review"
       },
@@ -874,7 +932,10 @@
         "rubric": "research",
         "posture": "standard",
         "provenance": "nonprofit-research",
-        "design": "cross-sectional"
+        "design": "cross-sectional",
+        "genres": [
+          "research"
+        ]
       },
       "words": 1351,
       "validation": "ok",
@@ -950,7 +1011,10 @@
         "rubric": "research",
         "posture": "standard",
         "provenance": "nonprofit-research",
-        "design": "cross-sectional"
+        "design": "cross-sectional",
+        "genres": [
+          "research"
+        ]
       },
       "words": 8503,
       "validation": "ok",

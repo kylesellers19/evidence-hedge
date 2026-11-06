@@ -1,9 +1,9 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // autodetect(text, options) → rubric id
 //
-// A wrapper over routeDocument (rubrics/route.js): provenance first, then genre
-// markers. It only chooses which pluggable config gets handed to analyze() —
-// the engine special-cases nothing.
+// A wrapper over routeDocument (rubrics/route.js): the genre roles decide, and
+// a hybrid returns its standard's id. It only chooses which pluggable config
+// gets handed to analyze() — the engine special-cases nothing.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { routeDocument } from './route.js'

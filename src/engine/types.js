@@ -57,6 +57,9 @@
  * @property {string} standard    name of the external standard
  * @property {string} citation    human-readable citation
  * @property {string} url         may be '' for print-only citations (e.g. Hyland)
+ * @property {string[]} [measures] hybrid frameworks only: the signals or flags it
+ *                                 grounds here ([] = cited, not yet measured)
+ * @property {string} [scope]      on a hybrid: 'hybrid' | a genre id | 'shared'
  */
 
 /**
@@ -92,6 +95,13 @@
  * @property {string}           defaultPosture  ∈ postures
  * @property {string[]}         documentSignals signal names (registered in signals/)
  * @property {ProvenanceEntry[]} provenance
+ *
+ * A hybrid judgment (rubrics/hybrids.js composeRubric) is a RubricConfig built
+ * from its standard's config, plus:
+ * @property {string}  [base]         id of the rubric whose ladder applies
+ * @property {string}  [genreNote]    the scenario's one-line genre note
+ * @property {boolean} [promotional]  verdict speaks of the copy, not "the evidence"
+ * @property {{ scenarios:{id:string,name:string}[], genres:string[], standard:string, why:string, audits:{id:string,from:string}[] }} [hybrid]
  */
 
 /**
@@ -152,6 +162,7 @@
 /**
  * @typedef  {Object} AnalysisResult
  * @property {Claim[]}   claims
+ * @property {Object}    profile   provenance, design, genre (engine/profile/)
  * @property {{text:string, via:'reference-list'|'pattern'}[]} references
  *   reference entries dropped from the claims (no linking to claims)
  * @property {Pattern[]} patterns

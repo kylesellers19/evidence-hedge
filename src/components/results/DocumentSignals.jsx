@@ -1,34 +1,14 @@
 import React from 'react'
+import { signalTitle } from '../../engine/signals/titles.js'
 
 // Document-level signals — their own layer, ABOVE the per-claim patterns.
 // Same visual register: hairline rules, square corners, navy accent, no colored
 // backgrounds. A flag uses a navy left-rule; a note/positive uses a hairline one.
 
-const TITLES = {
-  'limitations-absent': 'Limitations absent',
-  'abstract-body-confidence-delta': 'Abstract outruns the body',
-  'secondary-evidence-dominance': 'Discursive evidence dominance',
-  'platitude-density': 'Platitude density',
-  'self-citation-dominance': 'Self-citation dominance',
-  'register-mismatch': 'Register mismatch',
-  'per-claim-sourcing': 'Per-claim sourcing',
-  'label-transparency': 'Label transparency',
-  'method-disclosure': 'Method disclosure',
-  'perspective-plurality': 'Perspective plurality',
-  'right-of-reply': 'Right of reply',
-  'anonymous-sourcing': 'Anonymous sourcing',
-  'posture-gate': 'No expert claims',
-  'completeness-gaps': 'Reporting gaps',
-  'equivalence-from-nonsignificance': 'Equivalence from non-significance',
-  'subgroup-selection': 'Subgroup selection',
-  'covariate-inconsistency': 'Covariate-set inconsistency',
-  'self-disclaimed-causality': 'Causality disclaimed',
-}
-
-const titleFor = (s) => TITLES[s.id] || s.id.replace(/-/g, ' ')
+const titleFor = (s) => signalTitle(s.id)
 
 function SignalTag({ signal }) {
-  if (signal.positive) return <span className="label-tag text-navy">Disclosed ✓</span>
+  if (signal.positive) return <span className="label-tag text-navy">{signal.positiveLabel || 'Disclosed'} ✓</span>
   if (signal.severity === 'flag') return <span className="label-tag text-navy">Flag</span>
   return <span className="label-tag text-gray-400">Note</span>
 }
@@ -45,7 +25,7 @@ export default function DocumentSignals({ signals }) {
 
       {signals.length === 0 ? (
         <p className="text-sm text-muted leading-relaxed">
-          No document-level signals surfaced for this rubric.
+          No document-level signals surfaced under this standard.
         </p>
       ) : (
         <ul className="space-y-6">

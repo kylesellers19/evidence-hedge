@@ -92,7 +92,7 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
   const { body, references: listed } = segmentDocument(document)
   const references = listed.map((text) => ({ text, via: 'reference-list' }))
   const raw = extractClaims(body, rubric.extraction, {
-    rubricId: rubric.id,
+    rubricId: rubric.base || rubric.id,
     onDrop: (text, rule) => { if (rule === 'reference-entry') references.push({ text, via: 'pattern' }) },
   })
   /** @type {Claim[]} */

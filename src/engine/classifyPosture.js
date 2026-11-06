@@ -88,6 +88,13 @@ export function researchLikeRegister(text) {
   return scoreGroups(text || '', CORP_RESEARCH_LIKE).score >= RESEARCH_REGISTER_MIN
 }
 
+// Press-release markers in the text itself (profile/genre.js reads the form
+// from this, against PRESS_MIN).
+export function pressReleaseScore(text) {
+  const pr = scoreGroups(text || '', CORP_PRESS)
+  return { score: pr.score, evidence: pr.evidence }
+}
+
 function classifyCorporate(text) {
   const rl = scoreGroups(text, CORP_RESEARCH_LIKE)
   const mk = scoreGroups(text, CORP_MARKETING)
@@ -206,7 +213,8 @@ const CLASSIFIERS = {
 export const ZERO_SIGNAL_NOTE = 'No posture signals — held to the strictest standard'
 
 export function classifyPosture(text, rubric) {
-  const fn = CLASSIFIERS[rubric?.id]
+  // A hybrid (rubrics/hybrids.js) keeps its standard's postures.
+  const fn = CLASSIFIERS[rubric?.base || rubric?.id]
   const result = fn ? fn(text || '') : null
   // No signal at all → the strictest posture, never the most lenient default.
   if (!result || !rubric?.postures?.includes(result.posture)) {

@@ -17,6 +17,7 @@ import { signals as corporate } from './corporate.js'
 import { signals as journalism } from './journalism.js'
 import { signals as general } from './general.js'
 import { signals as completeness } from './completeness.js'
+import { signals as hybrid } from './hybrid.js'
 
 /** @type {Record<string, Function>} */
 export const SIGNAL_REGISTRY = {
@@ -25,7 +26,19 @@ export const SIGNAL_REGISTRY = {
   ...journalism,
   ...general,
   ...completeness,
+  ...hybrid,
 }
+
+// Which genre each signal comes from: 'shared' runs under every rubric,
+// 'hybrid' only in the hybrid scenarios that list it (rubrics/hybrids.js).
+export const SIGNAL_ORIGIN = Object.fromEntries([
+  ...Object.keys(research).map((k) => [k, 'research']),
+  ...Object.keys(corporate).map((k) => [k, 'corporate']),
+  ...Object.keys(journalism).map((k) => [k, 'journalism']),
+  ...Object.keys(general).map((k) => [k, 'general']),
+  ...Object.keys(completeness).map((k) => [k, 'shared']),
+  ...Object.keys(hybrid).map((k) => [k, 'hybrid']),
+])
 
 /** Names that exist in the registry (used by the validator's resolution check). */
 export const SIGNAL_NAMES = Object.keys(SIGNAL_REGISTRY)

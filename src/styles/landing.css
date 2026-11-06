@@ -330,3 +330,112 @@
 .eh-branch-actions .eh-submit {
   padding: 14px 36px;
 }
+
+/* ═══════════════ BRANCH — the genre reading and the judgment ═══════════════
+   Two columns on wide screens, stacked on phones. The genre hues appear only
+   as swatches and the blend strip; the chrome stays ink and hairline. */
+
+.eh-reading-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+}
+
+@media (min-width: 860px) {
+  .eh-reading-grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 40px;
+  }
+}
+
+.eh-section-label {
+  font-family: var(--eh-sans);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--eh-ink-soft);
+  margin: 0 0 12px;
+}
+
+.eh-adjusted {
+  color: var(--eh-navy);
+  letter-spacing: 0.16em;
+}
+
+.eh-override {
+  margin-top: 32px;
+  padding-top: 18px;
+  border-top: 1px solid var(--eh-hairline);
+}
+
+.eh-override-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.eh-linkbutton {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font-family: var(--eh-sans);
+  font-size: 12px;
+  color: var(--eh-navy);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.eh-genre-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.eh-genre-toggle {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--eh-sans);
+  font-size: 12px;
+  color: var(--eh-ink-soft);
+  background: var(--eh-paper);
+  border: 1px solid var(--eh-hairline);
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.eh-genre-toggle.is-on {
+  color: var(--eh-ink);
+  border-color: var(--genre);
+  box-shadow: var(--eh-shadow-lift), inset 0 0 0 1px var(--genre);
+}
+
+.eh-genre-swatch {
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--genre);
+  background: transparent;
+}
+
+.eh-genre-toggle.is-on .eh-genre-swatch {
+  background: var(--genre);
+}
+
+.eh-genre-detected {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--eh-ink-soft);
+}
+
+.eh-genre-toggle:focus-visible,
+.eh-linkbutton:focus-visible {
+  outline: 2px solid var(--eh-navy);
+  outline-offset: 2px;
+}

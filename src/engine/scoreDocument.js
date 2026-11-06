@@ -125,8 +125,8 @@ export function bandFor(score) {
   return 'failing'
 }
 
-function verdictFor(band, posture, noun) {
-  if (PROMOTIONAL.has(posture) && band !== 'strong') return PROMOTIONAL_SUMMARY[band](noun)
+function verdictFor(band, posture, noun, promotional = false) {
+  if ((promotional || PROMOTIONAL.has(posture)) && band !== 'strong') return PROMOTIONAL_SUMMARY[band](noun)
   return SUMMARY[band](noun)
 }
 
@@ -160,7 +160,9 @@ export function scoreDocument(analysis) {
   const posture = analysis.posture
   const profile = analysis.profile || null
   const noun = rubric?.documentNoun || 'document'
-  const genreNote = GENRE_NOTES[posture] || ''
+  // A hybrid (rubrics/hybrids.js) carries its own genre note and register.
+  const genreNote = rubric?.genreNote || GENRE_NOTES[posture] || ''
+  const promotional = !!rubric?.promotional
 
   // Special case: the general/experiential posture-gate verdict. Makes no expert
   // claims → there is no evidence obligation, so this is 'carried', NOT a low
@@ -228,7 +230,7 @@ export function scoreDocument(analysis) {
     score,
     display: Math.round(score),
     band,
-    summary: verdictFor(band, posture, noun),
+    summary: verdictFor(band, posture, noun, promotional),
     genreNote,
     breakdown: {
       gate: false,

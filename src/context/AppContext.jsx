@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
-// Holds the submitted document (+ any source meta), the confirmed rubric, and
-// the analysis result. The three-screen flow fills these in stages:
+// Holds the submitted document (+ any source meta), the confirmed rubric (a
+// genre config or a composed hybrid), and the analysis result. The three-screen
+// flow fills these in stages:
 //   Landing  → SET_DOCUMENT (document + meta, result cleared)
-//   Branch   → SET_ANALYSIS (rubric + result, document retained)
+//   Branch   → SET_ANALYSIS (rubric + result + reading, document retained)
 // No server, no persistence — analysis is a pure client-side function of
 // (document, rubric).
 
@@ -12,6 +13,7 @@ const initialState = {
   meta: {},        // { sourceUrl? } from link mode
   rubric: null,    // the confirmed RubricConfig that produced `result`
   result: null,    // AnalysisResult
+  reading: null,   // { detected, chosen } genres — chosen differs when overridden
 }
 
 function reducer(state, action) {
@@ -23,6 +25,7 @@ function reducer(state, action) {
         meta: action.payload.meta || {},
         rubric: null,
         result: null,
+        reading: null,
       }
     case 'SET_ANALYSIS':
       // Rubric confirmed on the branch screen — attach result, keep document.
@@ -30,6 +33,7 @@ function reducer(state, action) {
         ...state,
         rubric: action.payload.rubric,
         result: action.payload.result,
+        reading: action.payload.reading || null,
       }
     case 'RESET':
       return initialState

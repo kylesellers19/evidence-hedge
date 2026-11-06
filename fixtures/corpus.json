@@ -1,5 +1,5 @@
 {
-  "_comment": "Measurement-validity corpus. gold labels are WORKING labels — PROVISIONAL — not ratified. source: reader = fetched through r.jina.ai (raw body cached, run through the app's reader pipeline at load); pdf = PDF downloaded and read with the app's own PDF extractor (as an upload); supplied = a file Kyle places in fixtures/cache/ (<id>.txt or <id>.pdf); committed = text tracked in this repo. commit = may the full text be committed (public-domain / CC only, D4); commitIf = regex the fetched text must match before it is committed. Full text of everything else lives only in the gitignored fixtures/cache/. expect = a phrase the document must contain (guards against a URL that now redirects elsewhere); archiveUrl = an archived copy used when the live URL no longer serves the document; the reader refuses web.archive.org, so the archived HTML is downloaded and reduced to text in scripts/fetch-corpus.mjs (blocks → lines, chrome elements dropped), then run through the app's reader pipeline.",
+  "_comment": "Measurement-validity corpus. gold labels are WORKING labels — PROVISIONAL — not ratified. source: reader = fetched through r.jina.ai (raw body cached, run through the app's reader pipeline at load); pdf = PDF downloaded and read with the app's own PDF extractor (as an upload); supplied = a file Kyle places in fixtures/cache/ (<id>.txt or <id>.pdf); committed = text tracked in this repo. commit = may the full text be committed (public-domain / CC only, D4); commitIf = regex the fetched text must match before it is committed. Full text of everything else lives only in the gitignored fixtures/cache/. expect = a phrase the document must contain (guards against a URL that now redirects elsewhere); archiveUrl = an archived copy used when the live URL no longer serves the document; the reader refuses web.archive.org, so the archived HTML is downloaded and reduced to text in scripts/fetch-corpus.mjs (blocks → lines, chrome elements dropped), then run through the app's reader pipeline. gold.genres = the genres the document mixes, in role order (speaker, form, stake, evidence; profile/genre.js); gold.hybrid = the primary hybrid scenario (rubrics/hybrids.js), absent for a single-genre document; gold.rubric = the evidence standard its claims are held to.",
   "docs": [
     {
       "id": "allen-ehp-2016",
@@ -9,7 +9,10 @@
         "rubric": "research",
         "posture": "standard",
         "provenance": "peer-reviewed-journal",
-        "design": "controlled-experiment"
+        "design": "controlled-experiment",
+        "genres": [
+          "research"
+        ]
       },
       "license": "US federal publication (EHP) — public domain when the notice is present",
       "commit": true,
@@ -25,7 +28,12 @@
         "posture": "press-release",
         "provenance": "academic-press-office",
         "design": "controlled-experiment",
-        "designInherited": true
+        "designInherited": true,
+        "genres": [
+          "corporate",
+          "research"
+        ],
+        "hybrid": "press-release-study"
       },
       "license": "copyright Harvard — cache only",
       "commit": false,
@@ -42,7 +50,12 @@
         "posture": "press-release",
         "provenance": "academic-press-office",
         "design": "controlled-experiment",
-        "designInherited": true
+        "designInherited": true,
+        "genres": [
+          "corporate",
+          "research"
+        ],
+        "hybrid": "press-release-study"
       },
       "license": "republished press release — cache only",
       "commit": false,
@@ -57,7 +70,12 @@
         "posture": "news",
         "provenance": "trade-press",
         "design": "controlled-experiment",
-        "designInherited": true
+        "designInherited": true,
+        "genres": [
+          "journalism",
+          "research"
+        ],
+        "hybrid": "science-news"
       },
       "license": "copyright — cache only",
       "commit": false,
@@ -72,7 +90,12 @@
         "posture": "opinion",
         "provenance": "trade-press",
         "design": "controlled-experiment",
-        "designInherited": true
+        "designInherited": true,
+        "genres": [
+          "journalism",
+          "research"
+        ],
+        "hybrid": "science-news"
       },
       "license": "copyright — cache only",
       "commit": false,
@@ -87,7 +110,13 @@
         "posture": "marketing",
         "provenance": "firm-vendor",
         "design": "controlled-experiment",
-        "designInherited": true
+        "designInherited": true,
+        "genres": [
+          "corporate",
+          "general",
+          "research"
+        ],
+        "hybrid": "vendor-study"
       },
       "license": "copyright — cache only",
       "commit": false,
@@ -101,7 +130,12 @@
         "rubric": "corporate",
         "posture": "research-like",
         "provenance": "firm-vendor",
-        "design": "cross-sectional"
+        "design": "cross-sectional",
+        "genres": [
+          "corporate",
+          "research"
+        ],
+        "hybrid": "firm-research"
       },
       "license": "copyright — cache only",
       "commit": false,
@@ -115,7 +149,12 @@
         "rubric": "corporate",
         "posture": "press-release",
         "provenance": "firm-vendor",
-        "design": "cross-sectional"
+        "design": "cross-sectional",
+        "genres": [
+          "corporate",
+          "research"
+        ],
+        "hybrid": "press-release-study"
       },
       "license": "copyright — cache only",
       "commit": false,
@@ -130,7 +169,13 @@
         "posture": "news",
         "provenance": "trade-press",
         "design": "cross-sectional",
-        "designInherited": true
+        "designInherited": true,
+        "genres": [
+          "journalism",
+          "corporate",
+          "research"
+        ],
+        "hybrid": "firm-sourced-news"
       },
       "license": "copyright — cache only",
       "commit": false,
@@ -144,7 +189,12 @@
         "rubric": "corporate",
         "posture": "marketing",
         "provenance": "firm-vendor",
-        "design": "none-reported"
+        "design": "none-reported",
+        "genres": [
+          "corporate",
+          "general"
+        ],
+        "hybrid": "content-marketing"
       },
       "license": "copyright — cache only",
       "commit": false,
@@ -158,7 +208,10 @@
         "rubric": "research",
         "posture": "standard",
         "provenance": "peer-reviewed-journal",
-        "design": "pre-post-uncontrolled"
+        "design": "pre-post-uncontrolled",
+        "genres": [
+          "research"
+        ]
       },
       "license": "repository copy — venue and licence unverified; cache only",
       "commit": false,
@@ -172,7 +225,12 @@
         "rubric": "corporate",
         "posture": "research-like",
         "provenance": "firm-vendor",
-        "design": "cross-sectional"
+        "design": "cross-sectional",
+        "genres": [
+          "corporate",
+          "research"
+        ],
+        "hybrid": "firm-research"
       },
       "license": "copyright HKS — cache only (file supplied by Kyle)",
       "commit": false
@@ -185,7 +243,12 @@
         "rubric": "corporate",
         "posture": "research-like",
         "provenance": "nonprofit-research",
-        "design": "narrative-review"
+        "design": "narrative-review",
+        "genres": [
+          "research",
+          "corporate"
+        ],
+        "hybrid": "firm-research"
       },
       "license": "committed before this audit",
       "commit": true
@@ -199,7 +262,10 @@
         "rubric": "research",
         "posture": "standard",
         "provenance": "nonprofit-research",
-        "design": "cross-sectional"
+        "design": "cross-sectional",
+        "genres": [
+          "research"
+        ]
       },
       "license": "committed before this audit",
       "commit": true
@@ -212,7 +278,10 @@
         "rubric": "research",
         "posture": "standard",
         "provenance": "nonprofit-research",
-        "design": "cross-sectional"
+        "design": "cross-sectional",
+        "genres": [
+          "research"
+        ]
       },
       "license": "copyright Pew Research Center — cache only",
       "commit": false,
@@ -227,7 +296,10 @@
         "rubric": "research",
         "posture": "standard",
         "provenance": "peer-reviewed-journal",
-        "design": "repeated-cross-sectional"
+        "design": "repeated-cross-sectional",
+        "genres": [
+          "research"
+        ]
       },
       "license": "CC BY (file supplied by Kyle)",
       "commit": false
@@ -241,7 +313,10 @@
         "rubric": "journalism",
         "posture": "news",
         "provenance": "news-outlet",
-        "design": "none-reported"
+        "design": "none-reported",
+        "genres": [
+          "journalism"
+        ]
       },
       "license": "copyright — cache only (text supplied by Kyle)",
       "commit": false

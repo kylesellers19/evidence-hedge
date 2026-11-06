@@ -4,14 +4,18 @@
 // There is no compiler, so this script IS the enforcement: it imports the
 // registry and asserts every config satisfies the RubricConfig contract, exiting
 // non-zero with a named failure on any violation. Also table-tests the
-// nullSeverity invariants for every rubric × posture × tier.
+// nullSeverity invariants for every rubric × posture × tier. Every hybrid
+// scenario (rubrics/hybrids.js), composed on its own genres, must satisfy the
+// same contract, name a standard among its genres, and resolve its frameworks.
 //
 // Run: npm run check:rubrics
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { listRubrics } from '../src/rubrics/index.js'
+import { listRubrics, listHybridRubrics, HYBRIDS } from '../src/rubrics/index.js'
+import { FRAMEWORKS } from '../src/rubrics/frameworks.js'
 import { severityRank, SEVERITY } from '../src/engine/nullSeverity.js'
 import { SIGNAL_REGISTRY } from '../src/engine/signals/index.js'
+import { FLAG_ORDER } from '../src/engine/patterns.js'
 
 const errors = []
 const fail = (rubricId, msg) => errors.push(`[${rubricId}] ${msg}`)
@@ -20,7 +24,7 @@ const isNonEmptyString = (v) => typeof v === 'string' && v.length > 0
 const isNumber = (v) => typeof v === 'number' && Number.isFinite(v)
 const isStringArray = (v) => Array.isArray(v) && v.every((x) => typeof x === 'string')
 
-for (const r of listRubrics()) {
+for (const r of [...listRubrics(), ...listHybridRubrics()]) {
   const id = r?.id || '(no id)'
 
   // ── Identity ──────────────────────────────────────────────────────────────
@@ -176,10 +180,33 @@ for (const r of listRubrics()) {
   }
 }
 
+// ── Hybrid scenarios ────────────────────────────────────────────────────────
+const GENRES = listRubrics().map((r) => r.id)
+const MEASURABLE = new Set([...Object.keys(SIGNAL_REGISTRY), ...FLAG_ORDER])
+const scenarioIds = new Set()
+for (const s of HYBRIDS) {
+  const id = `hybrid:${s.id}`
+  if (scenarioIds.has(s.id)) fail(id, 'duplicate scenario id')
+  scenarioIds.add(s.id)
+  if (!Array.isArray(s.genres) || s.genres.length < 2 || !s.genres.every((g) => GENRES.includes(g))) fail(id, `genres must be two or more of ${GENRES.join(', ')}`)
+  if (!s.genres?.includes(s.standard)) fail(id, `standard "${s.standard}" must be one of its genres`)
+  for (const f of ['name', 'noun', 'why']) if (!isNonEmptyString(s[f])) fail(id, `"${f}" must be a non-empty string`)
+  if ('when' in s && typeof s.when !== 'function') fail(id, '"when" must be a function when present')
+  for (const a of s.audits || []) if (!(a in SIGNAL_REGISTRY)) fail(id, `audit "${a}" is not a registered signal`)
+  for (const k of s.frameworks || []) if (!FRAMEWORKS[k]) fail(id, `framework "${k}" is not in rubrics/frameworks.js`)
+}
+for (const [k, f] of Object.entries(FRAMEWORKS)) {
+  for (const field of ['criterion', 'standard', 'citation']) if (!isNonEmptyString(f[field])) fail(`framework:${k}`, `${field} must be a non-empty string`)
+  if (typeof f.url !== 'string') fail(`framework:${k}`, 'url must be a string (may be \'\')')
+  if (!Array.isArray(f.measures)) fail(`framework:${k}`, 'measures must be an array (may be empty)')
+  else for (const m of f.measures) if (!MEASURABLE.has(m)) fail(`framework:${k}`, `measures "${m}" is neither a registered signal nor a flag`)
+  if (!HYBRIDS.some((s) => s.frameworks.includes(k))) fail(`framework:${k}`, 'no scenario cites it')
+}
+
 if (errors.length) {
   console.error(`✗ Rubric contract validation FAILED (${errors.length} error${errors.length === 1 ? '' : 's'}):`)
   for (const e of errors) console.error('  · ' + e)
   process.exit(1)
 }
-console.log('✓ Rubric contract valid — all four configs satisfy the contract and nullSeverity invariants.')
+console.log(`✓ Rubric contract valid — all four configs and ${HYBRIDS.length} hybrid scenarios satisfy the contract and nullSeverity invariants.`)
 process.exit(0)

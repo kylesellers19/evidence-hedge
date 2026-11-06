@@ -14,6 +14,9 @@ import { general } from './general.config.js'
 
 // Re-exported here so the entry flow imports detection + registry from one place.
 export { autodetect } from './autodetect.js'
+// Hybrid judgments compose these four configs (rubrics/hybrids.js); they are
+// never registered here, so the registry stays the four genres.
+export { judgmentFor, composeRubric, listHybridRubrics, HYBRIDS, GENRE_LABELS } from './hybrids.js'
 
 /** @type {Record<string, import('../engine/types.js').RubricConfig>} */
 export const RUBRICS = {

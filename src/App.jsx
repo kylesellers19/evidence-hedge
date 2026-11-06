@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { useApp } from './context/AppContext.jsx'
-import { listRubrics, getRubric } from './rubrics/index.js'
+import { judgmentFor } from './rubrics/index.js'
 import { routeDocument } from './rubrics/route.js'
 import { analyze } from './engine/analyze.js'
 import { validateText } from './ingest/validateText.js'
@@ -25,9 +25,10 @@ function LandingRoute() {
 }
 
 // ── Screen 2: Branch ─────────────────────────────────────────────────────────
-// Runs autodetect on the submitted text BEFORE render, hands the branch screen
-// the full registry (stubs included) + the detected id. Confirm runs the
-// pipeline with the CONFIRMED rubric — never silently the autodetected one.
+// Routes the submitted text BEFORE render — its genre roles and the judgment
+// they imply (one rubric, or a hybrid) — and hands the branch screen the route.
+// Confirm runs the pipeline with the CONFIRMED genres: the judgment is
+// recomposed from them, never silently the detected one.
 function BranchRoute() {
   const { state, dispatch } = useApp()
   const navigate = useNavigate()
@@ -35,20 +36,20 @@ function BranchRoute() {
   // Route guard: no document in state → back to the landing page. A reader
   // error body or a bot-check wall is not a document and never reaches analyze()
   // (the landing page already refuses both; this holds for any other route in).
-  if (!state.document) return <Navigate to="/" replace />
-  const check = validateText(state.document)
-  if (!check.ok) return <Navigate to="/" replace />
-
-  const rubrics = listRubrics()
-  // Routing: provenance first (the link's host when there is one), then genre.
   const sourceUrl = state.meta?.sourceUrl || ''
-  const detectedId = routeDocument(state.document, { sourceUrl }).rubric
+  const check = state.document ? validateText(state.document) : { ok: false }
+  // Routing: the genre roles (the link's host feeds the speaker), then the judgment.
+  const route = useMemo(
+    () => (check.ok ? routeDocument(state.document, { sourceUrl }) : null),
+    [check.ok, state.document, sourceUrl],
+  )
+  if (!state.document || !check.ok) return <Navigate to="/" replace />
 
-  // The CONFIRMED posture travels with the confirmed rubric into the pipeline.
-  const onConfirm = (rubricId, posture) => {
-    const rubric = getRubric(rubricId)
+  // The CONFIRMED genres and posture travel into the pipeline.
+  const onConfirm = (genres, posture) => {
+    const { rubric } = judgmentFor(route.profile.genre.roles, genres)
     const result = analyze(state.document, rubric, posture, { sourceUrl })
-    dispatch({ type: 'SET_ANALYSIS', payload: { rubric, result } })
+    dispatch({ type: 'SET_ANALYSIS', payload: { rubric, result, reading: { detected: route.judgment.genres, chosen: genres } } })
     navigate('/results')
   }
   const onBack = () => {
@@ -58,8 +59,7 @@ function BranchRoute() {
 
   return (
     <RubricBranch
-      rubrics={rubrics}
-      detectedId={detectedId}
+      route={route}
       text={state.document}
       onConfirm={onConfirm}
       onBack={onBack}

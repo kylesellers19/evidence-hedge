@@ -48,7 +48,11 @@ for (const doc of loadCorpus()) {
   for (const id of RUBRIC_ORDER) {
     const rubric = getRubric(id)
     const { posture } = classifyPosture(text, rubric)
-    const a = analyze(text, rubric, posture)
+    // The link goes to analyze() as it does in the app: the publisher host
+    // feeds provenance, own-site URLs and the provenance discount. (The
+    // pre-change engine ignores the fourth argument, so the before-snapshot is
+    // unaffected.)
+    const a = analyze(text, rubric, posture, { sourceUrl: doc.url || '' })
     const fc = a.summary.flagCounts
     row.rubrics[id] = {
       posture,

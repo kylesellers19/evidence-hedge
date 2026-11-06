@@ -40,6 +40,9 @@ for (const r of listRubrics()) {
     })
   }
   const ladderLen = Array.isArray(r.ladder) ? r.ladder.length : 0
+  if (!isNonEmptyString(r.ownResultRung) || !(r.ladder || []).some((rung) => rung.key === r.ownResultRung)) {
+    fail(id, `ownResultRung "${r.ownResultRung}" must name a ladder rung`)
+  }
 
   // ── Tiers ─────────────────────────────────────────────────────────────────
   if (!Array.isArray(r.tiers) || r.tiers.length === 0) {

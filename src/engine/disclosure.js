@@ -5,11 +5,11 @@
 // "we did not verify", "in my experience") is honest hedging, not a hidden gap.
 // When a claim's absence is disclosed, its nullSeverity is lowered (Part A), and
 // analyze.js suppresses the unsupported-assertion penalty on that claim when the
-// disclosed severity falls below 'flag'. Reuses the rubric's hedge cues plus the
-// explicit-absence phrases below.
+// disclosed severity falls below 'flag'. Reuses the shared Hyland hedge cues
+// (the same for every rubric) plus the explicit-absence phrases below.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { wordRe } from './signals/util.js'
+import { measureCertainty } from './measure/certainty.js'
 
 // Right-of-reply / explicit-absence phrasing (shared with the journalism
 // right-of-reply signal).
@@ -24,8 +24,7 @@ const EXPLICIT_ABSENCE =
  * @param {import('./types.js').RubricConfig} rubric
  * @returns {boolean}
  */
-export function isDisclosedAbsence(text, rubric) {
+export function isDisclosedAbsence(text, rubric) { // eslint-disable-line no-unused-vars
   if (EXPLICIT_ABSENCE.test(text)) return true
-  const hedges = rubric?.extraction?.assertivenessCues?.hedges || []
-  return hedges.some((h) => wordRe(h).test(text))
+  return measureCertainty(text).hedges.length > 0
 }

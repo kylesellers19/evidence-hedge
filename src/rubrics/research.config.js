@@ -8,6 +8,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { makeNullSeverity } from '../engine/nullSeverity.js'
+import { SHARED_EXTRACTION, TIERS, DEFAULT_TIER } from '../engine/measure/index.js'
 
 /** @type {import('../engine/types.js').RubricConfig} */
 export const research = {
@@ -41,7 +42,9 @@ export const research = {
       key: 'primary', label: 'Primary study', rank: 3, tint: 'supported',
       match: {
         types: ['author-year', 'year', 'numeric'],
-        keywords: ['study', 'trial', 'experiment', 'survey', 'dataset', 'cohort', 'observed', 'measured', 'found that', 'sample of'],
+        // 'study', 'survey', 'found that' removed: they name a source without
+        // grading it, and own results now reach this rung via ownResultRung.
+        keywords: ['trial', 'experiment', 'dataset', 'cohort', 'observed', 'measured', 'sample of'],
       },
     },
     {
@@ -53,23 +56,16 @@ export const research = {
     },
   ],
 
-  // Claim-strength bands, low → high weight.
-  tiers: [
-    { key: 'hedged',    label: 'Hedged',    weight: 1, cues: ['may', 'might', 'could', 'suggests', 'appears', 'seems', 'possibly', 'perhaps', 'potentially', 'tends to'] },
-    { key: 'measured',  label: 'Measured',  weight: 2, cues: ['shows', 'found', 'observed', 'associated', 'reported', 'correlates', 'indicates', 'supports'] },
-    { key: 'assertive', label: 'Assertive', weight: 3, cues: ['is', 'are', 'will', 'demonstrates', 'establishes', 'confirms', 'clearly', 'evidently', 'shows that'] },
-    { key: 'absolute',  label: 'Absolute',  weight: 4, cues: ['proves', 'proven', 'definitively', 'undeniable', 'conclusively', 'always', 'never', 'guarantees', 'unequivocally', 'beyond doubt'] },
-  ],
-  defaultTier: 'measured',
+  // Claim strength is measured, not judged: the four shared tiers and their
+  // Hyland cues live in engine/measure/certainty.js (rubric-invariant).
+  tiers: TIERS,
+  defaultTier: DEFAULT_TIER,
 
-  extraction: {
-    sensitivity: 0.55,
-    minClaimLength: 30,
-    assertivenessCues: {
-      boosters: ['clearly', 'obviously', 'undeniably', 'definitively', 'certainly', 'proves', 'conclusively', 'unequivocally', 'evidently', 'without doubt'],
-      hedges: ['may', 'might', 'could', 'possibly', 'perhaps', 'suggests', 'appears', 'seems', 'arguably', 'potentially', 'likely'],
-    },
-  },
+  // Rung an own-result claim reaches on the document's own evidence.
+  ownResultRung: 'primary', // PROVISIONAL — not ratified
+
+  // Shared extraction (engine/measure/index.js): identical under every rubric.
+  extraction: SHARED_EXTRACTION,
 
   // ceilings[posture][rank] = strongest tier weight this evidence grade may
   // assert. Research has a single 'standard' posture, so only 'default' is needed.

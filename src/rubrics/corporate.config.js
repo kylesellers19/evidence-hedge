@@ -9,6 +9,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { makeNullSeverity } from '../engine/nullSeverity.js'
+import { SHARED_EXTRACTION, TIERS, DEFAULT_TIER } from '../engine/measure/index.js'
 
 /** @type {import('../engine/types.js').RubricConfig} */
 export const corporate = {
@@ -52,22 +53,16 @@ export const corporate = {
     },
   ],
 
-  tiers: [
-    { key: 'hedged',    label: 'Hedged',    weight: 1, cues: ['aim to', 'hope to', 'strive to', 'intend to', 'may', 'could', 'working toward', 'seek to'] },
-    { key: 'measured',  label: 'Measured',  weight: 2, cues: ['offer', 'provides', 'includes', 'supports', 'designed to', 'helps', 'enables'] },
-    { key: 'assertive', label: 'Assertive', weight: 3, cues: ['leading', 'best-in-class', 'is', 'delivers', 'ensures', 'drives', 'trusted', 'proven track record', 'industry-leading'] },
-    { key: 'absolute',  label: 'Absolute',  weight: 4, cues: ['guaranteed', '#1', 'unmatched', 'unrivaled', 'world-class', 'revolutionary', 'the only', 'always', 'never fails', '100%', 'best'] },
-  ],
-  defaultTier: 'measured',
+  // Claim strength is measured, not judged: the four shared tiers and their
+  // Hyland cues live in engine/measure/certainty.js (rubric-invariant).
+  tiers: TIERS,
+  defaultTier: DEFAULT_TIER,
 
-  extraction: {
-    sensitivity: 0.5,
-    minClaimLength: 25,
-    assertivenessCues: {
-      boosters: ['leading', 'best-in-class', 'world-class', 'unmatched', 'guaranteed', 'proven', 'revolutionary', '#1', 'unrivaled', 'trusted', 'best'],
-      hedges: ['aim to', 'hope to', 'strive to', 'intend to', 'may', 'could', 'working toward', 'seek to'],
-    },
-  },
+  // Rung an own-result claim reaches on the document's own evidence.
+  ownResultRung: 'self-reported', // PROVISIONAL — not ratified
+
+  // Shared extraction (engine/measure/index.js): identical under every rubric.
+  extraction: SHARED_EXTRACTION,
 
   // Ceilings are rank-indexed (ladder rank 0→4) and posture-keyed. The migrated
   // provisional [1,2,2,3,4] becomes both the default and the research-like path

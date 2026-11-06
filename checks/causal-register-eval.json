@@ -1,0 +1,119 @@
+{
+  "source": "medalpaca/medical_meadow_pubmed_causal (labels corrected to Yu 2019)",
+  "seed": 20191103,
+  "split": "70/30",
+  "development": {
+    "n": 1712,
+    "accuracy": 0.765,
+    "macroF1": 0.718,
+    "perClass": {
+      "none": {
+        "n": 750,
+        "precision": 0.811,
+        "recall": 0.829,
+        "f1": 0.82
+      },
+      "correlational": {
+        "n": 565,
+        "precision": 0.806,
+        "recall": 0.749,
+        "f1": 0.776
+      },
+      "conditional-causal": {
+        "n": 126,
+        "precision": 0.552,
+        "recall": 0.675,
+        "f1": 0.607
+      },
+      "direct-causal": {
+        "n": 271,
+        "precision": 0.673,
+        "recall": 0.661,
+        "f1": 0.667
+      }
+    },
+    "confusion": {
+      "none": {
+        "none": 622,
+        "correlational": 59,
+        "conditional-causal": 27,
+        "direct-causal": 42
+      },
+      "correlational": {
+        "none": 82,
+        "correlational": 423,
+        "conditional-causal": 17,
+        "direct-causal": 43
+      },
+      "conditional-causal": {
+        "none": 23,
+        "correlational": 16,
+        "conditional-causal": 85,
+        "direct-causal": 2
+      },
+      "direct-causal": {
+        "none": 40,
+        "correlational": 27,
+        "conditional-causal": 25,
+        "direct-causal": 179
+      }
+    }
+  },
+  "heldOut": {
+    "n": 734,
+    "accuracy": 0.755,
+    "macroF1": 0.702,
+    "perClass": {
+      "none": {
+        "n": 334,
+        "precision": 0.847,
+        "recall": 0.796,
+        "f1": 0.821
+      },
+      "correlational": {
+        "n": 232,
+        "precision": 0.74,
+        "recall": 0.772,
+        "f1": 0.755
+      },
+      "conditional-causal": {
+        "n": 44,
+        "precision": 0.518,
+        "recall": 0.659,
+        "f1": 0.58
+      },
+      "direct-causal": {
+        "n": 124,
+        "precision": 0.656,
+        "recall": 0.645,
+        "f1": 0.65
+      }
+    },
+    "confusion": {
+      "none": {
+        "none": 266,
+        "correlational": 38,
+        "conditional-causal": 8,
+        "direct-causal": 22
+      },
+      "correlational": {
+        "none": 27,
+        "correlational": 179,
+        "conditional-causal": 6,
+        "direct-causal": 20
+      },
+      "conditional-causal": {
+        "none": 5,
+        "correlational": 10,
+        "conditional-causal": 29,
+        "direct-causal": 0
+      },
+      "direct-causal": {
+        "none": 16,
+        "correlational": 15,
+        "conditional-causal": 13,
+        "direct-causal": 80
+      }
+    }
+  }
+}

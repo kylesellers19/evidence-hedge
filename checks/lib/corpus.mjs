@@ -36,6 +36,15 @@ async function readerPipeline() {
  * @returns {Promise<{status:'ok', text:string, via:string, file:string, chromeDropped?:string[]} | {status:'skip', reason:string}>}
  */
 export async function loadDocText(doc) {
+  const loaded = await loadRaw(doc)
+  // A URL that now redirects elsewhere still returns text; the expected phrase catches it.
+  if (loaded.status === 'ok' && doc.expect && !new RegExp(doc.expect, 'i').test(loaded.text)) {
+    return { status: 'skip', reason: `content mismatch — "${doc.expect}" absent (page redirected or changed)` }
+  }
+  return loaded
+}
+
+async function loadRaw(doc) {
   if (doc.source === 'committed') {
     const p = join(ROOT, doc.path)
     if (!existsSync(p)) return { status: 'skip', reason: `missing ${doc.path}` }

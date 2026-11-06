@@ -7,6 +7,11 @@
 // No match above the floor → the bottom rung (rank 0, "unsourced" / near-null),
 // which is what makes an assertive-but-uncited line surface downstream as an
 // unsupported-assertion rather than an overconfident one.
+//
+// An own-result claim reports the document's own evidence, so it reaches at
+// least the rubric's in-document rung (rubric.ownResultRung: research →
+// primary, corporate → self-reported, journalism → documented, general →
+// primary) whether or not it carries a citation.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** @typedef {import('./types.js').Rung} Rung */
@@ -18,9 +23,16 @@ const wordRe = (term) =>
 /**
  * @param {{ text:string, citations:Citation[] }} claim
  * @param {Rung[]} ladder              ordered low → high rank
+ * @param {{ inDocumentRung?: string|null }} [options]  rung key an own result reaches
  * @returns {Rung}
  */
-export function gradeEvidence(claim, ladder) {
+export function gradeEvidence(claim, ladder, options = {}) {
+  const matched = matchRung(claim, ladder)
+  const floor = options.inDocumentRung ? ladder.find((r) => r.key === options.inDocumentRung) : null
+  return floor && floor.rank > matched.rank ? floor : matched
+}
+
+function matchRung(claim, ladder) {
   const types = new Set(claim.citations.map(c => c.type))
   const byRankDesc = [...ladder].sort((a, b) => b.rank - a.rank)
 

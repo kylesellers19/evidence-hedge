@@ -8,12 +8,12 @@
     "chars": 57370
   },
   "hsph-press-2015": {
-    "source": "reader",
-    "url": "https://www.hsph.harvard.edu/news/press-releases/green-office-environments-linked-with-higher-cognitive-function-scores/",
-    "sha256": "cdf3c6e4c946b3d1152564beccddec93bdfbb430ef5fe509b818f86a10ca4ed4",
-    "rawChars": 4759,
-    "retrievedAt": "2026-11-06T03:08:01.497Z",
-    "chars": 4277
+    "source": "archive",
+    "url": "https://web.archive.org/web/20151101035745id_/http://www.hsph.harvard.edu:80/news/press-releases/green-office-environments-linked-with-higher-cognitive-function-scores/",
+    "sha256": "09cd36395347a419a9ec35ae248cb8675eaa304f277c5546adc37fd4dee7f2d6",
+    "rawChars": 6851,
+    "retrievedAt": "2026-11-06T03:33:02.931Z",
+    "chars": 6677
   },
   "sciencedaily-2015": {
     "source": "reader",

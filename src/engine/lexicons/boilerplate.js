@@ -32,4 +32,12 @@ export const BOILERPLATE = [
   'nothing herein',
   'results may vary',
   'individual results may vary',
+  // site banners and cookie notices the reader keeps as full sentences
+  'official website of the united states government',
+  'a .gov website belongs to',
+  'share sensitive information only on official',
+  'this website stores cookies',
+  'these cookies are used to',
+  'if you decline, your information',
+  'we use cookies',
 ]

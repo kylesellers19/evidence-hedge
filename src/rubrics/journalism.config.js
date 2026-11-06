@@ -8,6 +8,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { makeNullSeverity } from '../engine/nullSeverity.js'
+import { SHARED_EXTRACTION, TIERS, DEFAULT_TIER } from '../engine/measure/index.js'
 
 /** @type {import('../engine/types.js').RubricConfig} */
 export const journalism = {
@@ -33,22 +34,16 @@ export const journalism = {
       match: { types: ['doi'], keywords: ['verified', 'corroborated', 'confirmed by multiple'] } },
   ],
 
-  tiers: [
-    { key: 'hedged',    label: 'Hedged',    weight: 1, cues: ['may', 'might', 'could', 'reportedly', 'allegedly', 'appears'] },
-    { key: 'measured',  label: 'Measured',  weight: 2, cues: ['said', 'reported', 'described', 'noted'] },
-    { key: 'assertive', label: 'Assertive', weight: 3, cues: ['is', 'are', 'will', 'shows', 'reveals', 'proves'] },
-    { key: 'absolute',  label: 'Absolute',  weight: 4, cues: ['undeniable', 'definitively', 'always', 'never', 'conclusively'] },
-  ],
-  defaultTier: 'measured',
+  // Claim strength is measured, not judged: the four shared tiers and their
+  // Hyland cues live in engine/measure/certainty.js (rubric-invariant).
+  tiers: TIERS,
+  defaultTier: DEFAULT_TIER,
 
-  extraction: {
-    sensitivity: 0.55,
-    minClaimLength: 28,
-    assertivenessCues: {
-      boosters: ['clearly', 'undeniably', 'definitively', 'conclusively'],
-      hedges: ['may', 'might', 'could', 'reportedly', 'allegedly', 'appears'],
-    },
-  },
+  // Rung an own-result claim reaches on the document's own evidence.
+  ownResultRung: 'documented', // PROVISIONAL — not ratified
+
+  // Shared extraction (engine/measure/index.js): identical under every rubric.
+  extraction: SHARED_EXTRACTION,
 
   tolerance: {
     ceilings: {

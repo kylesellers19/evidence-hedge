@@ -39,6 +39,21 @@ async function fetchReader(url) {
   return { status: res.status, body }
 }
 
+// Archived HTML → reader-like text: one line per block element, chrome
+// elements (nav/header/footer/aside/script/style) removed. Corpus-only: the
+// app never reads web.archive.org (the reader refuses it).
+function htmlToText(html) {
+  const decode = (t) => t.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"').replace(/&#0?39;|&rsquo;|&lsquo;/g, "'").replace(/&ldquo;|&rdquo;/g, '"').replace(/&mdash;/g, '—').replace(/&ndash;/g, '–')
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n))
+  return decode(html
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<(script|style|noscript|nav|header|footer|aside|form|svg)\b[\s\S]*?<\/\1>/gi, '')
+    .replace(/<\/(p|div|h[1-6]|li|tr|section|article|blockquote|figcaption)>|<br\s*\/?>/gi, '\n\n')
+    .replace(/<[^>]+>/g, ' '))
+    .split('\n').map((l) => l.replace(/[ \t]+/g, ' ').trim()).join('\n')
+}
+
 let readerCalls = 0
 const lines = []
 for (const doc of loadCorpus()) {
@@ -46,7 +61,14 @@ for (const doc of loadCorpus()) {
   const txtPath = join(CACHE, `${doc.id}.txt`)
   const pdfPath = join(CACHE, `${doc.id}.pdf`)
   try {
-    if (doc.source === 'reader' && (REFRESH || !existsSync(rawPath))) {
+    if (doc.source === 'reader' && doc.archiveUrl && (REFRESH || !existsSync(rawPath))) {
+      const res = await fetch(doc.archiveUrl, { signal: AbortSignal.timeout(60000) })
+      if (!res.ok) { lines.push(`SKIP ${doc.id} — archive status ${res.status}`); continue }
+      const body = htmlToText(await res.text())
+      writeFileSync(rawPath, body)
+      manifest[doc.id] = { source: 'archive', url: doc.archiveUrl, sha256: sha256(body), rawChars: body.length, retrievedAt: new Date().toISOString() }
+    }
+    if (doc.source === 'reader' && !doc.archiveUrl && (REFRESH || !existsSync(rawPath))) {
       if (readerCalls++) await sleep(READER_GAP_MS)
       const { status, body } = await fetchReader(doc.url)
       if (status >= 400 || !body.trim()) { lines.push(`SKIP ${doc.id} — reader status ${status}`); continue }

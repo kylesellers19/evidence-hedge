@@ -13,6 +13,8 @@
 
 import { extractClaims } from './extractClaims.js'
 import { measureAssertiveness } from './measureAssertiveness.js'
+import { measureClaim } from './measure/index.js'
+import { segmentDocument } from './measure/segment.js'
 import { gradeEvidence } from './gradeEvidence.js'
 import { detectMismatch } from './detectMismatch.js'
 import { PATTERN_META, FLAG_ORDER } from './patterns.js'
@@ -33,13 +35,23 @@ const STRONG_WEIGHT = 3 // tier weight at/above which a claim reads as "strong"
  * @returns {AnalysisResult}
  */
 export function analyze(document, rubric, posture = rubric.defaultPosture) {
-  // ── The four steps ────────────────────────────────────────────────────────
-  const raw = extractClaims(document, rubric.extraction, { rubricId: rubric.id })
+  // ── Measurement (rubric-invariant) ────────────────────────────────────────
+  // The reference list after its heading, and reference entries anywhere, are
+  // apparatus: they go to `references`, never to claims. No linking.
+  const { body, references: listed } = segmentDocument(document)
+  const references = listed.map((text) => ({ text, via: 'reference-list' }))
+  const raw = extractClaims(body, rubric.extraction, {
+    rubricId: rubric.id,
+    onDrop: (text, rule) => { if (rule === 'reference-entry') references.push({ text, via: 'pattern' }) },
+  })
   /** @type {Claim[]} */
   const claims = raw.map(c => {
-    const tier = measureAssertiveness(c, rubric)
-    const rung = gradeEvidence(c, rubric.ladder)
-    const mismatch = detectMismatch({ tier, rung }, rubric.tolerance, posture)
+    const m = measureClaim(c)
+    // ── Judgment (the rubric's) ─────────────────────────────────────────────
+    const tier = measureAssertiveness(c, rubric, m.certainty.tier)
+    const rung = gradeEvidence(c, rubric.ladder, { inDocumentRung: m.function === 'own-result' ? rubric.ownResultRung : null })
+    // A method statement reports what was done, not a claim — never flagged.
+    const mismatch = m.function === 'method' ? null : detectMismatch({ tier, rung }, rubric.tolerance, posture)
     let flag = mismatch ? mismatch.flag : null
     let explanation = mismatch ? mismatch.explanation : null
 
@@ -54,7 +66,10 @@ export function analyze(document, rubric, posture = rubric.defaultPosture) {
       if (sev === 'none' || sev === 'note') { flag = null; explanation = null }
     }
 
-    return { ...c, tier, rung, flag, explanation, disclosed }
+    return {
+      ...c, tier, rung, flag, explanation, disclosed,
+      certainty: m.certainty, function: m.function, register: m.register, recommendation: m.recommendation,
+    }
   })
 
   // ── Document-level signals (Part C) ───────────────────────────────────────
@@ -113,6 +128,7 @@ export function analyze(document, rubric, posture = rubric.defaultPosture) {
 
   return {
     claims,
+    references,
     patterns,
     signals,
     posture,

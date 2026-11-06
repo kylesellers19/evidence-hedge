@@ -22,8 +22,10 @@
  */
 
 /**
- * One claim-strength / assertiveness band, bottom → top by weight.
- * `cues` are the lexical signals measureAssertiveness scans for.
+ * One claim-strength / assertiveness band, bottom → top by weight. The four
+ * bands are SHARED by every rubric (engine/measure/certainty.js TIERS): claim
+ * strength is measurement, read from Hyland hedges/boosters, never judgment.
+ * `cues` lists the lexicon for display.
  * @typedef  {Object} Tier
  * @property {string}   key
  * @property {string}   label
@@ -81,7 +83,9 @@
  * @property {boolean}          [stub]          true = shape complete, values are drafts
  * @property {Rung[]}           ladder
  * @property {Tier[]}           tiers
- * @property {string}           defaultTier     tier.key used when no cues match
+ * @property {string}           defaultTier     tier.key used when no cues match ('measured')
+ * @property {string}           ownResultRung   ladder rung key an own-result claim reaches
+ *                                              on the document's own evidence
  * @property {ExtractionConfig} extraction
  * @property {ToleranceConfig}  tolerance
  * @property {string[]}         postures        valid posture keys for this rubric
@@ -117,6 +121,12 @@
  * @property {Rung}          rung         evidence grade (gradeEvidence)
  * @property {?FlagType}     flag         null if within tolerance
  * @property {?Explanation}  explanation
+ * @property {{tier:string, hedges:string[], boosters:string[], attitude:string[]}} certainty
+ * @property {'method'|'own-result'|'background'|'interpretation'|'recommendation'|'other'} function
+ * @property {{register:'none'|'correlational'|'conditional-causal'|'direct-causal', cues:{root:string, strength:number}[], strength:number, conditioned:boolean}} register
+ * @property {{strength:'none'|'weak'|'strong', cues:string[]}} recommendation
+ *   certainty / function / register / recommendation are MEASUREMENT
+ *   (engine/measure/): identical under every rubric.
  */
 
 /**
@@ -142,6 +152,8 @@
 /**
  * @typedef  {Object} AnalysisResult
  * @property {Claim[]}   claims
+ * @property {{text:string, via:'reference-list'|'pattern'}[]} references
+ *   reference entries dropped from the claims (no linking to claims)
  * @property {Pattern[]} patterns
  * @property {Signal[]}  signals               document-level signals (Part C)
  * @property {string}    posture               active posture the analysis ran under

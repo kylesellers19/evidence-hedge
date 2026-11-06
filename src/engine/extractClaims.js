@@ -4,10 +4,13 @@
 // Splits prose into candidate sentences, detects rubric-agnostic citation tokens
 // (a `[1]` is a `[1]` regardless of document type — RANKING those tokens into an
 // evidence grade is the ladder's job, in gradeEvidence), and keeps only lines
-// assertive/declarative enough to clear the rubric's extraction sensitivity.
+// assertive/declarative enough to clear the shared extraction sensitivity.
+// Reference entries, affiliations, correspondence, dates, licence lines and
+// contributor blocks are dropped (measure/segment.js); `onDrop` receives each.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { isDropped, demotionPenalty } from './nonClaimFilter.js'
+import { nonClaimRule } from './measure/segment.js'
 
 /** @typedef {import('./types.js').ExtractionConfig} ExtractionConfig */
 /** @typedef {import('./types.js').Citation} Citation */
@@ -74,11 +77,12 @@ function claimLikelihood(sentence) {
 /**
  * @param {string} text
  * @param {ExtractionConfig} extraction
- * @param {{ rubricId?: string }} [options]  rubricId gates posture-specific filter rules
+ * @param {{ rubricId?: string, onDrop?: (sentence:string, rule:string) => void }} [options]
+ *   rubricId gates the journalism heading exemption; onDrop sees apparatus drops
  * @returns {Array<{ id:number, text:string, citations:Citation[] }>}
  */
 export function extractClaims(text, extraction, options = {}) {
-  const { rubricId } = options
+  const { rubricId, onDrop } = options
   const sentences = splitSentences(text || '')
   const claims = []
   let id = 0
@@ -86,6 +90,8 @@ export function extractClaims(text, extraction, options = {}) {
     if (sentence.length < extraction.minClaimLength) continue
     // Non-claim filter — DROP hard exclusions, then DEMOTE via the likelihood.
     if (isDropped(sentence)) continue
+    const rule = nonClaimRule(sentence)
+    if (rule) { if (onDrop) onDrop(sentence, rule); continue }
     const likelihood = claimLikelihood(sentence) - demotionPenalty(sentence, rubricId)
     if (likelihood < extraction.sensitivity) continue
     claims.push({ id: id++, text: sentence, citations: detectCitations(sentence) })

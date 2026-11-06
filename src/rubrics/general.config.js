@@ -7,6 +7,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { makeNullSeverity } from '../engine/nullSeverity.js'
+import { SHARED_EXTRACTION, TIERS, DEFAULT_TIER } from '../engine/measure/index.js'
 
 /** @type {import('../engine/types.js').RubricConfig} */
 export const general = {
@@ -32,22 +33,16 @@ export const general = {
       match: { types: ['doi'], keywords: ['peer-reviewed', 'official', 'verified'] } },
   ],
 
-  tiers: [
-    { key: 'hedged',    label: 'Hedged',    weight: 1, cues: ['may', 'might', 'could', 'often', 'sometimes', 'tends to'] },
-    { key: 'measured',  label: 'Measured',  weight: 2, cues: ['can', 'helps', 'provides', 'shows'] },
-    { key: 'assertive', label: 'Assertive', weight: 3, cues: ['is', 'are', 'will', 'always', 'the best way', 'guarantees'] },
-    { key: 'absolute',  label: 'Absolute',  weight: 4, cues: ['definitely', 'undeniable', 'never', 'guaranteed', '100%', 'the only'] },
-  ],
-  defaultTier: 'measured',
+  // Claim strength is measured, not judged: the four shared tiers and their
+  // Hyland cues live in engine/measure/certainty.js (rubric-invariant).
+  tiers: TIERS,
+  defaultTier: DEFAULT_TIER,
 
-  extraction: {
-    sensitivity: 0.5,
-    minClaimLength: 24,
-    assertivenessCues: {
-      boosters: ['definitely', 'undeniably', 'guaranteed', 'the best', '100%'],
-      hedges: ['may', 'might', 'could', 'often', 'sometimes', 'tends to'],
-    },
-  },
+  // Rung an own-result claim reaches on the document's own evidence.
+  ownResultRung: 'primary', // PROVISIONAL — not ratified
+
+  // Shared extraction (engine/measure/index.js): identical under every rubric.
+  extraction: SHARED_EXTRACTION,
 
   // Most lenient ladder ceilings of the four rubrics. Experiential writing carries
   // no evidence obligation; authoritative (prescriptive + YMYL) is held stricter.

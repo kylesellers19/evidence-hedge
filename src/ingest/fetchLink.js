@@ -34,7 +34,7 @@ const DOC_EXTS = new Set(Object.values(DOC_TYPES))
 // Site chrome the reader drops before extracting text: menus, footers, sidebars.
 // Semantic elements only — <header> is kept because many articles put their own
 // headline inside one.
-const CHROME_SELECTOR = 'nav, footer, aside, [role=navigation], [role=contentinfo], [role=complementary]'
+export const CHROME_SELECTOR = 'nav, footer, aside, [role=navigation], [role=contentinfo], [role=complementary]'
 
 // A value is a URL if it has no internal whitespace and either starts with
 // http(s):// or reads as a bare domain (example.com, sub.example.co.uk/path).

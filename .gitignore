@@ -19,3 +19,6 @@ dist/
 .env*
 !.env.example
 **/.claude/settings.local.json
+
+# Corpus text cache (D4: only public-domain / CC text is committed, under fixtures/corpus/)
+fixtures/cache/

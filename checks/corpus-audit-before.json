@@ -1,0 +1,879 @@
+{
+  "engine": "working-tree",
+  "docs": {
+    "allen-ehp-2016": {
+      "gold": {
+        "rubric": "research",
+        "posture": "standard",
+        "provenance": "peer-reviewed-journal",
+        "design": "controlled-experiment"
+      },
+      "words": 8888,
+      "route": {
+        "rubric": "research"
+      },
+      "rubrics": {
+        "research": {
+          "posture": "standard",
+          "score": 8,
+          "claims": 316,
+          "strong": 35,
+          "unsupported": 202,
+          "overconfident": 4,
+          "gate": false,
+          "signals": []
+        },
+        "corporate": {
+          "posture": "research-like",
+          "score": 6.4,
+          "claims": 322,
+          "strong": 15,
+          "unsupported": 258,
+          "overconfident": 2,
+          "gate": false,
+          "signals": [
+            "register-mismatch"
+          ]
+        },
+        "journalism": {
+          "posture": "news",
+          "score": 5.5,
+          "claims": 316,
+          "strong": 35,
+          "unsupported": 257,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "per-claim-sourcing",
+            "method-disclosure",
+            "perspective-plurality"
+          ]
+        },
+        "general": {
+          "posture": "authoritative",
+          "score": 8.1,
+          "claims": 322,
+          "strong": 34,
+          "unsupported": 200,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        }
+      },
+      "spread": 2.6
+    },
+    "hsph-press-2015": {
+      "gold": {
+        "rubric": "corporate",
+        "posture": "press-release",
+        "provenance": "academic-press-office",
+        "design": "controlled-experiment",
+        "designInherited": true
+      },
+      "words": 640,
+      "route": {
+        "rubric": "general"
+      },
+      "rubrics": {
+        "research": {
+          "posture": "standard",
+          "score": 7.2,
+          "claims": 14,
+          "strong": 2,
+          "unsupported": 10,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "limitations-absent"
+          ]
+        },
+        "corporate": {
+          "posture": "marketing",
+          "score": 9.8,
+          "claims": 14,
+          "strong": 1,
+          "unsupported": 1,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        },
+        "journalism": {
+          "posture": "news",
+          "score": 5.2,
+          "claims": 14,
+          "strong": 2,
+          "unsupported": 12,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "per-claim-sourcing",
+            "method-disclosure",
+            "perspective-plurality"
+          ]
+        },
+        "general": {
+          "posture": "experiential",
+          "score": 9.6,
+          "claims": 14,
+          "strong": 2,
+          "unsupported": 2,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        }
+      },
+      "spread": 4.6
+    },
+    "sciencedaily-2015": {
+      "gold": {
+        "rubric": "corporate",
+        "posture": "press-release",
+        "provenance": "academic-press-office",
+        "design": "controlled-experiment",
+        "designInherited": true
+      },
+      "words": 1484,
+      "route": {
+        "rubric": "research"
+      },
+      "rubrics": {
+        "research": {
+          "posture": "standard",
+          "score": 7.6,
+          "claims": 45,
+          "strong": 5,
+          "unsupported": 28,
+          "overconfident": 1,
+          "gate": false,
+          "signals": [
+            "limitations-absent"
+          ]
+        },
+        "corporate": {
+          "posture": "marketing",
+          "score": 9.9,
+          "claims": 49,
+          "strong": 2,
+          "unsupported": 2,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        },
+        "journalism": {
+          "posture": "news",
+          "score": 5.6,
+          "claims": 45,
+          "strong": 5,
+          "unsupported": 36,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "per-claim-sourcing",
+            "method-disclosure",
+            "perspective-plurality"
+          ]
+        },
+        "general": {
+          "posture": "authoritative",
+          "score": 7.8,
+          "claims": 49,
+          "strong": 4,
+          "unsupported": 35,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        }
+      },
+      "spread": 4.3
+    },
+    "gba-news-2015": {
+      "gold": {
+        "rubric": "journalism",
+        "posture": "news",
+        "provenance": "trade-press",
+        "design": "controlled-experiment",
+        "designInherited": true
+      },
+      "words": 1609,
+      "route": {
+        "rubric": "general"
+      },
+      "rubrics": {
+        "research": {
+          "posture": "standard",
+          "score": 7.3,
+          "claims": 43,
+          "strong": 10,
+          "unsupported": 29,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "limitations-absent"
+          ]
+        },
+        "corporate": {
+          "posture": "marketing",
+          "score": 9.1,
+          "claims": 43,
+          "strong": 6,
+          "unsupported": 6,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "self-citation-dominance"
+          ]
+        },
+        "journalism": {
+          "posture": "news",
+          "score": 5.5,
+          "claims": 43,
+          "strong": 10,
+          "unsupported": 36,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "per-claim-sourcing",
+            "method-disclosure"
+          ]
+        },
+        "general": {
+          "posture": "authoritative",
+          "score": 8,
+          "claims": 43,
+          "strong": 10,
+          "unsupported": 27,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        }
+      },
+      "spread": 3.6
+    },
+    "bdc-blog-allen": {
+      "gold": {
+        "rubric": "journalism",
+        "posture": "opinion",
+        "provenance": "trade-press",
+        "design": "controlled-experiment",
+        "designInherited": true
+      },
+      "words": 656,
+      "route": {
+        "rubric": "research"
+      },
+      "rubrics": {
+        "research": {
+          "posture": "standard",
+          "score": 7.1,
+          "claims": 20,
+          "strong": 7,
+          "unsupported": 13,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "limitations-absent"
+          ]
+        },
+        "corporate": {
+          "posture": "marketing",
+          "score": 9.1,
+          "claims": 21,
+          "strong": 7,
+          "unsupported": 7,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        },
+        "journalism": {
+          "posture": "unlabeled",
+          "score": 4.1,
+          "claims": 20,
+          "strong": 7,
+          "unsupported": 18,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "per-claim-sourcing",
+            "label-transparency",
+            "method-disclosure",
+            "perspective-plurality"
+          ]
+        },
+        "general": {
+          "posture": "experiential",
+          "score": 9.5,
+          "claims": 21,
+          "strong": 7,
+          "unsupported": 4,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        }
+      },
+      "spread": 5.4
+    },
+    "naava-allen": {
+      "gold": {
+        "rubric": "corporate",
+        "posture": "marketing",
+        "provenance": "firm-vendor",
+        "design": "controlled-experiment",
+        "designInherited": true
+      },
+      "words": 399,
+      "route": {
+        "rubric": "research"
+      },
+      "rubrics": {
+        "research": {
+          "posture": "standard",
+          "score": 7,
+          "claims": 15,
+          "strong": 2,
+          "unsupported": 12,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "limitations-absent"
+          ]
+        },
+        "corporate": {
+          "posture": "marketing",
+          "score": 10,
+          "claims": 15,
+          "strong": 0,
+          "unsupported": 0,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        },
+        "journalism": {
+          "posture": "unlabeled",
+          "score": 4.6,
+          "claims": 15,
+          "strong": 2,
+          "unsupported": 14,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "per-claim-sourcing",
+            "label-transparency",
+            "method-disclosure",
+            "perspective-plurality"
+          ]
+        },
+        "general": {
+          "posture": "experiential",
+          "score": 9.6,
+          "claims": 15,
+          "strong": 2,
+          "unsupported": 2,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        }
+      },
+      "spread": 5.4
+    },
+    "gensler-gws-2024": {
+      "gold": {
+        "rubric": "corporate",
+        "posture": "research-like",
+        "provenance": "firm-vendor",
+        "design": "cross-sectional"
+      },
+      "words": 697,
+      "route": {
+        "rubric": "research"
+      },
+      "rubrics": {
+        "research": {
+          "posture": "standard",
+          "score": 7.5,
+          "claims": 30,
+          "strong": 3,
+          "unsupported": 20,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "limitations-absent"
+          ]
+        },
+        "corporate": {
+          "posture": "research-like",
+          "score": 5.8,
+          "claims": 30,
+          "strong": 3,
+          "unsupported": 29,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "register-mismatch"
+          ]
+        },
+        "journalism": {
+          "posture": "unlabeled",
+          "score": 4.1,
+          "claims": 30,
+          "strong": 7,
+          "unsupported": 30,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "per-claim-sourcing",
+            "label-transparency",
+            "method-disclosure",
+            "perspective-plurality"
+          ]
+        },
+        "general": {
+          "posture": "experiential",
+          "score": 7.5,
+          "claims": 30,
+          "strong": 3,
+          "unsupported": 0,
+          "overconfident": 0,
+          "gate": true,
+          "signals": [
+            "posture-gate"
+          ]
+        }
+      },
+      "spread": 3.4
+    },
+    "gensler-press-2024": {
+      "gold": {
+        "rubric": "corporate",
+        "posture": "press-release",
+        "provenance": "firm-vendor",
+        "design": "cross-sectional"
+      },
+      "words": 955,
+      "route": {
+        "rubric": "corporate"
+      },
+      "rubrics": {
+        "research": {
+          "posture": "standard",
+          "score": 6.9,
+          "claims": 33,
+          "strong": 8,
+          "unsupported": 25,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "limitations-absent"
+          ]
+        },
+        "corporate": {
+          "posture": "research-like",
+          "score": 5.9,
+          "claims": 35,
+          "strong": 5,
+          "unsupported": 30,
+          "overconfident": 1,
+          "gate": false,
+          "signals": [
+            "register-mismatch"
+          ]
+        },
+        "journalism": {
+          "posture": "news",
+          "score": 4.5,
+          "claims": 33,
+          "strong": 10,
+          "unsupported": 31,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "per-claim-sourcing",
+            "method-disclosure",
+            "perspective-plurality"
+          ]
+        },
+        "general": {
+          "posture": "experiential",
+          "score": 9.3,
+          "claims": 35,
+          "strong": 9,
+          "unsupported": 9,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        }
+      },
+      "spread": 4.8
+    },
+    "bdc-gensler-news-2024": {
+      "gold": {
+        "rubric": "journalism",
+        "posture": "news",
+        "provenance": "trade-press",
+        "design": "cross-sectional",
+        "designInherited": true
+      },
+      "words": 911,
+      "route": {
+        "rubric": "general"
+      },
+      "rubrics": {
+        "research": {
+          "posture": "standard",
+          "score": 7.2,
+          "claims": 32,
+          "strong": 7,
+          "unsupported": 23,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "limitations-absent"
+          ]
+        },
+        "corporate": {
+          "posture": "marketing",
+          "score": 9.7,
+          "claims": 32,
+          "strong": 3,
+          "unsupported": 3,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        },
+        "journalism": {
+          "posture": "unlabeled",
+          "score": 4.3,
+          "claims": 32,
+          "strong": 9,
+          "unsupported": 29,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "per-claim-sourcing",
+            "label-transparency",
+            "method-disclosure",
+            "perspective-plurality"
+          ]
+        },
+        "general": {
+          "posture": "experiential",
+          "score": 7.5,
+          "claims": 32,
+          "strong": 7,
+          "unsupported": 0,
+          "overconfident": 0,
+          "gate": true,
+          "signals": [
+            "posture-gate"
+          ]
+        }
+      },
+      "spread": 5.4
+    },
+    "co2meter-plants": {
+      "gold": {
+        "rubric": "corporate",
+        "posture": "marketing",
+        "provenance": "firm-vendor",
+        "design": "none-reported"
+      },
+      "words": 2611,
+      "route": {
+        "rubric": "journalism"
+      },
+      "rubrics": {
+        "research": {
+          "posture": "standard",
+          "score": 7.2,
+          "claims": 111,
+          "strong": 11,
+          "unsupported": 101,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        },
+        "corporate": {
+          "posture": "marketing",
+          "score": 9.5,
+          "claims": 112,
+          "strong": 12,
+          "unsupported": 12,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        },
+        "journalism": {
+          "posture": "news",
+          "score": 5,
+          "claims": 111,
+          "strong": 12,
+          "unsupported": 106,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "per-claim-sourcing",
+            "method-disclosure",
+            "perspective-plurality"
+          ]
+        },
+        "general": {
+          "posture": "authoritative",
+          "score": 7.1,
+          "claims": 137,
+          "strong": 15,
+          "unsupported": 129,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        }
+      },
+      "spread": 4.5
+    },
+    "jcu-timber-pilot": {
+      "gold": {
+        "rubric": "research",
+        "posture": "standard",
+        "provenance": "verify-venue",
+        "design": "pre-post-uncontrolled"
+      },
+      "words": 10525,
+      "route": {
+        "rubric": "research"
+      },
+      "rubrics": {
+        "research": {
+          "posture": "standard",
+          "score": 7.8,
+          "claims": 411,
+          "strong": 53,
+          "unsupported": 281,
+          "overconfident": 1,
+          "gate": false,
+          "signals": []
+        },
+        "corporate": {
+          "posture": "research-like",
+          "score": 7.6,
+          "claims": 444,
+          "strong": 38,
+          "unsupported": 352,
+          "overconfident": 1,
+          "gate": false,
+          "signals": []
+        },
+        "journalism": {
+          "posture": "news",
+          "score": 5.7,
+          "claims": 412,
+          "strong": 61,
+          "unsupported": 345,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "per-claim-sourcing",
+            "method-disclosure"
+          ]
+        },
+        "general": {
+          "posture": "authoritative",
+          "score": 8,
+          "claims": 447,
+          "strong": 53,
+          "unsupported": 287,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        }
+      },
+      "spread": 2.3
+    },
+    "fixture-a-cadre": {
+      "gold": {
+        "rubric": "corporate",
+        "posture": "research-like",
+        "provenance": "nonprofit-research",
+        "design": "narrative-review"
+      },
+      "words": 19165,
+      "route": {
+        "rubric": "research"
+      },
+      "rubrics": {
+        "research": {
+          "posture": "standard",
+          "score": 7.6,
+          "claims": 572,
+          "strong": 57,
+          "unsupported": 379,
+          "overconfident": 10,
+          "gate": false,
+          "signals": [
+            "secondary-evidence-dominance"
+          ]
+        },
+        "corporate": {
+          "posture": "research-like",
+          "score": 7.9,
+          "claims": 626,
+          "strong": 31,
+          "unsupported": 445,
+          "overconfident": 8,
+          "gate": false,
+          "signals": []
+        },
+        "journalism": {
+          "posture": "news",
+          "score": 5.8,
+          "claims": 578,
+          "strong": 51,
+          "unsupported": 415,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "per-claim-sourcing",
+            "method-disclosure",
+            "perspective-plurality"
+          ]
+        },
+        "general": {
+          "posture": "authoritative",
+          "score": 8.1,
+          "claims": 627,
+          "strong": 47,
+          "unsupported": 409,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        }
+      },
+      "spread": 2.3
+    },
+    "fixture-b-pew-html": {
+      "gold": {
+        "rubric": "research",
+        "posture": "standard",
+        "provenance": "nonprofit-research",
+        "design": "cross-sectional"
+      },
+      "words": 1351,
+      "route": {
+        "rubric": "research"
+      },
+      "rubrics": {
+        "research": {
+          "posture": "standard",
+          "score": 6.6,
+          "claims": 40,
+          "strong": 18,
+          "unsupported": 27,
+          "overconfident": 1,
+          "gate": false,
+          "signals": [
+            "limitations-absent"
+          ]
+        },
+        "corporate": {
+          "posture": "marketing",
+          "score": 9.2,
+          "claims": 42,
+          "strong": 7,
+          "unsupported": 6,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "self-citation-dominance"
+          ]
+        },
+        "journalism": {
+          "posture": "news",
+          "score": 3.9,
+          "claims": 40,
+          "strong": 24,
+          "unsupported": 36,
+          "overconfident": 0,
+          "gate": false,
+          "signals": [
+            "per-claim-sourcing",
+            "method-disclosure",
+            "perspective-plurality"
+          ]
+        },
+        "general": {
+          "posture": "authoritative",
+          "score": 6.1,
+          "claims": 42,
+          "strong": 24,
+          "unsupported": 35,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        }
+      },
+      "spread": 5.3
+    },
+    "fixture-b-pew-report": {
+      "gold": {
+        "rubric": "research",
+        "posture": "standard",
+        "provenance": "nonprofit-research",
+        "design": "cross-sectional"
+      },
+      "words": 8503,
+      "route": {
+        "rubric": "research"
+      },
+      "rubrics": {
+        "research": {
+          "posture": "standard",
+          "score": 6.8,
+          "claims": 260,
+          "strong": 106,
+          "unsupported": 166,
+          "overconfident": 3,
+          "gate": false,
+          "signals": [
+            "limitations-absent"
+          ]
+        },
+        "corporate": {
+          "posture": "research-like",
+          "score": 5.3,
+          "claims": 263,
+          "strong": 42,
+          "unsupported": 249,
+          "overconfident": 2,
+          "gate": false,
+          "signals": [
+            "self-citation-dominance",
+            "register-mismatch"
+          ]
+        },
+        "journalism": {
+          "posture": "news",
+          "score": 3.6,
+          "claims": 262,
+          "strong": 129,
+          "unsupported": 246,
+          "overconfident": 1,
+          "gate": false,
+          "signals": [
+            "per-claim-sourcing",
+            "method-disclosure",
+            "perspective-plurality",
+            "anonymous-sourcing"
+          ]
+        },
+        "general": {
+          "posture": "authoritative",
+          "score": 6.8,
+          "claims": 263,
+          "strong": 127,
+          "unsupported": 186,
+          "overconfident": 0,
+          "gate": false,
+          "signals": []
+        }
+      },
+      "spread": 3.2
+    }
+  }
+}

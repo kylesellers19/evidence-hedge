@@ -1,0 +1,144 @@
+{
+  "_comment": "Measurement-validity corpus. gold labels are WORKING labels — PROVISIONAL — not ratified. source: reader = fetched through r.jina.ai (raw body cached, run through the app's reader pipeline at load); pdf = PDF downloaded and read with the app's own PDF extractor (as an upload); supplied = a file Kyle places in fixtures/cache/ (<id>.txt or <id>.pdf); committed = text tracked in this repo. commit = may the full text be committed (public-domain / CC only, D4); commitIf = regex the fetched text must match before it is committed. Full text of everything else lives only in the gitignored fixtures/cache/.",
+  "docs": [
+    {
+      "id": "allen-ehp-2016",
+      "source": "reader",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4892924/",
+      "gold": { "rubric": "research", "posture": "standard", "provenance": "peer-reviewed-journal", "design": "controlled-experiment" },
+      "license": "US federal publication (EHP) — public domain when the notice is present",
+      "commit": true,
+      "commitIf": "public domain"
+    },
+    {
+      "id": "hsph-press-2015",
+      "source": "reader",
+      "url": "https://www.hsph.harvard.edu/news/press-releases/green-office-environments-linked-with-higher-cognitive-function-scores/",
+      "gold": { "rubric": "corporate", "posture": "press-release", "provenance": "academic-press-office", "design": "controlled-experiment", "designInherited": true },
+      "license": "copyright Harvard — cache only",
+      "commit": false
+    },
+    {
+      "id": "sciencedaily-2015",
+      "source": "reader",
+      "url": "https://sciencedaily.com/releases/2015/10/151026171409.htm",
+      "gold": { "rubric": "corporate", "posture": "press-release", "provenance": "academic-press-office", "design": "controlled-experiment", "designInherited": true },
+      "license": "republished press release — cache only",
+      "commit": false
+    },
+    {
+      "id": "gba-news-2015",
+      "source": "reader",
+      "url": "https://www.greenbuildingadvisor.com/article/stuffy-offices-lower-cognitive-function",
+      "gold": { "rubric": "journalism", "posture": "news", "provenance": "trade-press", "design": "controlled-experiment", "designInherited": true },
+      "license": "copyright — cache only",
+      "commit": false
+    },
+    {
+      "id": "bdc-blog-allen",
+      "source": "reader",
+      "url": "https://www.bdcnetwork.com/sustainability/sustainable-development/blog/55151892/do-green-building-environments-improve-cognitive-function",
+      "gold": { "rubric": "journalism", "posture": "opinion", "provenance": "trade-press", "design": "controlled-experiment", "designInherited": true },
+      "license": "copyright — cache only",
+      "commit": false
+    },
+    {
+      "id": "naava-allen",
+      "source": "reader",
+      "url": "https://www.naava.io/science/a-controlled-exposure-study-of-green-and-conventional-office-environments",
+      "gold": { "rubric": "corporate", "posture": "marketing", "provenance": "firm-vendor", "design": "controlled-experiment", "designInherited": true },
+      "license": "copyright — cache only",
+      "commit": false
+    },
+    {
+      "id": "gensler-gws-2024",
+      "source": "reader",
+      "url": "https://www.gensler.com/gri/global-workplace-survey-2024",
+      "gold": { "rubric": "corporate", "posture": "research-like", "provenance": "firm-vendor", "design": "cross-sectional" },
+      "license": "copyright — cache only",
+      "commit": false
+    },
+    {
+      "id": "gensler-press-2024",
+      "source": "reader",
+      "url": "https://www.gensler.com/press-releases/global-survey-workplace-experience-2024",
+      "gold": { "rubric": "corporate", "posture": "press-release", "provenance": "firm-vendor", "design": "cross-sectional" },
+      "license": "copyright — cache only",
+      "commit": false
+    },
+    {
+      "id": "bdc-gensler-news-2024",
+      "source": "reader",
+      "url": "https://www.bdcnetwork.com/home/news/55166189/new-gensler-report-calls-for-workplace-design-that-responds-to-employees-human-emotions",
+      "gold": { "rubric": "journalism", "posture": "news", "provenance": "trade-press", "design": "cross-sectional", "designInherited": true },
+      "license": "copyright — cache only",
+      "commit": false
+    },
+    {
+      "id": "co2meter-plants",
+      "source": "reader",
+      "url": "https://www.co2meter.com/blogs/news/nasa-compiles-list-of-best-plants-to-clean-indoor-air",
+      "gold": { "rubric": "corporate", "posture": "marketing", "provenance": "firm-vendor", "design": "none-reported" },
+      "license": "copyright — cache only",
+      "commit": false
+    },
+    {
+      "id": "jcu-timber-pilot",
+      "source": "reader",
+      "url": "https://researchonline.jcu.edu.au/89901/1/89901.pdf",
+      "gold": { "rubric": "research", "posture": "standard", "provenance": "verify-venue", "design": "pre-post-uncontrolled" },
+      "license": "repository copy — venue and licence unverified; cache only",
+      "commit": false
+    },
+    {
+      "id": "hks-human-potential",
+      "source": "supplied",
+      "gold": { "rubric": "corporate", "posture": "research-like", "provenance": "firm-vendor", "design": "cross-sectional" },
+      "license": "copyright HKS — cache only (file supplied by Kyle)",
+      "commit": false
+    },
+    {
+      "id": "fixture-a-cadre",
+      "source": "committed",
+      "path": "fixtures/cadre-neuroarchitecture-normalized.txt",
+      "gold": { "rubric": "corporate", "posture": "research-like", "provenance": "nonprofit-research", "design": "narrative-review" },
+      "license": "committed before this audit",
+      "commit": true
+    },
+    {
+      "id": "fixture-b-pew-html",
+      "source": "committed",
+      "path": "fixtures/pew-workplace-ai-normalized.txt",
+      "role": "ingestion-test",
+      "gold": { "rubric": "research", "posture": "standard", "provenance": "nonprofit-research", "design": "cross-sectional" },
+      "license": "committed before this audit",
+      "commit": true
+    },
+    {
+      "id": "fixture-b-pew-report",
+      "source": "pdf",
+      "url": "https://www.pewresearch.org/wp-content/uploads/sites/20/2025/02/ST_2025.2.25_AI-Workers_REPORT.pdf",
+      "gold": { "rubric": "research", "posture": "standard", "provenance": "nonprofit-research", "design": "cross-sectional" },
+      "license": "copyright Pew Research Center — cache only",
+      "commit": false
+    },
+    {
+      "id": "reading-jones-2025",
+      "source": "supplied",
+      "testUrl": "https://centaur.reading.ac.uk/123665/1/1-s2.0-S2352710225017139-main.pdf",
+      "expectTestUrl": "blocked",
+      "gold": { "rubric": "research", "posture": "standard", "provenance": "peer-reviewed-journal", "design": "repeated-cross-sectional" },
+      "license": "CC BY (file supplied by Kyle)",
+      "commit": false
+    },
+    {
+      "id": "sciencealert-plants",
+      "source": "supplied",
+      "testUrl": "https://www.sciencealert.com/a-nasa-study-about-houseplants-has-been-widely-misread-scientist-says",
+      "expectTestUrl": "reader-error",
+      "gold": { "rubric": "journalism", "posture": "news", "provenance": "news-outlet", "design": "none-reported" },
+      "license": "copyright — cache only (text supplied by Kyle)",
+      "commit": false
+    }
+  ]
+}

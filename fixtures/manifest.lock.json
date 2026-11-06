@@ -1,0 +1,110 @@
+{
+  "allen-ehp-2016": {
+    "source": "reader",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4892924/",
+    "sha256": "24e4562c88a4e2f01b7a7057ce8f12bfe92f1b7f201b8c3f1634ae9f7f70109f",
+    "rawChars": 59171,
+    "retrievedAt": "2026-11-06T03:07:57.686Z",
+    "chars": 58299
+  },
+  "hsph-press-2015": {
+    "source": "reader",
+    "url": "https://www.hsph.harvard.edu/news/press-releases/green-office-environments-linked-with-higher-cognitive-function-scores/",
+    "sha256": "cdf3c6e4c946b3d1152564beccddec93bdfbb430ef5fe509b818f86a10ca4ed4",
+    "rawChars": 4759,
+    "retrievedAt": "2026-11-06T03:08:01.497Z",
+    "chars": 4327
+  },
+  "sciencedaily-2015": {
+    "source": "reader",
+    "url": "https://sciencedaily.com/releases/2015/10/151026171409.htm",
+    "sha256": "710cf6e19824b8d7160cd4199dfb6dfc9c053a31631a70378e2b31718d5a294d",
+    "rawChars": 10727,
+    "retrievedAt": "2026-11-06T03:08:06.420Z",
+    "chars": 10328
+  },
+  "gba-news-2015": {
+    "source": "reader",
+    "url": "https://www.greenbuildingadvisor.com/article/stuffy-offices-lower-cognitive-function",
+    "sha256": "e5b55dcfd376d8df5078ab9580ef9d2f32dc2cf8abb0c3fd18ef5ef43f7bbe5d",
+    "rawChars": 11242,
+    "retrievedAt": "2026-11-06T03:08:10.292Z",
+    "chars": 10242
+  },
+  "bdc-blog-allen": {
+    "source": "reader",
+    "url": "https://www.bdcnetwork.com/sustainability/sustainable-development/blog/55151892/do-green-building-environments-improve-cognitive-function",
+    "sha256": "5699cad2b721d8c57c1defd230f9f60ab9b18c985373195887489ecdfd38afac",
+    "rawChars": 4604,
+    "retrievedAt": "2026-11-06T03:08:14.352Z",
+    "chars": 4329
+  },
+  "naava-allen": {
+    "source": "reader",
+    "url": "https://www.naava.io/science/a-controlled-exposure-study-of-green-and-conventional-office-environments",
+    "sha256": "057991d57e9a865a68b110617c11c725753193833e50fc0a77970d44df38f97e",
+    "rawChars": 2977,
+    "retrievedAt": "2026-11-06T03:08:18.161Z",
+    "chars": 2824
+  },
+  "gensler-gws-2024": {
+    "source": "reader",
+    "url": "https://www.gensler.com/gri/global-workplace-survey-2024",
+    "sha256": "26e5815467186ae4d5db9ebf59f6d0528aeb5feeed56e783ef67ba86ef941b3a",
+    "rawChars": 5390,
+    "retrievedAt": "2026-11-06T03:08:21.958Z",
+    "chars": 4802
+  },
+  "gensler-press-2024": {
+    "source": "reader",
+    "url": "https://www.gensler.com/press-releases/global-survey-workplace-experience-2024",
+    "sha256": "00416f9d0935e772134fa23bf8faa5bb9115c5f81dc375e9a124d11d8de65838",
+    "rawChars": 6861,
+    "retrievedAt": "2026-11-06T03:08:25.688Z",
+    "chars": 6385
+  },
+  "bdc-gensler-news-2024": {
+    "source": "reader",
+    "url": "https://www.bdcnetwork.com/home/news/55166189/new-gensler-report-calls-for-workplace-design-that-responds-to-employees-human-emotions",
+    "sha256": "ab2678c321fb388ae6d40961f436f3ca1ce0882ea1f51ae92fae9f6e83165f8e",
+    "rawChars": 6530,
+    "retrievedAt": "2026-11-06T03:08:29.458Z",
+    "chars": 6251
+  },
+  "co2meter-plants": {
+    "source": "reader",
+    "url": "https://www.co2meter.com/blogs/news/nasa-compiles-list-of-best-plants-to-clean-indoor-air",
+    "sha256": "c3d93f680f6322587fe56917db8a0d652c6499b7470762e977347b7941a69a29",
+    "rawChars": 18351,
+    "retrievedAt": "2026-11-06T03:08:33.411Z",
+    "chars": 17215
+  },
+  "jcu-timber-pilot": {
+    "source": "reader",
+    "url": "https://researchonline.jcu.edu.au/89901/1/89901.pdf",
+    "sha256": "0d0dfe5139ad13a6bb1f9ce5a87576f5099e18e7fdbd6e7709710f9cadbc7844",
+    "rawChars": 73614,
+    "retrievedAt": "2026-11-06T03:08:37.273Z",
+    "chars": 73493
+  },
+  "fixture-a-cadre": {
+    "source": "committed",
+    "path": "fixtures/cadre-neuroarchitecture-normalized.txt",
+    "sha256": "565e5f7dad509656554767c72521c0c9d3656633998462a6089f31358f870f5f",
+    "chars": 133367
+  },
+  "fixture-b-pew-html": {
+    "source": "committed",
+    "path": "fixtures/pew-workplace-ai-normalized.txt",
+    "sha256": "bd0fb5914bd83deab0fa7336bea42ee7314cbece6ebf73f9e7646b2974c9eb90",
+    "chars": 7852
+  },
+  "fixture-b-pew-report": {
+    "source": "pdf",
+    "url": "https://www.pewresearch.org/wp-content/uploads/sites/20/2025/02/ST_2025.2.25_AI-Workers_REPORT.pdf",
+    "sha256": "247d46d0e0d1de5dfd231a3341ef14e403b069700343682133e30eac48817bf2",
+    "bytes": 573076,
+    "retrievedAt": "2026-11-06T03:08:38.664Z",
+    "chars": 48736
+  }
+}

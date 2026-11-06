@@ -18,7 +18,8 @@
     "check:normalizer": "node checks/normalizer.mjs",
     "check": "npm run check:rubrics && npm run check:regression && npm run check:posture && npm run check:nullseverity && npm run check:rightofreply && npm run check:score && npm run check:verdict && npm run check:filter && npm run check:normalizer && npm run check:pdfcolumns && npm run check:fetchlink",
     "check:pdfcolumns": "node checks/pdf-column-fix.mjs",
-    "check:fetchlink": "node checks/fetch-link.test.mjs"
+    "check:fetchlink": "node checks/fetch-link.test.mjs",
+    "fixtures:fetch": "node scripts/fetch-corpus.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.7",

@@ -1,0 +1,426 @@
+{
+  "fixture": "fixture-c-gensler-fandom-2026",
+  "recorded": "2026-11-08",
+  "engine_commit": "dc34856",
+  "source": "The brief Kyle pasted on 2026-11-08 from the app at build e3fc8a7 (src unchanged since dc34856), recorded with --write and checked against the paste field by field: header, counts, judgment, profile, the 5 signals, the 3 patterns and their 8 example lines, the distribution and the 21 provenance entries.",
+  "brief": {
+    "header": {
+      "judgedAs": "Corporate × Research",
+      "heldTo": "Corporate",
+      "posture": "press-release",
+      "draft": false,
+      "genreNote": "Read as research from an interested publisher: held to research reporting standards, with its own data graded as self-reported."
+    },
+    "verdict": "This research report makes 378 claims, 16 of them strongly stated; of these, 236 rest on no cited evidence, 2 cite sources too weak to carry them, and 24 claim more cause than the study design supports.",
+    "counts": {
+      "claimsWeighed": 378,
+      "readAsStrong": 16,
+      "flagged": 238
+    },
+    "howJudged": {
+      "reading": "detected automatically",
+      "genres": [
+        "Corporate",
+        "Research"
+      ],
+      "scenario": "Research published by a firm or interest group",
+      "heldTo": "The corporate evidence standard.",
+      "why": "Its findings come from a publisher with a stake in them: they count as self-reported until a third party or peer review checks them.",
+      "ladder": [
+        "Unsourced",
+        "Internal assertion",
+        "Self-reported metric",
+        "Third-party / analyst",
+        "Audited / verified disclosure"
+      ],
+      "auditedFor": {
+        "standard": "Corporate audits (8)",
+        "added": [
+          {
+            "from": "Research",
+            "audits": [
+              "Limitations absent",
+              "Abstract outruns the body"
+            ]
+          },
+          {
+            "from": "This mix",
+            "audits": [
+              "Interest disclosure"
+            ]
+          }
+        ]
+      },
+      "roles": {
+        "speaker": {
+          "genre": "Corporate",
+          "text": "Firm or vendor",
+          "evidence": [
+            {
+              "signal": null,
+              "span": {
+                "sha": "be5ee8d9e8e7",
+                "chars": 26
+              }
+            }
+          ]
+        },
+        "form": {
+          "genre": "Corporate",
+          "text": "Sponsored content",
+          "evidence": [
+            {
+              "signal": "sponsorship cue",
+              "span": {
+                "sha": "c1b336d9b6a4",
+                "chars": 12
+              }
+            }
+          ]
+        },
+        "stake": {
+          "genre": null,
+          "text": "None beyond the speaker’s own",
+          "evidence": []
+        },
+        "evidence": {
+          "genre": "Research",
+          "text": "Its own study — cross-sectional",
+          "evidence": [
+            {
+              "signal": "surveyed 2,752",
+              "span": {
+                "sha": "8f797beb2956",
+                "chars": 200
+              }
+            }
+          ]
+        }
+      }
+    },
+    "profile": {
+      "provenance": "Firm or vendor",
+      "provenanceSpans": [
+        {
+          "sha": "be5ee8d9e8e7",
+          "chars": 26
+        }
+      ],
+      "studyDesign": "Cross sectional",
+      "studyDesignSpans": [
+        {
+          "sha": "8f797beb2956",
+          "chars": 200
+        }
+      ],
+      "designCeiling": "Licenses up to associational language and weak advice.",
+      "causalityDisclaimed": null,
+      "selfCitation": {
+        "percent": 0,
+        "matched": 0,
+        "pool": 25
+      },
+      "referencesSetAside": null
+    },
+    "signals": [
+      {
+        "id": "self-citation-dominance",
+        "title": "Self-citation dominance",
+        "tag": "Note",
+        "summary": "Evidence is predominantly self-referential (5 self-citations vs 0 independent) — the vendor's own voice standing in for outside proof.",
+        "evidence": [
+          {
+            "sha": "798922c8fccc",
+            "chars": 11
+          },
+          {
+            "sha": "798922c8fccc",
+            "chars": 11
+          },
+          {
+            "sha": "c5faf9f698d8",
+            "chars": 10
+          },
+          {
+            "sha": "a1028498e7ec",
+            "chars": 12
+          }
+        ]
+      },
+      {
+        "id": "register-mismatch",
+        "title": "Register mismatch",
+        "tag": "Flag",
+        "summary": "Adopts a research-like register, yet 16 of 16 top-tier claims fall short of independent (third-party or audited) evidence — marketing in a lab coat.",
+        "evidence": [
+          {
+            "sha": "52cfb1119e94",
+            "chars": 164
+          },
+          {
+            "sha": "2f5ddbb41b23",
+            "chars": 233
+          },
+          {
+            "sha": "8af1003c5d42",
+            "chars": 156
+          }
+        ]
+      },
+      {
+        "id": "completeness-gaps",
+        "title": "Reporting gaps",
+        "tag": "Note",
+        "summary": "For a cross sectional study, the report does not state: response rate; weighting; missing data or sample-size accounting; data availability.",
+        "evidence": [
+          "response rate — AXIS 13 · CHERRIES · AAPOR",
+          "weighting — AAPOR · CHERRIES",
+          "missing data or sample-size accounting — STROBE 12c, 13 · AXIS 14",
+          "data availability — STROBE 22 · AAPOR"
+        ]
+      },
+      {
+        "id": "limitations-absent",
+        "title": "Limitations absent",
+        "tag": "Note",
+        "summary": "No limitations or caveats passage was found — the paper does not bound its own claims.",
+        "evidence": []
+      },
+      {
+        "id": "undisclosed-interest",
+        "title": "Interest disclosure",
+        "tag": "Disclosed ✓",
+        "summary": "States who sponsored the work or what interest its publisher holds.",
+        "evidence": [
+          {
+            "sha": "c1b336d9b6a4",
+            "chars": 12
+          }
+        ]
+      }
+    ],
+    "patterns": [
+      {
+        "key": "unsupported-assertion",
+        "name": "Unsupported assertion",
+        "count": 236,
+        "description": "A polished, quotable sentence that reads like a settled conclusion but cites little or nothing. The confidence is rhetorical, not evidential — the line carries no backing a reader could check.",
+        "examples": [
+          {
+            "sha": "d3c1bc7110e9",
+            "chars": 237
+          },
+          {
+            "sha": "ea1451188f2b",
+            "chars": 38
+          },
+          {
+            "sha": "3d8f9b47a731",
+            "chars": 67
+          }
+        ]
+      },
+      {
+        "key": "overconfident",
+        "name": "Overconfident relative to source",
+        "count": 2,
+        "description": "The claim does cite a source, but asserts more certainty than that grade of evidence can carry — the language outruns what the citation actually establishes.",
+        "examples": [
+          {
+            "sha": "88b25065f798",
+            "chars": 158
+          },
+          {
+            "sha": "8c67e3ad7f1a",
+            "chars": 1300
+          }
+        ]
+      },
+      {
+        "key": "causal-overreach",
+        "name": "Causal overreach",
+        "count": 24,
+        "description": "The claim asserts more cause — or gives firmer advice — than the study design behind it can license. A survey or uncontrolled comparison can show that things move together, not that one produces the other.",
+        "examples": [
+          {
+            "sha": "18f99c53b538",
+            "chars": 490
+          },
+          {
+            "sha": "d05e3621ce5c",
+            "chars": 94
+          },
+          {
+            "sha": "13790fa3f569",
+            "chars": 141
+          }
+        ]
+      }
+    ],
+    "distribution": [
+      {
+        "rung": "Audited / verified disclosure",
+        "count": 0,
+        "percent": 0
+      },
+      {
+        "rung": "Third-party / analyst",
+        "count": 3,
+        "percent": 1
+      },
+      {
+        "rung": "Self-reported metric",
+        "count": 52,
+        "percent": 14
+      },
+      {
+        "rung": "Internal assertion",
+        "count": 9,
+        "percent": 2
+      },
+      {
+        "rung": "Unsourced",
+        "count": 314,
+        "percent": 83
+      }
+    ],
+    "distributionNote": "How this document's claims spread across the corporate ladder, strongest evidence to unsourced.",
+    "rubricProvenance": {
+      "heading": "Rubric provenance — Corporate × Research",
+      "groups": [
+        {
+          "heading": "Frameworks for this mix",
+          "entries": [
+            {
+              "criterion": "industry sponsorship and favourable results and conclusions",
+              "citation": "Lundh, A., Lexchin, J., Mintzes, B., Schroll, J. B. & Bero, L. (2017). Industry sponsorship and research outcome. Cochrane Database of Systematic Reviews, 2017(2), MR000033.",
+              "measuredBy": [
+                "Interest disclosure"
+              ],
+              "url": "https://doi.org/10.1002/14651858.MR000033.pub3"
+            },
+            {
+              "criterion": "disclosing sources of support and conflicts of interest",
+              "citation": "International Committee of Medical Journal Editors — Recommendations for the Conduct, Reporting, Editing and Publication of Scholarly Work in Medical Journals, §II.B: Disclosure of Financial and Non-Financial Relationships and Activities, and Conflicts of Interest (updated January 2026).",
+              "measuredBy": [
+                "Interest disclosure"
+              ],
+              "url": "https://www.icmje.org/recommendations/browse/roles-and-responsibilities/author-responsibilities--conflicts-of-interest.html"
+            },
+            {
+              "criterion": "naming who sponsored a survey and who conducted it",
+              "citation": "American Association for Public Opinion Research — Transparency Initiative; Code of Professional Ethics and Practices (rev. April 2021), §III.A.2 “Who Sponsored the Research and Who Conducted It”.",
+              "measuredBy": [
+                "Interest disclosure"
+              ],
+              "url": "https://aapor.org/standards-and-ethics/transparency-initiative/"
+            },
+            {
+              "criterion": "publishing company-sponsored research",
+              "citation": "DeTora, L. M., Toroser, D., Sykes, A., et al. (2022). Good Publication Practice (GPP) Guidelines for Company-Sponsored Biomedical Research: 2022 Update. Annals of Internal Medicine, 175(9), 1298–1304.",
+              "measuredBy": "cited only",
+              "url": "https://doi.org/10.7326/M22-1460"
+            },
+            {
+              "criterion": "honest, transparent research; no conclusions the data do not support",
+              "citation": "ICC/ESOMAR International Code on Market, Opinion and Social Research and Data Analytics (2025 revision), Art. 9(c)–(d), 10(a). International Chamber of Commerce & ESOMAR.",
+              "measuredBy": "cited only",
+              "url": "https://iccwbo.org/news-publications/business-solutions/iccesomar-international-code-market-opinion-social-research-data-analytics/"
+            },
+            {
+              "criterion": "service requirements for research providers",
+              "citation": "ISO 20252:2026 — Market, opinion and social research, including insights and data analytics — Vocabulary and service requirements. International Organization for Standardization.",
+              "measuredBy": "cited only",
+              "url": "https://www.iso.org/standard/88881.html"
+            }
+          ]
+        },
+        {
+          "heading": "Corporate standards",
+          "entries": [
+            {
+              "criterion": "assertiveness tiers (hedges / boosters)",
+              "citation": "Hyland, K. (2005). Metadiscourse: Exploring Interaction in Writing.",
+              "url": null
+            },
+            {
+              "criterion": "uncertainty / modal word lists",
+              "citation": "Loughran, T. & McDonald, B. (2011). \"When Is a Liability Not a Liability?\" Journal of Finance.",
+              "url": "https://sraf.nd.edu/loughranmcdonald-master-dictionary/"
+            }
+          ]
+        },
+        {
+          "heading": "Research standards",
+          "entries": [
+            {
+              "criterion": "certainty-of-evidence framework",
+              "citation": "GRADE Working Group — certainty-of-evidence framework.",
+              "url": "https://www.gradeworkinggroup.org/"
+            },
+            {
+              "criterion": "evidence-ladder rung placement",
+              "citation": "OCEBM Levels of Evidence, Centre for Evidence-Based Medicine, University of Oxford.",
+              "url": "https://www.cebm.ox.ac.uk/resources/levels-of-evidence/oxford-centre-for-evidence-based-medicine-levels-of-evidence-march-2009"
+            },
+            {
+              "criterion": "critical appraisal of study quality",
+              "citation": "CASP Checklists, Critical Appraisal Skills Programme.",
+              "url": "https://casp-uk.net/casp-tools-checklists/"
+            }
+          ]
+        },
+        {
+          "heading": "Shared measurement standards",
+          "entries": [
+            {
+              "criterion": "causal register of claims",
+              "citation": "Yu, B., Li, Y. & Wang, J. (2019). Detecting Causal Language Use in Science Findings. EMNLP-IJCNLP 2019, 4664–4674.",
+              "url": "https://aclanthology.org/D19-1473/"
+            },
+            {
+              "criterion": "causal strength of linking words",
+              "citation": "Haber, N. A., Wieten, S. E., Rohrer, J. M., et al. (2022). Causal and Associational Language in Observational Health Research: A Systematic Evaluation. American Journal of Epidemiology, 191(12), 2084–2097. Ratings: osf.io/jtdaz (CC BY 4.0).",
+              "url": "https://doi.org/10.1093/aje/kwac137"
+            },
+            {
+              "criterion": "recommendation strength",
+              "citation": "Li, Y., Wang, J. & Yu, B. (2021). Detecting Health Advice in Medical Research Literature. EMNLP 2021.",
+              "url": "https://aclanthology.org/2021.emnlp-main.486/"
+            },
+            {
+              "criterion": "equivalence claimed from non-significance (spin)",
+              "citation": "Lazarus, C., Haneef, R., Ravaud, P. & Boutron, I. (2015). Classification and prevalence of spin in abstracts of non-randomized studies evaluating an intervention. BMC Medical Research Methodology, 15, 85.",
+              "url": "https://doi.org/10.1186/s12874-015-0079-x"
+            },
+            {
+              "criterion": "reporting completeness — observational studies",
+              "citation": "von Elm, E., Altman, D. G., Egger, M., et al. (2007). The Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) statement. PLoS Medicine, 4(10), e296.",
+              "url": "https://www.strobe-statement.org/"
+            },
+            {
+              "criterion": "reporting completeness — cross-sectional studies",
+              "citation": "Downes, M. J., Brennan, M. L., Williams, H. C. & Dean, R. S. (2016). Development of a critical appraisal tool to assess the quality of cross-sectional studies (AXIS). BMJ Open, 6(12), e011458.",
+              "url": "https://doi.org/10.1136/bmjopen-2016-011458"
+            },
+            {
+              "criterion": "reporting completeness — web surveys",
+              "citation": "Eysenbach, G. (2004). Improving the Quality of Web Surveys: The Checklist for Reporting Results of Internet E-Surveys (CHERRIES). Journal of Medical Internet Research, 6(3), e34.",
+              "url": "https://doi.org/10.2196/jmir.6.3.e34"
+            },
+            {
+              "criterion": "reporting completeness — survey disclosure",
+              "citation": "American Association for Public Opinion Research — Code of Professional Ethics and Practices, Section III: Standards for Disclosure (2021).",
+              "url": "https://aapor.org/standards-and-ethics/disclosure-standards/"
+            },
+            {
+              "criterion": "document provenance (who is speaking)",
+              "citation": "Tyndall, J. AACODS Checklist (authority, accuracy, coverage, objectivity, date, significance) for grey literature, Flinders University.",
+              "url": "https://fac.flinders.edu.au/handle/2328/3326"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

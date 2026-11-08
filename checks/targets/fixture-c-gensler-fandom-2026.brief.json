@@ -1,7 +1,7 @@
 {
   "fixture": "fixture-c-gensler-fandom-2026",
   "recorded": "2026-11-08",
-  "engine_commit": "dc34856-dirty",
+  "engine_commit": "ba7854a-dirty",
   "source": "The brief Kyle pasted on 2026-11-08 from the app at build e3fc8a7 (src unchanged since dc34856), recorded with --write and checked against the paste field by field: header, counts, judgment, profile, the 5 signals, the 3 patterns and their 8 example lines, the distribution and the 21 provenance entries.",
   "brief": {
     "header": {
@@ -11,11 +11,11 @@
       "draft": false,
       "genreNote": "Read as research from an interested publisher: held to research reporting standards, with its own data graded as self-reported."
     },
-    "verdict": "This research report makes 378 claims, 16 of them strongly stated; of these, 236 rest on no cited evidence, 2 cite sources too weak to carry them, and 24 claim more cause than the study design supports.",
+    "verdict": "This research report makes 378 claims, 16 of them strongly stated; of these, 195 rest on no cited evidence, 5 cite sources too weak to carry them, and 24 claim more cause than the study design supports.",
     "counts": {
       "claimsWeighed": 378,
       "readAsStrong": 16,
-      "flagged": 238
+      "flagged": 200
     },
     "howJudged": {
       "reading": "detected automatically",
@@ -179,7 +179,7 @@
       {
         "key": "unsupported-assertion",
         "name": "Unsupported assertion",
-        "count": 236,
+        "count": 195,
         "description": "A polished, quotable sentence that reads like a settled conclusion but cites little or nothing. The confidence is rhetorical, not evidential — the line carries no backing a reader could check.",
         "examples": [
           {
@@ -199,16 +199,20 @@
       {
         "key": "overconfident",
         "name": "Overconfident relative to source",
-        "count": 2,
+        "count": 5,
         "description": "The claim does cite a source, but asserts more certainty than that grade of evidence can carry — the language outruns what the citation actually establishes.",
         "examples": [
           {
-            "sha": "88b25065f798",
-            "chars": 158
+            "sha": "52cfb1119e94",
+            "chars": 164
           },
           {
-            "sha": "8c67e3ad7f1a",
-            "chars": 1300
+            "sha": "8af1003c5d42",
+            "chars": 156
+          },
+          {
+            "sha": "88b25065f798",
+            "chars": 158
           }
         ]
       },
@@ -246,18 +250,18 @@
       },
       {
         "rung": "Self-reported metric",
-        "count": 52,
-        "percent": 14
+        "count": 125,
+        "percent": 33
       },
       {
         "rung": "Internal assertion",
-        "count": 9,
+        "count": 6,
         "percent": 2
       },
       {
         "rung": "Unsourced",
-        "count": 314,
-        "percent": 83
+        "count": 244,
+        "percent": 65
       }
     ],
     "distributionNote": "How this document's claims spread across the corporate ladder, strongest evidence to unsourced.",

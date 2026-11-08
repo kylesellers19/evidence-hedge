@@ -78,9 +78,13 @@ export const SECTION_KINDS = [
   ['references', /^(?:\d+(?:\.\d+)*\.?\s+)?(?:References|Bibliography|Works\s+Cited|Endnotes|Notes|Sources)\s*$/i],
   ['literature-review', /^(?:\d+(?:\.\d+)*\.?\s+)?(?:Background|Literature\s+Review|Review\s+of\s+(?:the\s+)?Literature|Related\s+Work|Prior\s+Research|Previous\s+Research|What\s+(?:We|the\s+Research)\s+Knows?|State\s+of\s+(?:the\s+)?(?:Research|Evidence|Science))\b/i],
   ['methods', /^(?:\d+(?:\.\d+)*\.?\s+)?(?:Materials\s+and\s+Methods|Methods?|Methodology|Study\s+Design|Data\s+and\s+Methods|Survey\s+Methodology|How\s+we\s+did\s+this|About\s+(?:this|the)\s+(?:survey|report|data|study|research))\b/i],
-  ['results', /^(?:\d+(?:\.\d+)*\.?\s+)?(?:Results?|Findings|Key\s+Findings|Key\s+Takeaways|What\s+We\s+Found)\b/i],
+  // An executive summary or highlights section reports the document's key
+  // findings; so does a short heading naming its own survey or analysis
+  // ("POST-WORLD CUP SURVEY", "IN-MATCH SOCIAL MEDIA ANALYSIS").
+  ['results', /^(?:\d+(?:\.\d+)*\.?\s+)?(?:Results?|Findings|Key\s+Findings|Key\s+Takeaways|What\s+We\s+Found|Executive\s+Summary|Highlights|At\s+a\s+Glance|Summary\s+of\s+Findings)\b/i],
+  ['results', /^(?:[A-Z0-9][\w'’&-]*\s+){0,4}(?:SURVEY|ANALYSIS|FINDINGS|RESULTS|Survey|Analysis|Findings|Results)\s*$/],
   ['discussion', /^(?:\d+(?:\.\d+)*\.?\s+)?(?:Discussion|Conclusions?|Implications|Limitations|Strengths\s+and\s+Limitations|Recommendations)\b/i],
-  ['introduction', /^(?:\d+(?:\.\d+)*\.?\s+)?(?:Introduction|Overview|Executive\s+Summary)\b/i],
+  ['introduction', /^(?:\d+(?:\.\d+)*\.?\s+)?(?:Introduction|Overview)\b/i],
 ]
 export const HEADING_MAX_CHARS = 80 // PROVISIONAL — not ratified (a line this short can be a heading)
 // The publisher's name counts only when it comes from the source URL's host or

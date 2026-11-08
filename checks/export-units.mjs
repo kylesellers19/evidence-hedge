@@ -7,6 +7,7 @@
 //   <out>/engine/<commit>/<fixture>.doc.json   routing, profile, counts, signals
 // and across all fixtures:
 //   <out>/engine/<commit>/attribution.jsonl    attribution per unit (change set 3)
+//   <out>/engine/<commit>/links.jsonl          evidence links per extracted claim (change set 4)
 // <out> defaults to checks/data/ (gitignored: the units carry document text).
 // Output is deterministic: two exports of the same commit are byte-identical
 // (checks/benchmark-verify.mjs holds this).
@@ -26,6 +27,7 @@ mkdirSync(join(OUT, 'units'), { recursive: true })
 mkdirSync(join(OUT, 'engine', commit), { recursive: true })
 
 const attributionRows = []
+const linkRows = []
 for (const f of FIXTURES) {
   const run = await runFixture(f)
   if (run.status !== 'ok') { console.log(`SKIP ${f.id} — ${run.reason}`); continue }
@@ -33,6 +35,13 @@ for (const f of FIXTURES) {
   unitAttribution(run).forEach((a, i) => attributionRows.push({
     unit_id: run.units[i].id, fixture: f.id, engine_commit: commit, label_tier: 'predicted', extracted: claimText.has(run.units[i].text), ...a,
   }))
+  let ci = 0
+  for (const u of run.units) {
+    const c = run.analysis.claims[ci]
+    if (!c || c.text !== u.text) continue
+    ci++
+    linkRows.push({ unit_id: u.id, fixture: f.id, claim_id: c.id, engine_commit: commit, label_tier: 'predicted', attribution: c.attribution.label, ...c.evidence })
+  }
   const units = run.units.map(({ id, fixture, page, index, hash, text, section, pageReason, pageBasis }) =>
     ({ id, fixture, page, index, hash, text, section, ...(pageReason ? { page_reason: pageReason } : {}), ...(pageBasis ? { page_basis: pageBasis } : {}) }))
   writeFileSync(join(OUT, 'units', `${f.id}.jsonl`), jsonl(units))
@@ -45,3 +54,5 @@ for (const f of FIXTURES) {
 }
 writeFileSync(join(OUT, 'engine', commit, 'attribution.jsonl'), jsonl(attributionRows))
 console.log(`attribution: ${attributionRows.length} units → engine/${commit}/attribution.jsonl`)
+writeFileSync(join(OUT, 'engine', commit, 'links.jsonl'), jsonl(linkRows))
+console.log(`links: ${linkRows.length} claims, ${linkRows.reduce((s, r) => s + r.links.length, 0)} links → engine/${commit}/links.jsonl`)

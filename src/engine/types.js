@@ -119,6 +119,24 @@
  * @property {number}      ceiling
  * @property {string}      posture       active posture key at flag time
  * @property {Attribution} [attribution] whose finding the claim reports (attribution.js)
+ * @property {Evidence}    [evidence]    the claim's links to its evidence (linkEvidence.js)
+ */
+
+/**
+ * One link from a claim to the evidence it leans on (engine/linkEvidence.js).
+ * @typedef  {Object} EvidenceLink
+ * @property {'marker'|'footnote'|'caption'|'hyperlink'|'section-scope'|'proximity'|'speaker'} basis  how it was made
+ * @property {string} anchor   the text in or near the claim that made it
+ * @property {{kind:'reference'|'unresolved-marker'|'note'|'own-study'|'source'|'figure'|'url'|'same-sentence'|'speaker'}} target
+ * @property {'high'|'low'} confidence
+ */
+
+/**
+ * @typedef  {Object} Evidence
+ * @property {'linked'|'unlinked'|'undetermined'} status
+ * @property {EvidenceLink[]} links
+ * @property {string[]} tried     the bases the claim's attribution routes through
+ * @property {string}   [reason]  why it is unlinked or undetermined
  */
 
 /**

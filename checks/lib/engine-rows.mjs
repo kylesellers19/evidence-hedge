@@ -99,6 +99,7 @@ export function engineRows(run, commit) {
         flag: c.flag,
         explanation: explanationOf(c.explanation),
         overreach: c.overreach ? { distance: c.overreach.distance, explanation: c.overreach.explanation } : null,
+        evidence: c.evidence,
       },
       measure: measureUnit(u.text),
     }

@@ -13,6 +13,7 @@
 
 import { extractClaims, splitSentences } from './extractClaims.js'
 import { attributeClaims, selfCitationCounter } from './attribution.js'
+import { linkEvidence } from './linkEvidence.js'
 import { measureAssertiveness } from './measureAssertiveness.js'
 import { measureClaim } from './measure/index.js'
 import { segmentDocument } from './measure/segment.js'
@@ -89,27 +90,47 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
   // Who is speaking and what study stands behind the text (profile/).
   const profile = profileDocument(document, { sourceUrl: options.sourceUrl || '' })
   // The reference list after its heading, and reference entries anywhere, are
-  // apparatus: they go to `references`, never to claims. No linking.
+  // apparatus: they go to `references`, never to claims. Markers link to them
+  // (linkEvidence).
   const { body, references: listed } = segmentDocument(document)
   const references = listed.map((text) => ({ text, via: 'reference-list' }))
   const raw = extractClaims(body, rubric.extraction, {
     rubricId: rubric.base || rubric.id,
     onDrop: (text, rule) => { if (rule === 'reference-entry') references.push({ text, via: 'pattern' }) },
+  }).map((c0) => ({ ...c0, citations: markOwnSiteUrls(c0.citations, profile.provenance) }))
+
+  // ── Attribution: whose finding each claim reports (rubric-invariant) ──────
+  // The label rides on the claim and on its flag explanations; own-prior
+  // claims feed the one self-citation counter the profile and the
+  // self-citation signal both read.
+  const publisher = profile.provenance.publisher || []
+  const attribution = attributeClaims(body, raw, splitSentences(body), { publisher })
+
+  // ── Stage 4: link each claim to the evidence it leans on ──────────────────
+  const evidence = linkEvidence({
+    claims: raw, attribution: attribution.claims, where: attribution.where, layout: attribution.layout,
+    references: references.map((r) => r.text), design: profile.design, publisher,
   })
+
   /** @type {Claim[]} */
-  const claims = raw.map(c0 => {
-    const c = { ...c0, citations: markOwnSiteUrls(c0.citations, profile.provenance) }
+  const claims = raw.map((c, i) => {
     const m = measureClaim(c, { design: profile.design.inherited ? 'none-reported' : profile.design.design })
+    const { citations: linkedCitations, ownStudy, ...ev } = evidence[i]
+    const attr = attribution.claims[i]
     // ── Judgment (the rubric's) ─────────────────────────────────────────────
+    // Grading reads the claim's links: the tokens behind them, and an own-study
+    // link (caption or section scope) lifting it to the in-document rung as an
+    // own result is.
     const tier = measureAssertiveness(c, rubric, m.certainty.tier)
-    const cited = gradeEvidence(c, rubric.ladder)
-    const rung = gradeEvidence(c, rubric.ladder, { inDocumentRung: m.function === 'own-result' ? rubric.ownResultRung : null })
+    const linked = { text: c.text, citations: linkedCitations }
+    const cited = gradeEvidence(linked, rubric.ladder)
+    const rung = gradeEvidence(linked, rubric.ladder, { inDocumentRung: m.function === 'own-result' || ownStudy ? rubric.ownResultRung : null })
     // Did the rung come from the document's own evidence rather than a citation?
     const inDocument = rung.key !== cited.key
     // A method statement reports what was done, not a claim — never flagged.
     const mismatch = m.function === 'method' ? null : detectMismatch({ tier, rung }, rubric.tolerance, posture)
     let flag = mismatch ? mismatch.flag : null
-    let explanation = mismatch ? mismatch.explanation : null
+    let explanation = mismatch ? { ...mismatch.explanation, attribution: attr, evidence: ev } : null
 
     // Disclosed-absence: an openly hedged/stated absence (right-of-reply, "we
     // did not verify", "in my experience") is honest hedging, not a hidden gap.
@@ -122,23 +143,13 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
       if (sev === 'none' || sev === 'note') { flag = null; explanation = null }
     }
 
+    const overreach = overreachOf(m, profile.design, posture, c.text)
     return {
       ...c, tier, rung, citedRung: cited, inDocument, flag, explanation, disclosed,
       certainty: m.certainty, function: m.function, register: m.register, recommendation: m.recommendation,
-      overreach: overreachOf(m, profile.design, posture, c.text),
+      attribution: attr, evidence: ev,
+      overreach: overreach ? { ...overreach, explanation: { ...overreach.explanation, attribution: attr, evidence: ev } } : null,
     }
-  })
-
-  // ── Attribution: whose finding each claim reports (rubric-invariant) ──────
-  // The label rides on the claim and on its flag explanations; own-prior
-  // claims feed the one self-citation counter the profile and the
-  // self-citation signal both read.
-  const publisher = profile.provenance.publisher || []
-  const attribution = attributeClaims(body, claims, splitSentences(body), { publisher })
-  claims.forEach((c, i) => {
-    c.attribution = attribution.claims[i]
-    if (c.explanation) c.explanation = { ...c.explanation, attribution: c.attribution }
-    if (c.overreach) c.overreach = { ...c.overreach, explanation: { ...c.overreach.explanation, attribution: c.attribution } }
   })
   profile.provenance.selfCitation = selfCitationCounter(profile.provenance, claims, publisher)
 

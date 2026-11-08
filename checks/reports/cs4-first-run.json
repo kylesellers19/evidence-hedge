@@ -1,0 +1,16 @@
+{
+  "_comment": "Change set 4, first linker run (before the narrative author-year fix and after the line-by-line caption fix), recorded so the completion report shows both runs. Numbers only.",
+  "engine": "ba7854a + uncommitted linker",
+  "runs": [
+    {
+      "note": "first run: 'Source:' matched on the collapsed text — no caption matched on Fixture C",
+      "fixture-a-cadre": { "links": { "proximity": 108, "marker": 84 }, "proximityShare": 0.563, "markersResolved": 0.476, "unlinkedShare": 0.653, "flags": { "unsupported-assertion": 148, "overconfident": 3, "causal-overreach": 16 }, "score": 1 },
+      "fixture-b-pew-report": { "links": { "proximity": 6, "caption": 83, "speaker": 1 }, "proximityShare": 0.067, "unlinkedShare": 0.619, "flags": { "unsupported-assertion": 9, "overconfident": 0, "causal-overreach": 3 }, "score": 7.3 },
+      "fixture-c-gensler-fandom-2026": { "links": { "section-scope": 96, "proximity": 9 }, "proximityShare": 0.086, "unlinkedShare": 0.733, "flags": { "unsupported-assertion": 207, "overconfident": 3, "causal-overreach": 24 }, "score": 1 }
+    },
+    {
+      "note": "second run: captions matched line by line (a standalone Source line ends at its line break)",
+      "fixture-c-gensler-fandom-2026": { "links": { "section-scope": 96, "caption": 30, "proximity": 9 }, "proximityShare": 0.067, "unlinkedShare": 0.683, "flags": { "unsupported-assertion": 195, "overconfident": 5, "causal-overreach": 24 }, "score": 1 }
+    }
+  ]
+}

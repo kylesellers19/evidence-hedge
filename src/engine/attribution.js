@@ -254,14 +254,12 @@ function speakerOf(text) {
 // ── Where each sentence sits ─────────────────────────────────────────────────
 
 /**
- * Locate sentences (in order) in the body: paragraph index and section kind
- * from the nearest heading line. Sentences are substrings of the
- * whitespace-collapsed body (extractClaims' splitter), so they are matched in
- * order with a cursor.
+ * The body's layout: the whitespace-collapsed text the sentence splitter works
+ * on (`norm`), where each paragraph and line starts in it, and the heading lines
+ * with their section kind. Shared with the evidence linker (captions, blocks).
  * @param {string} body
- * @param {string[]} sentences
  */
-export function locateSentences(body, sentences) {
+export function documentLayout(body) {
   const raw = body || ''
   let norm = ''
   const paraStarts = [0]
@@ -282,19 +280,35 @@ export function locateSentences(body, sentences) {
   lines.push({ start: lineStart, text: norm.slice(lineStart).trim() })
   const headings = lines
     .filter((l) => l.text && l.text.length <= HEADING_MAX_CHARS)
-    .map((l) => ({ start: l.start, kind: (SECTION_KINDS.find(([, re]) => re.test(l.text)) || [])[0] }))
+    .map((l) => ({ start: l.start, text: l.text, kind: (SECTION_KINDS.find(([, re]) => re.test(l.text)) || [])[0] }))
     .filter((h) => h.kind)
+  const paragraphAt = (at) => {
+    let p = 0
+    while (p + 1 < paraStarts.length && paraStarts[p + 1] <= at) p++
+    return p
+  }
+  return { norm, paraStarts, lines, headings, paragraphAt }
+}
 
+/**
+ * Locate sentences (in order) in the body: paragraph index, section kind from
+ * the nearest heading line, and offset in the layout's collapsed text.
+ * Sentences are substrings of that text (extractClaims' splitter), so they are
+ * matched in order with a cursor.
+ * @param {string} body
+ * @param {string[]} sentences
+ * @param {ReturnType<typeof documentLayout>} [layout]
+ */
+export function locateSentences(body, sentences, layout = documentLayout(body)) {
+  const { norm, headings, paragraphAt } = layout
   let cursor = 0
   return sentences.map((s) => {
     const at = norm.indexOf(s, cursor)
     if (at < 0) return { paragraph: null, section: null, offset: null }
     cursor = at + s.length
-    let paragraph = 0
-    while (paragraph + 1 < paraStarts.length && paraStarts[paragraph + 1] <= at) paragraph++
     let section = null
     for (const h of headings) { if (h.start <= at) section = h.kind; else break }
-    return { paragraph, section, offset: at }
+    return { paragraph: paragraphAt(at), section, offset: at }
   })
 }
 
@@ -313,8 +327,7 @@ const ATTRIBUTED = new Set(['own-current', 'own-prior', 'cited-other', 'quoted']
  * @param {{ publisher?: string[] }} [ctx]
  * @returns {Attribution[]}
  */
-export function attributeSentences(body, sentences, ctx = {}) {
-  const where = locateSentences(body, sentences)
+export function attributeSentences(body, sentences, ctx = {}, where = locateSentences(body, sentences)) {
   const out = []
   let antecedent = null // { index, paragraph, attribution }
   sentences.forEach((s, i) => {
@@ -351,14 +364,18 @@ export function attributeSentences(body, sentences, ctx = {}) {
  * @param {{ publisher?: string[] }} ctx
  */
 export function attributeClaims(body, claims, sentences, ctx) {
-  const all = attributeSentences(body, sentences, ctx)
+  const layout = documentLayout(body)
+  const where = locateSentences(body, sentences, layout)
+  const all = attributeSentences(body, sentences, ctx, where)
   let k = 0
-  const byClaim = claims.map((c) => {
+  const located = claims.map((c) => {
     while (k < sentences.length && sentences[k] !== c.text) k++
-    const a = k < sentences.length ? all[k++] : { label: 'undetermined', confidence: 'low', cues: [], reason: 'claim not found among the body sentences', section: null, paragraph: null }
-    return a
+    if (k >= sentences.length) return { attribution: { label: 'undetermined', confidence: 'low', cues: [], reason: 'claim not found among the body sentences', section: null, paragraph: null }, where: { paragraph: null, section: null, offset: null } }
+    const out = { attribution: all[k], where: where[k] }
+    k++
+    return out
   })
-  return { claims: byClaim, sentences: all }
+  return { claims: located.map((x) => x.attribution), where: located.map((x) => x.where), sentences: all, layout }
 }
 
 // ── Self-citation: one counter for the profile and the signal ───────────────

@@ -1,0 +1,33 @@
+{
+  "_comment": "Change set 2, app side: the published models scored side by side with the engine (checks/benchmark.mjs, checks/pair-comparison.mjs). Committed before the benchmark or pair comparison ran on the prediction files. Run under the user's instruction to proceed through every stop-gate; every value is PROVISIONAL — not ratified.",
+  "baseline": { "app": "c111e7d (engine 1c6f4eb)", "research": "evidence-hedge-research b5f4216" },
+  "seenBeforeWriting": "The research repo's own previews (reports/reproduction-cs2.md) were read before this file was written: Yu model on Eureka macro-F1 0.8305 decoded as ordinal; Yu model on Wright pairs press 0.640, abstract 0.725, pair-label agreement 0.631 (all 662 pairs); UniCausal on SSC reproduction 0.609, released 0.705; certainty-estimator Pearson r 0.678 on 331 test+ext rows; CESSC macro-F1 0.890 on 246 SSC test rows. Predictions near those numbers are not independent of them.",
+  "fixesBeforeRun": [
+    "yu2020_eureka is decoded by the encoding the bundle declares (labels.encoding: yu2020-ordinal), not assumed to be yu2019's upstream codes. Before the fix, 1 (correlational) and 3 (direct causal) were swapped, which is why the engine scored 0.371 on Eureka at 1c6f4eb.",
+    "covers() learns trained_on 'original-<split>' and 'original-aspect-<split>' (the source's published split), and treats a row whose published split is unknown as covered.",
+    "sideBySide() scores a model only on rows where it supplies the label being scored; a model with none is left out and counted."
+  ],
+  "predictions": {
+    "engine": {
+      "yu2020_eureka.all.macroF1": { "value": 0.58, "range": [0.50, 0.66], "basis": "the change set 1 prediction (checks/benchmark-predictions.json), unchanged" },
+      "yu2020_eureka.all.accuracy": { "value": 0.65, "range": [0.57, 0.72], "basis": "the change set 1 prediction, unchanged" },
+      "otherCorpusMetrics": "unchanged from engine 1c6f4eb (the fixes touch Eureka decoding and model-eligible rows only)"
+    },
+    "sideBySide": {
+      "yu2019_pubmed": { "model": "yu2019-causal@84abecc", "rows": { "value": 3045, "exact": true }, "modelMacroF1": { "value": 0.87, "range": [0.85, 0.89] }, "engineMacroF1": { "value": 0.71, "range": [0.68, 0.73] }, "order": "model > engine" },
+      "yu2020_eureka": { "model": "yu2019-causal@84abecc", "rows": { "value": 2073, "exact": true }, "modelMacroF1": { "value": 0.83, "range": [0.81, 0.85] }, "order": "model > engine" },
+      "pei2021": { "model": "certainty-estimator-sentence@97a130c", "rows": { "value": 331, "range": [320, 331] }, "modelSpearman": { "value": 0.67, "range": [0.60, 0.74] }, "engineSpearman": { "value": 0.58, "range": [0.50, 0.65] }, "order": "model > engine", "aspectModel": "left out of the certainty comparison (it supplies no 1–6 certainty)" },
+      "cessc_ssc": {
+        "cessc@42819b2": { "rows": { "value": 246, "exact": true }, "modelF1": { "value": 0.88, "range": [0.82, 0.93] }, "order": "model > engine" },
+        "unicausal-seq@96ed92b": { "rows": { "value": 1058, "exact": true }, "modelF1": { "value": 0.60, "range": [0.50, 0.70] }, "order": "model > engine" },
+        "unicausal-seq-released@96ed92b": { "rows": { "value": 1058, "exact": true }, "modelF1": { "value": 0.70, "range": [0.60, 0.78] }, "order": "model > engine" },
+        "engineF1": { "value": 0.60, "range": [0.52, 0.68], "basis": "precision 0.772, recall 0.473 on all 1,058 rows at 1c6f4eb gives F1 0.587" }
+      },
+      "unscientify": "no causal_register, certainty or causal label: left out of every side-by-side check (cross-checked on attribution instead, research repo)"
+    },
+    "pairs": {
+      "originalTest": { "yuRows": { "value": 562, "range": [560, 563] }, "yuMacroF1": { "value": 0.55, "range": [0.45, 0.65] }, "engineMacroF1": { "value": 0.45, "exact": true }, "order": "Yu > engine" },
+      "bundleTest": { "yuRows": { "value": 50, "range": [49, 50] }, "yuMacroF1": { "value": 0.55, "range": [0.40, 0.70] } }
+    }
+  }
+}

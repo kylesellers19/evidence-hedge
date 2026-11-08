@@ -22,7 +22,8 @@ const ABBREV = /\b(?:e\.g|i\.e|vs|etc|al|Dr|Mr|Mrs|Ms|Inc|Ltd|Corp|Fig|No|pp|cf)
 export function splitSentences(text) {
   const rough = text
     .replace(/\s+/g, ' ')
-    .split(/(?<=[.!?])\s+(?=["'“(]?[A-Z0-9])/)
+    // A superscript marker may follow the stop ("jobs.¹ The …").
+    .split(/(?<=[.!?](?:[⁰¹²³⁴⁵⁶⁷⁸⁹]+(?:[,–-][⁰¹²³⁴⁵⁶⁷⁸⁹]+)*)?)\s+(?=["'“(]?[A-Z0-9])/)
   // Re-join fragments that split on a known abbreviation.
   const out = []
   for (const frag of rough) {

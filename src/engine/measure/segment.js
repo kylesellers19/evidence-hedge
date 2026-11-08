@@ -47,9 +47,10 @@ export function isReferenceEntry(s) {
   return cues.length >= 2 && (cues.includes('authorList') || cues.includes('journalCite'))
 }
 
+// A list number stays with its entry: "1. Kellert, S. R." is not split after "1.".
 function splitEntries(text) {
   return text
-    .split(/\n\n+|(?<=\.)\s+(?=\d{1,3}\.\s+[A-Z][\p{L}'’-]+,)|(?<=\.)\s+(?=[A-Z][\p{L}'’-]+,\s(?:[A-Z]\.\s?)+)|(?<=\])\s+(?=\.?[A-Z0-9(])/u)
+    .split(/\n\n+|(?<=\.)\s+(?=\d{1,3}\.\s+[A-Z][\p{L}'’-]+,)|(?<=\.)(?<!(?:^|\s)\d{1,3}\.)\s+(?=[A-Z][\p{L}'’-]+,\s(?:[A-Z]\.\s?)+)|(?<=\])\s+(?=\.?[A-Z0-9(])/u)
     .map((s) => s.replace(/\s+/g, ' ').trim())
     .filter((s) => s.length > 8)
 }

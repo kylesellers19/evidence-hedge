@@ -2,8 +2,9 @@
 // node checks/claim-record.test.mjs — change set 5: claim records and comparison.
 //
 //   1. Flags and scores on the known-good string and Fixtures A–C are identical
-//      to change set 4's (checks/reports/links-513f33d.json): records are
-//      read-only on the analysis.
+//      to the linkage check's on the same engine (checks/reports/links-<engine
+//      commit>.json, written earlier in `npm run check`; change set 4's
+//      links-513f33d.json when absent): records are read-only on the analysis.
 //   2. Every record carries every field, each with a status, a label tier when
 //      resolved and a reason when unresolved; the six human-coded fields stay
 //      unresolved until coded.
@@ -40,10 +41,11 @@ const check = (name, ok, detail = '') => {
 check('record causal strength uses change set 1 mapping', JSON.stringify(CAUSAL_STRENGTH) === JSON.stringify(REGISTER_STRENGTH))
 
 // 1, 2, 5
-const BEFORE = JSON.parse(readFileSync(join(ROOT, 'checks', 'reports', 'links-513f33d.json'), 'utf8')).fixtures
+const commit = engineCommit()
+const sameEngine = join(ROOT, 'checks', 'reports', `links-${commit}.json`)
+const BEFORE = JSON.parse(readFileSync(existsSync(sameEngine) ? sameEngine : join(ROOT, 'checks', 'reports', 'links-513f33d.json'), 'utf8')).fixtures
 const PRED = JSON.parse(readFileSync(join(ROOT, 'checks', 'cs5-predictions.json'), 'utf8')).predictions
 const inRange = (v, r) => (Array.isArray(r) ? v >= r[0] && v <= r[1] : v === r)
-const commit = engineCommit()
 const report = { engine_commit: commit, label_tier: 'predicted', source: 'fixtures A–C', split: 'fixture', fixtures: {}, mismatches: [] }
 
 function wellFormed(id, records) {

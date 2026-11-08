@@ -22,6 +22,15 @@ export const NOTES_HEADING = /^(?:End\s?notes|Notes|Footnotes)\s*$/i
 export const NOTE_LINE = /^(\d{1,3})[.)]?\s+(.{6,})$/
 // A footnote anchor: digits glued to the end of a word or closing punctuation.
 export const FOOTNOTE_ANCHOR = /(?<=[a-z)\]”"’.,;:%])(\d{1,3})(?=\s|$)/g
+// A superscript marker, as PDF ingest keeps it inline: Unicode superscript
+// digits glued to a word or closing punctuation ("comfort⁷,¹²", "jobs.¹",
+// "studies¹⁴–¹⁶"). A numbered reference list resolves it as a citation marker;
+// a Notes list as a footnote; with neither it makes no link. Not after a
+// one- or two-letter word, so units ("m²", "cm³") are not markers.
+export const SUPERSCRIPT_MARKER = /(?<=\p{L}{3}|[)\]”"’.,;:%])[⁰¹²³⁴⁵⁶⁷⁸⁹]+(?:[,–-][⁰¹²³⁴⁵⁶⁷⁸⁹]+)*/gu
+const SUPER_DIGITS = '⁰¹²³⁴⁵⁶⁷⁸⁹'
+/** "⁷,¹²" → "7,12" */
+export const fromSuperscript = (s) => s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]/g, (d) => String(SUPER_DIGITS.indexOf(d)))
 
 // Reference entries.
 export const REF_NUMBER = /^\s*\[?(\d{1,3})[\].)]?\s+/

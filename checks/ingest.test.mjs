@@ -1,6 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Ingestion checks (Phase 1): validateText, failure copy, the reader-only
-// site-chrome stripper and the mid-word URL un-splice. Plain Node, no network:
+// site-chrome stripper, the mid-word URL un-splice, and PDF reading order with
+// inline super/subscripts (synthetic text items). Plain Node, no network:
 // the two failure bodies below are the reader's real responses for the corpus
 // test URLs, captured 2026-11-06 and tagged with their corpus ids.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -12,6 +13,7 @@ import { unspliceUrls } from '../src/ingest/normalizer.js'
 import { fetchLink, READER } from '../src/ingest/fetchLink.js'
 import { extractFile } from '../src/ingest/extractFile.js'
 import { ExtractionError } from '../src/ingest/errors.js'
+import { reconstructPage } from '../src/ingest/extractPdf.js'
 
 let ok = true
 const log = (label, pass, extra = '') => { if (!pass) ok = false; console.log(`${pass ? 'PASS ✅' : 'FAIL ❌'}  ${label}${extra ? ' — ' + extra : ''}`) }
@@ -86,6 +88,39 @@ log('stripper reports what it dropped', stripped.dropped.length === 2 && /Stuffy
 const cadre = 'how the built and natural envihttps://neurocivitas.group.cam.ac.uk/ ronment can advance human health'
 log('[fixture-a-cadre] "envi<url> ronment" → "environment <url>"', unspliceUrls(cadre) === 'how the built and natural environment https://neurocivitas.group.cam.ac.uk/ can advance human health', unspliceUrls(cadre))
 log('a URL after a space is untouched', unspliceUrls('See https://example.org/ for details.') === 'See https://example.org/ for details.')
+
+// ── PDF reading order and inline markers (synthetic pdfjs text items) ────────
+// item(str, x, y, h): a text item on baseline y, about 0.5 h per character wide.
+const item = (str, x, y, h = 9, w = str.length * h * 0.5) => ({ str, width: w, transform: [h, 0, 0, h, x, y] })
+const words = (n, tag) => Array.from({ length: n }, (_, i) => `${tag}${i}`)
+{
+  // Three 160px columns with 10px gutters (EHP's layout), baselines aligned.
+  const items = []
+  for (const [c, x] of [[0, 43], [1, 219], [2, 395]]) words(14, `c${c}w`).forEach((t, i) => items.push(item(`${t} lorem ipsum dolor sit amet ok`, x, 700 - i * 11, 9, 160)))
+  const t = reconstructPage(items)
+  const at = (s) => t.indexOf(s)
+  log('three columns, 10px gutters: read column by column', at('c0w13') < at('c1w0') && at('c1w13') < at('c2w0') && at('c0w0') < at('c0w13'), t.split('\n').slice(0, 2).join(' | '))
+}
+{
+  // A superscript citation marker and a subscript stay inline; a caption does not.
+  const items = []
+  for (let i = 0; i < 12; i++) items.push(item('body text of an ordinary line here', 50, 700 - i * 12, 9, 160))
+  items.push(item('health and comfort', 50, 500, 9, 81), item('7,12', 131.5, 503.5, 6, 11), item('. The next one', 143, 500, 9, 60))
+  items.push(item('peak indoor CO', 50, 488, 9, 63), item('2', 113.5, 486.5, 6, 3), item(' levels rose', 117.5, 488, 9, 54))
+  items.push(item('Photo credit: a separate caption line', 50, 300, 6, 120))
+  const t = reconstructPage(items)
+  log('superscript marker kept inline as Unicode superscripts', t.includes('comfort⁷,¹². The next one'), JSON.stringify(t.match(/comfort.{0,20}/)?.[0]))
+  log('subscript kept inline as a Unicode subscript', t.includes('CO₂ levels rose'), JSON.stringify(t.match(/CO.{0,14}/)?.[0]))
+  log('a small caption line still goes to the end of the page', t.trim().endsWith('Photo credit: a separate caption line'))
+}
+{
+  // A bullet list beside a heading column: the bullet stays with its text.
+  const items = []
+  for (let i = 0; i < 10; i++) items.push(item(i % 3 ? 'Heading words' : 'Section title', 50, 700 - i * 12, 9, 60))
+  for (let i = 0; i < 10; i++) { items.push(item('▪', 200, 700 - i * 12, 9, 5)); items.push(item(`item ${i} text of a bulleted line`, 214, 700 - i * 12, 9, 150)) }
+  const t = reconstructPage(items)
+  log('a bullet stays on the line of its text', /▪ item 0 text/.test(t) && /▪ item 9 text/.test(t), JSON.stringify(t.match(/.{0,8}item 0 text/)?.[0]))
+}
 
 if (!ok) { console.error('\ningest checks failed.'); process.exit(1) }
 console.log('\nAll ingest checks passed.')

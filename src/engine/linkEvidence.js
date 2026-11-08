@@ -34,7 +34,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { parseReferences, resolveMarker } from './references.js'
-import { SOURCE_LINE, CAPTION_REACH, FIGURE_REF, OWN_SOURCE_NOUN, NOTES_HEADING, NOTE_LINE, FOOTNOTE_ANCHOR } from './lexicons/linkage.js'
+import { SOURCE_LINE, CAPTION_REACH, FIGURE_REF, OWN_SOURCE_NOUN, NOTES_HEADING, NOTE_LINE, FOOTNOTE_ANCHOR, SUPERSCRIPT_MARKER, fromSuperscript } from './lexicons/linkage.js'
 import { NAMED_ORG } from './lexicons/attribution.js'
 import { escapeRe } from './signals/util.js'
 
@@ -113,6 +113,7 @@ export function linkEvidence({ claims, attribution, where, layout, references, d
   const ownStudy = hasOwnStudy ? { kind: 'own-study', design: design.design, evidence: (design.evidence[0]?.span || '').slice(0, 160) } : null
   const captions = captionsOf(layout, publisher, hasOwnStudy)
   const notes = notesOf(layout)
+  const numbered = entries.some((e) => e.number != null)
 
   return claims.map((c, i) => {
     const a = attribution[i]
@@ -121,6 +122,13 @@ export function linkEvidence({ claims, attribution, where, layout, references, d
     const links = []
     const citations = []
     let ownStudyLink = false
+    const markerLinks = (t) => {
+      for (const r of resolveMarker(t, entries)) {
+        links.push(r.entry
+          ? { basis: 'marker', anchor: r.cite, target: { kind: 'reference', index: r.entry.index, text: r.entry.text.slice(0, 160), ...(r.entry.doi ? { doi: r.entry.doi } : {}) }, confidence: r.ambiguous ? 'low' : 'high' }
+          : { basis: 'marker', anchor: r.cite, target: { kind: 'unresolved-marker' }, confidence: 'low' })
+      }
+    }
 
     // Same-sentence tokens: markers and hyperlinks when routed, else proximity.
     // A bare "(2020)" the detector typed as a year is a narrative author-year
@@ -134,11 +142,7 @@ export function linkEvidence({ claims, attribution, where, layout, references, d
       const t = named ? { type: 'author-year', raw: named } : t0
       const basis = TOKEN_BASIS[t.type]
       if (basis === 'marker' && routed.has('marker') && entries.length) {
-        for (const r of resolveMarker(t, entries)) {
-          links.push(r.entry
-            ? { basis: 'marker', anchor: r.cite, target: { kind: 'reference', index: r.entry.index, text: r.entry.text.slice(0, 160), ...(r.entry.doi ? { doi: r.entry.doi } : {}) }, confidence: r.ambiguous ? 'low' : 'high' }
-            : { basis: 'marker', anchor: r.cite, target: { kind: 'unresolved-marker' }, confidence: 'low' })
-        }
+        markerLinks(t)
         citations.push(t0)
       } else if (basis && routed.has(basis)) {
         links.push({ basis, anchor: t.raw.slice(0, 120), target: basis === 'marker' ? { kind: 'unresolved-marker', reason: 'no reference list' } : { kind: 'url', url: t.raw.slice(0, 200) }, confidence: basis === 'marker' ? 'low' : 'high' })
@@ -149,12 +153,25 @@ export function linkEvidence({ claims, attribution, where, layout, references, d
       }
     }
 
+    // Superscript markers (PDF ingest keeps them inline): citation markers
+    // against a numbered reference list, else footnote anchors below.
+    const superscripts = [...c.text.matchAll(SUPERSCRIPT_MARKER)].map((m) => m[0])
+    if (superscripts.length && numbered && routed.has('marker')) {
+      for (const raw of superscripts) {
+        const t = { type: 'numeric', raw: `[${fromSuperscript(raw)}]` }
+        markerLinks(t)
+        citations.push(t)
+      }
+    }
+
     // Footnotes
     if (routed.has('footnote') && notes.size) {
-      for (const m of c.text.matchAll(FOOTNOTE_ANCHOR)) {
-        const note = notes.get(Number(m[1]))
+      const anchors = [...c.text.matchAll(FOOTNOTE_ANCHOR)].map((m) => [m[0], Number(m[1])])
+      if (!numbered) for (const raw of superscripts) for (const n of fromSuperscript(raw).split(/[,–-]/)) anchors.push([raw, Number(n)])
+      for (const [anchor, n] of anchors) {
+        const note = notes.get(n)
         if (!note) continue
-        links.push({ basis: 'footnote', anchor: m[0], target: { kind: 'note', number: Number(m[1]), text: note }, confidence: 'high' })
+        links.push({ basis: 'footnote', anchor, target: { kind: 'note', number: n, text: note }, confidence: 'high' })
         citations.push(noteCitation(note))
       }
     }

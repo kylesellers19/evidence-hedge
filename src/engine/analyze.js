@@ -14,6 +14,7 @@
 import { extractClaims, splitSentences } from './extractClaims.js'
 import { attributeClaims, selfCitationCounter } from './attribution.js'
 import { linkEvidence } from './linkEvidence.js'
+import { parseReferences } from './references.js'
 import { buildClaimRecord } from './claimRecord.js'
 import { measureAssertiveness } from './measureAssertiveness.js'
 import { measureClaim } from './measure/index.js'
@@ -105,7 +106,9 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
   // claims feed the one self-citation counter the profile and the
   // self-citation signal both read.
   const publisher = profile.provenance.publisher || []
-  const attribution = attributeClaims(body, raw, splitSentences(body), { publisher })
+  // Superscript markers cite only where the reference list is numbered.
+  const superscriptMarkers = parseReferences(references.map((r) => r.text)).some((e) => e.number != null)
+  const attribution = attributeClaims(body, raw, splitSentences(body), { publisher, superscriptMarkers })
 
   // ── Stage 4: link each claim to the evidence it leans on ──────────────────
   const evidence = linkEvidence({

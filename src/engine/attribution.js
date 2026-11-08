@@ -36,6 +36,7 @@ import {
   QUOTE, SPEECH_VERB, REPORTED_SPEECH, BUILDS_ON, PRONOUN_SUBJECT, SECTION_KINDS, HEADING_MAX_CHARS, PUBLISHER_FRONT_CHARS,
 } from './lexicons/attribution.js'
 import { escapeRe } from './signals/util.js'
+import { SUPERSCRIPT_MARKER } from './lexicons/linkage.js'
 
 /** @typedef {import('./types.js').Attribution} Attribution */
 
@@ -62,6 +63,7 @@ const AUTHOR_YEAR = /\([A-Z][\p{L}.'’-]+(?:\s+(?:et al\.?|and|&)(?:\s+[A-Z][\p
 const NUMERIC = new RegExp(`${LEX.citationRegexes.patterns[0]}|\\[\\d+(?:\\s*[-,]\\s*\\d+)*\\]`)
 // UnScientify's parenthesized numeric marker, kept to ranges and lists so "(52)" is not a citation.
 const NUMERIC_PAREN = /\(\d{1,3}(?:\s*[–-]\s*\d{1,3}|(?:,\s*\d{1,3})+)\)/
+const SUPERSCRIPT_ONE = new RegExp(SUPERSCRIPT_MARKER.source, 'u')
 const ETAL = new RegExp(ET_AL, 'i')
 const DOI = /\b10\.\d{4,}\/\S+|doi\.org\/\S+/i
 const ACCORDING_NAMED = new RegExp(ACCORDING_TO_NAMED)
@@ -176,7 +178,9 @@ export function attributeSentence(text, ctx = {}) {
 
   // Other: strong
   const ay = first(AUTHOR_YEAR, text); add('author-year', ay)
-  const num = first(NUMERIC, text) || first(NUMERIC_PAREN, text); add('numeric-marker', num)
+  // A superscript marker cites only where the document has a numbered reference
+  // list; elsewhere it is a note marker (Pew's "jobs.¹").
+  const num = first(NUMERIC, text) || first(NUMERIC_PAREN, text) || (ctx.superscriptMarkers ? first(SUPERSCRIPT_ONE, text) : null); add('numeric-marker', num)
   const etal = first(ETAL, text); add('et-al', etal)
   // A DOI in the front of the body is the document's own (its venue block).
   const doi = ctx.front ? null : first(DOI, text); add('doi', doi)
@@ -333,7 +337,7 @@ export function attributeSentences(body, sentences, ctx = {}, where = locateSent
   sentences.forEach((s, i) => {
     const { paragraph, section, offset } = where[i]
     const front = offset != null && offset < PUBLISHER_FRONT_CHARS
-    const a = attributeSentence(s, { publisher: ctx.publisher, section, front })
+    const a = attributeSentence(s, { publisher: ctx.publisher, superscriptMarkers: ctx.superscriptMarkers, section, front })
     let result = a
     const sameParagraph = antecedent && paragraph != null && antecedent.paragraph === paragraph
     const reaches =

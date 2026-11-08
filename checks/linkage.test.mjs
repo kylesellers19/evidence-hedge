@@ -15,6 +15,10 @@
 //      same-sentence), into checks/reports/links-<engine commit>.json. A
 //      mismatch is reported there and in the completion report; it does not
 //      fail this check.
+//   5. Superscript markers, as PDF ingest keeps them inline ("workers⁷"):
+//      against a numbered reference list they are citation markers and the
+//      sentence reads as cited; with no list they make no link and leave the
+//      sentence's attribution alone. A numbered entry keeps its number.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
@@ -25,6 +29,10 @@ import { engineCommit } from './lib/engine-rows.mjs'
 import { routeDocument } from '../src/rubrics/route.js'
 import { analyze } from '../src/engine/analyze.js'
 import { LINK_BASES } from '../src/engine/linkEvidence.js'
+import { getRubric } from '../src/rubrics/index.js'
+import { splitSentences } from '../src/engine/extractClaims.js'
+import { segmentDocument } from '../src/engine/measure/segment.js'
+import { parseReferences } from '../src/engine/references.js'
 
 let failed = 0
 const check = (name, ok, detail = '') => {
@@ -51,6 +59,26 @@ for (const doc of loadCorpus()) {
   if (loaded.status !== 'ok') { console.log(`SKIP ${doc.id} — ${loaded.reason}`); continue }
   const route = routeDocument(loaded.text, { sourceUrl: doc.url || '' })
   wellFormed(doc.id, analyze(loaded.text, route.judgment.rubric, route.posture, { sourceUrl: doc.url || '' }))
+}
+
+// 5. Superscript markers (synthetic documents)
+{
+  const filler = Array.from({ length: 40 }, (_, i) => `Office layouts vary widely across the ${i + 1} sites that were visited during the year.`).join(' ')
+  const refs = Array.from({ length: 8 }, (_, i) => `${i + 1}. Author${String.fromCharCode(65 + i)}, J. K. A study of offices number ${i + 1}. Journal of Buildings ${10 + i}, 1–9 (20${10 + i}).`).join(' ')
+  const cited = `${filler}\n\nOpen-plan offices reduce sustained focus among knowledge workers⁷. ${filler}\n\nReferences ${refs}`
+  const entries = parseReferences(segmentDocument(cited).references)
+  check('a numbered reference entry keeps its number ("1. Surname, J. K.")', entries.length === 8 && entries.every((e, i) => e.number === i + 1), JSON.stringify(entries.map((e) => e.number)))
+  const a = analyze(cited, getRubric('research'), 'standard')
+  const c = a.claims.find((x) => x.text.includes('focus among knowledge workers'))
+  const link = c?.evidence.links.find((l) => l.basis === 'marker')
+  check('a superscript marker resolves against a numbered reference list', link?.target.kind === 'reference' && entries[link.target.index]?.number === 7, JSON.stringify(link))
+  check('…and the sentence reads as citing other work', c?.attribution.label === 'cited-other', c?.attribution.label)
+
+  const noted = `${filler}\n\nMost workers have heard about artificial intelligence in their jobs.¹ The share who use it every day rose sharply this year. ${filler}`
+  check('splitSentences keeps the boundary after a superscript marker', splitSentences(noted).some((x) => x.endsWith('in their jobs.¹')))
+  const b = analyze(noted, getRubric('research'), 'standard')
+  const n = b.claims.find((x) => x.text.includes('in their jobs.¹'))
+  check('with no reference or notes list a superscript makes no link', !!n && !n.evidence.links.length && n.attribution.label !== 'cited-other', n ? `${n.evidence.status}, ${n.attribution.label}` : 'claim not found')
 }
 
 const PRED = JSON.parse(readFileSync(join(ROOT, 'checks', 'cs4-predictions.json'), 'utf8')).predictions

@@ -1,0 +1,16 @@
+{
+  "engine_commit": "513f33d",
+  "label_tier": "gold",
+  "source": "fixtures A–C (link sample)",
+  "split": "fixture-sample",
+  "seed": 20261108,
+  "pool": 358,
+  "sampleByBasis": {
+    "marker": 17,
+    "proximity": 10,
+    "caption": 12,
+    "section-scope": 11
+  },
+  "status": "pending",
+  "reason": "no labeled file at checks/data/review/labeled/link-sample.csv"
+}

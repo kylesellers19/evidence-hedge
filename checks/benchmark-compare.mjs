@@ -23,7 +23,8 @@ const load = (c) => {
 const A = load(oldC)
 const B = load(newC)
 const keyOf = (m) => [m.check, m.source, m.split, m.metric, String(m.system || '').replace(/@.*/, '@')].join(' | ')
-const fmt = (v) => (v == null ? '—' : typeof v === 'number' ? String(+v.toFixed(4)) : String(v))
+const fmt = (v) => (v == null ? '—' : typeof v === 'number' ? String(+v.toFixed(4)) : typeof v === 'object' ? '(table)' : String(v))
+const same = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 const delta = (a, b) => (typeof a === 'number' && typeof b === 'number' ? +(b - a).toFixed(4) : null)
 
 const rows = new Map()
@@ -39,7 +40,7 @@ const L = [`# Benchmark: engine ${oldC} vs ${newC}`, '', `Generated ${new Date()
 let changed = 0
 for (const { m, a, b, rowsA, rowsB } of rows.values()) {
   const d = delta(a, b)
-  const moved = a !== b && !(a == null && b == null)
+  const moved = !same(a, b) && !(a == null && b == null)
   if (moved) changed++
   L.push(`| ${m.check} | ${m.source} | ${m.split} | ${fmt(rowsA)} → ${fmt(rowsB)} | ${m.label_tier} | ${m.metric}${m.system && !String(m.system).startsWith('engine') ? ` (${m.system})` : ''} | ${fmt(a)} | ${fmt(b)} | ${moved ? (d != null ? (d > 0 ? '+' : '') + d : 'changed') : ''} |`)
 }

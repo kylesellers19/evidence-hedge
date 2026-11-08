@@ -10,7 +10,13 @@
 //   '<source>:<split>'       the model saw that split of the source
 //   '<source>:out-of-fold'   trained on the source, but each row was scored by
 //                            a model that never saw it (covers nothing)
+//   '<source>:original-<split>'         the model saw that split as the source
+//                            published it (the row's original_split)
+//   '<source>:original-aspect-<split>'  the same, for Pei & Jurgens' aspect
+//                            files (original_split_aspect)
 //   '<fixture id>'           the model saw that fixture's units
+// A row whose published split is unknown counts as covered by an original-*
+// entry: it cannot be shown to be unseen.
 // cessc_general and UniCausal are one source: either name covers both.
 //
 // labels (PROVISIONAL — not ratified; change set 2 writes to this contract):
@@ -29,7 +35,10 @@ export const PREDICTIONS_DIR = join(DATA, 'predictions')
 const ALIASES = { unicausal: 'cessc_general', cessc_general: 'cessc_general' }
 const canon = (s) => ALIASES[String(s).toLowerCase()] || String(s).toLowerCase()
 
-/** Is a target row covered by a prediction's trained_on? */
+/**
+ * Is a target row covered by a prediction's trained_on?
+ * @param {{source:string, split?:string, originalSplit?:?string, originalSplitAspect?:?string}} target
+ */
 export function covers(trainedOn = [], target) {
   const source = canon(target.source)
   for (const entry of trainedOn) {
@@ -37,6 +46,11 @@ export function covers(trainedOn = [], target) {
     if (canon(s) !== source) continue
     if (scope === 'out-of-fold') continue
     if (!scope || scope === target.split) return true
+    const published = scope.match(/^original-(aspect-)?(.+)$/)
+    if (published) {
+      const split = published[1] ? target.originalSplitAspect : target.originalSplit
+      if (split == null || split === published[2]) return true
+    }
   }
   return false
 }

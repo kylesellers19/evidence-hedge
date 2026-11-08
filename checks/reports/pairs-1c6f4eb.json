@@ -52,8 +52,51 @@
         "undetermined": 0
       },
       "yu": {
-        "status": "pending",
-        "reason": "no checks/data/predictions/ yet (change set 2)"
+        "system": "yu2019-causal@84abecc",
+        "file": "yu2019-causal-84abecc.jsonl",
+        "label_tier": "predicted",
+        "rows": 562,
+        "missing": 1,
+        "droppedTrainedOn": 0,
+        "accuracy": 0.641,
+        "macroF1": 0.577,
+        "perClass": {
+          "same": {
+            "n": 345,
+            "precision": 0.801,
+            "recall": 0.699,
+            "f1": 0.746
+          },
+          "exaggerates": {
+            "n": 121,
+            "precision": 0.507,
+            "recall": 0.587,
+            "f1": 0.544
+          },
+          "downplays": {
+            "n": 96,
+            "precision": 0.397,
+            "recall": 0.5,
+            "f1": 0.442
+          }
+        },
+        "confusion": {
+          "same": {
+            "same": 241,
+            "exaggerates": 55,
+            "downplays": 49
+          },
+          "exaggerates": {
+            "same": 26,
+            "exaggerates": 71,
+            "downplays": 24
+          },
+          "downplays": {
+            "same": 34,
+            "exaggerates": 14,
+            "downplays": 48
+          }
+        }
       }
     },
     "bundleTest": {
@@ -105,8 +148,51 @@
         "undetermined": 0
       },
       "yu": {
-        "status": "pending",
-        "reason": "no checks/data/predictions/ yet (change set 2)"
+        "system": "yu2019-causal@84abecc",
+        "file": "yu2019-causal-84abecc.jsonl",
+        "label_tier": "predicted",
+        "rows": 50,
+        "missing": 0,
+        "droppedTrainedOn": 0,
+        "accuracy": 0.52,
+        "macroF1": 0.507,
+        "perClass": {
+          "same": {
+            "n": 26,
+            "precision": 0.609,
+            "recall": 0.538,
+            "f1": 0.571
+          },
+          "exaggerates": {
+            "n": 14,
+            "precision": 0.818,
+            "recall": 0.643,
+            "f1": 0.72
+          },
+          "downplays": {
+            "n": 10,
+            "precision": 0.188,
+            "recall": 0.3,
+            "f1": 0.231
+          }
+        },
+        "confusion": {
+          "same": {
+            "same": 14,
+            "exaggerates": 2,
+            "downplays": 10
+          },
+          "exaggerates": {
+            "same": 2,
+            "exaggerates": 9,
+            "downplays": 3
+          },
+          "downplays": {
+            "same": 7,
+            "exaggerates": 0,
+            "downplays": 3
+          }
+        }
       }
     }
   },

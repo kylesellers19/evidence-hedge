@@ -119,15 +119,22 @@ function writeEngineRows(source, rows) {
   writeFileSync(join(dir, `${source}.jsonl`), lines.join('\n') + '\n')
 }
 
-// Side by side: each published model and the engine on the rows that model may be scored on.
+// Side by side: each published model and the engine on the rows that model may
+// be scored on and supplies the scored label for. A model that supplies the
+// label on no row is left out, and listed in the check's notes.
+const supplies = (v) => v != null && !Number.isNaN(v)
+const leftOut = []
 function sideBySide(check, source, rows, score, metricName, toolValue) {
-  const targets = new Map(rows.map((r) => [idOf(r), { source, split: splitOf(r) }]))
+  const targets = new Map(rows.map((r) => [idOf(r), { source, split: splitOf(r), originalSplit: r.original_split ?? null, originalSplitAspect: r.original_split_aspect ?? null }]))
   for (const [tool, list] of preds) {
     const { kept, dropped } = usablePredictions(list, targets)
     if (!kept.size) continue
+    let withoutLabel = 0
+    for (const [id, p] of kept) if (!supplies(toolValue(p))) { kept.delete(id); withoutLabel++ }
+    if (!kept.size) { leftOut.push({ check, source, system: tool, reason: `supplies no label this check scores, on all ${withoutLabel} eligible rows` }); continue }
     const shared = rows.filter((r) => kept.has(idOf(r)))
     const tier = [...kept.values()][0].tier || 'predicted'
-    const base = { check, source, split: 'model-eligible', rows: shared.length, label_tier: 'published-human', droppedTrainedOn: dropped }
+    const base = { check, source, split: 'model-eligible', rows: shared.length, label_tier: 'published-human', droppedTrainedOn: dropped, droppedWithoutLabel: withoutLabel }
     record({ ...base, metric: metricName, system: tool, system_tier: tier, value: score(shared, (r) => toolValue(kept.get(idOf(r)))) })
     record({ ...base, metric: metricName, system: ENGINE, system_tier: 'predicted', value: score(shared, null) })
   }
@@ -196,11 +203,14 @@ const CORPUS_CHECKS = {
     causalCheck('yu2019_pubmed', rows, enc.encoding, part.partitionOf)
     return { status: 'ok', encoding: enc }
   },
+  // Yu 2020 numbers its classes ordinally (0 none, 1 correlational, 2 conditional
+  // causal, 3 direct causal), unlike Yu 2019; the bundle declares it per row.
   yu2020_eureka() {
-    const yu19 = yuEncoding(bySource('yu2019_pubmed'))
-    if (!['upstream', 'ordinal'].includes(yu19.encoding)) return { status: 'stopped', reason: `Yu label encoding ${yu19.encoding}` }
-    causalCheck('yu2020_eureka', bySource('yu2020_eureka'), yu19.encoding, null)
-    return { status: 'ok', encoding: { encoding: yu19.encoding, basis: 'assumed the same as yu2019_pubmed in the bundle (no upstream file on disk to verify)' } }
+    const rows = bySource('yu2020_eureka')
+    const declared = new Set(rows.map((r) => String(field(r, 'encoding')).split(':')[0]))
+    if (declared.size !== 1 || !declared.has('yu2020-ordinal')) return { status: 'stopped', reason: `Yu 2020 label encoding declared as ${[...declared].join(', ')}` }
+    causalCheck('yu2020_eureka', rows, 'ordinal', null)
+    return { status: 'ok', encoding: { encoding: 'ordinal', basis: 'declared by the bundle (labels.encoding: yu2020-ordinal, after junwang4/correlation-to-causation-exaggeration LABEL_NAME)' } }
   },
   pei2021() {
     const all = bySource('pei2021')
@@ -306,6 +316,7 @@ const report = {
     predictions: predictions.status === 'ok' ? { files: predictions.files, tools: [...preds.keys()] } : { status: 'skip', reason: predictions.reason },
   },
   checks,
+  leftOut,
   fixtures: fixtureResults,
   metrics,
   selfCheck: { metrics: metrics.length, unlabeled: unlabeled.length },
@@ -341,6 +352,10 @@ function markdown(r) {
   const notRun = Object.entries(r.checks).filter(([, c]) => c.status !== 'ok')
   if (!notRun.length) L.push('None.')
   for (const [k, c] of notRun) L.push(`- **${k}**: ${c.status} — ${c.reason}`)
+  if (r.leftOut?.length) {
+    L.push('', '## Models left out of a comparison', '')
+    for (const x of r.leftOut) L.push(`- **${x.system}** on ${x.source} (${x.check}): ${x.reason}`)
+  }
   L.push('', '## Fixtures', '')
   L.push('| Fixture | Standard | Rubric | Posture | Units (on a page) | Claims | Unsupported | Overconfident | Causal overreach | Score | Signals |', '|---|---|---|---|---|---|---|---|---|---|---|')
   for (const [id, f] of Object.entries(r.fixtures)) {

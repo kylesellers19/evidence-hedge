@@ -27,6 +27,7 @@ export const FIELDS = {
   conflict: 'label_conflict',
   text: 'text',
   yuStrength: 'labels.causal_strength',   // yu2019_pubmed, yu2020_eureka
+  encoding: 'labels.encoding',            // the label scheme each row declares
   certainty: 'labels.certainty',          // pei2021, 1–6
   causal: 'labels.causal',                // cessc_ssc, cessc_general: yes / no
   pressText: 'press_text',                // wright2021_pairs

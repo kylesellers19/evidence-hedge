@@ -81,6 +81,10 @@ check('trained_on: source:split covers only that split', covers(['yu2019_pubmed:
 check('trained_on: out-of-fold covers nothing', !covers(['yu2019_pubmed:out-of-fold'], t))
 check('trained_on: UniCausal covers cessc_general', covers(['UniCausal'], { source: 'cessc_general', split: 'train' }))
 check('trained_on: UniCausal does not cover cessc_ssc', !covers(['UniCausal'], { source: 'cessc_ssc', split: 'test' }))
+const pub = { source: 'pei2021', split: 'train', originalSplit: 'test', originalSplitAspect: 'train' }
+check('trained_on: original-<split> follows the published split, not the regrouped one', covers(['pei2021:original-test'], pub) && !covers(['pei2021:original-train'], pub))
+check('trained_on: original-aspect-<split> follows the aspect files\' split', covers(['pei2021:original-aspect-train'], pub) && !covers(['pei2021:original-aspect-test'], pub))
+check('trained_on: an unknown published split counts as covered', covers(['pei2021:original-train'], { source: 'pei2021', split: 'test', originalSplit: null }))
 
 // 5. Review CSV round trip
 for (const f of FIXTURES) {

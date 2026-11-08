@@ -35,7 +35,8 @@ const withStrength = (record, strength) => ({ ...record, causal_strength: { ...r
 function yuPredictions() {
   const dir = join(DATA, 'predictions')
   if (!existsSync(dir)) return { status: 'pending', reason: 'no checks/data/predictions/ yet (change set 2)' }
-  const file = readdirSync(dir).find((f) => /^yu[-_]/i.test(f) && f.endsWith('.jsonl') && /full|all|pairs|causal/i.test(f)) || readdirSync(dir).find((f) => /^yu[-_]/i.test(f) && f.endsWith('.jsonl'))
+  const yuFiles = readdirSync(dir).filter((f) => /^yu(?:\d{4})?[-_]/i.test(f) && f.endsWith('.jsonl'))
+  const file = yuFiles.find((f) => /full|all|pairs|causal/i.test(f)) || yuFiles[0]
   if (!file) return { status: 'pending', reason: 'no Yu prediction file in checks/data/predictions/' }
   const bySide = new Map()
   let tool = null

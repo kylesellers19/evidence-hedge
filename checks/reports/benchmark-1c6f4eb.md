@@ -31,8 +31,8 @@ Generated 2026-11-08 by `node checks/benchmark.mjs`. Baseline dc34856. Predictio
 | causal-register | yu2019_pubmed | never-seen | 610 | published-human | macroF1 | 0.68 [0.62–0.74] | 0.689 | yes |
 | causal-register | yu2019_pubmed | never-seen | 610 | published-human | perClassF1Order | ["none","correlational","direct-causal","conditional-causal"] | `["none","correlational","direct-causal","conditional-causal"]` | yes |
 | causal-register | yu2020_eureka | all | 2073 | published-human | rows | 2073 (exact) | 2073 | yes |
-| causal-register | yu2020_eureka | all | 2073 | published-human | macroF1 | 0.58 [0.5–0.66] | 0.371 | **no** |
-| causal-register | yu2020_eureka | all | 2073 | published-human | accuracy | 0.65 [0.57–0.72] | 0.331 | **no** |
+| causal-register | yu2020_eureka | all | 2073 | published-human | macroF1 | 0.58 [0.5–0.66] | 0.626 | yes |
+| causal-register | yu2020_eureka | all | 2073 | published-human | accuracy | 0.65 [0.57–0.72] | 0.63 | yes |
 | certainty | pei2021 | all | 1551 | published-human | rows | 2166 (exact) | 1551 | **no** |
 | certainty | pei2021 | all | 1551 | published-human | spearman | 0.25 [0.15–0.35] | 0.599 | **no** |
 | certainty | pei2021 | all | 1551 | published-human | measuredShare | 0.6 [0.6–1] | 0.647 | yes |
@@ -48,6 +48,16 @@ Generated 2026-11-08 by `node checks/benchmark.mjs`. Baseline dc34856. Predictio
 ## Checks not run
 
 - **spiced**: skip — fields reported; loader not written until Kyle reviews them
+
+## Models left out of a comparison
+
+- **certainty-estimator-aspect@97a130c** on yu2019_pubmed (causal-register): supplies no label this check scores, on all 3051 eligible rows
+- **certainty-estimator-sentence@97a130c** on yu2019_pubmed (causal-register): supplies no label this check scores, on all 3051 eligible rows
+- **cessc@42819b2** on yu2019_pubmed (causal-register): supplies no label this check scores, on all 3051 eligible rows
+- **certainty-estimator-aspect@97a130c** on yu2020_eureka (causal-register): supplies no label this check scores, on all 2073 eligible rows
+- **certainty-estimator-sentence@97a130c** on yu2020_eureka (causal-register): supplies no label this check scores, on all 2073 eligible rows
+- **cessc@42819b2** on yu2020_eureka (causal-register): supplies no label this check scores, on all 2073 eligible rows
+- **certainty-estimator-aspect@97a130c** on pei2021 (certainty): supplies no label this check scores, on all 278 eligible rows
 
 ## Fixtures
 
@@ -109,12 +119,16 @@ Generated 2026-11-08 by `node checks/benchmark.mjs`. Baseline dc34856. Predictio
 | causal-register | yu2019_pubmed | never-seen | 610 | published-human | engine@1c6f4eb | macroF1 | 0.689 |
 | causal-register | yu2019_pubmed | never-seen | 610 | published-human | engine@1c6f4eb | accuracy | 0.746 |
 | causal-register | yu2019_pubmed | never-seen | 610 | published-human | engine@1c6f4eb | perClassF1Order | `["none","correlational","direct-causal","conditional-causal"]` |
+| causal-register | yu2019_pubmed | model-eligible | 3045 | published-human | yu2019-causal@84abecc | macroF1 | 0.873 |
+| causal-register | yu2019_pubmed | model-eligible | 3045 | published-human | engine@1c6f4eb | macroF1 | 0.708 |
 | causal-register | yu2020_eureka | all | 2073 | published-human | engine@1c6f4eb | rows | 2073 |
-| causal-register | yu2020_eureka | all | 2073 | published-human | engine@1c6f4eb | macroF1 | 0.371 |
-| causal-register | yu2020_eureka | all | 2073 | published-human | engine@1c6f4eb | accuracy | 0.331 |
+| causal-register | yu2020_eureka | all | 2073 | published-human | engine@1c6f4eb | macroF1 | 0.626 |
+| causal-register | yu2020_eureka | all | 2073 | published-human | engine@1c6f4eb | accuracy | 0.63 |
 | causal-register | yu2020_eureka | bundle-test | 193 | published-human | engine@1c6f4eb | rows | 193 |
-| causal-register | yu2020_eureka | bundle-test | 193 | published-human | engine@1c6f4eb | macroF1 | 0.349 |
-| causal-register | yu2020_eureka | bundle-test | 193 | published-human | engine@1c6f4eb | accuracy | 0.301 |
+| causal-register | yu2020_eureka | bundle-test | 193 | published-human | engine@1c6f4eb | macroF1 | 0.624 |
+| causal-register | yu2020_eureka | bundle-test | 193 | published-human | engine@1c6f4eb | accuracy | 0.632 |
+| causal-register | yu2020_eureka | model-eligible | 2073 | published-human | yu2019-causal@84abecc | macroF1 | 0.831 |
+| causal-register | yu2020_eureka | model-eligible | 2073 | published-human | engine@1c6f4eb | macroF1 | 0.626 |
 | certainty | pei2021 | all | 1551 | published-human | engine@1c6f4eb | rows | 1551 |
 | certainty | pei2021 | all | 1551 | published-human | engine@1c6f4eb | spearman | 0.599 |
 | certainty | pei2021 | all | 1551 | published-human | engine@1c6f4eb | measuredShare | 0.647 |
@@ -123,6 +137,8 @@ Generated 2026-11-08 by `node checks/benchmark.mjs`. Baseline dc34856. Predictio
 | certainty | pei2021 | bundle-test | 164 | published-human | engine@1c6f4eb | spearman | 0.558 |
 | certainty | pei2021 | bundle-test | 164 | published-human | engine@1c6f4eb | measuredShare | 0.634 |
 | certainty | pei2021 | bundle-test | 164 | published-human | engine@1c6f4eb | tierCounts | `{"hedged":53,"measured":104,"assertive":5,"absolute":2}` |
+| certainty | pei2021 | model-eligible | 331 | published-human | certainty-estimator-sentence@97a130c | spearman | 0.616 |
+| certainty | pei2021 | model-eligible | 331 | published-human | engine@1c6f4eb | spearman | 0.635 |
 | restatement-gap | wright2021_pairs | all | 663 | published-human | engine@1c6f4eb | rows | 663 |
 | restatement-gap | wright2021_pairs | all | 663 | published-human | engine@1c6f4eb | agreement | 0.511 |
 | restatement-gap | wright2021_pairs | all | 663 | published-human | engine@1c6f4eb | macroF1 | 0.454 |
@@ -145,5 +161,11 @@ Generated 2026-11-08 by `node checks/benchmark.mjs`. Baseline dc34856. Predictio
 | causal-sentence | cessc_ssc | bundle-test | 117 | published-human | engine@1c6f4eb | counts | `{"tp":31,"fp":8,"fn":25,"tn":53}` |
 | causal-sentence | cessc_ssc | bundle-test | 117 | published-human | engine@1c6f4eb | precision (wide: + correlational) | 0.731 |
 | causal-sentence | cessc_ssc | bundle-test | 117 | published-human | engine@1c6f4eb | recall (wide: + correlational) | 0.679 |
+| causal-sentence | cessc_ssc | model-eligible | 246 | published-human | cessc@42819b2 | f1 | 0.89 |
+| causal-sentence | cessc_ssc | model-eligible | 246 | published-human | engine@1c6f4eb | f1 | 0.508 |
+| causal-sentence | cessc_ssc | model-eligible | 1058 | published-human | unicausal-seq@96ed92b | f1 | 0.609 |
+| causal-sentence | cessc_ssc | model-eligible | 1058 | published-human | engine@1c6f4eb | f1 | 0.586 |
+| causal-sentence | cessc_ssc | model-eligible | 1058 | published-human | unicausal-seq-released@96ed92b | f1 | 0.705 |
+| causal-sentence | cessc_ssc | model-eligible | 1058 | published-human | engine@1c6f4eb | f1 | 0.586 |
 
-Self-check: 100 metrics, 0 without source, split, rows and label tier.
+Self-check: 112 metrics, 0 without source, split, rows and label tier.

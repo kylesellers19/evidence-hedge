@@ -10,14 +10,15 @@ import { getRubric } from '../rubrics/index.js'
 import { ENGINE_VERSION } from '../engine/version.js'
 import RubricProvenance from '../components/results/RubricProvenance.jsx'
 import VerdictMark from '../components/results/VerdictMark.jsx'
+import AddToList from '../components/results/AddToList.jsx'
 
 // The one-page evidence brief — a standalone editorial report, three layers
 // top to bottom, serving three readers at once (with how it was judged — the
 // genre reading and the standard it set — between the verdict and the profile):
-//   1. Verdict       — plain-language, Newsreader display-serif headline
+//   1. Verdict       — plain-language, Source Serif display headline
 //   2. Patterns      — named patterns + verbatim examples (the heart)
 //   3. Distribution  — the structural ladder view, understated (the analyst)
-// Shares the global token source: navy accent, hairline rules, mono figures.
+// Shares the global token source: blue accent, hairline rules, mono figures.
 export default function ResultsPage() {
   const { state, dispatch } = useApp()
   const navigate = useNavigate()
@@ -53,7 +54,7 @@ export default function ResultsPage() {
       <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
         <p className="label-tag">Evidence brief</p>
         <p className="label-tag text-gray-400">
-          Judged as <span className="text-navy">{rubric.label}</span>
+          Judged as <span className="text-accent">{rubric.label}</span>
           {rubric.hybrid && <span> · held to <span className="text-gray-600">{standard.label}</span></span>}
           {result.posture && <span> · <span className="text-gray-600 capitalize">{result.posture}</span></span>}
           {rubric.stub && ' · draft rubric'}
@@ -70,9 +71,9 @@ export default function ResultsPage() {
         {summary.verdict}
       </h1>
       <div className="flex flex-wrap gap-x-6 gap-y-1 mt-5 text-[11px] text-muted">
-        <span><span className="text-gray-900 font-medium font-mono">{summary.totalClaims}</span> claims weighed</span>
-        <span><span className="text-gray-900 font-medium font-mono">{summary.strongClaims}</span> read as strong</span>
-        <span><span className="text-gray-900 font-medium font-mono">{flaggedTotal}</span> flagged</span>
+        <span><span className="text-gray-900 font-semibold tabular-nums">{summary.totalClaims}</span> claims weighed</span>
+        <span><span className="text-gray-900 font-semibold tabular-nums">{summary.strongClaims}</span> read as strong</span>
+        <span><span className="text-gray-900 font-semibold tabular-nums">{flaggedTotal}</span> flagged</span>
       </div>
 
       <hr className="brief-rule" />
@@ -124,6 +125,9 @@ export default function ResultsPage() {
         How this document's claims spread across the {standard.label.toLowerCase()} ladder,
         strongest evidence to unsourced.
       </p>
+
+      {/* ── Add to The List — only when The List is live ─────────────────── */}
+      <AddToList text={state.document} meta={state.meta} result={result} />
 
       {/* ── Rubric provenance — always visible footer ────────────────────── */}
       <RubricProvenance provenance={rubric.provenance} rubricLabel={rubric.label} />

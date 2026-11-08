@@ -72,7 +72,7 @@ export default function JudgmentSummary({ rubric, showFrameworks = true }) {
                 {frameworks.map((f) => (
                   <li key={f.key} className="flex items-baseline justify-between gap-3">
                     <span className="min-w-0">{f.standard}</span>
-                    <span className={`shrink-0 font-sans text-[10px] tracking-widest uppercase ${f.measures?.length ? 'text-navy' : 'text-gray-400'}`}>
+                    <span className={`shrink-0 font-sans text-[10px] tracking-widest uppercase ${f.measures?.length ? 'text-accent' : 'text-gray-400'}`}>
                       {f.measures?.length ? 'measured' : 'cited'}
                     </span>
                   </li>

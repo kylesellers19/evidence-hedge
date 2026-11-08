@@ -84,7 +84,7 @@ export const BAND_THRESHOLDS = [
 
 // Verdict sentence: band → sentence. Verdict register — no exclamation marks,
 // no praise adjectives. PROVISIONAL — not ratified (templates).
-const SUMMARY = {
+export const SUMMARY = {
   failing: (n) => `The evidence does not support what this ${n} claims.`,
   weak: (n) => `Much of what this ${n} claims outruns its evidence.`,
   mixed: (n) => `This ${n} makes some claims its evidence does not carry.`,

@@ -31,6 +31,11 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+        env:
+          # The List's live store (src/list/store.js, docs/the-list.sql), from
+          # repository variables. Unset, The List reads public/the-list.json.
+          VITE_SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

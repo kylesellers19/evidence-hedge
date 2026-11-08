@@ -39,7 +39,7 @@ const FORM_LABELS = {
 
 const humanize = (s) => s.replace(/-/g, ' ')
 
-const DESIGN_LABELS = {
+export const DESIGN_LABELS = {
   rct: 'randomized controlled trial',
   'controlled-experiment': 'controlled experiment',
   'quasi-experimental': 'quasi-experimental',

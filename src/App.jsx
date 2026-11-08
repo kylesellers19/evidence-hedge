@@ -5,14 +5,19 @@ import { judgmentFor } from './rubrics/index.js'
 import { routeDocument } from './rubrics/route.js'
 import { analyze } from './engine/analyze.js'
 import { validateText } from './ingest/validateText.js'
+import SiteLayout from './components/layout/SiteLayout.jsx'
 import LandingPage from './pages/LandingPage.jsx'
 import RubricBranch from './pages/RubricBranch.jsx'
 import ResultsPage from './pages/ResultsPage.jsx'
+import ListPage from './pages/ListPage.jsx'
+import MethodPage from './pages/MethodPage.jsx'
+import ContactPage from './pages/ContactPage.jsx'
 
 // ── Screen 1: Landing ────────────────────────────────────────────────────────
 // The only thing on the index route. Captures the document, then routes to the
 // branch screen. (The old cream/gold Header + EntryPage are retired from the
-// flow — nothing routes to them — so the landing renders as a bare white room.)
+// flow — nothing routes to them.) The site masthead floats over it, so the
+// landing still renders as a bare white room.
 function LandingRoute() {
   const { dispatch } = useApp()
   const navigate = useNavigate()
@@ -75,13 +80,20 @@ function ResultsRoute() {
   return <ResultsPage />
 }
 
+// Every screen sits inside the site frame: the masthead (The List, Method,
+// Contact at top right) and the footer.
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<LandingRoute />} />
-      <Route path="/branch" element={<BranchRoute />} />
-      <Route path="/results" element={<ResultsRoute />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route element={<SiteLayout />}>
+        <Route path="/" element={<LandingRoute />} />
+        <Route path="/branch" element={<BranchRoute />} />
+        <Route path="/results" element={<ResultsRoute />} />
+        <Route path="/list" element={<ListPage />} />
+        <Route path="/method" element={<MethodPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
     </Routes>
   )
 }

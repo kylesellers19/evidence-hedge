@@ -73,11 +73,11 @@ export default function DocumentProfile({ profile, referenceCount = 0 }) {
         {self.pool > 0 && (
           <Row
             term="Self-citation"
-            value={<><span className="font-mono">{Math.round(self.share * 100)}%</span> of references and links name the publisher ({self.matched} of {self.pool}).</>}
+            value={<><span className="tabular-nums">{Math.round(self.share * 100)}%</span> of references and links name the publisher ({self.matched} of {self.pool}).</>}
           />
         )}
         {referenceCount > 0 && (
-          <Row term="References" value={<><span className="font-mono">{referenceCount}</span> reference entries set aside — not scored as claims.</>} />
+          <Row term="References" value={<><span className="tabular-nums">{referenceCount}</span> reference entries set aside — not scored as claims.</>} />
         )}
       </dl>
     </section>

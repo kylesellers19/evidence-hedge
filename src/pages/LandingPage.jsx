@@ -12,8 +12,8 @@ import "../styles/landing.css";
 /**
  * LandingPage — the app's front door. "A single question in a white room."
  *
- * First paint shows only: the name as a whisper, the animated mark, one italic
- * serif question, and a near-invisible input panel. One decision on screen:
+ * First paint shows only: the animated mark, one italic serif question and a
+ * quiet input panel, under the site masthead. One decision on screen:
  * give the tool a document, by text or by link. On submit, the parent runs
  * autodetect and pushes to the rubric branch screen.
  *
@@ -90,9 +90,7 @@ export default function LandingPage({ onAnalyze }) {
   return (
     <main className="eh-landing">
       <div className="eh-landing-inner">
-        {/* The name is a whisper; the mark is the identity. */}
-        <p className="eh-microlabel">Evidence Hedge</p>
-
+        {/* The masthead carries the name; the mark is the identity. */}
         <ParticleMark size={300} />
 
         {/* The only prominent text on the page. */}
@@ -123,7 +121,7 @@ export default function LandingPage({ onAnalyze }) {
           {mode === "text" ? (
             <textarea
               className="eh-textarea"
-              placeholder="Paste the document text — a report, a whitepaper, a press release."
+              placeholder="Paste the text of a report, a white paper or a press release."
               value={text}
               onChange={(e) => setText(e.target.value)}
               rows={7}

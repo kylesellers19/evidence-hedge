@@ -3,22 +3,28 @@
 @tailwind utilities;
 
 /* ── The single token source for every screen ──────────────────────────────
-   Register: true white, cool near-black ink, hairline rules, square corners,
-   one institutional navy accent, whisper shadows. Three font families only. */
+   Register, after Delgam (delgam.org): an editorial page in the manner of a
+   newspaper graphics desk. Off-white paper, near-black ink, grey for the
+   population and one blue accent for the subject, hairline rules, square
+   corners. No cards and no shadows; a rule or a border does the separating.
+   Delgam's two typefaces, Source Serif 4 and Libre Franklin, and the system
+   monospace. The mark keeps its own four rubric hues (ParticleMark.jsx). */
 :root {
-  --eh-paper: #ffffff;
-  --eh-ink: #17181a;
-  --eh-ink-soft: #4b4e54;
-  --eh-hairline: #d9dce0;
-  --eh-navy: #1b2a4a;
+  --eh-paper: #fdfdfc;
+  --eh-ink: #1a1a1a;
+  --eh-ink-soft: #565a62;  /* secondary text: 6.7:1 on paper */
+  --eh-ink-faint: #656971; /* tertiary text: 5.4:1 on paper */
+  --eh-hairline: #e2e3e6;
+  --eh-dot: #b9bcc3;       /* grey marks for the population (table bars) */
+  --eh-accent: #1b63a8;    /* 6.0:1 on paper */
+  --eh-accent-wash: rgba(27, 99, 168, 0.12);
 
-  --eh-serif: "Newsreader", Georgia, "Times New Roman", serif;
-  --eh-sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
-  --eh-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  --eh-serif: "Source Serif 4 Variable", "Source Serif 4", Georgia, "Times New Roman", serif;
+  --eh-sans: "Libre Franklin Variable", "Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+  --eh-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* Whisper shadows — the emphasis mechanism. Never darker than ~0.08 alpha. */
-  --eh-shadow-rest: 0 1px 2px rgba(23, 24, 26, 0.05);
-  --eh-shadow-lift: 0 2px 8px rgba(23, 24, 26, 0.07);
+  --eh-prose: 640px; /* the one text column */
+  --eh-wide: 1040px; /* tables and figures break wider */
 }
 
 @layer base {
@@ -55,13 +61,13 @@
     @apply text-gray-900 font-sans text-xs tracking-editorial uppercase px-4 py-3 hover:bg-linen active:bg-border transition-colors duration-200;
   }
 
-  /* ── The ubiquitous tracked uppercase micro-label ───────────────────── */
+  /* ── The ubiquitous micro-label, set as a Delgam kicker ─────────────── */
   .label-tag {
-    @apply font-sans text-[10px] tracking-widest uppercase text-muted;
+    @apply font-sans text-[12px] font-semibold tracking-[0.06em] uppercase text-muted;
   }
 
   .editorial-heading {
-    @apply font-serif text-2xl font-medium leading-tight tracking-tight;
+    @apply font-serif text-2xl font-bold leading-tight tracking-tight;
   }
 
   .card {
@@ -84,9 +90,9 @@
   .grade-overconfident{ @apply bg-amber-50 text-amber-700 border-amber-200; }
   .grade-unsupported  { @apply bg-gray-50 text-gray-500 border-border; }
 
-  /* ── Flagged example line — active claim = left navy border highlight ── */
+  /* ── Flagged example line — active claim = left accent border highlight ── */
   .example-line {
-    @apply border-l-2 border-navy pl-4 py-1 font-serif italic text-[15px] leading-relaxed text-gray-800;
+    @apply border-l-2 border-accent pl-4 py-1 font-serif italic text-[15px] leading-relaxed text-gray-800;
   }
 
   /* ── Hairline rule between the brief's three layers ─────────────────── */
@@ -94,9 +100,9 @@
     @apply border-0 border-t border-border my-10;
   }
 
-  /* ── Evidence-ladder rung (config-driven; navy focus glint on hover) ── */
+  /* ── Evidence-ladder rung (config-driven; accent focus glint on hover) ── */
   .ladder-rung {
-    @apply flex items-center justify-between border border-border bg-white px-4 py-2.5 transition-colors duration-200 hover:border-navy;
+    @apply flex items-center justify-between border border-border bg-white px-4 py-2.5 transition-colors duration-200 hover:border-accent;
   }
 }
 

@@ -26,7 +26,7 @@ import { GENRE_ORDER, GENRE_LABELS, genreHue } from "../components/genre/labels.
  */
 
 // Inline styles — same register as landing.css: hairline borders, square
-// corners, whisper shadow (≤ 0.08 alpha), no new colors.
+// corners, no shadows, no new colors.
 const postureOptStyle = (active) => ({
   fontFamily: "var(--eh-sans)",
   fontSize: "11px",
@@ -34,10 +34,9 @@ const postureOptStyle = (active) => ({
   textTransform: "capitalize",
   padding: "6px 12px",
   cursor: "pointer",
-  background: active ? "var(--eh-navy)" : "var(--eh-paper)",
+  background: active ? "var(--eh-accent)" : "var(--eh-paper)",
   color: active ? "#fff" : "var(--eh-ink)",
-  border: "1px solid " + (active ? "var(--eh-navy)" : "var(--eh-hairline)"),
-  boxShadow: active ? "0 2px 8px rgba(23,24,26,0.07)" : "none",
+  border: "1px solid " + (active ? "var(--eh-accent)" : "var(--eh-hairline)"),
 });
 
 const same = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);

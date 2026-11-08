@@ -57,13 +57,13 @@ export default function VerdictMark({ score, rubricId }) {
           narrow widths this is the vertical leader; the box stays below. */}
       <div className="w-px bg-gray-300" style={{ height: 16 }} aria-hidden="true" />
 
-      {/* Annotation box — true white, square, separated by a whisper shadow
-          only (no border). Score in mono, summary in sans. Nothing else. */}
+      {/* Annotation box — white, square, a hairline border (no shadow, as on
+          delgam.org). Score in tabular serif figures, summary in sans. */}
       <div
-        className="bg-white px-5 py-3"
-        style={{ boxShadow: '0 1px 2px rgba(23,24,26,0.05)', maxWidth: 320 }}
+        className="bg-white border border-border px-5 py-3"
+        style={{ maxWidth: 320 }}
       >
-        <div className="font-mono text-2xl text-gray-900 leading-none tabular-nums">
+        <div className="font-serif font-bold text-2xl text-gray-900 leading-none tabular-nums">
           {score.display} / 10
         </div>
         <p className="font-sans text-[13px] text-muted leading-snug mt-2">

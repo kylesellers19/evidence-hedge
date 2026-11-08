@@ -33,10 +33,10 @@ export default function DistributionBar({ distribution }) {
               style={{ width: `${(count / max) * 100}%` }}
             />
           </div>
-          <span className="w-10 shrink-0 text-right text-[11px] text-gray-500 font-mono">
+          <span className="w-10 shrink-0 text-right text-[11px] text-gray-500 tabular-nums">
             {count}
           </span>
-          <span className="w-10 shrink-0 text-right text-[10px] text-gray-400 font-mono">
+          <span className="w-10 shrink-0 text-right text-[10px] text-gray-400 tabular-nums">
             {Math.round((count / total) * 100)}%
           </span>
         </div>

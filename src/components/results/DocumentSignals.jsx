@@ -2,14 +2,14 @@ import React from 'react'
 import { signalTitle } from '../../engine/signals/titles.js'
 
 // Document-level signals — their own layer, ABOVE the per-claim patterns.
-// Same visual register: hairline rules, square corners, navy accent, no colored
-// backgrounds. A flag uses a navy left-rule; a note/positive uses a hairline one.
+// Same visual register: hairline rules, square corners, blue accent, no colored
+// backgrounds. A flag uses an accent left-rule; a note/positive uses a hairline one.
 
 const titleFor = (s) => signalTitle(s.id)
 
 function SignalTag({ signal }) {
-  if (signal.positive) return <span className="label-tag text-navy">{signal.positiveLabel || 'Disclosed'} ✓</span>
-  if (signal.severity === 'flag') return <span className="label-tag text-navy">Flag</span>
+  if (signal.positive) return <span className="label-tag text-accent">{signal.positiveLabel || 'Disclosed'} ✓</span>
+  if (signal.severity === 'flag') return <span className="label-tag text-accent">Flag</span>
   return <span className="label-tag text-gray-400">Note</span>
 }
 
@@ -32,7 +32,7 @@ export default function DocumentSignals({ signals }) {
           {signals.map((s) => (
             <li
               key={s.id}
-              className={`pl-4 border-l-2 ${s.severity === 'flag' ? 'border-navy' : 'border-border'}`}
+              className={`pl-4 border-l-2 ${s.severity === 'flag' ? 'border-accent' : 'border-border'}`}
             >
               <div className="flex items-baseline justify-between gap-3 mb-1">
                 <h3 className="font-serif text-lg font-medium tracking-tight text-gray-900">

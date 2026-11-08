@@ -4,8 +4,8 @@ import { PATTERN_META } from '../../engine/patterns.js'
 import { GENRE_LABELS } from '../genre/labels.js'
 
 // Rubric provenance footer — always visible, at the bottom. Auditable grounding
-// is the product differentiator: each criterion is shown in IBM Plex Sans, the
-// citation in Newsreader, URLs as plain understated links. No colored backgrounds.
+// is the product differentiator: each criterion is shown in Libre Franklin, the
+// citation in Source Serif, URLs as plain understated links. No colored backgrounds.
 // A hybrid (rubrics/hybrids.js) lists its own frameworks first, each with what
 // it measures here, then each genre's standards, then the shared measures.
 
@@ -24,7 +24,7 @@ function Entry({ p }) {
         </p>
       )}
       {p.url && (
-        <a href={p.url} target="_blank" rel="noreferrer noopener" className="font-sans text-xs text-muted hover:text-navy underline underline-offset-2 break-all">
+        <a href={p.url} target="_blank" rel="noreferrer noopener" className="font-sans text-xs text-muted hover:text-accent underline underline-offset-2 break-all">
           {p.url}
         </a>
       )}

@@ -1,14 +1,16 @@
 /* Evidence Hedge — landing & branch screens.
-   Register: true white, cool near-black ink, hairline rules, square corners,
-   whisper shadows as the emphasis mechanism, single institutional navy accent
-   (branch cards carry the four rubric hues that map to the mark's offshoots).
+   Register, after Delgam: off-white paper, near-black ink, hairline rules,
+   square corners, no shadows, a single blue accent (branch cards carry the
+   four rubric hues that map to the mark's offshoots). Form controls alone get
+   a 3px radius, as on delgam.org.
 
-   Tokens (--eh-*) and the three font families live once in src/index.css :root.
+   Tokens (--eh-*) and the font families live once in src/index.css :root.
    This file only consumes them. */
 
 /* ═══════════════ LANDING — "a single question in a white room" ═══════════════
-   First paint contains ONLY: name whisper, the mark, one italic serif question,
-   and the near-invisible input panel. Nothing else. */
+   First paint contains ONLY: the mark, one italic serif question and the
+   quiet input panel, under the site masthead (src/components/layout/), which
+   floats over this page and carries the name. Nothing else. */
 
 .eh-landing {
   min-height: 100vh;
@@ -28,12 +30,13 @@
   align-items: center;
 }
 
-/* The name is a whisper ABOVE the mark; the mark is the identity. */
+/* A kicker, as on delgam.org: small bold sans capitals, lightly tracked. */
 .eh-microlabel {
   font-family: var(--eh-sans);
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.28em;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--eh-ink-soft);
   margin: 0 0 20px;
@@ -52,26 +55,22 @@
   text-align: center;
   margin: 26px 0 40px;
   max-width: 15ch;
-  /* Barely-there lift — survives the halving test. */
-  text-shadow: 0 1px 1px rgba(23, 24, 26, 0.04);
 }
 
-/* Input panel: no visible border at rest — only a hardly-discernible shadow.
-   Focus-within reveals a hairline + a slightly deeper (still whisper) shadow. */
+/* Input panel: a hairline at rest, no shadow. Focus-within darkens the line. */
 .eh-input-panel {
   width: 100%;
-  background: var(--eh-paper);
-  border: 1px solid transparent;
-  box-shadow: var(--eh-shadow-rest);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  background: #fff;
+  border: 1px solid var(--eh-hairline);
+  transition: border-color 0.2s ease;
 }
 
 .eh-input-panel:focus-within {
-  border-color: var(--eh-hairline);
-  box-shadow: var(--eh-shadow-lift);
+  border-color: var(--eh-ink-soft);
 }
 
-/* Two small text buttons above the field — not a full-width tab bar. */
+/* Two small text buttons above the field — not a full-width tab bar. They read
+   like the masthead's links: grey at rest, ink and underlined when current. */
 .eh-toggle {
   display: flex;
   gap: 18px;
@@ -82,19 +81,24 @@
   appearance: none;
   background: none;
   border: 0;
-  border-bottom: 1px solid transparent;
   padding: 0 0 3px;
   font-family: var(--eh-sans);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--eh-ink-soft);
   cursor: pointer;
 }
 
+.eh-toggle button:hover {
+  color: var(--eh-ink);
+}
+
 .eh-toggle button.is-active {
   color: var(--eh-ink);
-  border-bottom-color: var(--eh-navy);
+  text-decoration: underline;
+  text-decoration-color: var(--eh-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
 }
 
 .eh-notice {
@@ -133,7 +137,7 @@
   outline: none; /* the panel's focus-within treatment is the signal */
 }
 
-/* Submit: navy, compact, content-width — right-aligned within the panel. */
+/* Submit: the accent, compact, content-width — right-aligned within the panel. */
 .eh-submit-row {
   display: flex;
   justify-content: flex-end;
@@ -145,27 +149,26 @@
   width: auto;
   appearance: none;
   border: 0;
-  background: var(--eh-navy);
+  border-radius: 3px;
+  background: var(--eh-accent);
   color: #fff;
   font-family: var(--eh-sans);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 11px 22px;
   cursor: pointer;
-  box-shadow: var(--eh-shadow-rest);
-  transition: box-shadow 0.18s ease;
+  transition: background-color 0.18s ease;
 }
 
 .eh-submit:hover:not(:disabled) {
-  box-shadow: var(--eh-shadow-lift);
+  background: #15528c;
 }
 
 .eh-submit:disabled {
   background: var(--eh-hairline);
   color: var(--eh-ink-soft);
   cursor: default;
-  box-shadow: none;
 }
 
 /* Shared focus ring. */
@@ -173,11 +176,11 @@
 .eh-submit:focus-visible,
 .eh-rubric-card:focus-visible,
 .eh-backlink:focus-visible {
-  outline: 2px solid var(--eh-navy);
+  outline: 2px solid var(--eh-accent);
   outline-offset: 2px;
 }
 
-/* ═══════════════ BRANCH — denser, same type + shadow language ═══════════════ */
+/* ═══════════════ BRANCH — denser, same type and rule language ═══════════════ */
 
 .eh-branch {
   min-height: 100vh;
@@ -245,13 +248,13 @@
   cursor: pointer;
   font-family: var(--eh-sans);
   color: var(--eh-ink);
-  box-shadow: var(--eh-shadow-rest);
   transition: box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
+/* Selected: a doubled border in the branch hue (an inset line, not a shadow). */
 .eh-rubric-card.is-selected {
   border-color: var(--branch, var(--eh-ink));
-  box-shadow: var(--eh-shadow-lift), inset 0 0 0 1px var(--branch, var(--eh-ink));
+  box-shadow: inset 0 0 0 1px var(--branch, var(--eh-ink));
 }
 
 .eh-rubric-cardtop {
@@ -280,8 +283,8 @@
 
 .eh-tag-detected {
   color: #fff;
-  background: var(--branch, var(--eh-navy));
-  border-color: var(--branch, var(--eh-navy));
+  background: var(--branch, var(--eh-accent));
+  border-color: var(--branch, var(--eh-accent));
 }
 
 .eh-rubric-desc {
@@ -313,10 +316,12 @@
   font-size: 13px;
 }
 
-/* Numbers are the evidence — set the figures in mono so they read as data. */
+/* Numbers are the evidence — lining, tabular figures so they read as data. */
 .eh-num {
-  font-family: var(--eh-mono);
-  font-size: 12.5px;
+  font-family: var(--eh-sans);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums lining-nums;
   letter-spacing: 0;
   color: var(--eh-ink);
 }
@@ -350,16 +355,16 @@
 
 .eh-section-label {
   font-family: var(--eh-sans);
-  font-size: 10px;
-  letter-spacing: 0.22em;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--eh-ink-soft);
   margin: 0 0 12px;
 }
 
 .eh-adjusted {
-  color: var(--eh-navy);
-  letter-spacing: 0.16em;
+  color: var(--eh-accent);
 }
 
 .eh-override {
@@ -382,7 +387,7 @@
   padding: 0;
   font-family: var(--eh-sans);
   font-size: 12px;
-  color: var(--eh-navy);
+  color: var(--eh-accent);
   text-decoration: underline;
   text-underline-offset: 2px;
   cursor: pointer;
@@ -413,7 +418,7 @@
 .eh-genre-toggle.is-on {
   color: var(--eh-ink);
   border-color: var(--genre);
-  box-shadow: var(--eh-shadow-lift), inset 0 0 0 1px var(--genre);
+  box-shadow: inset 0 0 0 1px var(--genre);
 }
 
 .eh-genre-swatch {
@@ -436,6 +441,6 @@
 
 .eh-genre-toggle:focus-visible,
 .eh-linkbutton:focus-visible {
-  outline: 2px solid var(--eh-navy);
+  outline: 2px solid var(--eh-accent);
   outline-offset: 2px;
 }

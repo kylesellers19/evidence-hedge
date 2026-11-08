@@ -1,0 +1,797 @@
+/* Evidence Hedge — the site frame and the editorial pages (The List, Method,
+   Contact), after delgam.org: one text column, tables break wider, a kicker,
+   a headline and a dek at the top of each page, hairline rules between parts.
+   No cards, no shadows; form controls alone take a 3px radius.
+
+   Tokens (--eh-*) live once in src/index.css :root. Class names carry the eh-
+   prefix so Tailwind's preflight and utilities never collide with them. */
+
+/* ── Masthead ──────────────────────────────────────────────────────────── */
+
+.eh-skip {
+  position: absolute;
+  left: 16px;
+  top: -48px;
+  z-index: 50;
+  background: var(--eh-paper);
+  padding: 8px 12px;
+  font: 600 14px var(--eh-sans);
+  color: var(--eh-ink);
+}
+.eh-skip:focus {
+  top: 8px;
+}
+
+.eh-masthead {
+  position: relative;
+  z-index: 40;
+  border-bottom: 1px solid var(--eh-hairline);
+  background: var(--eh-paper);
+}
+
+/* On the landing page the masthead floats over the white room. */
+.eh-masthead.is-over {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-bottom: 0;
+  background: transparent;
+}
+
+.eh-bar {
+  max-width: calc(var(--eh-wide) + 32px);
+  margin: 0 auto;
+  padding: 8px 16px;
+  min-height: 54px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 22px;
+}
+.eh-masthead.is-over .eh-bar {
+  max-width: none;
+  padding-left: clamp(16px, 4vw, 56px);
+  padding-right: clamp(16px, 4vw, 56px);
+}
+
+.eh-brand {
+  font: 700 18px/1 var(--eh-serif);
+  letter-spacing: 0.01em;
+  color: var(--eh-ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.eh-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px 18px;
+  font: 600 14px/1.6 var(--eh-sans);
+}
+.eh-nav a {
+  color: var(--eh-ink-soft);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.eh-nav a:hover,
+.eh-nav a.active {
+  color: var(--eh-ink);
+}
+.eh-nav a.active {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
+@media (max-width: 400px) {
+  .eh-bar {
+    gap: 4px 14px;
+  }
+  .eh-brand {
+    font-size: 17px;
+  }
+  .eh-nav {
+    gap: 4px 14px;
+    font-size: 13px;
+  }
+}
+
+.eh-brand:focus-visible,
+.eh-nav a:focus-visible,
+.eh-foot a:focus-visible,
+.eh-page a:focus-visible,
+.eh-page button:focus-visible,
+.eh-page select:focus-visible,
+.eh-page input:focus-visible {
+  outline: 2px solid var(--eh-accent);
+  outline-offset: 2px;
+}
+
+/* ── Footer ────────────────────────────────────────────────────────────── */
+
+.eh-foot {
+  border-top: 1px solid var(--eh-hairline);
+  margin-top: 64px;
+  padding: 20px 0 40px;
+  font: 13px/1.5 var(--eh-sans);
+  color: var(--eh-ink-soft);
+}
+.eh-foot-in {
+  max-width: calc(var(--eh-wide) + 32px);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+.eh-foot-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 18px;
+  margin: 0 0 10px;
+}
+.eh-foot-nav .eh-brand {
+  font-size: 16px;
+}
+.eh-foot a {
+  color: var(--eh-ink-soft);
+}
+.eh-foot-nav a:not(.eh-brand) {
+  text-decoration: none;
+}
+.eh-foot-nav a:hover {
+  color: var(--eh-ink);
+}
+.eh-foot p {
+  margin: 0;
+}
+
+.eh-code {
+  font: 0.92em/1.4 var(--eh-mono);
+}
+
+/* ── Editorial pages ───────────────────────────────────────────────────── */
+
+.eh-page {
+  font: 19px/1.6 var(--eh-serif);
+  color: var(--eh-ink);
+  padding: 40px 0 0;
+}
+
+.eh-col,
+.eh-wide {
+  margin: 0 auto;
+  padding: 0 16px;
+}
+.eh-col {
+  max-width: calc(var(--eh-prose) + 32px);
+}
+.eh-wide {
+  max-width: calc(var(--eh-wide) + 32px);
+}
+
+.eh-page a {
+  color: var(--eh-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+.eh-page a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.eh-kicker {
+  font: 600 13px/1.4 var(--eh-sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--eh-ink-soft);
+  margin: 0 0 12px;
+}
+.eh-hed {
+  font: 700 40px/1.12 var(--eh-serif);
+  letter-spacing: -0.012em;
+  margin: 0 0 16px;
+  text-wrap: balance;
+}
+.eh-dek {
+  font: 400 21px/1.45 var(--eh-serif);
+  color: var(--eh-ink-soft);
+  margin: 0 0 28px;
+}
+
+.eh-page h2 {
+  font: 600 27px/1.25 var(--eh-serif);
+  letter-spacing: -0.006em;
+  margin: 56px 0 14px;
+  text-wrap: balance;
+}
+.eh-page h3 {
+  font: 600 15px/1.35 var(--eh-sans);
+  margin: 28px 0 8px;
+}
+.eh-page p {
+  margin: 0 0 16px;
+}
+.eh-page ul,
+.eh-page ol {
+  margin: 0 0 16px;
+  padding-left: 24px;
+}
+.eh-page li {
+  margin: 0 0 8px;
+}
+.eh-page strong {
+  font-weight: 650;
+}
+
+.eh-note {
+  font: 15px/1.5 var(--eh-sans);
+  color: var(--eh-ink-soft);
+}
+.eh-small {
+  font: 13px/1.5 var(--eh-sans);
+  color: var(--eh-ink-soft);
+}
+
+@media (max-width: 639px) {
+  .eh-page {
+    font-size: 18px;
+    padding-top: 28px;
+  }
+  .eh-hed {
+    font-size: 31px;
+  }
+  .eh-dek {
+    font-size: 19px;
+  }
+  .eh-page h2 {
+    font-size: 23px;
+  }
+}
+
+/* ── Data tables (Delgam's table.data) ─────────────────────────────────── */
+
+.eh-table-scroll {
+  overflow-x: auto;
+}
+
+.eh-data {
+  width: 100%;
+  border-collapse: collapse;
+  font: 14px/1.4 var(--eh-sans);
+  font-variant-numeric: tabular-nums lining-nums;
+  margin: 8px 0 24px;
+}
+.eh-data th,
+.eh-data td {
+  text-align: left;
+  vertical-align: top;
+  padding: 7px 10px 7px 0;
+  border-bottom: 1px solid var(--eh-hairline);
+}
+.eh-data th {
+  font-weight: 600;
+  border-bottom: 1px solid var(--eh-ink);
+  white-space: nowrap;
+}
+.eh-data td.n,
+.eh-data th.n {
+  text-align: right;
+  padding-right: 0;
+  padding-left: 10px;
+  white-space: nowrap;
+}
+
+/* ── Form controls (the one place with rounded corners) ────────────────── */
+
+.eh-field {
+  display: block;
+  margin: 0 0 14px;
+}
+.eh-field > span {
+  display: block;
+  font: 600 13px/1.4 var(--eh-sans);
+  color: var(--eh-ink);
+  margin: 0 0 4px;
+}
+.eh-input,
+.eh-select {
+  width: 100%;
+  font: 15px/1.4 var(--eh-sans);
+  color: var(--eh-ink);
+  background: #fff;
+  border: 1px solid var(--eh-ink-soft);
+  border-radius: 3px;
+  padding: 9px 10px;
+  min-height: 42px;
+}
+.eh-select {
+  padding-right: 28px;
+}
+.eh-input:focus,
+.eh-select:focus {
+  outline: 2px solid var(--eh-accent);
+  outline-offset: 0;
+  border-color: var(--eh-accent);
+}
+
+.eh-button {
+  appearance: none;
+  font: 600 14px/1.2 var(--eh-sans);
+  color: #fff;
+  background: var(--eh-accent);
+  border: 1px solid var(--eh-accent);
+  border-radius: 3px;
+  padding: 10px 18px;
+  min-height: 42px;
+  cursor: pointer;
+}
+.eh-button:hover:not(:disabled) {
+  background: #15528c;
+  border-color: #15528c;
+}
+.eh-button:disabled {
+  background: var(--eh-hairline);
+  border-color: var(--eh-hairline);
+  color: var(--eh-ink-soft);
+  cursor: default;
+}
+.eh-button.is-quiet {
+  color: var(--eh-ink);
+  background: transparent;
+  border-color: var(--eh-ink-soft);
+}
+.eh-button.is-quiet:hover:not(:disabled) {
+  background: var(--eh-paper);
+  border-color: var(--eh-ink);
+}
+
+@media print {
+  .eh-masthead,
+  .eh-foot,
+  .eh-skip {
+    display: none !important;
+  }
+}
+
+/* ── The List ──────────────────────────────────────────────────────────── */
+
+.eh-sr-only:not(:focus-within) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.eh-sortbar {
+  border: 0;
+  border-top: 1px solid var(--eh-hairline);
+  margin: 8px 0 0;
+  padding: 14px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 20px;
+  font-family: var(--eh-sans);
+}
+.eh-sortlevel {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+.eh-sortlevel label > span:not(.eh-sr-only) {
+  display: block;
+  font: 600 13px/1.4 var(--eh-sans);
+  color: var(--eh-ink-soft);
+  margin: 0 0 4px;
+}
+.eh-sortlevel .eh-select {
+  width: auto;
+  min-width: 150px;
+  font-size: 14px;
+  min-height: 38px;
+  padding: 6px 28px 6px 8px;
+}
+.eh-sortdir .eh-select {
+  min-width: 128px;
+}
+.eh-select:disabled {
+  color: var(--eh-ink-faint);
+  border-color: var(--eh-hairline);
+  background: var(--eh-paper);
+}
+.eh-sortclear {
+  min-height: 38px;
+  padding: 7px 14px;
+}
+
+.eh-list-count {
+  margin: 18px 0 0 !important;
+}
+
+/* Column headings are buttons: the whole label sorts. */
+.eh-th {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--eh-ink);
+  cursor: pointer;
+  text-align: inherit;
+  white-space: nowrap;
+}
+.eh-th:hover {
+  color: var(--eh-accent);
+}
+.eh-th-mark {
+  margin-left: 4px;
+  color: var(--eh-accent);
+}
+.eh-th-mark sup {
+  font-size: 10px;
+  margin-left: 1px;
+}
+
+.eh-list-table td {
+  font-size: 14px;
+}
+.eh-list-company {
+  font-weight: 600;
+}
+.eh-list-name {
+  min-width: 220px;
+}
+.eh-list-date {
+  white-space: nowrap;
+}
+
+/* The score: a grey bar for its place on 1 to 10, then the figure. */
+.eh-score {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.eh-score-bar {
+  display: inline-block;
+  width: 48px;
+  height: 6px;
+  background: var(--eh-hairline);
+}
+.eh-score-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--eh-dot);
+}
+.eh-score-num {
+  font-weight: 600;
+  min-width: 2.2em;
+  text-align: right;
+}
+
+.eh-list-empty {
+  border-bottom: 1px solid var(--eh-hairline);
+  padding: 4px 0 18px;
+  margin-top: -24px !important;
+}
+
+@media (max-width: 639px) {
+  .eh-sortbar {
+    gap: 10px;
+  }
+  .eh-sortlevel {
+    width: 100%;
+  }
+  .eh-sortlevel label:first-child {
+    flex: 1 1 auto;
+  }
+  .eh-sortlevel label:first-child .eh-select {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* ── Contact ───────────────────────────────────────────────────────────── */
+
+.eh-contact-line {
+  font: 600 19px/1.4 var(--eh-sans);
+  margin: -8px 0 8px !important;
+}
+.eh-reason {
+  border-top: 1px solid var(--eh-hairline);
+  margin-top: 28px;
+  padding-top: 10px;
+}
+.eh-page .eh-reason h2 {
+  font: 700 22px/1.25 var(--eh-serif);
+  margin: 0 0 8px;
+}
+.eh-reason dl {
+  margin: 0;
+  font: 16px/1.5 var(--eh-serif);
+}
+.eh-reason dt {
+  font: 600 12px/1.4 var(--eh-sans);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--eh-ink-soft);
+  margin-top: 8px;
+}
+.eh-reason dd {
+  margin: 2px 0 0;
+}
+.eh-ask {
+  font: 600 14px/1.4 var(--eh-sans);
+  margin: 10px 0 0 !important;
+}
+.eh-contact-foot {
+  margin-top: 36px !important;
+}
+
+/* ── Add to The List (the last part of the evidence brief) ─────────────── */
+
+.eh-addlist {
+  border-top: 1px solid var(--eh-hairline);
+  margin-top: 40px;
+  padding-top: 24px;
+  font-family: var(--eh-sans);
+}
+.eh-addlist-h {
+  font: 700 22px/1.25 var(--eh-serif);
+  margin: 8px 0 8px;
+}
+.eh-addlist-dek {
+  font: 16px/1.5 var(--eh-serif);
+  color: var(--eh-ink-soft);
+  margin: 0 0 18px;
+}
+.eh-addlist-done {
+  font: 16px/1.5 var(--eh-serif);
+  margin: 8px 0 0;
+}
+.eh-addlist a {
+  color: var(--eh-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.eh-addlist-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 18px;
+}
+@media (min-width: 640px) {
+  .eh-addlist-form {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .eh-addlist-wide {
+    grid-column: 1 / -1;
+  }
+}
+.eh-field-error {
+  display: block;
+  font: italic 13px/1.4 var(--eh-sans);
+  color: #a8431a; /* Delgam's warm ink, 5.6:1 on paper */
+  margin: 4px 0 0;
+}
+.eh-input[aria-invalid='true'],
+.eh-select[aria-invalid='true'] {
+  border-color: #a8431a;
+}
+.eh-addlist-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 4px 0 0;
+}
+.eh-addlist-actions .eh-field-error {
+  margin: 0;
+}
+.eh-addlist-note {
+  font: 13px/1.5 var(--eh-sans);
+  color: var(--eh-ink-soft);
+  margin: 14px 0 0;
+}
+.eh-addlist .eh-button:focus-visible,
+.eh-addlist .eh-input:focus-visible,
+.eh-addlist .eh-select:focus-visible,
+.eh-addlist a:focus-visible {
+  outline: 2px solid var(--eh-accent);
+  outline-offset: 2px;
+}
+
+/* ── Method ────────────────────────────────────────────────────────────── */
+
+.eh-data caption {
+  text-align: left;
+  font: 600 15px/1.4 var(--eh-sans);
+  padding: 0 0 8px;
+}
+.eh-caption-sub {
+  display: block;
+  font: 400 13px/1.45 var(--eh-sans);
+  color: var(--eh-ink-soft);
+  margin-top: 2px;
+}
+.eh-method .eh-table-scroll {
+  margin: 20px 0 8px;
+}
+.eh-method .eh-data {
+  font-size: 13.5px;
+}
+
+/* A table that needs more than the text column breaks out to the wide one. */
+.eh-break {
+  width: min(var(--eh-wide), calc(100vw - 32px));
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.eh-toc {
+  border-top: 1px solid var(--eh-hairline);
+  border-bottom: 1px solid var(--eh-hairline);
+  margin: 28px 0 8px;
+  padding: 14px 0 6px;
+  font: 15px/1.5 var(--eh-sans);
+}
+.eh-toc-h {
+  font: 600 13px/1.4 var(--eh-sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--eh-ink-soft);
+  margin: 0 0 8px !important;
+}
+.eh-page .eh-toc ol {
+  columns: 2;
+  column-gap: 32px;
+  margin: 0 0 8px;
+  padding-left: 22px;
+}
+.eh-page .eh-toc li {
+  margin: 0 0 4px;
+  break-inside: avoid;
+}
+@media (max-width: 639px) {
+  .eh-page .eh-toc ol {
+    columns: 1;
+  }
+}
+
+/* The steps as a numbered spine, as on Delgam's method page. */
+.eh-page .eh-spine {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0;
+  position: relative;
+}
+.eh-spine::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 6px;
+  bottom: 6px;
+  border-left: 2px solid var(--eh-accent-wash);
+}
+.eh-page .eh-spine li {
+  position: relative;
+  padding-left: 44px;
+  margin-bottom: 14px;
+}
+.eh-spine-n {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--eh-accent);
+  color: var(--eh-paper);
+  font: 700 14px/28px var(--eh-sans);
+  text-align: center;
+}
+.eh-page .eh-spine h3 {
+  font: 700 18px/1.3 var(--eh-serif);
+  margin: 0 0 2px;
+}
+.eh-page .eh-spine h3 a {
+  color: var(--eh-ink);
+  text-decoration: none;
+}
+.eh-page .eh-spine h3 a:hover {
+  text-decoration: underline;
+}
+.eh-page .eh-spine p {
+  margin: 0;
+  font: 16px/1.5 var(--eh-serif);
+}
+.eh-term {
+  font: 13px var(--eh-sans);
+  color: var(--eh-ink-soft);
+}
+
+.eh-defs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px 0;
+  margin: 8px 0 20px;
+}
+.eh-defs dt {
+  font: 600 15px/1.4 var(--eh-sans);
+  margin-top: 10px;
+}
+.eh-defs dd {
+  margin: 0;
+  font: 17px/1.5 var(--eh-serif);
+}
+.eh-page .eh-tight li {
+  margin-bottom: 2px;
+}
+
+.eh-rank {
+  display: inline-block;
+  min-width: 1.4em;
+  font-weight: 700;
+  color: var(--eh-ink-soft);
+}
+.eh-page ol.eh-steps li {
+  margin-bottom: 12px;
+}
+
+.eh-example {
+  margin: 16px 0 20px;
+  padding: 2px 0 2px 18px;
+  border-left: 2px solid var(--eh-accent);
+  font: italic 17px/1.55 var(--eh-serif);
+  color: var(--eh-ink);
+}
+.eh-example-claim {
+  min-width: 260px;
+  font-family: var(--eh-serif);
+  font-size: 15px;
+}
+.eh-flagged {
+  color: #a8431a;
+  font-weight: 600;
+}
+.eh-arith {
+  width: auto;
+  min-width: 320px;
+  margin: 4px 0 20px;
+}
+.eh-arith td.n {
+  padding-left: 32px;
+}
+.eh-arith-total td {
+  font-weight: 700;
+  border-bottom-color: var(--eh-ink);
+}
+
+.eh-sources h3 {
+  margin-top: 24px;
+}
+.eh-sources ul {
+  list-style: none;
+  padding: 0;
+  font: 14px/1.5 var(--eh-sans);
+}
+.eh-page .eh-sources li {
+  margin: 0 0 10px;
+}
+.eh-source-for {
+  color: var(--eh-ink);
+}
+.eh-source-cite {
+  display: block;
+  color: var(--eh-ink-soft);
+  font-size: 13px;
+}
+.eh-method-foot {
+  margin-top: 36px !important;
+}

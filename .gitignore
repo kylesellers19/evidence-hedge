@@ -22,3 +22,7 @@ dist/
 
 # Corpus text cache (D4: only public-domain / CC text is committed, under fixtures/corpus/)
 fixtures/cache/
+
+# Benchmark data: licensed datasets, fixture text, units and research outputs
+# (change set 1). The repo is public; nothing under checks/data/ is committed.
+checks/data/

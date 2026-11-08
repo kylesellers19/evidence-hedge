@@ -1,0 +1,61 @@
+{
+  "_comment": "Change set 1 predictions, approved by Kyle on 2026-11-07 (Step 0), before any benchmark ran. value = point prediction; range = inclusive tolerance; exact = must equal. Where Step 0 said 'about', the tolerance written here (±0.10 for the Fixture C unsupported share, ±0.08 for the Wright per-side accuracies, ±9 rows for the Yu partitions, the deduplication margin) was fixed after approval and before the run it applies to. Never edit a value to match a result.",
+  "approved": "2026-11-07",
+  "baseline": "dc34856",
+  "corpus": {
+    "yu2019_pubmed": {
+      "engine-tuning": { "rows": { "value": 1712, "range": [1703, 1712] }, "macroF1": { "value": 0.718, "exact": true }, "accuracy": { "value": 0.765, "exact": true } },
+      "engine-held-out": { "rows": { "value": 734, "range": [725, 734] }, "macroF1": { "value": 0.702, "exact": true }, "accuracy": { "value": 0.755, "exact": true } },
+      "never-seen": { "rows": { "value": 606, "range": [597, 615] }, "macroF1": { "value": 0.68, "range": [0.62, 0.74] }, "perClassF1Order": ["none", "correlational", "direct-causal", "conditional-causal"] },
+      "bundle-test": { "macroF1": { "value": 0.70, "range": [0.66, 0.74] } }
+    },
+    "yu2020_eureka": {
+      "all": { "rows": { "value": 2073, "exact": true }, "macroF1": { "value": 0.58, "range": [0.50, 0.66] }, "accuracy": { "value": 0.65, "range": [0.57, 0.72] } }
+    },
+    "pei2021": {
+      "all": { "rows": { "value": 2166, "exact": true }, "spearman": { "value": 0.25, "range": [0.15, 0.35] }, "measuredShare": { "value": 0.6, "range": [0.6, 1.0] } }
+    },
+    "wright2021_pairs": {
+      "all": {
+        "rows": { "value": 663, "exact": true },
+        "agreement": { "value": 0.45, "range": [0.35, 0.55] },
+        "macroF1": { "value": 0.35, "range": [0.25, 0.45] },
+        "abstractStrengthAccuracy": { "value": 0.70, "range": [0.62, 0.78] },
+        "pressStrengthAccuracy": { "value": 0.62, "range": [0.54, 0.70] }
+      }
+    },
+    "cessc_ssc": {
+      "all": { "rows": { "value": 1058, "exact": true }, "precision": { "value": 0.65, "range": [0.50, 0.80] }, "recall": { "value": 0.45, "range": [0.30, 0.60] } }
+    },
+    "spiced": { "status": "skip", "reason": "copenlu/spiced not downloaded" }
+  },
+  "fixtures": {
+    "fixture-a-cadre": {
+      "claims": { "value": 242, "exact": true },
+      "unsupported-assertion": { "value": 148, "exact": true },
+      "overconfident": { "value": 3, "exact": true },
+      "causal-overreach": { "value": 16, "exact": true },
+      "flagRows": { "value": 167, "exact": true }
+    },
+    "fixture-b-pew-report": {
+      "claims": { "value": 231, "exact": true },
+      "unsupported-assertion": { "value": 9, "exact": true },
+      "overconfident": { "value": 0, "exact": true },
+      "causal-overreach": { "value": 3, "exact": true }
+    },
+    "fixture-c-gensler-fandom-2026": {
+      "claims": { "value": 300, "range": [180, 450] },
+      "unsupportedShare": { "value": 0.75, "range": [0.65, 0.85] },
+      "overconfident": { "value": 2, "range": [0, 5] },
+      "causal-overreach": { "value": 10, "range": [4, 25] },
+      "nonClaimLeakage": { "value": 0.25, "range": [0.15, 0.40] }
+    }
+  },
+  "verification": {
+    "engineUnchanged": true,
+    "dataIgnored": true,
+    "unitIdsStable": true,
+    "metricsLabeled": true,
+    "commitRecorded": true
+  }
+}

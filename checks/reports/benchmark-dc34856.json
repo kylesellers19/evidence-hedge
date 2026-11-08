@@ -1,0 +1,411 @@
+{
+  "engine_commit": "dc34856",
+  "baseline": "dc34856",
+  "generated": "2026-11-07",
+  "inputs": {
+    "bundle": {
+      "status": "skip",
+      "reason": "checks/data/foundations-v2/unified_eval.jsonl absent"
+    },
+    "predictions": {
+      "status": "skip",
+      "reason": "checks/data/predictions/ absent (change set 2 supplies it)"
+    }
+  },
+  "checks": {
+    "fixture:fixture-a-cadre": {
+      "status": "ok",
+      "reviewed": false
+    },
+    "fixture:fixture-b-pew-report": {
+      "status": "ok",
+      "reviewed": false
+    },
+    "fixture:fixture-c-gensler-fandom-2026": {
+      "status": "ok",
+      "reviewed": false
+    },
+    "yu2019_pubmed": {
+      "status": "skip",
+      "reason": "checks/data/foundations-v2/unified_eval.jsonl absent"
+    },
+    "yu2020_eureka": {
+      "status": "skip",
+      "reason": "checks/data/foundations-v2/unified_eval.jsonl absent"
+    },
+    "pei2021": {
+      "status": "skip",
+      "reason": "checks/data/foundations-v2/unified_eval.jsonl absent"
+    },
+    "wright2021_pairs": {
+      "status": "skip",
+      "reason": "checks/data/foundations-v2/unified_eval.jsonl absent"
+    },
+    "cessc_ssc": {
+      "status": "skip",
+      "reason": "checks/data/foundations-v2/unified_eval.jsonl absent"
+    },
+    "spiced": {
+      "status": "skip",
+      "reason": "copenlu/spiced not downloaded (expected at checks/data/spiced/)"
+    }
+  },
+  "fixtures": {
+    "fixture-a-cadre": {
+      "route": {
+        "standard": "corporate",
+        "rubric": "hybrid:firm-research",
+        "posture": "research-like",
+        "genres": [
+          "research",
+          "corporate"
+        ]
+      },
+      "units": 292,
+      "unitsOnPage": 282,
+      "claims": 242,
+      "flagCounts": {
+        "unsupported-assertion": 148,
+        "overconfident": 3,
+        "causal-overreach": 16
+      },
+      "score": 1,
+      "signals": [
+        "register-mismatch",
+        "undisclosed-interest"
+      ]
+    },
+    "fixture-b-pew-report": {
+      "route": {
+        "standard": "research",
+        "rubric": "research",
+        "posture": "standard",
+        "genres": [
+          "research"
+        ]
+      },
+      "units": 289,
+      "unitsOnPage": 289,
+      "claims": 231,
+      "flagCounts": {
+        "unsupported-assertion": 9,
+        "overconfident": 0,
+        "causal-overreach": 3
+      },
+      "score": 7.3,
+      "signals": [
+        "limitations-absent",
+        "completeness-gaps"
+      ]
+    },
+    "fixture-c-gensler-fandom-2026": {
+      "route": {
+        "standard": "corporate",
+        "rubric": "hybrid:firm-research",
+        "posture": "press-release",
+        "genres": [
+          "corporate",
+          "research"
+        ]
+      },
+      "units": 495,
+      "unitsOnPage": 495,
+      "claims": 378,
+      "flagCounts": {
+        "unsupported-assertion": 236,
+        "overconfident": 2,
+        "causal-overreach": 24
+      },
+      "score": 1,
+      "signals": [
+        "self-citation-dominance",
+        "register-mismatch",
+        "completeness-gaps",
+        "limitations-absent",
+        "undisclosed-interest"
+      ]
+    }
+  },
+  "metrics": [
+    {
+      "check": "fixture-counts",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "claims",
+      "value": 242,
+      "rows": 292,
+      "predicted": {
+        "value": 242,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "unsupported-assertion",
+      "value": 148,
+      "rows": 242,
+      "predicted": {
+        "value": 148,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "overconfident",
+      "value": 3,
+      "rows": 242,
+      "predicted": {
+        "value": 3,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "causal-overreach",
+      "value": 16,
+      "rows": 242,
+      "predicted": {
+        "value": 16,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "flagRows",
+      "value": 167,
+      "rows": 242,
+      "predicted": {
+        "value": 167,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "unsupportedShare",
+      "value": 0.612,
+      "rows": 242
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-b-pew-report",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "claims",
+      "value": 231,
+      "rows": 289,
+      "predicted": {
+        "value": 231,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-b-pew-report",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "unsupported-assertion",
+      "value": 9,
+      "rows": 231,
+      "predicted": {
+        "value": 9,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-b-pew-report",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "overconfident",
+      "value": 0,
+      "rows": 231,
+      "predicted": {
+        "value": 0,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-b-pew-report",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "causal-overreach",
+      "value": 3,
+      "rows": 231,
+      "predicted": {
+        "value": 3,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-b-pew-report",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "flagRows",
+      "value": 12,
+      "rows": 231
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-b-pew-report",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "unsupportedShare",
+      "value": 0.039,
+      "rows": 231
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "claims",
+      "value": 378,
+      "rows": 495,
+      "predicted": {
+        "value": 300,
+        "range": [
+          180,
+          450
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "unsupported-assertion",
+      "value": 236,
+      "rows": 378
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "overconfident",
+      "value": 2,
+      "rows": 378,
+      "predicted": {
+        "value": 2,
+        "range": [
+          0,
+          5
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "causal-overreach",
+      "value": 24,
+      "rows": 378,
+      "predicted": {
+        "value": 10,
+        "range": [
+          4,
+          25
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "flagRows",
+      "value": 262,
+      "rows": 378
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@dc34856",
+      "metric": "unsupportedShare",
+      "value": 0.624,
+      "rows": 378,
+      "predicted": {
+        "value": 0.75,
+        "range": [
+          0.65,
+          0.85
+        ]
+      },
+      "match": false
+    },
+    {
+      "check": "fixture-review",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "gold",
+      "system": "engine@dc34856",
+      "metric": "nonClaimLeakage",
+      "value": null,
+      "rows": 0,
+      "predicted": {
+        "value": 0.25,
+        "range": [
+          0.15,
+          0.4
+        ]
+      },
+      "match": null,
+      "pending": "labels: checks/data/review/labeled/fixture-c-gensler-fandom-2026.csv"
+    }
+  ],
+  "selfCheck": {
+    "metrics": 19,
+    "unlabeled": 0
+  }
+}

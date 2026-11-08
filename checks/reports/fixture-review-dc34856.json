@@ -1,0 +1,18 @@
+{
+  "engine_commit": "dc34856",
+  "label_tier": "gold",
+  "fixtures": {
+    "fixture-a-cadre": {
+      "status": "pending",
+      "reason": "no labeled file at checks/data/review/labeled/fixture-a-cadre.csv"
+    },
+    "fixture-b-pew-report": {
+      "status": "pending",
+      "reason": "no labeled file at checks/data/review/labeled/fixture-b-pew-report.csv"
+    },
+    "fixture-c-gensler-fandom-2026": {
+      "status": "pending",
+      "reason": "no labeled file at checks/data/review/labeled/fixture-c-gensler-fandom-2026.csv"
+    }
+  }
+}

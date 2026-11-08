@@ -1,0 +1,10 @@
+{
+  "engine_commit": "1c6f4eb",
+  "label_tier": "gold",
+  "source": "fixtures A–C (attribution sample)",
+  "split": "fixture-sample",
+  "seed": 20261108,
+  "pool": 851,
+  "status": "pending",
+  "reason": "no labeled file at checks/data/review/labeled/attribution-sample.csv"
+}

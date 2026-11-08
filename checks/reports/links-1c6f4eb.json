@@ -1,0 +1,110 @@
+{
+  "engine_commit": "1c6f4eb",
+  "label_tier": "predicted",
+  "source": "fixtures A–C",
+  "split": "fixture",
+  "fixtures": {
+    "fixture-a-cadre": {
+      "claims": 242,
+      "rows": 242,
+      "linksPerBasis": {
+        "marker": 88,
+        "footnote": 0,
+        "caption": 0,
+        "hyperlink": 0,
+        "section-scope": 0,
+        "proximity": 45,
+        "speaker": 0
+      },
+      "links": 133,
+      "markersResolved": 0.466,
+      "unresolvedMarkers": 47,
+      "proximityShare": {
+        "before": 1,
+        "after": 0.338
+      },
+      "status": {
+        "linked": 84,
+        "unlinked": 158,
+        "undetermined": 0
+      },
+      "unlinkedShare": 0.653,
+      "flags": {
+        "unsupported-assertion": 148,
+        "overconfident": 3,
+        "causal-overreach": 16
+      },
+      "score": 1
+    },
+    "fixture-b-pew-report": {
+      "claims": 231,
+      "rows": 231,
+      "linksPerBasis": {
+        "marker": 1,
+        "footnote": 0,
+        "caption": 83,
+        "hyperlink": 0,
+        "section-scope": 0,
+        "proximity": 5,
+        "speaker": 1
+      },
+      "links": 90,
+      "markersResolved": 0,
+      "unresolvedMarkers": 1,
+      "proximityShare": {
+        "before": 1,
+        "after": 0.056
+      },
+      "status": {
+        "linked": 88,
+        "unlinked": 143,
+        "undetermined": 0
+      },
+      "unlinkedShare": 0.619,
+      "flags": {
+        "unsupported-assertion": 9,
+        "overconfident": 0,
+        "causal-overreach": 3
+      },
+      "score": 7.3
+    },
+    "fixture-c-gensler-fandom-2026": {
+      "claims": 378,
+      "rows": 378,
+      "linksPerBasis": {
+        "marker": 0,
+        "footnote": 0,
+        "caption": 30,
+        "hyperlink": 0,
+        "section-scope": 96,
+        "proximity": 9,
+        "speaker": 0
+      },
+      "links": 135,
+      "markersResolved": null,
+      "unresolvedMarkers": 0,
+      "proximityShare": {
+        "before": 1,
+        "after": 0.067
+      },
+      "status": {
+        "linked": 120,
+        "unlinked": 258,
+        "undetermined": 0
+      },
+      "unlinkedShare": 0.683,
+      "flags": {
+        "unsupported-assertion": 195,
+        "overconfident": 5,
+        "causal-overreach": 24
+      },
+      "score": 1
+    }
+  },
+  "mismatches": [
+    "fixture-a-cadre links.hyperlink: predicted [2,30], actual 0",
+    "fixture-b-pew-report links.caption: predicted [5,60], actual 83",
+    "fixture-b-pew-report proximityShare: predicted [0.1,0.9], actual 0.056",
+    "fixture-c-gensler-fandom-2026 links.section-scope: predicted [25,95], actual 96"
+  ]
+}

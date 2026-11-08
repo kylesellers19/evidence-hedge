@@ -1,0 +1,114 @@
+{
+  "engine_commit": "1c6f4eb",
+  "source": "wright2021_pairs",
+  "label_tier": "published-human",
+  "checks": {
+    "originalTest": {
+      "split": "Wright & Augenstein's own test split",
+      "rows": 563,
+      "engine": {
+        "system": "engine@1c6f4eb",
+        "label_tier": "predicted",
+        "rows": 563,
+        "accuracy": 0.512,
+        "macroF1": 0.45,
+        "perClass": {
+          "same": {
+            "n": 345,
+            "precision": 0.755,
+            "recall": 0.571,
+            "f1": 0.65
+          },
+          "exaggerates": {
+            "n": 122,
+            "precision": 0.307,
+            "recall": 0.352,
+            "f1": 0.328
+          },
+          "downplays": {
+            "n": 96,
+            "precision": 0.296,
+            "recall": 0.5,
+            "f1": 0.372
+          }
+        },
+        "confusion": {
+          "same": {
+            "same": 197,
+            "exaggerates": 72,
+            "downplays": 76
+          },
+          "exaggerates": {
+            "same": 41,
+            "exaggerates": 43,
+            "downplays": 38
+          },
+          "downplays": {
+            "same": 23,
+            "exaggerates": 25,
+            "downplays": 48
+          }
+        },
+        "undetermined": 0
+      },
+      "yu": {
+        "status": "pending",
+        "reason": "no checks/data/predictions/ yet (change set 2)"
+      }
+    },
+    "bundleTest": {
+      "split": "bundle test split (regrouped)",
+      "rows": 50,
+      "engine": {
+        "system": "engine@1c6f4eb",
+        "label_tier": "predicted",
+        "rows": 50,
+        "accuracy": 0.54,
+        "macroF1": 0.483,
+        "perClass": {
+          "same": {
+            "n": 26,
+            "precision": 0.643,
+            "recall": 0.692,
+            "f1": 0.667
+          },
+          "exaggerates": {
+            "n": 14,
+            "precision": 0.556,
+            "recall": 0.357,
+            "f1": 0.435
+          },
+          "downplays": {
+            "n": 10,
+            "precision": 0.308,
+            "recall": 0.4,
+            "f1": 0.348
+          }
+        },
+        "confusion": {
+          "same": {
+            "same": 18,
+            "exaggerates": 3,
+            "downplays": 5
+          },
+          "exaggerates": {
+            "same": 5,
+            "exaggerates": 5,
+            "downplays": 4
+          },
+          "downplays": {
+            "same": 5,
+            "exaggerates": 1,
+            "downplays": 4
+          }
+        },
+        "undetermined": 0
+      },
+      "yu": {
+        "status": "pending",
+        "reason": "no checks/data/predictions/ yet (change set 2)"
+      }
+    }
+  },
+  "note": "The handoff names 81 test-split pairs; the bundle holds 563 pairs in the source's own test split and 50 in its regrouped test split. Both are reported; neither is 81."
+}

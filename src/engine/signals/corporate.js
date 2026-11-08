@@ -1,5 +1,5 @@
 // Corporate document-level signals.
-import { spansFor, phraseRe } from './util.js'
+import { phraseRe } from './util.js'
 import { PLATITUDES } from '../lexicons/platitudes.js'
 import { researchLikeRegister } from '../classifyPosture.js'
 
@@ -19,24 +19,29 @@ function platitudeDensity(doc) {
   }
 }
 
-// Self-referential evidence framing (the company's own voice standing in for
+// Self-referential evidence (the company's own voice standing in for
 // independent evidence). Vendor self-citation already sits a rung below
 // third-party on the corporate ladder (self-reported, rank 2) — no ladder
 // extension needed; this signal reports the document-level dominance.
-const SELF_REF =
-  /\b(our data|our study|our analysis|our research|our results|our survey|our internal(?:\s+\w+)?|we found|we measured|we surveyed|company data)\b/i
+//
+// It reads the one self-citation counter the profile shows
+// (profile.provenance.selfCitation, built by attribution.js): citation targets
+// that name the publisher, against the independent rest. Reporting its own
+// study ("we surveyed", "our analysis") is own-current attribution, not a
+// citation, and never counts here.
 
 // 5. self-citation-dominance — evidence is predominantly the org's own voice.
-function selfCitationDominance(doc, claims, citations) {
-  const selfSpans = spansFor(doc, SELF_REF)
-  const external = citations.filter((c) => ['url', 'doi', 'author-year', 'numeric', 'year'].includes(c.type)).length
-  const self = selfSpans.length
-  if (self > 0 && self >= external) {
+function selfCitationDominance(doc, claims, citations, posture, ctx = {}) {
+  const sc = ctx.profile?.provenance?.selfCitation
+  if (!sc) return null
+  const self = sc.matched
+  const independent = sc.independent ?? sc.pool - sc.matched
+  if (self > 0 && self >= independent) {
     return {
       id: 'self-citation-dominance',
       severity: 'note',
-      summary: `Evidence is predominantly self-referential (${self} self-citation${self === 1 ? '' : 's'} vs ${external} independent) — the vendor's own voice standing in for outside proof.`,
-      evidence: selfSpans.slice(0, 4),
+      summary: `Evidence is predominantly self-referential (${self} self-citation${self === 1 ? '' : 's'} vs ${independent} independent) — the vendor's own voice standing in for outside proof.`,
+      evidence: (sc.targets || []).slice(0, 4),
     }
   }
   return null

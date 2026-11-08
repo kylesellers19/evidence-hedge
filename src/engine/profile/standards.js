@@ -15,6 +15,12 @@ export const SHARED_PROVENANCE = [
     url: 'https://aclanthology.org/D19-1473/',
   },
   {
+    criterion: 'attribution — whose finding a sentence reports',
+    standard: 'UnScientify (Ningrum, Mayr & Atanassova 2023)',
+    citation: 'Ningrum, P. K., Mayr, P. & Atanassova, I. (2023). UnScientify: Detecting Scientific Uncertainty in Scholarly Full Text. arXiv:2307.14236. Authorial-reference word lists from the Scientific Uncertainty Extractor (BSD 3-Clause; see THIRD_PARTY_NOTICES.md).',
+    url: 'https://arxiv.org/abs/2307.14236',
+  },
+  {
     criterion: 'causal strength of linking words',
     standard: 'Haber et al. 2022',
     citation: 'Haber, N. A., Wieten, S. E., Rohrer, J. M., et al. (2022). Causal and Associational Language in Observational Health Research: A Systematic Evaluation. American Journal of Epidemiology, 191(12), 2084–2097. Ratings: osf.io/jtdaz (CC BY 4.0).',

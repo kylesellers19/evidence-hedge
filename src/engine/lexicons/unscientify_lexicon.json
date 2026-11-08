@@ -1,0 +1,62 @@
+{
+  "_notice": "Word lists copied verbatim from UnScientify (Scientific Uncertainty Extractor, su_extractor 0.0.1), patterns/reference/reference.json and patterns/citations/citations.json. Copyright (c) Iana Atanassova, Panggih Kusuma Ningrum, Nicolas Gutehrlé (Université de Franche-Comté), Project InSciM. Licensed under the BSD 3-Clause License (stated in the project README; the repository's LICENSE file is empty). Full license text: THIRD_PARTY_NOTICES.md. The spaCy token patterns themselves (part-of-speech and morphology constraints) are not reproduced; only their literal word lists, keyed by the pattern ids they come from.",
+  "_source": {
+    "repository": "https://github.com/Project-InSciM/Scientific-Uncertainty-Extractor",
+    "commit": "24f12a6500e61d7e8d277aa323bb56acbd8f1d15",
+    "files": ["UnScientify-ver0125/dist/su_extractor-0.0.1.tar.gz: su_extractor-0.0.1/patterns/reference/reference.json", "su_extractor-0.0.1/patterns/citations/citations.json"],
+    "paper": "Ningrum, P. K., Mayr, P. & Atanassova, I. (2023). UnScientify: Detecting Scientific Uncertainty in Scholarly Full Text. arXiv:2307.14236."
+  },
+  "studyNouns": {
+    "from": ["Reference-p2", "Reference-p3"],
+    "lemmas": ["study", "research", "analysis", "article", "work", "paper", "investigation", "experiement"]
+  },
+  "studyNounsWithHypothesis": {
+    "from": ["Reference-p4", "Reference-p8", "Reference-p12"],
+    "lemmas": ["study", "research", "analysis", "article", "work", "hypothesis", "paper", "investigation", "experiement"]
+  },
+  "currentStudyAdjectives": {
+    "from": ["Reference-p20"],
+    "lower": ["current", "present"]
+  },
+  "currentStudyNouns": {
+    "from": ["Reference-p20"],
+    "lemmas": ["study", "research", "analysis", "work", "investigation", "experiement", "assumption", "prediction"]
+  },
+  "authorPossessives": {
+    "from": ["Reference-p21"],
+    "lower": ["our", "my"]
+  },
+  "authorPossessiveNouns": {
+    "from": ["Reference-p21"],
+    "lemmas": ["study", "research", "analysis", "article", "work", "hypothesis", "paper", "investigation", "experiement", "assumption", "prediction", "opinion", "conclusion", "hypothesis", "knowledge", "view", "perspective", "mind", "information"]
+  },
+  "nonCurrentAdjectiveExclusions": {
+    "from": ["Reference-p2"],
+    "lemmas": ["main", "first", "second", "third", "current", "present", "further"]
+  },
+  "priorWorkQuantifiers": {
+    "from": ["Reference-p12"],
+    "lower": ["many", "some", "most", "several", "various"]
+  },
+  "reportedByVerbs": {
+    "from": ["Reference-p9"],
+    "lower": ["according", "based"],
+    "particles": ["on", "to"]
+  },
+  "otherAgents": {
+    "from": ["Reference-p15"],
+    "lemmas": ["other", "one", "people"]
+  },
+  "authorNoun": {
+    "from": ["Reference-p22"],
+    "lemmas": ["author"]
+  },
+  "citationRegexes": {
+    "from": ["Citations-p1", "Citations-p2", "Citations-p3"],
+    "patterns": [
+      "\\[\\d+(?:–\\d+)?(?:,\\s*\\d+)*\\]",
+      "\\(\\d{1,3}(?:–\\d{1,3})?(?:,\\s*\\d{1,3})*\\)",
+      "\\(\\s*(see\\s+)?(.+? \\d{4}[a-z]?)(;\\s*.+? \\d{4}[a-z]?)*\\s*\\)"
+    ]
+  }
+}

@@ -111,12 +111,15 @@ function orgTokens(host, body) {
   return [...tokens]
 }
 
+// The pool and match the self-citation counter starts from (attribution.js
+// selfCitationCounter adds own-prior claims' targets; the profile and the
+// self-citation signal both read the result).
 export function selfCitationShare(org, references, claimUrls) {
   const pool = [...references.map((r) => r.text || r), ...claimUrls]
-  if (!org.length || pool.length === 0) return { share: 0, matched: 0, pool: pool.length }
+  if (!org.length || pool.length === 0) return { share: 0, matched: 0, pool: pool.length, targets: [] }
   const res = org.map((t) => new RegExp(`\\b${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i'))
-  const matched = pool.filter((p) => res.some((re) => re.test(p))).length
-  return { share: Math.round((matched / pool.length) * 100) / 100, matched, pool: pool.length }
+  const targets = pool.filter((p) => res.some((re) => re.test(p)))
+  return { share: Math.round((targets.length / pool.length) * 100) / 100, matched: targets.length, pool: pool.length, targets: targets.map((t) => t.slice(0, 160)) }
 }
 
 /**

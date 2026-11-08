@@ -118,6 +118,21 @@
  * @property {Rung}        rungReached
  * @property {number}      ceiling
  * @property {string}      posture       active posture key at flag time
+ * @property {Attribution} [attribution] whose finding the claim reports (attribution.js)
+ */
+
+/**
+ * Whose finding a sentence reports (engine/attribution.js). Measurement:
+ * identical under every rubric.
+ * @typedef  {Object} Attribution
+ * @property {'own-current'|'own-prior'|'cited-other'|'quoted'|'unattributed'|'undetermined'} label
+ * @property {'high'|'low'}  confidence
+ * @property {{cue:string, span:string}[]} cues   the spans behind the label
+ * @property {string}  [reason]    why the label is low confidence or undetermined
+ * @property {string}  [buildsOn]  the prior work an own-current claim applies its method to
+ * @property {string}  [speaker]   for quoted claims, when named
+ * @property {?string} [section]   section kind from the nearest heading
+ * @property {?number} [paragraph] paragraph index in the body
  */
 
 /** @typedef {'unsupported-assertion'|'overconfident'} FlagType */

@@ -16,9 +16,16 @@
 // counts only in a sentence that frames the document's own study, cites no
 // other work and does not deny it ("unlike an RCT"). Positive evidence only: a
 // disclosed limitation never changes the design. Rubric-invariant.
+//
+// Attribution (attribution.js) feeds the frame: a sentence attributed
+// own-current on a strong cue ("we surveyed", "our analysis", "Pew Research
+// Center surveyed") always frames the document's own study and is never
+// counted as a citation to other work; the publisher speaking of itself counts
+// as first person for `inherited`.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { DESIGN_CUES, OWN_STUDY_FRAME, SELF_DISCLAIMER } from '../lexicons/design.js'
+import { attributeSentence } from '../attribution.js'
 
 export const DESIGNS = ['rct', 'controlled-experiment', 'quasi-experimental', 'cohort-longitudinal', 'repeated-cross-sectional', 'cross-sectional', 'pre-post-uncontrolled', 'case-qualitative', 'modeling', 'systematic-review', 'narrative-review', 'none-reported']
 
@@ -55,24 +62,28 @@ const sentencesOf = (t) => t.replace(/\s+/g, ' ').split(/(?<=[.!?])\s+(?=[A-Z0-9
 
 /**
  * @param {string} body
- * @param {{ provenance?: string, references?: number }} [options]
+ * @param {{ provenance?: string, references?: number, publisher?: string[] }} [options]
+ *   publisher: names that identify the publisher (attribution.js publisherNames)
  */
-export function profileDesign(body, { provenance = 'unknown', references = 0 } = {}) {
+export function profileDesign(body, { provenance = 'unknown', references = 0, publisher = [] } = {}) {
   const scores = {}
   const evidence = {}
   let firstPerson = false
   let otherCitations = 0
   for (const s of sentencesOf(body || '')) {
-    if (OTHER_WORK.test(s)) { otherCitations++; continue }
-    const own = FRAME.test(s)
+    const a = attributeSentence(s, { publisher })
+    const ownCurrent = a.label === 'own-current' && a.strength === 'strong'
+    if (!ownCurrent && OTHER_WORK.test(s)) { otherCitations++; continue }
+    const own = ownCurrent || FRAME.test(s)
     if (!own) continue
+    const firstParty = FIRST_PERSON.test(s) || (ownCurrent && a.cues.some((c) => c.cue === 'publisher-verb'))
     for (const [design, res] of Object.entries(CUES)) {
       const m = res.map((re) => s.match(re)).find((x) => x && !NEGATED_BEFORE.test(s.slice(0, x.index)))
       if (!m) continue
       if ((scores[design] || 0) >= CUE_CAP) continue
       scores[design] = (scores[design] || 0) + 1
       ;(evidence[design] ||= []).push({ signal: m[0], span: s.slice(0, 200) })
-      if (FIRST_PERSON.test(s)) firstPerson = true
+      if (firstParty) firstPerson = true
     }
   }
 

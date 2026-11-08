@@ -11,7 +11,8 @@
 // journalism and general comes from the config object passed in.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { extractClaims } from './extractClaims.js'
+import { extractClaims, splitSentences } from './extractClaims.js'
+import { attributeClaims, selfCitationCounter } from './attribution.js'
 import { measureAssertiveness } from './measureAssertiveness.js'
 import { measureClaim } from './measure/index.js'
 import { segmentDocument } from './measure/segment.js'
@@ -128,6 +129,19 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
     }
   })
 
+  // ── Attribution: whose finding each claim reports (rubric-invariant) ──────
+  // The label rides on the claim and on its flag explanations; own-prior
+  // claims feed the one self-citation counter the profile and the
+  // self-citation signal both read.
+  const publisher = profile.provenance.publisher || []
+  const attribution = attributeClaims(body, claims, splitSentences(body), { publisher })
+  claims.forEach((c, i) => {
+    c.attribution = attribution.claims[i]
+    if (c.explanation) c.explanation = { ...c.explanation, attribution: c.attribution }
+    if (c.overreach) c.overreach = { ...c.overreach, explanation: { ...c.overreach.explanation, attribution: c.attribution } }
+  })
+  profile.provenance.selfCitation = selfCitationCounter(profile.provenance, claims, publisher)
+
   // ── Document-level signals (Part C) ───────────────────────────────────────
   const citations = claims.flatMap(c => c.citations)
   const signals = runSignals(document, claims, citations, posture, rubric, profile)
@@ -187,6 +201,7 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
   return {
     claims,
     references,
+    attribution: { sentences: attribution.sentences },
     profile,
     patterns,
     signals,

@@ -56,13 +56,22 @@ export function measureUnit(text) {
   return { register: reg.register, causal_strength: REGISTER_STRENGTH[reg.register], register_cues: reg.cues.map((c) => c.root), tier: measureCertainty(text).tier }
 }
 
+// Attribution per unit (change set 3): analysis.attribution.sentences covers
+// every body sentence, in the order the units are built from.
+export function unitAttribution(run) {
+  const sentences = run.analysis.attribution?.sentences || []
+  if (sentences.length !== run.units.length) throw new Error(`attribution drift on ${run.fixture.id}: ${sentences.length} attributed sentences vs ${run.units.length} units`)
+  return sentences
+}
+
 export function engineRows(run, commit) {
   const { units, analysis, rubric } = run
   const rubricId = rubric.base || rubric.id
   const claims = analysis.claims
+  const attribution = unitAttribution(run)
   let ci = 0
-  const rows = units.map((u) => {
-    const base = { unit_id: u.id, fixture: u.fixture, engine_commit: commit, label_tier: 'predicted' }
+  const rows = units.map((u, ui) => {
+    const base = { unit_id: u.id, fixture: u.fixture, engine_commit: commit, label_tier: 'predicted', attribution: attribution[ui] }
     const c = claims[ci]
     if (!c || c.text !== u.text) {
       const drop = dropReason(u.text, rubric.extraction, rubricId)

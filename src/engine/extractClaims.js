@@ -19,7 +19,7 @@ import { nonClaimRule, sectionOpenedBy } from './measure/segment.js'
 // while leaving common abbreviations intact.
 const ABBREV = /\b(?:e\.g|i\.e|vs|etc|al|Dr|Mr|Mrs|Ms|Inc|Ltd|Corp|Fig|No|pp|cf)\.$/i
 
-function splitSentences(text) {
+export function splitSentences(text) {
   const rough = text
     .replace(/\s+/g, ' ')
     .split(/(?<=[.!?])\s+(?=["'“(]?[A-Z0-9])/)

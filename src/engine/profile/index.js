@@ -12,6 +12,7 @@ import { segmentDocument } from '../measure/segment.js'
 import { profileProvenance } from './provenance.js'
 import { profileDesign } from './design.js'
 import { profileGenre } from './genre.js'
+import { publisherNames } from '../attribution.js'
 
 const URL_RE = /https?:\/\/[^\s)]+/g
 
@@ -23,7 +24,8 @@ export function profileDocument(text, { sourceUrl = '' } = {}) {
   const { body, references } = segmentDocument(text || '')
   const claimUrls = (body.match(URL_RE) || [])
   const provenance = profileProvenance(body, { sourceUrl, references: references.map((t) => ({ text: t })), claimUrls })
-  const design = profileDesign(body, { provenance: provenance.kind, references: references.length })
+  const publisher = publisherNames(provenance, body)
+  const design = profileDesign(body, { provenance: provenance.kind, references: references.length, publisher })
   const genre = profileGenre(body, { sourceUrl, provenance, design })
-  return { provenance, design, genre, referenceCount: references.length }
+  return { provenance: { ...provenance, publisher }, design, genre, referenceCount: references.length }
 }

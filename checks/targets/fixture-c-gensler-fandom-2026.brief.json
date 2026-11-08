@@ -1,7 +1,7 @@
 {
   "fixture": "fixture-c-gensler-fandom-2026",
   "recorded": "2026-11-08",
-  "engine_commit": "dc34856",
+  "engine_commit": "dc34856-dirty",
   "source": "The brief Kyle pasted on 2026-11-08 from the app at build e3fc8a7 (src unchanged since dc34856), recorded with --write and checked against the paste field by field: header, counts, judgment, profile, the 5 signals, the 3 patterns and their 8 example lines, the distribution and the 21 provenance entries.",
   "brief": {
     "header": {
@@ -123,30 +123,6 @@
       "referencesSetAside": null
     },
     "signals": [
-      {
-        "id": "self-citation-dominance",
-        "title": "Self-citation dominance",
-        "tag": "Note",
-        "summary": "Evidence is predominantly self-referential (5 self-citations vs 0 independent) — the vendor's own voice standing in for outside proof.",
-        "evidence": [
-          {
-            "sha": "798922c8fccc",
-            "chars": 11
-          },
-          {
-            "sha": "798922c8fccc",
-            "chars": 11
-          },
-          {
-            "sha": "c5faf9f698d8",
-            "chars": 10
-          },
-          {
-            "sha": "a1028498e7ec",
-            "chars": 12
-          }
-        ]
-      },
       {
         "id": "register-mismatch",
         "title": "Register mismatch",
@@ -377,6 +353,11 @@
               "criterion": "causal register of claims",
               "citation": "Yu, B., Li, Y. & Wang, J. (2019). Detecting Causal Language Use in Science Findings. EMNLP-IJCNLP 2019, 4664–4674.",
               "url": "https://aclanthology.org/D19-1473/"
+            },
+            {
+              "criterion": "attribution — whose finding a sentence reports",
+              "citation": "Ningrum, P. K., Mayr, P. & Atanassova, I. (2023). UnScientify: Detecting Scientific Uncertainty in Scholarly Full Text. arXiv:2307.14236. Authorial-reference word lists from the Scientific Uncertainty Extractor (BSD 3-Clause; see THIRD_PARTY_NOTICES.md).",
+              "url": "https://arxiv.org/abs/2307.14236"
             },
             {
               "criterion": "causal strength of linking words",

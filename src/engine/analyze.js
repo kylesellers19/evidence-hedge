@@ -14,6 +14,7 @@
 import { extractClaims, splitSentences } from './extractClaims.js'
 import { attributeClaims, selfCitationCounter } from './attribution.js'
 import { linkEvidence } from './linkEvidence.js'
+import { buildClaimRecord } from './claimRecord.js'
 import { measureAssertiveness } from './measureAssertiveness.js'
 import { measureClaim } from './measure/index.js'
 import { segmentDocument } from './measure/segment.js'
@@ -209,8 +210,12 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
   // ── Overall document score (computed last) ────────────────────────────────
   const documentScore = scoreDocument({ claims, signals, posture, rubric, profile })
 
+  // ── Claim records (change set 5): read-only, after every judgment ─────────
+  const records = claims.map((c) => buildClaimRecord(c, { profile, design: profile.design }))
+
   return {
     claims,
+    records,
     references,
     attribution: { sentences: attribution.sentences },
     profile,

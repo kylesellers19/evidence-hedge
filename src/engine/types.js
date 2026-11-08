@@ -132,6 +132,37 @@
  */
 
 /**
+ * One field of a claim record (engine/claimRecord.js).
+ * @typedef  {Object} RecordField
+ * @property {*}       value
+ * @property {?('predicted'|'gold'|'weak'|'published-human')} tier  the label tier the value carries
+ * @property {?string} span    the text it came from
+ * @property {'resolved'|'unresolved'} status
+ * @property {string}  [reason] why it is unresolved
+ */
+
+/**
+ * A claim as a structured record, comparable across documents (compareClaims.js).
+ * @typedef  {Object} ClaimRecord
+ * @property {string} text
+ * @property {RecordField} causal_strength
+ * @property {RecordField} certainty
+ * @property {RecordField} attribution
+ * @property {RecordField} evidence
+ * @property {RecordField} generic
+ * @property {RecordField} present_tense
+ * @property {RecordField} action_guiding
+ * @property {RecordField} identification_strategy
+ * @property {RecordField} population
+ * @property {RecordField} exposure
+ * @property {RecordField} comparator
+ * @property {RecordField} outcome
+ * @property {RecordField} timeframe
+ * @property {RecordField} setting
+ * @property {RecordField} genre
+ */
+
+/**
  * @typedef  {Object} Evidence
  * @property {'linked'|'unlinked'|'undetermined'} status
  * @property {EvidenceLink[]} links

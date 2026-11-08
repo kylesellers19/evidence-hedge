@@ -1,0 +1,40 @@
+{
+  "_comment": "Change set 4 (evidence linkage) — Step 0 findings and predictions, committed before any linker code was written. Run under the user's instruction to proceed through every stop-gate; every value is PROVISIONAL — not ratified. A mismatch is reported, never adjusted away.",
+  "baseline": "78e007a (engine ba7854a)",
+  "step0": {
+    "stage4Today": "Same-sentence proximity only. extractClaims.detectCitations finds tokens in the claim's own sentence (doi, url, numeric [n], author-year, (year), attribution phrases such as 'according to' / 'source:' / 'data from'); analyze.markOwnSiteUrls turns publisher-host URLs into url-own; gradeEvidence walks the rubric ladder top-down by those token types and the claim's keywords, with an own-result claim lifted to rubric.ownResultRung. Nothing links a claim to a reference entry, a footnote, a caption or a section; segment.js sets the reference list aside 'No linking'.",
+    "captionsInIngestion": "Not labeled. extractPdf.js segregates small-font text (captions/credits) to the end of each page but marks nothing; nonClaimFilter demotes 'Figure N:' captions. So the linker falls back to lines and inline spans beginning 'Source:' (per the handoff), and to 'Figure/Fig./Exhibit/Chart/Table N' references.",
+    "fixtures": {
+      "fixture-a-cadre": "105 reference entries after the References heading (author-year, APA-like: 'Araujo, D. M., … (2020). Cognitive …'); 71 author-year anchors in the body, often split by the two-column merge; 0 numbered markers; 0 footnotes; 46 URLs in the body; 0 'Source:' lines; 2 figure references.",
+      "fixture-b-pew-report": "No reference list; 0 author-year anchors in the body except a methods line ('Hur, Achen (2013)'); 0 URLs; 19 inline 'Source: Survey of U.S. workers conducted Oct. 7-13, 2024.' inside chart notes (the chart-note sentences are dropped as non-claims; the claims above them are the chart titles and prose); no footnotes.",
+      "fixture-c-gensler-fandom-2026": "No reference list; 0 markers; 25 URLs (credits and footers); 9 standalone 'Source: Post-World Cup Survey' / 'Source: In-Match Social Media Analysis' lines closing chart blocks, each page opened by a running 'EXECUTIVE SUMMARY' header; no footnotes. The handoff's check claim ('Our pre-World Cup survey data shows that 9 of 10 respondents…', p11) has no Source line in its block, so it can link only by section scope."
+    },
+    "decisions": [
+      "A resolved marker keeps its own token type for grading (numeric / author-year); the reference entry it resolves to (and any DOI there) is recorded on the link but does not move the rung. Grading by the quality of the target is a ladder change, left to change set 6.",
+      "Same-sentence tokens that the attribution routing does not prefer are kept as 'proximity' links, so no evidence the sentence carries is lost and reliance on proximity is measurable.",
+      "An own-study link (caption naming the document's own study, or section scope) lifts the claim to rubric.ownResultRung, as an own-result claim already is.",
+      "Section kinds: an Executive Summary, Key Takeaways or Highlights heading, and a short heading naming the document's own survey/analysis ('POST-WORLD CUP SURVEY'), read as key findings.",
+      "An unlinked claim records evidence.status 'unlinked' with the bases tried; its rung stays the ladder's floor (the ladder and its labels are out of scope)."
+    ]
+  },
+  "predictions": {
+    "linksPerBasis": {
+      "_basis": "Counts of links on extracted claims. Ranges set from the Step 0 inventory above.",
+      "fixture-a-cadre": { "marker": [55, 110], "footnote": [0, 0], "caption": [0, 2], "hyperlink": [2, 30], "section-scope": [0, 0], "proximity": [5, 60], "speaker": [0, 5] },
+      "fixture-b-pew-report": { "marker": [0, 3], "footnote": [0, 0], "caption": [5, 60], "hyperlink": [0, 0], "section-scope": [0, 30], "proximity": [5, 40], "speaker": [0, 5] },
+      "fixture-c-gensler-fandom-2026": { "marker": [0, 2], "footnote": [0, 0], "caption": [5, 60], "hyperlink": [0, 10], "section-scope": [25, 95], "proximity": [1, 20], "speaker": [0, 5] }
+    },
+    "markersResolved": { "fixture-a-cadre": [0.35, 0.85], "_basis": "share of author-year anchors that match an entry by first author and year; the two-column merge splits some names" },
+    "proximityShare": { "before": 1.0, "after": { "fixture-a-cadre": [0.05, 0.45], "fixture-b-pew-report": [0.10, 0.90], "fixture-c-gensler-fandom-2026": [0.02, 0.35] } },
+    "unlinkedShare": { "fixture-a-cadre": [0.55, 0.80], "fixture-b-pew-report": [0.50, 0.90], "fixture-c-gensler-fandom-2026": [0.35, 0.75] },
+    "flagCounts": {
+      "_basis": "Only own-study links (captions, section scope) and footnotes can lift a rung; A has neither (narrative review, no captions). causal-overreach reads the design, not the rung, so it does not move.",
+      "fixture-a-cadre": { "unsupported-assertion": [148, 148], "overconfident": [3, 3], "causal-overreach": [16, 16] },
+      "fixture-b-pew-report": { "unsupported-assertion": [3, 9], "overconfident": [0, 2], "causal-overreach": [3, 3] },
+      "fixture-c-gensler-fandom-2026": { "unsupported-assertion": [150, 225], "overconfident": [5, 40], "causal-overreach": [24, 24] }
+    },
+    "score": { "fixture-a-cadre": [1, 1], "fixture-b-pew-report": [7.3, 8.2], "fixture-c-gensler-fandom-2026": [1, 2] },
+    "fixtureCCheckClaim": "links to the report's own survey by section scope (no caption in its block)",
+    "knownGoodString": "flags unchanged (no own study, no captions; its citations are same-sentence)"
+  }
+}

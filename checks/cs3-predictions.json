@@ -1,0 +1,47 @@
+{
+  "_comment": "Change set 3 (attribution) — Step 0 findings and predictions, committed before any attribution code was written. Ranges are wide on purpose: they were set before a single label existed. Run under the user's instruction to proceed through every stop-gate without waiting for approval; every value here is PROVISIONAL — not ratified.",
+  "baseline": "e3fc8a7",
+  "step0": {
+    "selfCitationSignal": "src/engine/signals/corporate.js selfCitationDominance: counts SELF_REF matches (our data|our study|our analysis|our research|our results|our survey|our internal …|we found|we measured|we surveyed|company data) anywhere in the raw document, against citations of type url/doi/author-year/numeric/year; fires when self >= external. Shows the first 4 spans while counting all (Fixture C: 5 counted, 4 shown). Identifies the publisher not at all — any first-person method phrase counts.",
+    "profileCount": "src/engine/profile/provenance.js selfCitationShare: share of reference entries + claim URLs whose text names an org token. Org tokens (orgTokens): the host's registrable label (>= 3 chars, not co/com/org/ac/edu/gov) plus any 'Pew Research Center', '<Name> Research Institute' or 'Harvard T.H. Chan School of Public Health' anywhere in the body. Read by DocumentProfile.jsx and scoreDocument (penalty share x 1.5 when pool >= 5).",
+    "designDetection": "src/engine/profile/design.js profileDesign: per sentence of the body, a sentence matching OTHER_WORK (author-year, [n], et al., superscript-style) counts as a citation to other work and is skipped; otherwise a design cue counts only if OWN_STUDY_FRAME matches (we|our|this study|… |participants|respondents|researchers|… surveyed). firstPerson (we|our in a cue sentence) decides inherited for derivative provenance. Identifies the publisher not at all.",
+    "publisherIdentificationIssues": [
+      "Fixture A (CADRE, Building Brains Coalition): org token is 'Harvard T.H. Chan School of Public Health' — a school the report cites, not its publisher (no source URL; the regex takes any mention in the body).",
+      "Fixture C (Gensler): org token 'Gensler Research Institute' — correct; no host (PDF upload)."
+    ],
+    "knownGoodRegressionString": "checks/regression-baseline.mjs FIXTURE is invented marketing text, which conflicts with ground rule 3 (real documents only). It is kept as the existing regression guard the handoff names, not extended, and the conflict is reported."
+  },
+  "predictions": {
+    "flagCounts": {
+      "_basis": "Attribution adds a label and an explanation field; it does not touch tier, rung or the mismatch rule. Design detection changes only for sentences attributed own-current (they bypass the other-work exclusion and the frame requirement), which on these fixtures already frame their own study.",
+      "fixture-a-cadre": { "unsupported-assertion": 148, "overconfident": 3, "causal-overreach": 16, "exact": true },
+      "fixture-b-pew-report": { "unsupported-assertion": 9, "overconfident": 0, "causal-overreach": 3, "exact": true },
+      "fixture-c-gensler-fandom-2026": { "unsupported-assertion": 236, "overconfident": 2, "causal-overreach": 24, "exact": true }
+    },
+    "design": { "fixture-a-cadre": "narrative-review", "fixture-b-pew-report": "cross-sectional", "fixture-c-gensler-fandom-2026": "cross-sectional", "exact": true },
+    "selfCitationSignal": {
+      "fixture-a-cadre": "absent (unchanged)",
+      "fixture-b-pew-report": "absent (unchanged)",
+      "fixture-c-gensler-fandom-2026": "absent (was: 5 self-citations vs 0 independent)"
+    },
+    "profileSelfCitation": {
+      "_basis": "The unified counter keeps the profile's pool (reference entries + claim URLs) and its publisher match, so the profile numbers do not move; the signal now reads the same numbers.",
+      "fixture-a-cadre": { "matched": 0, "pool": 151 },
+      "fixture-b-pew-report": { "matched": 0, "pool": 0 },
+      "fixture-c-gensler-fandom-2026": { "matched": 0, "pool": 25 }
+    },
+    "score": {
+      "_basis": "C loses a 0.4 note penalty but sits at the floor (raw -0.31 -> 0.09, both clamp to 1). A and B lose nothing.",
+      "fixture-a-cadre": 1, "fixture-b-pew-report": 7.3, "fixture-c-gensler-fandom-2026": 1, "exact": true
+    },
+    "registerMismatch": "unchanged on all three (its inputs, tier and rung, do not change)",
+    "knownGoodString": "1 unsupported-assertion + 1 overconfident, values unchanged",
+    "fixtureCOldSpans": "all 5 sentences carrying the old signal's spans are labeled own-current; none counts as self-citation",
+    "labelDistribution": {
+      "_basis": "Share of extracted claims per label. Guesses from reading the three documents, before any code ran.",
+      "fixture-a-cadre": { "own-current": [0.02, 0.20], "own-prior": [0, 0.03], "cited-other": [0.20, 0.60], "quoted": [0, 0.05], "unattributed": [0.30, 0.70], "undetermined": [0, 0.15] },
+      "fixture-b-pew-report": { "own-current": [0.10, 0.60], "own-prior": [0, 0.05], "cited-other": [0, 0.10], "quoted": [0, 0.15], "unattributed": [0.30, 0.85], "undetermined": [0, 0.10] },
+      "fixture-c-gensler-fandom-2026": { "own-current": [0.15, 0.45], "own-prior": [0, 0.02], "cited-other": [0, 0.10], "quoted": [0, 0.05], "unattributed": [0.45, 0.80], "undetermined": [0, 0.10] }
+    }
+  }
+}

@@ -1,6 +1,9 @@
 {
   "_comment": "PDF ingest fix (after change sets 2–5): two-column reading order on the EHP papers, and superscript citation markers dropped on the JCU report. Committed before any fix code entered src/. Every value PROVISIONAL — not ratified.",
-  "baseline": { "app": "a447fc8 (engine 1c6f4eb)", "research": "evidence-hedge-research 6a2f7f3" },
+  "baseline": {
+    "app": "a447fc8 (engine 1c6f4eb)",
+    "research": "evidence-hedge-research 6a2f7f3"
+  },
   "step0": {
     "columns": "The EHP papers (Allen 2016, Satish 2012) are set in three columns with ~10 px gutters (x 209–218, 385–394). extractPdf.js buckets x into 4 px slots, so a 10 px gutter reads as 8 px and is rejected by COLUMN_GAP_MIN = 10. On pages with a table (Allen p3), table text crosses the gutters and lifts their coverage above GUTTER_COVERAGE_FRAC.",
     "superscripts": "extractPdf.js moves every glyph under 0.85 × the page's modal height to the end of the page as a caption or credit. That includes superscript citation markers (JCU, 67 attached to body text), Pew's superscript footnote markers (7) and the subscript 2 of CO2 (Satish, 141). Fixtures A and C have none attached to body text.",
@@ -17,23 +20,131 @@
   "predictions": {
     "grobidSentenceCoverage": {
       "_basis": "Share of GROBID body sentences (≥ 60 normalized characters) whose first 60 characters appear in the app's text. Development metric.",
-      "allen-ehp-2016": [0.80, 0.98], "satish-ehp-2012": [0.80, 0.98], "jcu-timber-pilot": [0.97, 1.0]
+      "allen-ehp-2016": [
+        0.8,
+        0.98
+      ],
+      "satish-ehp-2012": [
+        0.8,
+        0.98
+      ],
+      "jcu-timber-pilot": [
+        0.97,
+        1.0
+      ]
     },
     "grobidWholeSentenceCoverage": {
       "_basis": "The whole GROBID sentence (callouts included) appears in the app's text. Baseline 0.035, 0.026, 0.872.",
-      "allen-ehp-2016": [0.70, 0.95], "satish-ehp-2012": [0.65, 0.95], "jcu-timber-pilot": [0.92, 1.0]
+      "allen-ehp-2016": [
+        0.7,
+        0.95
+      ],
+      "satish-ehp-2012": [
+        0.65,
+        0.95
+      ],
+      "jcu-timber-pilot": [
+        0.92,
+        1.0
+      ]
     },
     "grobidComparison": {
-      "mappedCalloutSentences": { "allen-ehp-2016": [15, 24], "satish-ehp-2012": [20, 33], "jcu-timber-pilot": [24, 27] },
-      "appReferences": { "_basis": "the reference list is read in column order too; baseline 11, 54, 5 against GROBID's 37, 43, 43", "allen-ehp-2016": [25, 45], "satish-ehp-2012": [25, 50], "jcu-timber-pilot": [40, 60] },
-      "unitLevelAgreement": { "allen-ehp-2016": [0.10, 0.60], "satish-ehp-2012": [0.10, 0.60], "jcu-timber-pilot": [0.40, 0.90] },
-      "jcuSameTargets": [8, 22]
+      "mappedCalloutSentences": {
+        "allen-ehp-2016": [
+          15,
+          24
+        ],
+        "satish-ehp-2012": [
+          20,
+          33
+        ],
+        "jcu-timber-pilot": [
+          24,
+          27
+        ]
+      },
+      "appReferences": {
+        "_basis": "the reference list is read in column order too; baseline 11, 54, 5 against GROBID's 37, 43, 43",
+        "allen-ehp-2016": [
+          25,
+          45
+        ],
+        "satish-ehp-2012": [
+          25,
+          50
+        ],
+        "jcu-timber-pilot": [
+          40,
+          60
+        ]
+      },
+      "unitLevelAgreement": {
+        "allen-ehp-2016": [
+          0.1,
+          0.6
+        ],
+        "satish-ehp-2012": [
+          0.1,
+          0.6
+        ],
+        "jcu-timber-pilot": [
+          0.4,
+          0.9
+        ]
+      },
+      "jcuSameTargets": [
+        8,
+        22
+      ]
     },
     "fixtures": {
-      "fixture-a-cadre": { "pagesChanged": [0, 3], "flagsChangeEach": [0, 3], "score": "unchanged", "pdfColumnCheck": "splice rate ≤ 0.05 and hyphen tells ≤ 5 (its limits)" },
-      "fixture-b-pew-report": { "pagesChanged": [1, 8], "claims": "unchanged (the 7 markers come after full stops; the splitter keeps the boundary)", "flags": "unchanged (no numbered reference list; page-foot notes carry no Notes heading)", "score": "unchanged" },
-      "fixture-c-gensler-fandom-2026": { "pagesChanged": [0, 3], "flags": "unchanged", "score": "unchanged", "briefTarget": "unchanged" }
+      "fixture-a-cadre": {
+        "pagesChanged": [
+          0,
+          3
+        ],
+        "flagsChangeEach": [
+          0,
+          3
+        ],
+        "score": "unchanged",
+        "pdfColumnCheck": "splice rate ≤ 0.05 and hyphen tells ≤ 5 (its limits)"
+      },
+      "fixture-b-pew-report": {
+        "pagesChanged": [
+          1,
+          8
+        ],
+        "claims": "unchanged (the 7 markers come after full stops; the splitter keeps the boundary)",
+        "flags": "unchanged (no numbered reference list; page-foot notes carry no Notes heading)",
+        "score": "unchanged"
+      },
+      "fixture-c-gensler-fandom-2026": {
+        "pagesChanged": [
+          0,
+          3
+        ],
+        "flags": "unchanged",
+        "score": "unchanged",
+        "briefTarget": "unchanged"
+      }
     },
     "checks": "npm run check and npm run build pass; the known-good string unchanged"
+  },
+  "addendum": {
+    "_comment": "Found after the predictions above were committed, before any fix code: committed on its own before the code.",
+    "step0b": "segmentDocument's splitEntries splits '1. Kellert, S. R., …' between the number and the surname (its author-initials alternative matches right after '1.'); the '1.' fragment is under 8 characters and is dropped, so numbered entries lose their number. JCU: 54 entries, 1 numbered. Fixture A: 105 entries, 1 numbered, 74 start 'Surname, X.' with no number (author-year list). Fixtures B and C: no reference list.",
+    "fix": "splitEntries does not split directly after a list number.",
+    "predictions": {
+      "jcuNumberedEntries": [
+        40,
+        54
+      ],
+      "fixtureANumberedEntries": [
+        0,
+        3
+      ],
+      "fixtureAMarkerResolution": "41 of 88 unchanged (author-year list)"
+    }
   }
 }

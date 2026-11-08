@@ -1,0 +1,26 @@
+{
+  "_comment": "Change set 5 (claim records, comparison) — Step 0 findings and predictions, committed before any record or comparison code was written. Run under the user's instruction to proceed through every stop-gate; every value is PROVISIONAL — not ratified.",
+  "baseline": { "app": "12e52ed (engine 513f33d)", "research": "evidence-hedge-research, being built in parallel (change set 2)" },
+  "step0": {
+    "causalStrengthMapping": "NOT ratified. checks/lib/mapping.mjs REGISTER_STRENGTH (none 0, correlational 1, conditional-causal 2, direct-causal 3) is PROVISIONAL. Records use it and every causal-strength value says so (mapping: 'provisional'); ratification stays Kyle's.",
+    "potato": "Inspected in the research repo when installed (Part E); its config format is reported there before claim-record.yaml is written.",
+    "genreField": "The document's stage: research (a research paper or report of its own study), academic conclusion (a research paper's abstract, discussion or conclusion), press release, commercial (a firm's or vendor's restatement). News and general web are none of the four: unresolved, with the reason.",
+    "scopeMarkers": "After Peters & Chin-Yee (generalization in science summaries): generic = a present-tense result statement with no quantifier and no sample reference; present tense = a result verb in the present; action-guiding = should / must / need to / recommend, imperatives (the engine's own recommendation measure), PROVISIONAL lexicons."
+  },
+  "predictions": {
+    "flagsAndScores": "identical to engine 513f33d on Fixtures A–C and the known-good string (records are read-only on the analysis)",
+    "fillRates": {
+      "_basis": "Share of extracted claims whose field is resolved. causal strength, certainty, attribution and evidence come from modules that already run on every claim; attribution counts undetermined as unresolved, evidence counts unlinked as unresolved.",
+      "fixture-a-cadre": { "causal_strength": 1, "certainty": 1, "attribution": [0.99, 1], "evidence": [0.30, 0.40], "generic": [0.10, 0.45], "present_tense": [0.25, 0.65], "action_guiding": [0.03, 0.25], "identification_strategy": [0, 0.10], "population": 0, "exposure": 0, "comparator": 0, "outcome": 0, "timeframe": 0, "setting": 0, "genre": 1 },
+      "fixture-b-pew-report": { "causal_strength": 1, "certainty": 1, "attribution": [0.99, 1], "evidence": [0.33, 0.43], "generic": [0.03, 0.25], "present_tense": [0.20, 0.60], "action_guiding": [0, 0.08], "identification_strategy": [0.08, 0.35], "population": 0, "exposure": 0, "comparator": 0, "outcome": 0, "timeframe": 0, "setting": 0, "genre": 1 },
+      "fixture-c-gensler-fandom-2026": { "causal_strength": 1, "certainty": 1, "attribution": [0.99, 1], "evidence": [0.27, 0.37], "generic": [0.10, 0.45], "present_tense": [0.25, 0.65], "action_guiding": [0.03, 0.25], "identification_strategy": [0.15, 0.40], "population": 0, "exposure": 0, "comparator": 0, "outcome": 0, "timeframe": 0, "setting": 0, "genre": 1 }
+    },
+    "genre": { "fixture-a-cadre": "commercial", "fixture-b-pew-report": "research", "fixture-c-gensler-fandom-2026": "commercial" },
+    "pairs": {
+      "_basis": "Wright & Augenstein's original test split, compared with compareClaims (causal strength change → exaggerates / downplays / same) against the human label. Engine from change set 1's restatement-gap result on all rows (macro-F1 0.454); the Yu model from the strength-based results in Wright & Augenstein 2021.",
+      "testPairs": 81,
+      "engineMacroF1": [0.30, 0.55],
+      "yuModelMacroF1": [0.40, 0.70]
+    }
+  }
+}

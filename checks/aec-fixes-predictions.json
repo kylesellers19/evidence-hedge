@@ -1,0 +1,65 @@
+{
+  "_comment": "Engine fixes from the AEC corpus run (1,584 research PDFs from architecture, engineering and construction firms, read as uploads and as links by scripts/weigh-folder.mjs; files in the gitignored checks/data/aec/). Step 0 findings and predictions, committed before any fix code entered src/. Four fixes, each its own commit: A dateline, B own web address, C English check and no score without claims, D headings glued to sentences. Not in this round: recalibrating the flag rate (46% of reports sit on the 1.0 floor) and crediting a report's own chart-backed figures; both change what the score means and are Kyle's call. Every value PROVISIONAL — not ratified.",
+  "baseline": {
+    "app": "519810d (engine 519810d)",
+    "corpus": "checks/data/aec, run with scripts/weigh-folder.mjs from a git archive of 519810d (ENGINE_SHA=519810d)",
+    "corpusMetrics": {"files": 1584, "weighed": 1555, "notWeighed": {"no-text": 29, "error": 0, "missing": 0, "not-english": 0}, "deterministic": 1555, "zeroClaims": 6, "zeroClaimsScored": 6, "floorLink": 720, "medianLink": 1.2, "bands": {"failing": 1260, "weak": 244, "mixed": 38, "strong": 7, "carried": 6}, "pressLink": 295, "pressUpload": 248, "provenanceUploadUnknown": 985, "provenanceLinkUnknown": 22, "provenanceDiffers": 1141, "judgmentDiffers": 1048, "moveHalf": 393, "claimsTotal": 419316, "examples": 9018, "leakExamples": 344, "reportsWithLeak": 228, "unstableSeries": 21, "_definitions": "pressLink/pressUpload: posture or form role press-release. provenanceDiffers: link and upload give different provenance kinds. judgmentDiffers: different standard, scenario or posture. moveHalf: link and upload scores differ by 0.5 or more. leakExamples: brief example lines matching plain non-claim markers (dot leaders, 'Page x of y', 'Suite n', author-list labels, \u00a9, four or more capitalized words at the start). unstableSeries: a firm's report series judged under more than one standard or scenario. Same numbers on engine 7178387."}
+  },
+  "step0": {
+    "dateline": "classifyPosture.js scores the 'dateline' cue anywhere in the text and up to three times (weight 2 each), so two chart headings of the form 'Word - Word' reach PRESS_MIN 4 on their own. On the corpus (link reading), 295 reports are read as press releases (posture or form); 266 of them carry no press cue but the dateline, 7 have other cues reaching PRESS_MIN, 22 have 2 or 3 points of other cues, and none has its first dateline in the first 1,500 characters alongside another cue of 2 or more. Gold-corpus press releases: hsph-press-2015 has its dateline at character 534 plus a release line (3); sciencedaily-2015 and gensler-press-2024 carry no dateline and score 6 on other cues. Fixture C (Gensler, upload) is read as a press release today on a media-contact line (2) plus two datelines from character 47,020 on.",
+    "ownAddress": "An upload has no link, so profileProvenance has no host and reads the publisher from text cues alone; a firm's report rarely carries the cues ('our clients', '© 2024 Name Inc'), and AEC text trips the nonprofit cues ('foundation' as in building foundations). Uploaded, 985 of 1,555 reports read as provenance 'unknown' (22 when linked); 1,141 get a different provenance kind uploaded than linked, 1,048 a different judgment and 393 move by half a point or more. 944 reports carry, on their first or last 3,000 characters, a web address that matches their copyright holder or is a contact email; 568 of the 985 unknown uploads are among them. 853 of the 944 agree with the link's host or the firm's name; in the first 674 reports, 19 of the 25 that differed were the publisher's other domains (a parent company's, an email domain, the research firm that published a sponsored report). A first draft that ranked every domain on the edges by count picked a cited source (a statistics agency, a journal) for about one report in six; requiring the copyright holder's name or an email address cut that to about one in seventy on the first 674 reports, and the wrong picks were mostly co-authors' or sponsors' hosts.",
+    "language": "One report, a 69-page Arup paper, is mostly Chinese: 4% of its letters are Latin script. Two WSP reports are in French: other languages' function words outnumber English ones about 7 to 1 and 13 to 1. No other report comes close once words that double as English words or AEC abbreviations (pour, est., per, LOS, DU, com) are left out of the other-language list; counted, they brought a 2,175-claim English report from NV5 within 3% of the line. The engine reads all three today, and scores them 10.0, 2.4 and 2.4.",
+    "zeroClaims": "scoreDocument starts from the full budget, so a document with no claims scores 10.0, band strong, 'The evidence supports what this report claims', while the headline reads 'No assertive claims were detected'. 6 reports have no claims and score 10.0: the Chinese Arup paper and five sheets of one to three pages (cost tables, a matrix, a flyer, a bulletin).",
+    "gluedHeadings": "splitSentences collapses all whitespace before splitting, so a heading, label or cover line with no closing punctuation runs into the sentence after it; normalizeDocument keeps paragraph breaks, so the information is there. Claims today that start with a short paragraph (≤ 12 words, no closing punctuation): Fixture A 40 of 242 (26 flagged), Fixture B 40 of 231 (2 flagged), Fixture C 86 of 397 (52 flagged). The corpus's example lines with plain non-claim markers: 344 of 9,018 example lines, in 228 of 1,555 reports. No fixture claim carries a dot leader today; corpus examples do (tables of contents run into the first sentence).",
+    "units": "checks/lib/units.mjs keeps a copy of splitSentences from dc34856, already behind the engine on superscript markers; benchmark-guards.test.mjs (not in npm run check) passes today. The review sheets in checks/data/review/ carry no labels yet (verdict and is_claim empty in all 591 rows), so unit ids can move."
+  },
+  "seenBeforeWriting": "Input measurements only (scratch scripts, not committed): cue counts and positions, web addresses on each report's first and last 3,000 characters, script and function-word shares, short-paragraph glue counts on the fixtures. The own-address rule was tried as a measurement on the first 674 cached reports (agreement with the link's host or the firm's name), and the English test on the 1,347 report texts cached at the time (it refused the three reports named under language, and no other). No fix was run on the fixtures, the checks or the full corpus.",
+  "plan": {
+    "A": "The dateline counts only in the first DATELINE_HEAD_CHARS = 1500 characters, and once. Every other press cue is unchanged.",
+    "B": "With no link, ownHost(body) reads the document's own web address from its first and last OWN_EDGE_CHARS = 3000 characters: a domain or email domain whose name is the copyright holder's, else the email domain used most there; social, webmail, DOI and link-shortener hosts never count. It stands in for the link's host everywhere the host is read (publisher kind, org tokens for self-citation, the publisher names attribution uses, the stake role's own-host test), with evidence 'own web address'.",
+    "C": "validateText refuses 'not-english' on every path when the text has at least 500 letters and either under half are Latin script or other languages' function words outnumber English ones; failureCopy gives one sentence. scoreDocument returns score null, band 'unscored', 'We found no claims in this report to weigh, so it has no score.' for a document with no claims (the general-web gate keeps its own verdict); the verdict mark shows 'No score' and Add to The List stays hidden.",
+    "D": "splitSentences ends a block at a paragraph break after a short paragraph (≤ HEADING_MAX_WORDS = 12 words) that has no closing punctuation and is followed by a paragraph that does not start in lower case. A sentence with dot leaders is dropped as a contents line. units.mjs imports the engine's splitter."
+  },
+  "predictions": {
+    "A": {
+      "corpusPressLink": [5, 40],
+      "corpusPressUpload": [5, 40],
+      "goldCorpus": "hsph-press-2015, sciencedaily-2015 and gensler-press-2024 stay press releases; npm run check passes with no other gold change",
+      "fixtureA": "unchanged (no press cues)",
+      "fixtureB": "unchanged (one release line, 3; no dateline)",
+      "fixtureC": { "posture": "not press-release", "formRole": "not press-release", "score": [1.0, 1.5], "briefTarget": "moves (posture, genre note, verdict sentence); re-recorded in the same commit" },
+      "unstableSeries": [5, 18]
+    },
+    "B": {
+      "corpusUploadProvenanceUnknown": [330, 550],
+      "corpusProvenanceDiffersLinkUpload": [350, 750],
+      "corpusJudgmentDiffersLinkUpload": [350, 750],
+      "corpusScoreMovesHalfPoint": [120, 300],
+      "fixtures": "unchanged: A has no address on its edges and no copyright line; B has its link; C's copyright lines are photo credits and gensler.com is not on its first or last 3,000 characters",
+      "goldCorpus": "unchanged (the two corpus documents without a link have no matching address on their edges)"
+    },
+    "C": {
+      "corpusNotEnglish": [2, 5],
+      "corpusNoScoreLink": [4, 7],
+      "corpusZeroClaimsScored": 0,
+      "fixtures": "unchanged (all English, all with claims)",
+      "checks": "npm run check passes; no check scores a document without claims"
+    },
+    "D": {
+      "fixtureA": { "claims": [225, 260], "flagged": [140, 172], "score": [1.0, 1.5] },
+      "fixtureB": { "claims": [210, 250], "unsupported": [5, 12], "causalOverreach": [2, 4], "score": [6.8, 7.8] },
+      "fixtureC": { "claims": [360, 430], "flagged": [200, 245], "score": [1.0, 1.5] },
+      "fixtureExamplesStartingWithAGluedHeading": "0 in all three",
+      "corpusLeakExamples": [40, 200],
+      "corpusReportsWithLeak": [30, 150],
+      "corpusClaims": [385000, 440000],
+      "corpusFloor": [600, 790],
+      "targets": "check:targets and check:evidencesection move on every fixture whose claims change; re-recorded in the same commit with the differences listed in the report",
+      "unitsGuard": "benchmark-guards.test.mjs passes (units cover every claim, in order)"
+    },
+    "all": {
+      "determinism": "every weighed report repeats exactly",
+      "build": "npm run check and npm run build pass after each fix"
+    }
+  }
+}

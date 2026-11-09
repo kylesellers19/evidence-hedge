@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// profileProvenance(body, { sourceUrl, references }) → who is speaking
+// profileProvenance(body, { sourceUrl, references, text }) → who is speaking
 //
 //   kind: peer-reviewed-journal | academic-press-office | government |
 //         nonprofit-research | firm-vendor | news-outlet | trade-press |
@@ -12,12 +12,14 @@
 // Order of evidence: (1) the document's OWN venue block — DOI, journal line,
 // received/accepted dates in the body, never DOIs inside the reference list;
 // (2) the link's host, or with no link the web address the document gives as
-// its own (ownHost); (3) text cues. Rubric-invariant. AACODS grounds the
-// criterion (rubric provenance footer).
+// its own (ownHost, read on the whole text); (3) text cues, never read in a
+// reference entry. Rubric-invariant. AACODS grounds the criterion (rubric
+// provenance footer).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { PUBLISHER_HOSTS, HOST_SUFFIX_KINDS } from '../lexicons/publishers.js'
 import { spansFor } from '../signals/util.js'
+import { isReferenceEntry } from '../measure/segment.js'
 
 export const PROVENANCE_KINDS = ['peer-reviewed-journal', 'academic-press-office', 'government', 'nonprofit-research', 'firm-vendor', 'news-outlet', 'trade-press', 'individual', 'unknown']
 export const VENUE_MIN = 3 // PROVISIONAL — not ratified (venue-block points for a journal)
@@ -93,7 +95,9 @@ const VENUE = [
 ]
 const FRONT_CHARS = 6000
 
-// Text cues per kind (points each, capped at 3 hits per cue).
+// Text cues per kind (points each, capped at 3 hits per cue). "Foundation" counts
+// only in a name ("the Kresge Foundation", "Foundation for …"): in building
+// reports it is mostly the structure's foundation.
 const TEXT_CUES = {
   'academic-press-office': [
     [/\bfor immediate release\b/i, 3], [/\bstory source:|\bmaterials provided by\b/i, 3], [/\bmedia contacts?\b/i, 1],
@@ -101,7 +105,7 @@ const TEXT_CUES = {
   ],
   'nonprofit-research': [
     [/\bPew Research Center\b/, 3], [/\b(?:non-?profit|nonpartisan|non-partisan|not-for-profit)\b/i, 2], [/\bthink tank\b|\bfact tank\b/i, 2],
-    [/\bcoalition\b/i, 1], [/\bfoundation\b/i, 1],
+    [/\bcoalition\b/i, 1], [/\b[Tt]he\s+(?:(?:[A-Z][\w.'’-]*|&)\s+){1,5}Foundation\b|\bFoundation\s+for\s+[A-Z]/, 1],
   ],
   government: [
     [/\b(?:U\.S\.|United States)\s+(?:Department|Environmental Protection Agency|Government)\b/, 2], [/\bofficial website of the\b/i, 2], [/\bpublic domain\b/i, 1],
@@ -131,12 +135,15 @@ function venueEvidence(body) {
   return { points, evidence: out }
 }
 
+// A cited source names someone else ("Pew Research Center, 2010"), so
+// paragraphs that read as reference entries are left out.
 function textScores(body) {
+  const ownWords = body.split(/\n\n+/).filter((p) => !isReferenceEntry(p.replace(/\s+/g, ' '))).join('\n\n')
   const scores = {}
   const evidence = {}
   for (const [kind, cues] of Object.entries(TEXT_CUES)) {
     for (const [re, pts] of cues) {
-      const spans = spansFor(body, re)
+      const spans = spansFor(ownWords, re)
       if (!spans.length) continue
       scores[kind] = (scores[kind] || 0) + pts * Math.min(spans.length, 3)
       ;(evidence[kind] ||= []).push({ signal: `text: ${re.source.slice(0, 40)}`, span: spans[0].slice(0, 120) })
@@ -171,10 +178,13 @@ export function selfCitationShare(org, references, claimUrls) {
 
 /**
  * @param {string} body  document text without its reference list
- * @param {{ sourceUrl?: string, references?: {text:string}[], claimUrls?: string[] }} [options]
+ * @param {{ sourceUrl?: string, references?: {text:string}[], claimUrls?: string[], text?: string }} [options]
+ *   text: the whole document. The own address is read on its edges, since a back
+ *   cover after the reference list is not in the body; on the body's edges when
+ *   the whole text gives none (an address just before the reference list).
  */
-export function profileProvenance(body, { sourceUrl = '', references = [], claimUrls = [] } = {}) {
-  const own = sourceUrl ? null : ownHost(body)
+export function profileProvenance(body, { sourceUrl = '', references = [], claimUrls = [], text = body } = {}) {
+  const own = sourceUrl ? null : ownHost(text) || ownHost(body)
   const host = hostOf(sourceUrl) || own?.host || ''
   const venue = venueEvidence(body)
   const { scores, evidence: textEvidence } = textScores(body)
@@ -190,7 +200,10 @@ export function profileProvenance(body, { sourceUrl = '', references = [], claim
     const ranked = Object.entries(scores).sort((a, b) => b[1] - a[1])
     const [topKind, topPts] = ranked[0] || [null, 0]
     const hostIsSpecific = !!host && Object.keys(PUBLISHER_HOSTS).some((h) => host === h || host.endsWith('.' + h))
-    if (fromHost && (hostIsSpecific || !(topPts >= TEXT_MIN))) {
+    // A firm's own address (.com …) outranks nonprofit cues: firms mention the
+    // nonprofits, coalitions and foundations they work with.
+    const cuesOverride = topPts >= TEXT_MIN && !(topKind === 'nonprofit-research' && fromHost === 'firm-vendor')
+    if (fromHost && (hostIsSpecific || !cuesOverride)) {
       kind = fromHost
       evidence.push(own ? { signal: 'own web address', span: `${host} (${own.via})` } : { signal: 'publisher host', span: host })
     } else if (topPts >= TEXT_MIN) {

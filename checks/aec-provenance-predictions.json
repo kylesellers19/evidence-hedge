@@ -1,0 +1,88 @@
+{
+  "_comment": "Engine fixes E–G, from tracing the AEC corpus's top upload score: the Perkins&Will Research Journal 03.02 scores 2.8 linked and 8.8 uploaded on the same text. Step 0 findings and predictions, committed before any fix code entered src/. Three fixes, each its own commit: E an upload's own web address read on the whole text, F a reference list followed by another ends where prose resumes, G publisher text cues (the word 'foundation' only as an organization's name, never in reference entries, and a firm's own .com address outranks nonprofit cues). Corpus: checks/data/aec (gitignored), run with scripts/weigh-folder.mjs. Every value PROVISIONAL — not ratified.",
+  "baseline": {
+    "app": "bcbedf8 (engine identical to d6714e6: no change under src/ since)",
+    "corpus": "checks/data/aec/results-d6714e6 (engine d6714e6)",
+    "corpusMetrics": {
+      "weighed": 1552,
+      "deterministic": 1552,
+      "floorLink": 699,
+      "medianLink": 1.2,
+      "provenanceUploadUnknown": 433,
+      "provenanceLinkUnknown": 22,
+      "nonprofitLink": 103,
+      "nonprofitUpload": 181,
+      "firmVendorLink": 1365,
+      "firmVendorUpload": 862,
+      "provenanceDiffers": 514,
+      "judgmentDiffers": 510,
+      "moveHalf": 199,
+      "claimsTotal": 426027,
+      "referencesTotal": 15086,
+      "perkinsWillJournals": { "count": 26, "claims": 15374, "medianLink": 1.0, "medianUpload": 2.9, "largestLinkUploadGap": 6.0 },
+      "topLink": 8.3,
+      "topUpload": 8.8,
+      "_definitions": "As in checks/aec-fixes-predictions.json. nonprofitLink/nonprofitUpload, firmVendorLink/firmVendorUpload: reports whose provenance kind is that, linked or uploaded. judgmentDiffers compares rubric label, standard, scenario and posture. referencesTotal: analysis references on the linked reading (list entries plus entries found in the body). perkinsWillJournals: the 26 issues of the Perkins&Will Research Journal in the corpus. topLink/topUpload: the highest score on each reading."
+    }
+  },
+  "step0": {
+    "trace": "Perkins&Will Research Journal 03.02 (185,278 characters, five articles, each with its own REFERENCES list at 20%, 40%, 67%, 77% and 95% of the text). segmentDocument cuts at the first list past REFERENCE_MIN_POSITION (67%): the body is the first 124,303 characters, and articles 4 and 5 and the back cover become 212 'references'. The lists of articles 1 and 2 stay in the body; article 2's carries 'Pew Research Center' as entry [3]. Uploaded, ownHost(body) finds no address: the first 3,000 characters hold a copyright line but no domain, and the back cover, with its copyright line and the firm's research contact email, was cut with the references. Text cues then decide: one 'Pew Research Center' scores 3, TEXT_MIN, so the publisher reads as nonprofit-research. Linked, perkinswill.com is a listed publisher host, so firm-vendor. Same text: linked 2.8 (Corporate × Research, 461 unsupported), uploaded 8.8 (Research, 44 unsupported).",
+    "nonprofit": "Every report in the corpus comes from an AEC firm, yet 181 read as nonprofit-research uploaded and 103 linked. Re-reading those 181 PDFs: the word 'foundation' (building foundations, 'a foundation for') lifts 104 of them over TEXT_MIN; 84 rest on 'foundation' or 'coalition' alone; 'Pew Research Center', each time a citation, decides 7. With 'foundation' counted only as a name and citations skipped, 51 linked readings stay nonprofit; 47 of them sit on the firm's own .com host: TEXT_CUES beat a generic host suffix, and firms mention the nonprofits, coalitions and foundations they work for. Where a report reads firm-vendor linked and nonprofit uploaded (78), the upload scores 0.71 higher on average; four Perkins&Will journals by 4.1 to 6.0.",
+    "ownAddress": "ownHost reads the body's first and last 3,000 characters, and the body ends at the reference list, so a back cover after the references never counts. Read on the whole text, an own address appears for 47 more uploads: 23 Perkins&Will journals (the other 3 had one already), 10 Arup reports, 4 Jacobs. The host never differs where both readings find one. One Arup report loses its address on the whole text (it sits at the body's end, before the reference list), hence the fallback in E.",
+    "referenceCut": "28 reports carry more than one reference list with prose between: 26 Perkins&Will journals, and an Arup and a Jacobs report written in chapters that each end in references. Their bodies hold 40–76% of the text today. Lists whose entries are numbered [n] and carry few other reference cues do not open a list (two of the four in journal 09.01), so a journal can keep part of its later text in a list that runs to the end. Counting bracket numbers as entries would change five single-list reports as well; it is not in this round.",
+    "edgesVariant": "Reading text cues only on the whole text's first and last 3,000 characters was measured and dropped: Fixture C loses its firm cues (firm-vendor → unknown, hybrid firm-research → mixed) and Fixture A falls to TEXT_MIN exactly (17 → 3)."
+  },
+  "seenBeforeWriting": "Scratch scripts, not committed: the trace of journal 03.02; a cue scan of the 596 reports read nonprofit or turned unknown by uploading; the candidate rules of E, F and G written in a scratch copy of src/ and run as routing only (profile and judgment, no claims scored) on all 1,552 weighed reports, the gold corpus (14 loaded, 3 supplied files absent) and Fixtures A–C, one fix at a time; a body-length sweep of the candidate segmenter on every cached corpus text, with and without bracket-numbered entries; the fixtures' provenance evidence spans, hashed. No candidate was run through analyze(), the checks or the corpus runner.",
+  "plan": {
+    "E": "With no link, profileProvenance reads the own web address (ownHost) on the whole document text, and on the body only when the whole text gives none: profileDocument passes the text. Everything else ownHost does is unchanged.",
+    "F": "segmentDocument finds every heading that opens a reference list (same tests as now). With one list past REFERENCE_MIN_POSITION and no other, nothing changes. With more than one, every list counts, wherever it falls, and each but the last ends where prose resumes: the start of the first run of PROSE_RUN_MIN = 1000 characters of paragraphs that are neither reference entries nor numbered like one ([n] or n.), before the next list's heading. The last list runs to the end, as now. The body is the stretches outside the lists, joined by a paragraph break.",
+    "G": "Three changes to the publisher text cues. (1) 'foundation' counts only in an organization's name: 'the <Name> Foundation' or 'Foundation for <Name>'. (2) Cues are not read in paragraphs that are reference entries. (3) When the link's host, or an upload's own address, has a firm suffix (.com, .io, .co, .ai, .biz …) and the top text cue is nonprofit-research, the host decides; every other kind keeps the existing rule (text cues of 3 or more beat a generic suffix)."
+  },
+  "predictions": {
+    "E": {
+      "provenanceUploadUnknown": [405, 425],
+      "nonprofitUpload": [155, 172],
+      "provenanceDiffers": [465, 490],
+      "judgmentDiffers": [460, 488],
+      "moveHalf": [155, 192],
+      "perkinsWillUploadsFirmVendor": 26,
+      "perkinsWillMedianUpload": [1.0, 1.8],
+      "topUpload": 8.3,
+      "linkReadings": "unchanged: claimsTotal 426,027, floorLink 699, medianLink 1.2, topLink 8.3",
+      "fixtures": "A, B, C unchanged (no address newly found; check:targets and check:evidencesection pass without re-recording)",
+      "goldCorpus": "unchanged",
+      "checks": "npm run check and npm run build pass"
+    },
+    "F": {
+      "reportsWithBodyChanged": 28,
+      "claimsTotal": [431000, 438000],
+      "referencesTotal": [9500, 12500],
+      "floorLink": [690, 715],
+      "perkinsWillClaims": [20000, 26000],
+      "perkinsWillMedianLink": [1.0, 1.5],
+      "provenanceDiffers": "within 3 of E's",
+      "judgmentDiffers": "within 5 of E's",
+      "fixtures": "unchanged: each has at most one reference list, so its body is the same string (check:targets and check:evidencesection pass without re-recording)",
+      "goldCorpus": "unchanged",
+      "checks": "npm run check and npm run build pass"
+    },
+    "G": {
+      "nonprofitLink": [0, 10],
+      "nonprofitUpload": [55, 75],
+      "firmVendorLink": [1445, 1465],
+      "provenanceUploadUnknown": [440, 465],
+      "provenanceDiffers": [505, 535],
+      "judgmentDiffers": [500, 530],
+      "linkJudgmentsMoved": [90, 110],
+      "floorLink": [700, 770],
+      "moveHalf": [150, 240],
+      "fixtures": "provenance kind and the brief's provenance spans unchanged (A's nonprofit cue score 18 → 17, C's nonprofit score 1 → 0, neither shown); check:targets and check:evidencesection pass without re-recording",
+      "goldCorpus": "provenance unchanged for all 14 loaded documents; check:corpus, check:routing and check:hybrid pass",
+      "checks": "npm run check and npm run build pass"
+    },
+    "all": {
+      "determinism": "every weighed report repeats exactly",
+      "weighed": 1552
+    }
+  }
+}

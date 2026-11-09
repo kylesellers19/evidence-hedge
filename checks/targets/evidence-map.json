@@ -1,6 +1,6 @@
 {
   "recorded": "2026-11-09",
-  "engine_commit": "55645db",
+  "engine_commit": "4549f66-dirty",
   "rows": {
     "allen-ehp-2016": [
       {
@@ -220,6 +220,530 @@
         "overreach": 0
       }
     ],
+    "hsph-press-2015": [
+      {
+        "kind": "described-study",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 4,
+        "reaches": "hedged",
+        "pastIt": 1,
+        "overreach": 0
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "self-reported",
+        "claims": 1,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "unnamed",
+        "grade": "presumed",
+        "rung": "unsourced",
+        "claims": 1,
+        "reaches": "hedged",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "none",
+        "grade": "none",
+        "rung": "unsourced",
+        "claims": 16,
+        "reaches": "hedged",
+        "pastIt": 15,
+        "overreach": 0
+      }
+    ],
+    "sciencedaily-2015": [
+      {
+        "kind": "link",
+        "grade": "linked",
+        "rung": "audited",
+        "claims": 1,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "link",
+        "grade": "linked",
+        "rung": "self-reported",
+        "claims": 1,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "self-reported",
+        "claims": 1,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "described-study",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 3,
+        "reaches": "hedged",
+        "pastIt": 1,
+        "overreach": 0
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "self-reported",
+        "claims": 1,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "internal",
+        "claims": 4,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "unnamed",
+        "grade": "presumed",
+        "rung": "unsourced",
+        "claims": 2,
+        "reaches": "hedged",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "none",
+        "grade": "none",
+        "rung": "unsourced",
+        "claims": 28,
+        "reaches": "hedged",
+        "pastIt": 26,
+        "overreach": 0
+      }
+    ],
+    "gba-news-2015": [
+      {
+        "kind": "described-study",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 3,
+        "reaches": "hedged",
+        "pastIt": 2,
+        "overreach": 0
+      },
+      {
+        "kind": "speaker",
+        "grade": "loose",
+        "rung": "documented",
+        "claims": 2,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "speaker",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 3,
+        "reaches": "hedged",
+        "pastIt": 2,
+        "overreach": 0
+      },
+      {
+        "kind": "speaker",
+        "grade": "loose",
+        "rung": "named",
+        "claims": 2,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "named",
+        "claims": 1,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "keyword",
+        "grade": "loose",
+        "rung": "named",
+        "claims": 3,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "none",
+        "grade": "none",
+        "rung": "unsourced",
+        "claims": 27,
+        "reaches": "hedged",
+        "pastIt": 22,
+        "overreach": 0
+      }
+    ],
+    "bdc-blog-allen": [
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "documented",
+        "claims": 2,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "described-study",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 2,
+        "reaches": "hedged",
+        "pastIt": 2,
+        "overreach": 0
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "named",
+        "claims": 1,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "none",
+        "grade": "none",
+        "rung": "unsourced",
+        "claims": 15,
+        "reaches": "hedged",
+        "pastIt": 12,
+        "overreach": 0
+      }
+    ],
+    "naava-allen": [
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "self-reported",
+        "claims": 2,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "described-study",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 2,
+        "reaches": "hedged",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "none",
+        "grade": "none",
+        "rung": "unsourced",
+        "claims": 7,
+        "reaches": "hedged",
+        "pastIt": 7,
+        "overreach": 0
+      }
+    ],
+    "gensler-gws-2024": [
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "self-reported",
+        "claims": 2,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 1
+      },
+      {
+        "kind": "publisher",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 1,
+        "reaches": "hedged",
+        "pastIt": 1,
+        "overreach": 0
+      },
+      {
+        "kind": "keyword",
+        "grade": "loose",
+        "rung": "third-party",
+        "claims": 1,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "none",
+        "grade": "none",
+        "rung": "unsourced",
+        "claims": 25,
+        "reaches": "hedged",
+        "pastIt": 23,
+        "overreach": 0
+      }
+    ],
+    "gensler-press-2024": [
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "self-reported",
+        "claims": 4,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 1
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "self-reported",
+        "claims": 1,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 1
+      },
+      {
+        "kind": "keyword",
+        "grade": "loose",
+        "rung": "third-party",
+        "claims": 1,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "keyword",
+        "grade": "loose",
+        "rung": "internal",
+        "claims": 2,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "none",
+        "grade": "none",
+        "rung": "unsourced",
+        "claims": 23,
+        "reaches": "hedged",
+        "pastIt": 18,
+        "overreach": 0
+      }
+    ],
+    "bdc-gensler-news-2024": [
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "documented",
+        "claims": 3,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "described-study",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 1,
+        "reaches": "hedged",
+        "pastIt": 1,
+        "overreach": 0
+      },
+      {
+        "kind": "speaker",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 3,
+        "reaches": "hedged",
+        "pastIt": 2,
+        "overreach": 0
+      },
+      {
+        "kind": "speaker",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 1,
+        "reaches": "hedged",
+        "pastIt": 1,
+        "overreach": 0
+      },
+      {
+        "kind": "unnamed",
+        "grade": "presumed",
+        "rung": "unsourced",
+        "claims": 1,
+        "reaches": "hedged",
+        "pastIt": 1,
+        "overreach": 0
+      },
+      {
+        "kind": "none",
+        "grade": "none",
+        "rung": "unsourced",
+        "claims": 24,
+        "reaches": "hedged",
+        "pastIt": 19,
+        "overreach": 0
+      }
+    ],
+    "co2meter-plants": [
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "self-reported",
+        "claims": 1,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 1
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "internal",
+        "claims": 1,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "unnamed",
+        "grade": "presumed",
+        "rung": "unsourced",
+        "claims": 2,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "none",
+        "grade": "none",
+        "rung": "unsourced",
+        "claims": 106,
+        "reaches": "measured",
+        "pastIt": 4,
+        "overreach": 1
+      }
+    ],
+    "jcu-timber-pilot": [
+      {
+        "kind": "link",
+        "grade": "linked",
+        "rung": "peer-reviewed",
+        "claims": 11,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 1
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 106,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 12
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 2,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 5,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 1,
+        "reaches": "hedged",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "unresolved",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 1,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "anecdotal",
+        "claims": 8,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "keyword",
+        "grade": "loose",
+        "rung": "peer-reviewed",
+        "claims": 4,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "keyword",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 5,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "unnamed",
+        "grade": "presumed",
+        "rung": "unsourced",
+        "claims": 3,
+        "reaches": "hedged",
+        "pastIt": 2,
+        "overreach": 0
+      },
+      {
+        "kind": "none",
+        "grade": "none",
+        "rung": "unsourced",
+        "claims": 165,
+        "reaches": "hedged",
+        "pastIt": 90,
+        "overreach": 12
+      }
+    ],
     "fixture-a-cadre": [
       {
         "kind": "reference",
@@ -383,6 +907,107 @@
         "claims": 7,
         "reaches": "hedged",
         "pastIt": 5,
+        "overreach": 0
+      }
+    ],
+    "fixture-b-pew-report": [
+      {
+        "kind": "own",
+        "grade": "linked",
+        "rung": "primary",
+        "claims": 42,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 89,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 2
+      },
+      {
+        "kind": "speaker",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 1,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "unresolved",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 1,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 2,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "anecdotal",
+        "claims": 1,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "publisher",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 1,
+        "reaches": "hedged",
+        "pastIt": 1,
+        "overreach": 0
+      },
+      {
+        "kind": "keyword",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 6,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 1
+      },
+      {
+        "kind": "keyword",
+        "grade": "loose",
+        "rung": "secondary",
+        "claims": 2,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "keyword",
+        "grade": "loose",
+        "rung": "anecdotal",
+        "claims": 3,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "none",
+        "grade": "none",
+        "rung": "unsourced",
+        "claims": 83,
+        "reaches": "hedged",
+        "pastIt": 8,
         "overreach": 0
       }
     ]

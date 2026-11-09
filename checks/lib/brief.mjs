@@ -16,7 +16,7 @@ import { signalTitle } from '../../src/engine/signals/titles.js'
 import { PATTERN_META } from '../../src/engine/patterns.js'
 import { GENRE_LABELS, PROVENANCE_LABELS, roleText } from '../../src/components/genre/labels.js'
 import { textHash } from './units.mjs'
-import { buildEvidenceMap, provenanceOf } from '../../src/engine/evidenceMap.js'
+import { buildEvidenceMap, provenanceOf, noteOf, ATTRIBUTION_LABELS } from '../../src/engine/evidenceMap.js'
 
 // Copied from src/components/results/DocumentProfile.jsx (not exported there).
 const REGISTER_LABELS = {
@@ -150,8 +150,9 @@ function evidenceMapOf(result, rubric) {
       statedAs: lead.tier.label,
       sourceReaches: tierLabel(lead.ceiling),
       pastItsReach: Math.max(0, lead.tier.weight - lead.ceiling),
-      whoseFinding: lead.attribution.label,
+      whoseFinding: ATTRIBUTION_LABELS[lead.attribution.label] || lead.attribution.label,
       entry: lead.kind === 'reference' ? lead.targetSpan : null,
+      note: noteOf(lead),
     },
   }
 }

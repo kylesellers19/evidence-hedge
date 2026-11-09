@@ -19,10 +19,13 @@
 //      and a claim sits past its row's reach exactly when the engine flagged
 //      it, unless it is a method statement, a hedged (disclosed) absence, or
 //      the posture gate fired
+//  10. a source split by grade continues on a ditto line: no two adjacent rows
+//      of one kind carry the same name
 // On the benchmark fixtures (checks/lib/fixtures.mjs) that load:
-//  10. the brief records the map with no document text left readable: every
+//  11. the brief records the map with no document text left readable: every
 //      string of 30+ characters the document contains verbatim is hashed
-//  11. row counts equal checks/targets/evidence-map.json for each document it
+// Against the recorded rows:
+//  12. row counts equal checks/targets/evidence-map.json for each document it
 //      lists (recorded output at a known commit, not a prediction). A change
 //      that moves them on purpose re-records in the same commit:
 //        node checks/evidence-map.test.mjs --write
@@ -126,12 +129,16 @@ for (const doc of docs) {
   check(`rows partition the claims; past reach ⇔ flagged [${id}]`, partition && wrongReach.length === 0 && pastNotFlagged.length === 0,
     `${map.rows.length} rows, ${wrongReach.length} with mixed reach, ${pastNotFlagged.length} claims where position and flag disagree`)
 
+  // 10
+  const repeated = map.rows.filter((r, i) => i > 0 && !r.continued && map.rows[i - 1].kind === r.kind && map.rows[i - 1].label === r.label)
+  check(`a source split by grade continues on a ditto line [${id}]`, repeated.length === 0, repeated.slice(0, 3).map((r) => `${r.kind}: ${r.label}`).join('; '))
+
   recorded[id] = rowsOf(map)
   console.log(`      ${id}: ${GROUND_KINDS.filter((k) => map.grounds.some((g) => g.kind === k.kind)).map((k) => `${k.kind} ${map.grounds.find((g) => g.kind === k.kind).claims.length}`).join(', ')}`)
 }
 check('at least one real document ran', ran > 0, `${ran} of ${docs.length}`)
 
-// 10
+// 11
 for (const f of FIXTURES) {
   const run = await runFixture(f)
   if (run.status !== 'ok') { console.log(`SKIP ${f.id} — ${run.reason}`); continue }
@@ -148,7 +155,7 @@ for (const f of FIXTURES) {
   check(`the brief's map keeps document text hashed [${f.id}]`, brief.evidenceMap && leaks.length === 0, leaks.slice(0, 2).join(' | '))
 }
 
-// 11
+// 12
 if (WRITE) {
   writeFileSync(TARGETS, JSON.stringify({ recorded: new Date().toISOString().slice(0, 10), engine_commit: engineCommit(), rows: recorded }, null, 2) + '\n')
   console.log(`WROTE checks/targets/evidence-map.json at engine ${engineCommit()} (${Object.keys(recorded).length} documents)`)

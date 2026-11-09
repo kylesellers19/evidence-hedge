@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react'
-import { buildEvidenceMap, provenanceOf } from '../../engine/evidenceMap.js'
+import { buildEvidenceMap, provenanceOf, noteOf, ATTRIBUTION_LABELS } from '../../engine/evidenceMap.js'
 import '../../styles/evidence-map.css'
 
 // What each claim stands on: the lead figure of the evidence brief. It reads
@@ -11,16 +11,8 @@ import '../../styles/evidence-map.css'
 // writes out its chain. Read-only: built from the analysis
 // (engine/evidenceMap.js), it moves no flag, signal or score.
 
-const ATTRIBUTION = {
-  'own-current': 'The document’s own',
-  'own-prior': 'The publisher’s earlier work',
-  'cited-other': 'Someone else’s',
-  quoted: 'A quoted speaker’s',
-  unattributed: 'Not attributed',
-  undetermined: 'Undetermined',
-}
 const markState = (c) => (c.judgment === 'outruns' ? 'outruns' : c.judgment === 'overreach' ? 'overreach' : c.tier.weight > c.ceiling ? 'unjudged' : 'within')
-const MARK_WORDS = { outruns: 'stated past its reach', overreach: 'more cause than the design licenses', unjudged: 'past its reach, not judged', within: 'within reach' }
+const MARK_WORDS = { outruns: 'stated past its reach', overreach: 'more cause or firmer advice than the design licenses', unjudged: 'past its reach, not judged', within: 'within reach' }
 const pct = (w) => `${(w / 4) * 100}%`
 // The mark a phone has room for: "[12]" stays, "(Zeitzer 2000)" becomes "( )".
 const shortMark = (m) => (m.length <= 5 ? m : m.startsWith('[') ? '[n]' : /\(/.test(m) ? '( )' : /^[“"]/.test(m) ? '“ ”' : m.slice(0, 4))
@@ -162,7 +154,7 @@ export default function EvidenceMap({ result, rubric, standardLabel }) {
           It is solid <span className="em-key" aria-label="solid rule" /> when the citation resolves, dashed <span className="em-key is-loose" aria-label="dashed rule" /> when
           the source is named or inferred but not linked, and dotted <span className="em-key is-presumed" aria-label="dotted rule" /> when the text appeals to research it doesn’t name.
           A blue square <span className="em-key-sq" aria-hidden="true" /> is stated past the end of its rule; a blue outline <span className="em-key-sq is-overreach" aria-hidden="true" /> claims
-          more cause than the study design licenses; an open square <span className="em-key-sq is-unjudged" aria-hidden="true" /> is past it but hedged, or describes a method.
+          more cause, or gives firmer advice, than the study design licenses; an open square <span className="em-key-sq is-unjudged" aria-hidden="true" /> is past it but hedged, or describes a method.
         </figcaption>
       </figure>
 
@@ -187,6 +179,7 @@ function ClaimPanel({ c, map, standard, tierName }) {
   const steps = c.tier.weight - c.ceiling
   const isPast = c.judgment === 'outruns'
   const row = map.rows.find((r) => r.claims.includes(c.index))
+  const note = noteOf(c)
   return (
     <>
       <p className="em-quote"><span className="em-runin">Claim {c.index + 1}.</span> “{c.text}”</p>
@@ -195,12 +188,10 @@ function ClaimPanel({ c, map, standard, tierName }) {
         <div className="em-cell"><dt>Stated as</dt><dd>{c.tier.label}</dd></div>
         <div className="em-cell"><dt>Its source reaches</dt><dd>{tierName(c.ceiling)}</dd></div>
         <div className="em-cell"><dt>Past its reach</dt><dd className={isPast ? 'is-past' : ''}>{steps > 0 ? `${steps} ${steps === 1 ? 'step' : 'steps'}` : 'No'}</dd></div>
-        <div className="em-cell"><dt>Whose finding</dt><dd>{ATTRIBUTION[c.attribution.label] || c.attribution.label}</dd></div>
+        <div className="em-cell"><dt>Whose finding</dt><dd>{ATTRIBUTION_LABELS[c.attribution.label] || c.attribution.label}</dd></div>
       </dl>
       {c.kind === 'reference' && c.targetSpan && <p className="em-entry"><span className="em-runin">{row?.label}.</span> {c.targetSpan}</p>}
-      {(c.link?.confidence === 'low' || !c.link) && (c.evidenceReason || c.groundReason || c.link) && (
-        <p className="em-note">† {c.link ? `Linked with low confidence${c.groundReason ? `: ${c.groundReason}` : ''}.` : `The engine looked for ${c.evidenceReason?.replace(/^no /, '') || 'a link'} and found none.`}</p>
-      )}
+      {note && <p className="em-note">† {note}</p>}
     </>
   )
 }

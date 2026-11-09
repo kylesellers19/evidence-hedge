@@ -1,7 +1,7 @@
 {
   "fixture": "fixture-c-gensler-fandom-2026",
   "recorded": "2026-11-09",
-  "engine_commit": "9bc2011-dirty",
+  "engine_commit": "4549f66-dirty",
   "source": "The brief Kyle pasted on 2026-11-08 from the app at build e3fc8a7 (src unchanged since dc34856), recorded with --write and checked against the paste field by field: header, counts, judgment, profile, the 5 signals, the 3 patterns and their 8 example lines, the distribution and the 21 provenance entries.",
   "brief": {
     "header": {
@@ -107,12 +107,13 @@
           "sha": "a3beba1e0f4b",
           "chars": 93
         },
-        "provenance": "Stated as absolute, with no citation, to The publisher itself. Unsourced carries up to hedged under the corporate standard, so the claim is stated 3 steps past its reach.",
+        "provenance": "Stated as absolute, with no citation, to the publisher itself. Unsourced carries up to hedged under the corporate standard, so the claim is stated 3 steps past its reach.",
         "statedAs": "Absolute",
         "sourceReaches": "Hedged",
         "pastItsReach": 3,
-        "whoseFinding": "own-prior",
-        "entry": null
+        "whoseFinding": "The publisher’s earlier work",
+        "entry": null,
+        "note": "The engine looked for a citation marker, a footnote, a link or DOI, or a citation in the same sentence, and found none."
       }
     },
     "howJudged": {

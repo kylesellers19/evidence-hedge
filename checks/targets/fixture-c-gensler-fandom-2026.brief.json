@@ -1,21 +1,32 @@
 {
   "fixture": "fixture-c-gensler-fandom-2026",
   "recorded": "2026-11-09",
-  "engine_commit": "852e7b8-dirty",
+  "engine_commit": "5160fcd-dirty",
   "source": "The brief Kyle pasted on 2026-11-08 from the app at build e3fc8a7 (src unchanged since dc34856), recorded with --write and checked against the paste field by field: header, counts, judgment, profile, the 5 signals, the 3 patterns and their 8 example lines, the distribution and the 21 provenance entries.",
   "brief": {
     "header": {
-      "judgedAs": "Corporate × Research",
-      "heldTo": "Corporate",
-      "posture": "research-like",
+      "readAs": "Research published by a firm or interest group",
+      "heldTo": "The corporate standard",
       "draft": false,
-      "genreNote": "Read as research from an interested publisher: held to research reporting standards, with its own data graded as self-reported."
+      "dek": "Its own data count as self-reported until a third party checks them.",
+      "score": "1 / 10",
+      "scoreHref": "/method#score-1",
+      "verdictBox": "The evidence does not support what this research report claims."
     },
-    "verdict": "This research report makes 417 claims, 14 of them strongly stated; of these, 224 rest on no cited evidence, 4 cite sources too weak to carry them, and 21 claim more cause, or give firmer advice, than the study design supports.",
+    "verdict": "235 of 417 claims say more than their evidence shows.",
     "counts": {
       "claimsWeighed": 417,
       "readAsStrong": 14,
-      "flagged": 228
+      "flagged": 235,
+      "unsupported": 224,
+      "overconfident": 4,
+      "overreach": 21,
+      "twoFlags": 14,
+      "strictFlagged": null
+    },
+    "countsNotes": {
+      "breakdown": "Of the 235 flagged, 224 cite nothing, 4 cite too little and 21 claim more cause than the study shows (14 claims have two flags).",
+      "strict": null
     },
     "evidenceSection": {
       "dek": "224 of 417 claims are stated as fact with nothing cited. Another 11 say more than the source they cite.",

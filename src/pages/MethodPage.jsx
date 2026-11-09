@@ -11,7 +11,7 @@ import { REGISTERS, CAUSAL_ROOT_MIN } from '../engine/measure/causalRegister.js'
 import { STRENGTHS } from '../engine/measure/recommendation.js'
 import { REFERENCE_MIN_POSITION } from '../engine/measure/segment.js'
 import { PRONOUN_REACH } from '../engine/attribution.js'
-import { SCORE_WEIGHTS as W, BAND_THRESHOLDS, SUMMARY } from '../engine/scoreDocument.js'
+import { SCORE_WEIGHTS as W, BAND_THRESHOLDS, SUMMARY, bandFor, READ_AS } from '../engine/scoreDocument.js'
 import { DESIGNS, DESIGN_CEILINGS, CITATION_DENSE_MIN } from '../engine/profile/design.js'
 import { SHARED_PROVENANCE } from '../engine/profile/standards.js'
 import { SIGNAL_TITLES } from '../engine/signals/titles.js'
@@ -23,6 +23,8 @@ import { MIN_LINK_WORDS } from '../ingest/validateText.js'
 import { PROVENANCE_LABELS, ROLE_META, DESIGN_LABELS } from '../components/genre/labels.js'
 import { engine_commit as BENCH_ENGINE, generated as BENCH_DATE, metrics as BENCH } from '../../checks/reports/benchmark-af3c2e7.json'
 import { apDate } from '../list/entry.js'
+import { ANCHORS, scoreAnchor, standardAnchor } from '../components/results/briefTop.js'
+import SCALE from './method-scale.json'
 
 /**
  * Method — how Evidence Hedge weighs a document, after Delgam's method page:
@@ -183,6 +185,8 @@ export default function MethodPage() {
               <li><a href="#design">What the study design can carry</a></li>
               <li><a href="#signals">Checks on the whole document</a></li>
               <li><a href="#score">From flags to a score</a></li>
+              <li><a href="#numbers">The numbers on a brief</a></li>
+              <li><a href="#scale">What makes a 1 through a 10</a></li>
               <li><a href="#example">One paragraph, worked through</a></li>
               <li><a href="#limits">What the score does not show</a></li>
               <li><a href="#testing">How we test it</a></li>
@@ -194,8 +198,9 @@ export default function MethodPage() {
           <h2 id="steps">The eight steps</h2>
           <p>
             Every document goes through the same eight steps. The genre changes the standard a claim is held
-            to in steps 5, 7 and 8; it never changes how claims are found or measured, so two readings of the
-            same text always weigh the same sentences.
+            to in steps 5, 7 and 8. It changes how claims are found in one way only: a news story keeps its
+            headlines and labels as claims, so the journalism standard can weigh more sentences than the
+            others. Every claim found under two standards is measured the same way under both.
           </p>
           <ol className="eh-spine">
             {STEPS.map(([title, what, term, id], i) => (
@@ -308,8 +313,12 @@ export default function MethodPage() {
             statement, which commits a publisher to something as surely as a finding does.
           </p>
           <p>
-            This step is identical under every standard. A check holds it: the same text yields the same
-            claims, measured the same way, whichever genre it is read as.
+            This step is the same under every standard but one. Under the journalism standard, headlines and
+            labels count as claims, because a news headline makes one; of the {SCALE.corpus.scored} documents
+            in our corpus that received a score, {SCALE.moreClaimsUnderJournalism} have more claims under
+            journalism than under the other three. A check holds the rest: every claim found under two
+            standards is measured the same way under both, and the extra journalism claims are all headlines
+            or labels.
           </p>
 
           {/* ── 4 ─────────────────────────────────────────────────────────── */}
@@ -435,11 +444,17 @@ export default function MethodPage() {
             three ways.
           </p>
           <dl className="eh-defs">
-            <dt>Unsupported assertion</dt>
-            <dd>The claim cites nothing, and it is stated more firmly than an unsourced claim may be.</dd>
-            <dt>Overconfident relative to source</dt>
-            <dd>The claim cites something, but that grade of evidence cannot carry the certainty it asserts.</dd>
-            <dt>Causal overreach</dt>
+            <dt id={ANCHORS.flag('unsupported-assertion')}>Unsupported assertion</dt>
+            <dd>
+              The claim cites nothing, and it is stated more firmly than an unsourced claim may be. On a brief it
+              is counted as a claim that cites nothing.
+            </dd>
+            <dt id={ANCHORS.flag('overconfident')}>Overconfident relative to source</dt>
+            <dd>
+              The claim cites something, but that grade of evidence cannot carry the certainty it asserts. On a
+              brief it is counted as a claim that cites too little.
+            </dd>
+            <dt id={ANCHORS.flag('causal-overreach')}>Causal overreach</dt>
             <dd>
               The claim asserts more cause, or gives firmer advice, than the design of the study behind it can
               support. This is checked for the document’s own results, its interpretations and its
@@ -453,7 +468,7 @@ export default function MethodPage() {
           {rubrics.map((r) => {
             const postures = r.postures?.length ? r.postures : ['default']
             return (
-              <div className="eh-table-scroll eh-break" key={r.id}>
+              <div className="eh-table-scroll eh-break" key={r.id} id={standardAnchor(r.id)}>
                 <table className="eh-data eh-ceilings">
                   <caption>{r.label}: the strongest certainty each rung may carry</caption>
                   <thead>
@@ -530,18 +545,20 @@ export default function MethodPage() {
             checks, every document that reports its own study runs the reporting checks, and hybrids add the
             checks their scenarios call for.
           </p>
-          {rubrics.map((r) => (
-            <SignalTable key={r.id} caption={`${r.label} checks`} ids={r.documentSignals.filter((id) => !COMPLETENESS_GROUP.includes(id))} />
+          {rubrics.map((r, i) => (
+            <SignalTable key={r.id} table={i} caption={`${r.label} checks`} ids={r.documentSignals.filter((id) => !COMPLETENESS_GROUP.includes(id))} />
           ))}
-          <SignalTable caption="Reporting checks, for a document’s own study" ids={COMPLETENESS_GROUP} />
-          <SignalTable caption="Checks hybrids add" ids={HYBRID_AUDITS} />
+          <SignalTable table={rubrics.length} caption="Reporting checks, for a document’s own study" ids={COMPLETENESS_GROUP} />
+          <SignalTable table={rubrics.length + 1} caption="Checks hybrids add" ids={HYBRID_AUDITS} />
 
           {/* ── 10 ────────────────────────────────────────────────────────── */}
           <h2 id="score">From flags to a score</h2>
           <p>
             Every document starts with {W.START_BUDGET} points and loses them in four ways. The score cannot fall
-            below {W.MIN} or rise above {W.MAX}, and it is shown to one decimal place. A document in which we find
-            no claims gets no score at all, not a perfect one: there is nothing for its evidence to carry.
+            below {W.MIN} or rise above {W.MAX}, and it is kept to one decimal place: The List shows that decimal,
+            and a brief shows it rounded to the nearest whole number (see <a href="#scale">What makes a 1 through
+            a 10</a>). A document in which we find no claims gets no score at all, not a perfect one: there is
+            nothing for its evidence to support.
           </p>
           <ol className="eh-steps">
             <li>
@@ -596,6 +613,9 @@ export default function MethodPage() {
             of flags. Each is marked as provisional in <a href={REPO}>the code, which is public</a>.
           </p>
 
+          <BriefNumbers rubrics={rubrics} />
+          <ScoreScale />
+
           {/* ── 11 ────────────────────────────────────────────────────────── */}
           <h2 id="example">One paragraph, worked through</h2>
           <p>
@@ -624,8 +644,8 @@ export default function MethodPage() {
           <h2 id="testing">How we test it</h2>
           <p>
             The code holds the engine to a suite of checks: the score is identical however often it runs,
-            identical across postures and never higher for a hybrid than for its standard alone; the same
-            claims are measured the same way under every standard; removing disclosures does not move causal
+            identical across postures and never higher for a hybrid than for its standard alone; a claim found
+            under two standards is measured the same way under both; removing disclosures does not move causal
             overreach; and documents in a working corpus are routed to the genre, posture, publisher type and
             design we labeled them with. For benchmark documents, every field of the evidence brief is
             recorded, and a change that moves any of them fails until it is reviewed and recorded again.
@@ -683,7 +703,13 @@ const ROLE_WORDS = {
   evidence: 'The design of the study the document reports or describes, from a randomized trial to none at all.',
 }
 
-function SignalTable({ caption, ids }) {
+// The first table to list a check holds its anchor (#signal-<id>), which a
+// brief's document signals link to.
+const SIGNAL_TABLES = [...RUBRIC_ORDER.map((id) => getRubric(id).documentSignals.filter((x) => !COMPLETENESS_GROUP.includes(x))), COMPLETENESS_GROUP, HYBRID_AUDITS]
+const FIRST_TABLE = {}
+SIGNAL_TABLES.forEach((ids, t) => ids.forEach((id) => { if (!(id in FIRST_TABLE)) FIRST_TABLE[id] = t }))
+
+function SignalTable({ caption, ids, table }) {
   if (!ids.length) return null
   return (
     <div className="eh-table-scroll eh-break">
@@ -694,7 +720,7 @@ function SignalTable({ caption, ids }) {
           {ids.map((id) => {
             const [what, cost] = SIGNAL_COPY[id] || ['', 'note']
             return (
-              <tr key={id}>
+              <tr key={id} id={FIRST_TABLE[id] === table ? ANCHORS.signal(id) : undefined}>
                 <td>{SIGNAL_TITLES[id] || humanize(id)}</td>
                 <td>{what}</td>
                 <td>{COST[cost]()}</td>
@@ -758,7 +784,7 @@ function Example({ route, result }) {
           <tr><td>Causal overreach</td><td className="n">{minus(b.overreachPenalty)}</td></tr>
           <tr><td>Checks on the whole document</td><td className="n">{minus(b.signalPenalty + b.completenessPenalty + b.platitudePenalty)}</td></tr>
           <tr><td>Self-citation</td><td className="n">{minus(b.selfCitationPenalty)}</td></tr>
-          <tr className="eh-arith-total"><td>Score</td><td className="n">{result.documentScore.score.toFixed(1)}</td></tr>
+          <tr className="eh-arith-total"><td>Score</td><td className="n"><a href={`#${scoreAnchor(result.documentScore.display)}`}>{result.documentScore.score.toFixed(1)}</a></td></tr>
         </tbody>
       </table>
       <p>
@@ -842,5 +868,179 @@ function SourceList({ title, entries }) {
         ))}
       </ul>
     </section>
+  )
+}
+
+// ── The numbers on a brief ───────────────────────────────────────────────────
+// Each label on a brief's top links to its definition here (briefTop.js).
+// PROVISIONAL — not ratified (definitions).
+function BriefNumbers({ rubrics }) {
+  const strictest = rubrics.map((r) => `${r.label.toLowerCase()}, ${humanize(r.strictestPosture)}`)
+  const firmResearch = HYBRIDS.find((h) => h.id === 'firm-research')
+  const strongTiers = TIERS.filter((t) => t.weight >= 3).map((t) => t.label.toLowerCase())
+  return (
+    <>
+      <h2 id="numbers">The numbers on a brief</h2>
+      <p>
+        The top of every brief says what we read the document as and the standard we held it to, then
+        gives a score and four counts. Each is defined here, and each links here from the brief.
+      </p>
+      <dl className="eh-defs">
+        <dt id={ANCHORS.readAs}>Read as</dt>
+        <dd>
+          What kind of document we took it for. A document that mixes genres reads as the scenario that fits
+          it, such as “{firmResearch.name.toLowerCase()}”; a document of one genre reads as the kind it is
+          within that genre, such as “{READ_AS['research-like'].toLowerCase()}.” You see the reading, and can
+          change it, before the analysis runs (see <a href="#kind">What kind of document it is</a>).
+        </dd>
+        <dt id="held-to">Held to</dt>
+        <dd>
+          The standard the claims were judged against: research, corporate, journalism or general web. Each has
+          its own ladder of evidence and its own limit on how firmly each kind of evidence may be stated, in the
+          tables under <a href="#flags">When a claim outruns its evidence</a>.
+        </dd>
+        <dt id={ANCHORS.claims}>Claims weighed</dt>
+        <dd>
+          Every sentence we kept as a claim (see <a href="#claims">Finding the claims</a>). Statements of
+          method are counted but never flagged.
+        </dd>
+        <dt id={ANCHORS.strong}>Read as strong</dt>
+        <dd>
+          Claims stated with a booster or an absolute and no hedge, such as “clearly,” “shows that,” “always”
+          or “proves” (the {list(strongTiers)} levels of certainty). A plain statement is not strong, yet under
+          a strict standard it is still flagged when it cites nothing, so most flagged claims on a brief are
+          plain statements.
+        </dd>
+        <dt id={ANCHORS.flagged}>Flagged</dt>
+        <dd>
+          Claims with at least one flag: an unsupported assertion, an overconfident claim or a causal
+          overreach, each counted once. One claim can be both unsupported and an overreach, so the three counts
+          under the row can add up to more than the flagged total; the brief says how many claims have two. The
+          headline counts the same claims, as “so many of so many claims say more than their evidence shows.”
+        </dd>
+        <dt id={ANCHORS.strictest}>The strictest setting</dt>
+        <dd>
+          A brief flags claims at the setting the document was read with, so a marketing page may sound surer
+          than a research report without a flag on every line. The score does not: it judges every claim again
+          at the strictest setting of its standard ({list(strictest, 'and')}), and counts a firm’s or a press
+          office’s own data one step lower on the ladder. When the two differ, the brief says how many claims
+          the score counted.
+        </dd>
+      </dl>
+    </>
+  )
+}
+
+// ── What makes a 1 through a 10 ─────────────────────────────────────────────
+// Derived from scoreDocument.js: the shown number is Math.round of a score
+// that is 10 minus the losses, held to 1–10 and kept to one decimal, so a
+// shown N means the document lost more than 9.5 − N and at most 10.5 − N
+// points. The counts and anchors come from scripts/method-scale.mjs (the
+// corpus audit), never typed in. PROVISIONAL — not ratified (meanings).
+const BAND_MEANING = {
+  strong: 'Almost every claim is stated no more firmly than its evidence shows.',
+  carried: 'The evidence supports most of what it claims; some claims go further.',
+  mixed: 'Some claims go beyond what their evidence supports, though most do not.',
+  weak: 'Much of what it claims goes beyond its evidence.',
+  failing: 'The evidence does not support what it claims.',
+}
+const SCALE_NOTE = {
+  10: 'Nothing in it says more than its evidence shows, and the document passes its whole-document checks.',
+  9: null,
+  8: `A 7 and an 8 give the same verdict; they differ only in points lost. Writing from personal experience, which is not weighed, gets ${W.GATE_SCORE} and shows as ${Math.round(W.GATE_SCORE)}.`,
+  7: 'A 7 and an 8 give the same verdict; they differ only in points lost.',
+  5: 'A 5 straddles two verdicts: a score of 5.0 or more is “mixed” and anything lower is “weak,” so two documents showing 5 can read differently.',
+  3: 'A 3 straddles two verdicts: a score of 3.0 or more is “weak” and anything lower is “failing,” so two documents showing 3 can read differently.',
+  2: 'A 2 and a 1 give the same verdict; a 2 lost less.',
+  1: `A 1 is the floor: it also takes in every document that would score lower, so a 1 does not say how far below the floor a document fell.`,
+}
+
+function ScoreScale() {
+  const plainCost = W.flag['unsupported-assertion'] * W.FLAG_RATE_SCALE
+  const scores = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+  const stdRows = RUBRIC_ORDER.map((id) => ({ id, label: getRubric(id).label, ...SCALE.byStandard[id] }))
+  return (
+    <>
+      <h2 id="scale">What makes a 1 through a 10</h2>
+      <p>
+        A brief shows the score rounded to the nearest whole number. The score is {W.START_BUDGET} minus what
+        the document loses: its flagged claims as a rate, up to {W.OVERREACH_CAP} for causal overreach, and the
+        costs of the checks on the whole document, of missing reporting items, of platitudes and of
+        self-citation (see <a href="#score">From flags to a score</a>). It is held between {W.MIN} and {W.MAX}{' '}
+        and kept to one decimal. So a whole number on a brief means the document lost more than half a point
+        below what would round to the next number up, and at most half a point above it.
+      </p>
+      <p>
+        One way to picture the losses: under a strict standard, a plain statement that cites nothing costs a
+        document {round1(plainCost / 10)} points for every tenth of its claims that are like it. A claim stated
+        absolutely with nothing cited costs up to three times as much.
+      </p>
+      <p className="eh-note">
+        The examples below are documents from our corpus that scored each number and that a reviewer read
+        alongside their text and found the output sound. They were scored by engine build {SCALE.engine} on{' '}
+        {apDate(SCALE.generated)}, and they change when the engine changes. We name and link them; we do not
+        quote them.
+      </p>
+      <ol className="eh-scale">
+        {scores.map((n) => <ScaleEntry key={n} n={n} plainCost={plainCost} />)}
+      </ol>
+
+      <h3>Whether a 4 means the same under every standard</h3>
+      <p>
+        It does not quite. A score is relative to the standard a document is held to, because each standard
+        has its own ladder and its own limits on how firmly each kind of evidence may be stated (compare the
+        tables under <a href="#flags">When a claim outruns its evidence</a>). The same text can score
+        differently under two of them. Every document in our corpus was also scored under all four standards,
+        whatever it was read as:
+      </p>
+      <div className="eh-table-scroll">
+        <table className="eh-data">
+          <caption>The same {SCALE.corpus.scored} documents, scored under each standard</caption>
+          <thead><tr><th scope="col">Standard</th><th scope="col" className="n">Median score</th><th scope="col" className="n">Shown as a 1</th></tr></thead>
+          <tbody>
+            {stdRows.map((r) => (
+              <tr key={r.id}><td>{r.label}</td><td className="n">{r.median?.toFixed(1)}</td><td className="n">{r.shownAsOne}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p>
+        So a 4 under the journalism standard and a 4 under the general web standard both mean the document
+        lost about six points, but they lost them against different limits. Compare scores across documents
+        held to the same standard.
+      </p>
+    </>
+  )
+}
+
+function ScaleEntry({ n, plainCost }) {
+  const lost = { lo: Math.max(0, 9.5 - n), hi: 10.5 - n }
+  const bands = [...new Set([bandFor(Math.max(W.MIN, n - 0.5)), bandFor(Math.min(W.MAX, n + 0.4))])]
+  const meaning = bands.length > 1 ? `${BAND_MEANING[bands[1]]} Or, at the low end: ${BAND_MEANING[bands[0]].charAt(0).toLowerCase()}${BAND_MEANING[bands[0]].slice(1)}` : BAND_MEANING[bands[0]]
+  const at = SCALE.byScore[n]
+  const lostText = n === 10
+    ? `It lost no more than ${lost.hi.toFixed(1)} points.`
+    : n === 1
+      ? `It lost more than ${lost.lo.toFixed(1)} points.`
+      : `It lost more than ${lost.lo.toFixed(1)} and at most ${lost.hi.toFixed(1)} points.`
+  const share = (x) => Math.round((x / plainCost) * 100)
+  const plainText = lost.lo >= plainCost
+    ? 'Plain statements that cite nothing cannot do this alone: a document whose every claim was one would still score 2. It also takes overreach, problems with the whole document or claims stated absolutely.'
+    : n === 10
+      ? `If plain statements that cite nothing were its only loss, at most ${share(lost.hi)}% of its claims could be like that.`
+      : `If plain statements that cite nothing were its only loss, ${share(lost.lo)}% to ${Math.min(100, share(lost.hi))}% of its claims would be like that.`
+  return (
+    <li id={scoreAnchor(n)} className="eh-scale-entry">
+      <h3><span className="eh-scale-n">{n}</span> {bands.map((b) => cap(b)).join(' or ')}</h3>
+      <p><strong>{meaning}</strong> {SCALE_NOTE[n] || ''}</p>
+      <p>{lostText} {plainText}</p>
+      <p className="eh-scale-example">
+        {at.documents === 0
+          ? `No document in our corpus scored a ${n}, so there is no example; the arithmetic allows it.`
+          : at.anchor
+            ? <>Example: <a href={at.anchor.url}>{at.anchor.title}</a>{at.anchor.publisher ? `, ${at.anchor.publisher}` : ''}{at.anchor.published ? ` (${at.anchor.published})` : ''}, read as {at.anchor.readAs.toLowerCase()}, scored {at.anchor.score.toFixed(1)}. {at.documents} {at.documents === 1 ? 'document' : 'documents'} in our corpus scored a {n}.</>
+            : `No clean example yet: ${at.documents} ${at.documents === 1 ? 'document' : 'documents'} in our corpus scored a ${n}, and none has passed review.`}
+      </p>
+    </li>
   )
 }

@@ -17,6 +17,7 @@ import { PATTERN_META } from '../../src/engine/patterns.js'
 import { GENRE_LABELS, PROVENANCE_LABELS, roleText } from '../../src/components/genre/labels.js'
 import { textHash } from './units.mjs'
 import { buildEvidenceSection, VERDICTS } from '../../src/engine/evidenceSection.js'
+import { briefTop } from '../../src/components/results/briefTop.js'
 
 // Copied from src/components/results/DocumentProfile.jsx (not exported there).
 const REGISTER_LABELS = {
@@ -49,23 +50,26 @@ export function briefOf(run) {
   const { summary, patterns, signals, profile } = result
   const h = rubric.hybrid
 
-  const ua = summary.flagCounts['unsupported-assertion']
-  const oc = summary.flagCounts.overconfident
   const total = summary.distribution.reduce((n, d) => n + d.count, 0) || 1
   const self = profile.provenance.selfCitation
   const refs = result.references?.length || 0
   const scoped = (rubric.provenance || []).some((p) => p.scope)
 
+  // The top of the brief, as ResultsPage renders it (src/components/results/briefTop.js).
+  const top = briefTop(result, rubric)
   return {
     header: {
-      judgedAs: rubric.label,
-      heldTo: h ? standard.label : null,
-      posture: result.posture || null,
+      readAs: top.readAs,
+      heldTo: top.heldTo,
       draft: !!rubric.stub,
-      genreNote: result.documentScore?.genreNote || null,
+      dek: top.dek,
+      score: top.verdictBox.score,
+      scoreHref: top.verdictBox.href,
+      verdictBox: top.verdictBox.summary,
     },
     verdict: summary.verdict,
-    counts: { claimsWeighed: summary.totalClaims, readAsStrong: summary.strongClaims, flagged: ua + oc },
+    counts: { claimsWeighed: top.stats.claims, readAsStrong: top.stats.strong, flagged: top.stats.flagged, unsupported: top.stats.unsupported, overconfident: top.stats.overconfident, overreach: top.stats.overreach, twoFlags: top.stats.twoFlags, strictFlagged: top.stats.strictFlagged },
+    countsNotes: { breakdown: top.breakdown, strict: top.strict },
     evidenceSection: evidenceSectionOf(result, rubric, run.loaded?.pages || null),
     howJudged: profile.genre ? {
       reading: 'detected automatically',

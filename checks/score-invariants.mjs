@@ -64,7 +64,7 @@ const gateText = 'In my experience, mornings are the hardest. When I started jou
 const gateDoc = Array(7).fill(gateText).join(' ')
 const gate = analyze(gateDoc, getRubric('general'), 'experiential').documentScore
 log("posture-gate scores 'carried' (not low), with its own summary",
-  gate.band === 'carried' && /no expert claims/.test(gate.summary), `score=${gate.score} band=${gate.band}`)
+  gate.band === 'carried' && /Written from experience/.test(gate.summary), `score=${gate.score} band=${gate.band}`)
 const shortGate = analyze(gateText, getRubric('general'), 'experiential').signals.some((s) => s.gate)
 log('posture-gate stays shut under 150 words', !shortGate)
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext.jsx'
 import PatternSection from '../components/results/PatternSection.jsx'
 import DistributionBar from '../components/results/DistributionBar.jsx'
@@ -12,6 +12,7 @@ import RubricProvenance from '../components/results/RubricProvenance.jsx'
 import VerdictMark from '../components/results/VerdictMark.jsx'
 import AddToList from '../components/results/AddToList.jsx'
 import EvidenceSection from '../components/results/EvidenceSection.jsx'
+import { briefTop, statsLabels, METHOD, ANCHORS, standardAnchor } from '../components/results/briefTop.js'
 
 // The one-page evidence brief — a standalone editorial report, three layers
 // top to bottom, serving three readers at once (with how it was judged — the
@@ -30,8 +31,11 @@ export default function ResultsPage() {
   // A hybrid's ladder, hue and noun come from its standard (rubrics/hybrids.js).
   const standard = getRubric(rubric.base || rubric.id)
   const { summary, patterns, signals } = result
-  const { flagCounts } = summary
-  const flaggedTotal = flagCounts['unsupported-assertion'] + flagCounts.overconfident
+  // Every string at the top of the brief, from the confirmed rubric (briefTop.js).
+  const top = briefTop(result, rubric)
+  const st = top.stats
+  const L = statsLabels(st)
+  const toMethod = (anchor) => `${METHOD}#${anchor}`
 
   const onNew = () => {
     dispatch({ type: 'RESET' })
@@ -53,29 +57,56 @@ export default function ResultsPage() {
         <VerdictMark score={result.documentScore} rubricId={standard.id} />
       )}
 
-      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-        <p className="label-tag">Evidence brief</p>
-        <p className="label-tag text-gray-400">
-          Judged as <span className="text-accent">{rubric.label}</span>
-          {rubric.hybrid && <span> · held to <span className="text-gray-600">{standard.label}</span></span>}
-          {result.posture && <span> · <span className="text-gray-600 capitalize">{result.posture}</span></span>}
-          {rubric.stub && ' · draft rubric'}
-        </p>
-      </div>
+      {/* ── Kicker, then the title block: what it was read as and the standard
+          it was held to, once, each linked to its definition. After a drawing's
+          title block (labeled cells under a hairline) and a rating action's
+          header (the rating, its basis, a link to the definitions). ──────── */}
+      <p className="label-tag">{top.kicker}</p>
+      <dl className="eh-titleblock">
+        <div>
+          <dt>Read as</dt>
+          <dd><Link to={toMethod(ANCHORS.readAs)}>{top.readAs}</Link></dd>
+        </div>
+        <div>
+          <dt>Held to</dt>
+          <dd><Link to={toMethod(standardAnchor(standard.id))}>{top.heldTo}</Link></dd>
+        </div>
+      </dl>
 
-      {/* Genre note — the one line the posture changes; the score does not move. */}
-      {result.documentScore?.genreNote && (
-        <p className="text-[12px] text-muted mt-2 leading-relaxed">{result.documentScore.genreNote}</p>
-      )}
-
-      {/* ── Layer 1: Verdict ─────────────────────────────────────────────── */}
-      <h1 className="font-serif text-3xl sm:text-4xl font-medium leading-tight tracking-tight text-gray-900 mt-4">
-        {summary.verdict}
+      {/* ── Layer 1: Verdict — one sentence; the counts sit in the row under it ── */}
+      <h1 className="font-serif text-3xl sm:text-4xl font-medium leading-tight tracking-tight text-gray-900 mt-5">
+        {top.headline}
       </h1>
-      <div className="flex flex-wrap gap-x-6 gap-y-1 mt-5 text-[11px] text-muted">
-        <span><span className="text-gray-900 font-semibold tabular-nums">{summary.totalClaims}</span> claims weighed</span>
-        <span><span className="text-gray-900 font-semibold tabular-nums">{summary.strongClaims}</span> read as strong</span>
-        <span><span className="text-gray-900 font-semibold tabular-nums">{flaggedTotal}</span> flagged</span>
+      {top.dek && <p className="eh-brief-dek">{top.dek}</p>}
+      <div className="eh-stats">
+        <p className="eh-stats-row">
+          <span><b>{st.claims}</b> <Link to={toMethod(L.claims[1])}>{L.claims[0]}</Link></span>
+          <span><b>{st.strong}</b> <Link to={toMethod(L.strong[1])}>{L.strong[0]}</Link></span>
+          <span><b>{st.flagged}</b> <Link to={toMethod(L.flagged[1])}>{L.flagged[0]}</Link></span>
+        </p>
+        {st.flagged > 0 && (
+          <p className="eh-stats-note">
+            Of the {st.flagged} flagged,{' '}
+            {[
+              st.unsupported > 0 && ['unsupported', st.unsupported],
+              st.overconfident > 0 && ['overconfident', st.overconfident],
+              st.overreach > 0 && ['overreach', st.overreach],
+            ].filter(Boolean).map(([k, n], i, all) => (
+              <React.Fragment key={k}>
+                {i > 0 && (i === all.length - 1 ? ' and ' : ', ')}
+                {n} <Link to={toMethod(L[k][1])}>{L[k][0]}</Link>
+              </React.Fragment>
+            ))}
+            {st.twoFlags > 0 && <> ({st.twoFlags} {st.twoFlags === 1 ? 'claim has' : 'claims have'} two flags)</>}.
+          </p>
+        )}
+        {top.strict && (
+          <p className="eh-stats-note">
+            For the score, every claim is held to the{' '}
+            <Link to={toMethod(ANCHORS.strictest)}>strictest setting</Link>, where {st.strictFlagged} of {st.claims} cite
+            nothing or too little.
+          </p>
+        )}
       </div>
 
       <hr className="brief-rule" />

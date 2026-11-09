@@ -795,3 +795,133 @@
 .eh-method-foot {
   margin-top: 36px !important;
 }
+
+/* ── The top of the evidence brief (ResultsPage, briefTop.js) ────────────────
+   The title block, after an engineering drawing's: two labeled cells under a
+   hairline, saying once what the document was read as and the standard it
+   was held to. Labels in the kicker's small capitals, values in sentence case,
+   one ink color; each value links to its definition on Method. */
+.eh-titleblock {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  margin: 8px 0 0;
+  border-top: 1px solid var(--eh-ink);
+  border-bottom: 1px solid var(--eh-hairline);
+}
+.eh-titleblock > div {
+  padding: 7px 14px 8px 0;
+  min-width: 0;
+}
+.eh-titleblock > div + div {
+  border-left: 1px solid var(--eh-hairline);
+  padding-left: 14px;
+}
+.eh-titleblock dt {
+  font: 600 11px/1.3 var(--eh-sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--eh-ink-faint);
+}
+.eh-titleblock dd {
+  margin: 3px 0 0;
+  font: 400 15px/1.35 var(--eh-serif);
+  color: var(--eh-ink);
+}
+.eh-titleblock a,
+.eh-stats a,
+.eh-score-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--eh-dot);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.eh-titleblock a:hover,
+.eh-stats a:hover,
+.eh-score-link:hover {
+  text-decoration-color: var(--eh-accent);
+}
+.eh-score-link {
+  text-underline-offset: 4px;
+}
+@media (max-width: 639px) {
+  .eh-titleblock {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .eh-titleblock > div + div {
+    border-left: 0;
+    border-top: 1px solid var(--eh-hairline);
+    padding-left: 0;
+  }
+}
+
+/* The line under the headline, then the counts: each count's label links to
+   its definition. */
+.eh-brief-dek {
+  margin: 10px 0 0;
+  font: 400 15px/1.5 var(--eh-serif);
+  color: var(--eh-ink-soft);
+}
+.eh-stats {
+  margin-top: 18px;
+}
+.eh-stats-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 22px;
+  margin: 0;
+  font: 400 12px/1.5 var(--eh-sans);
+  color: var(--eh-ink-soft);
+}
+.eh-stats-row b {
+  font-weight: 600;
+  color: var(--eh-ink);
+  font-variant-numeric: tabular-nums;
+}
+.eh-stats-note {
+  margin: 6px 0 0;
+  font: 400 12px/1.5 var(--eh-sans);
+  color: var(--eh-ink-soft);
+  max-width: 62ch;
+}
+
+/* ── Method: what makes a 1 through a 10 ──────────────────────────────────
+   One entry per whole number, 10 down to 1, each its own anchor
+   (#score-N) that a score on a brief or The List links to. */
+.eh-scale {
+  list-style: none;
+  margin: 18px 0 8px;
+  padding: 0;
+  border-top: 1px solid var(--eh-ink);
+}
+.eh-scale-entry {
+  padding: 14px 0 12px;
+  border-bottom: 1px solid var(--eh-hairline);
+  scroll-margin-top: 16px;
+}
+.eh-scale-entry h3 {
+  margin: 0 0 6px;
+  font: 600 13px/1.3 var(--eh-sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--eh-ink-soft);
+}
+.eh-scale-n {
+  display: inline-block;
+  min-width: 1.6em;
+  margin-right: 6px;
+  font: 700 22px/1 var(--eh-serif);
+  letter-spacing: 0;
+  color: var(--eh-ink);
+  font-variant-numeric: tabular-nums;
+}
+.eh-scale-entry p {
+  margin: 6px 0 0;
+}
+.eh-scale-example {
+  font-size: 15px;
+  color: var(--eh-ink-soft);
+}
+.eh-method [id] {
+  scroll-margin-top: 16px;
+}

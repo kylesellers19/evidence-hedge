@@ -85,12 +85,13 @@ export const BAND_THRESHOLDS = [
 ]
 
 // Verdict sentence: band → sentence. Verdict register — no exclamation marks,
-// no praise adjectives. PROVISIONAL — not ratified (templates).
+// no praise adjectives, none of the words readers never see (docs/evidence-
+// section.md: carry, outrun, ceiling…). PROVISIONAL — not ratified (templates).
 export const SUMMARY = {
   failing: (n) => `The evidence does not support what this ${n} claims.`,
-  weak: (n) => `Much of what this ${n} claims outruns its evidence.`,
-  mixed: (n) => `This ${n} makes some claims its evidence does not carry.`,
-  carried: (n) => `The evidence largely carries what this ${n} claims.`,
+  weak: (n) => `Much of what this ${n} claims goes beyond its evidence.`,
+  mixed: (n) => `This ${n} makes some claims its evidence does not support.`,
+  carried: (n) => `The evidence supports most of what this ${n} claims.`,
   strong: (n) => `The evidence supports what this ${n} claims.`,
 }
 // Promotional postures speak of the copy, not of "the evidence", until the
@@ -102,23 +103,42 @@ const PROMOTIONAL_SUMMARY = {
   carried: (n) => `Most of what this ${n} asserts stays within the evidence it shows.`,
 }
 const PROMOTIONAL = new Set(['marketing', 'press-release'])
-const GATE_SUMMARY = (n) => `This ${n} makes no expert claims — there is no evidence obligation to assess.`
+export const GATE_SUMMARY = (n) => `Written from experience, this ${n} owes no evidence.` // PROVISIONAL — not ratified
 // No claims found, so no score. PROVISIONAL — not ratified (template).
-export const UNSCORED_SUMMARY = (n) => `We found no claims in this ${n} to weigh, so it has no score.`
+export const UNSCORED_SUMMARY = (n) => `With no claims to weigh, this ${n} has no score.`
 
-// One line naming the genre the document was read as. PROVISIONAL — not ratified.
+// What a single-genre document was read as, by posture: the brief's "Read as"
+// line (src/components/results/briefTop.js). A hybrid reads as its scenario's
+// name instead (rubrics/hybrids.js). PROVISIONAL — not ratified.
+export const READ_AS = {
+  standard: 'A research paper',
+  marketing: 'Marketing copy',
+  'thought-leadership': 'Thought leadership',
+  'research-like': 'A research-style report from a firm or coalition',
+  'press-release': 'A press release',
+  news: 'News',
+  opinion: 'Opinion',
+  sponsored: 'Sponsored content',
+  unlabeled: 'An article with no opinion, analysis or sponsored label',
+  experiential: 'Writing from personal experience',
+  authoritative: 'Advice on a consequential topic',
+}
+// One line under the headline: what the reading means for this document. It
+// never names the standard (the "Held to" line does, from the same rubric), so
+// the two cannot disagree. Empty when there is nothing to add.
+// PROVISIONAL — not ratified.
 export const GENRE_NOTES = {
-  standard: 'Read as a research paper.',
-  marketing: 'Read as marketing copy: promotional confidence is expected, but the score holds it to the same evidence standard as any document.',
-  'thought-leadership': 'Read as thought leadership: opinion is expected, but the score counts only what its evidence carries.',
-  'research-like': 'Read as a research-style report from a firm or coalition, held to research evidence standards.',
-  'press-release': 'Read as a press release: it reports a study it did not itself publish — check the study before repeating its claims.',
-  news: 'Read as news: claims should trace to named, documented sources.',
-  opinion: 'Read as opinion: argument is expected, but the score counts only what its evidence carries.',
-  sponsored: 'Read as sponsored content: a paid placement, read as advertising.',
-  unlabeled: 'Read as an unlabeled article: no opinion, analysis or sponsored label sets expectations.',
-  experiential: 'Read as personal-experience writing.',
-  authoritative: 'Read as authoritative advice on a consequential topic.',
+  standard: '',
+  marketing: 'Promotional confidence is expected, but the score holds it to the same evidence standard as any document.',
+  'thought-leadership': 'Opinion is expected, but the score counts only what its evidence shows.',
+  'research-like': 'Its own data count as self-reported until a third party checks them.',
+  'press-release': 'It reports a study it did not itself publish, so check the study before repeating its claims.',
+  news: 'Its claims should trace to named, documented sources.',
+  opinion: 'Argument is expected, but the score counts only what its evidence shows.',
+  sponsored: 'A paid placement reads as advertising.',
+  unlabeled: '',
+  experiential: '',
+  authoritative: '',
 }
 
 const round1 = (x) => Math.round(x * 10) / 10

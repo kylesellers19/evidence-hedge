@@ -18,7 +18,10 @@
 //               above the standard rubric's own (checks/hybrid.test.mjs).
 //   frameworks  keys into rubrics/frameworks.js: the standards and research
 //               behind the scenario's audits
-//   name, noun, note, promotional   copy for the branch screen and the brief
+//   name, noun, note, promotional   copy for the branch screen and the brief:
+//               the name is what the brief says it was read as; the note is
+//               advice only and never names a standard (the brief's "Held to"
+//               line does, from `standard`), so the two cannot disagree
 //
 // composeRubric() turns the matches into an ordinary RubricConfig, so analyze()
 // and scoreDocument() run unchanged. PROVISIONAL — not ratified.
@@ -53,7 +56,7 @@ export const HYBRIDS = [
     why: 'A paid placement speaks for its sponsor, so its claims are graded as the sponsor’s own until it cites independent evidence.',
     audits: ['sponsorship-disclosure', 'per-claim-sourcing', 'label-transparency'],
     frameworks: ['ftc-deceptive-formats-2015', 'ftc-native-guide-2015', 'wojdynski-evans-2016'],
-    note: 'Read as sponsored content: advertising in an editorial format, held to its sponsor’s evidence standard.',
+    note: 'A paid placement speaks for its sponsor, so it reads as advertising.',
     promotional: true,
   },
   {
@@ -66,7 +69,7 @@ export const HYBRIDS = [
     why: 'A release relays a study in its issuer’s voice: its results count as self-reported until it cites the study itself.',
     audits: ['limitations-absent', 'abstract-body-confidence-delta', 'study-traceability'],
     frameworks: ['sumner-2014', 'woloshin-2009', 'yavchitz-2012', 'trust-project-references'],
-    note: 'Read as a press release about a study: check the study before repeating its claims.',
+    note: 'Check the study itself before repeating its claims.',
     promotional: true,
   },
   {
@@ -79,7 +82,7 @@ export const HYBRIDS = [
     why: 'The firm is the speaker, so its claims are graded as its own however news-like the format.',
     audits: ['per-claim-sourcing', 'perspective-plurality', 'sponsorship-disclosure'],
     frameworks: ['ftc-deceptive-formats-2015'],
-    note: 'Read as brand journalism: a firm’s content in a news format, held to the firm’s evidence standard.',
+    note: 'The firm is the speaker, however news-like the format.',
     promotional: true,
   },
   {
@@ -92,7 +95,7 @@ export const HYBRIDS = [
     why: 'It is reporting, so its claims are graded on the journalism ladder; how much of the sourcing comes from the firm it covers is audited on its own.',
     audits: ['subject-source-dependence', 'platitude-density'],
     frameworks: ['healthnewsreview-criteria', 'schwitzer-2008', 'lewis-2008'],
-    note: 'Read as news that relies on the firm it covers: its claims should trace to sources beyond that firm.',
+    note: 'Its claims should trace to sources beyond the firm it covers.',
   },
   {
     id: 'firm-research',
@@ -104,7 +107,7 @@ export const HYBRIDS = [
     why: 'Its findings come from a publisher with a stake in them: they count as self-reported until a third party or peer review checks them.',
     audits: ['limitations-absent', 'abstract-body-confidence-delta', 'undisclosed-interest'],
     frameworks: ['lundh-2017', 'icmje-coi', 'aapor-ti', 'gpp-2022', 'icc-esomar-2025', 'iso-20252'],
-    note: 'Read as research from an interested publisher: held to research reporting standards, with its own data graded as self-reported.',
+    note: 'Its own data count as self-reported until a third party checks them.',
   },
   {
     id: 'vendor-study',
@@ -116,7 +119,7 @@ export const HYBRIDS = [
     why: 'The page sells and the study is its evidence: claims are graded in the seller’s voice, and the study must be one a reader can find.',
     audits: ['study-traceability', 'limitations-absent'],
     frameworks: ['ftc-substantiation-1984', 'ftc-health-2022', 'trust-project-references'],
-    note: 'Read as a seller’s page citing a study: check that the study supports this product and this claim.',
+    note: 'Check that the study supports this product and this claim.',
     promotional: true,
   },
   {
@@ -128,7 +131,7 @@ export const HYBRIDS = [
     why: 'It is reporting, so its claims are graded on the journalism ladder; the study’s design still caps how much cause they may claim.',
     audits: ['limitations-absent', 'abstract-body-confidence-delta', 'study-traceability'],
     frameworks: ['healthnewsreview-criteria', 'schwitzer-2008', 'sumner-2014', 'yavchitz-2012', 'trust-project-references'],
-    note: 'Read as news about a study: its claims should trace to the study and stay within what its design shows.',
+    note: 'Its claims should trace to the study and stay within what its design shows.',
   },
   {
     id: 'content-marketing',
@@ -140,7 +143,7 @@ export const HYBRIDS = [
     why: 'The firm is the speaker, so its advice and claims are graded as its own, whatever the blog format.',
     audits: [],
     frameworks: ['ftc-substantiation-1984', 'ftc-endorsement-2023'],
-    note: 'Read as content marketing: a firm’s own blog post, held to the firm’s evidence standard.',
+    note: 'The firm is the speaker, whatever the blog format.',
     promotional: true,
   },
   {
@@ -153,7 +156,7 @@ export const HYBRIDS = [
     why: 'It takes the form of research, so it is held to research evidence; no venue has reviewed it.',
     audits: [],
     frameworks: [],
-    note: 'Read as research outside a journal: held to research evidence standards, with no peer review behind it.',
+    note: 'No journal has reviewed it.',
   },
   {
     id: 'research-explainer',
@@ -165,7 +168,7 @@ export const HYBRIDS = [
     why: 'It is a personal post, so the general-web ladder applies; the study must be findable and its limits stated.',
     audits: ['study-traceability', 'limitations-absent'],
     frameworks: ['ihc-key-concepts', 'trust-project-references'],
-    note: 'Read as a personal explainer of a study: the study should be findable and its limits stated.',
+    note: 'The study should be findable and its limits stated.',
   },
   {
     id: 'independent-reporting',
@@ -177,7 +180,7 @@ export const HYBRIDS = [
     why: 'It takes the form of reporting, so its claims should trace to named, documented sources; no newsroom stands behind it.',
     audits: [],
     frameworks: [],
-    note: 'Read as independent reporting: held to journalism sourcing standards, with no newsroom behind it.',
+    note: 'No newsroom stands behind it.',
   },
 ]
 
@@ -224,6 +227,7 @@ export function composeRubric(scenarios, genres) {
     documentNoun: primary.noun,
     documentSignals: [...base.documentSignals, ...audits],
     genreNote: primary.note,
+    readAs: primary.name,
     promotional: !!primary.promotional,
     provenance: uniqueBy([...hybridEntries, ...genreEntries, ...sharedEntries], (p) => p.standard),
     hybrid: {

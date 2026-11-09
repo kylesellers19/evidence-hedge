@@ -1,0 +1,93 @@
+{
+ "engine": "5160fcd",
+ "generated": "2026-11-09",
+ "corpus": {
+  "documents": 1603,
+  "scored": 1568,
+  "reviewed": 59
+ },
+ "byScore": {
+  "1": {
+   "documents": 807,
+   "reviewedOk": 2,
+   "anchor": {
+    "id": "aec:top100/gray/gray-graywayapril2010",
+    "title": "GraywayApril2010",
+    "publisher": "Gray",
+    "url": "https://media-cdn.gray.com/wp-content/uploads/2020/02/GraywayApril2010.pdf",
+    "score": 1,
+    "readAs": "Corporate",
+    "standard": "corporate",
+    "published": null
+   }
+  },
+  "2": {
+   "documents": 304,
+   "reviewedOk": 0,
+   "anchor": null
+  },
+  "3": {
+   "documents": 202,
+   "reviewedOk": 0,
+   "anchor": null
+  },
+  "4": {
+   "documents": 133,
+   "reviewedOk": 0,
+   "anchor": null
+  },
+  "5": {
+   "documents": 87,
+   "reviewedOk": 0,
+   "anchor": null
+  },
+  "6": {
+   "documents": 20,
+   "reviewedOk": 0,
+   "anchor": null
+  },
+  "7": {
+   "documents": 10,
+   "reviewedOk": 0,
+   "anchor": null
+  },
+  "8": {
+   "documents": 4,
+   "reviewedOk": 0,
+   "anchor": null
+  },
+  "9": {
+   "documents": 0,
+   "reviewedOk": 0,
+   "anchor": null
+  },
+  "10": {
+   "documents": 1,
+   "reviewedOk": 0,
+   "anchor": null
+  }
+ },
+ "byStandard": {
+  "research": {
+   "documents": 1568,
+   "median": 1.5,
+   "shownAsOne": 748
+  },
+  "corporate": {
+   "documents": 1568,
+   "median": 1.4,
+   "shownAsOne": 791
+  },
+  "journalism": {
+   "documents": 1568,
+   "median": 1,
+   "shownAsOne": 1274
+  },
+  "general": {
+   "documents": 1568,
+   "median": 2.2,
+   "shownAsOne": 419
+  }
+ },
+ "moreClaimsUnderJournalism": 1320
+}

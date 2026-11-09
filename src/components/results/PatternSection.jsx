@@ -1,4 +1,6 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import { METHOD, ANCHORS } from './briefTop.js'
 
 // One named pattern: its name, a one-line description of how the writing
 // manufactures false confidence, and 2–3 verbatim example lines from the
@@ -9,10 +11,10 @@ export default function PatternSection({ pattern }) {
     <section className="mb-8 last:mb-0">
       <div className="flex items-baseline justify-between gap-3 mb-1.5">
         <h3 className="font-serif text-xl font-medium tracking-tight text-gray-900">
-          {pattern.name}
+          <Link className="eh-score-link" to={`${METHOD}#${ANCHORS.flag(pattern.key)}`}>{pattern.name}</Link>
         </h3>
         <span className="label-tag whitespace-nowrap">
-          {pattern.count} {pattern.count === 1 ? 'instance' : 'instances'}
+          {pattern.count} <Link className="eh-score-link" to={`${METHOD}#${ANCHORS.flag(pattern.key)}`}>{pattern.count === 1 ? 'instance' : 'instances'}</Link>
         </span>
       </div>
 

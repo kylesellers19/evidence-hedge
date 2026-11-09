@@ -1,5 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { signalTitle } from '../../engine/signals/titles.js'
+import { METHOD, ANCHORS } from './briefTop.js'
 
 // Document-level signals — their own layer, ABOVE the per-claim patterns.
 // Same visual register: hairline rules, square corners, blue accent, no colored
@@ -36,7 +38,7 @@ export default function DocumentSignals({ signals }) {
             >
               <div className="flex items-baseline justify-between gap-3 mb-1">
                 <h3 className="font-serif text-lg font-medium tracking-tight text-gray-900">
-                  {titleFor(s)}
+                  <Link className="eh-score-link" to={`${METHOD}#${ANCHORS.signal(s.id)}`}>{titleFor(s)}</Link>
                 </h3>
                 <SignalTag signal={s} />
               </div>

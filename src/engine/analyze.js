@@ -198,17 +198,13 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
   const strongClaims = claims.filter(c => c.tier.weight >= STRONG_WEIGHT).length
 
   // ── Layer 1: plain-language verdict ───────────────────────────────────────
-  let verdict
-  if (gate) {
-    verdict = `This ${rubric.documentNoun || 'document'} makes no expert claims — there is no evidence obligation to assess.`
-  } else {
-    verdict = buildVerdict({ rubric, totalClaims: claims.length, strongClaims, flagCounts })
-    // Platitude density lowers the earned-confidence budget: name the filler.
-    const plat = signals.find(s => s.id === 'platitude-density')
-    if (plat) {
-      verdict += ` It also leans on ${plat.count} content-free ${plat.count === 1 ? 'platitude' : 'platitudes'}, which carry no checkable claim.`
-    }
-  }
+  // A claim is flagged when it carries any flag: unsupported, overconfident or
+  // causal overreach (one claim can carry two). The headline and the brief's
+  // stats row both count claims this way, so their numbers are the same.
+  const flaggedClaims = claims.filter(c => c.flag || c.overreach).length
+  const verdict = gate
+    ? GATE_HEADLINE(rubric.documentNoun || 'document')
+    : buildVerdict({ rubric, totalClaims: claims.length, strongClaims, flagCounts, flaggedClaims })
 
   // ── Overall document score (computed last) ────────────────────────────────
   const documentScore = scoreDocument({ claims, signals, posture, rubric, profile })
@@ -230,56 +226,30 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
       verdict,
       totalClaims: claims.length,
       strongClaims,
+      flaggedClaims,
       flagCounts,
       distribution,
     },
   }
 }
 
-// One or two sentences a non-expert can act on.
+// The headline: one sentence, 15 words or fewer, a non-expert can act on.
 //
-// Binding rule: EVERY number refers to the population it describes. flagCounts
-// are document-wide (over all extracted claims), and strongClaims is likewise a
-// subset of the whole — so both denominators are `totalClaims`. (Previously the
-// flag clauses read "N of them…" where "them" was the strong subpopulation,
-// mis-binding a document-wide numerator to the strong-claim denominator.)
-export function buildVerdict({ rubric, totalClaims, strongClaims, flagCounts }) {
+// Binding rule: EVERY number refers to the population it describes. Both
+// numbers are counts of claims over the whole document: flaggedClaims (a claim
+// with any flag, counted once however many it carries) of totalClaims. The
+// per-flag counts and the strong count go in the stats row under it, where
+// each is labeled; the headline never mixes them. Platitudes are a document
+// signal with their own section and stay out of the headline.
+// PROVISIONAL — not ratified (templates).
+export const GATE_HEADLINE = (noun) => `This ${noun} speaks from experience, so no claim in it owes a source.`
+
+export function buildVerdict({ rubric, totalClaims, flaggedClaims }) {
   const noun = rubric.documentNoun || 'document'
-  if (totalClaims === 0) {
-    return `No assertive claims were detected in this ${noun}.`
-  }
-
-  const unsupported = flagCounts['unsupported-assertion']
-  const overconfident = flagCounts.overconfident
-
-  // Lead: total claims, with the strong count as an explicit subset of the total.
-  const lead = `This ${noun} makes ${totalClaims} ${plural(totalClaims, 'claim')}, ${strongClaims} of them strongly stated`
-
-  // Flag clauses: counts over ALL claims → "of these" (= the total), not the
-  // strong subpopulation.
-  const clauses = []
-  if (unsupported > 0) {
-    clauses.push(`${unsupported} ${unsupported === 1 ? 'rests' : 'rest'} on no cited evidence`)
-  }
-  if (overconfident > 0) {
-    clauses.push(`${overconfident} ${overconfident === 1 ? 'cites' : 'cite'} sources too weak to carry them`)
-  }
-  const overreach = flagCounts['causal-overreach'] || 0
-  if (overreach > 0) {
-    // Causal overreach fires on the causal wording or the advice (overreachOf),
-    // so the clause names both, as the pattern and the Method page do.
-    clauses.push(`${overreach} ${overreach === 1 ? 'claims more cause, or gives firmer advice,' : 'claim more cause, or give firmer advice,'} than the study design supports`)
-  }
-
-  if (clauses.length === 0) {
-    return `${lead}, each backed by evidence in proportion to its confidence.`
-  }
-  return `${lead}; of these, ${joinClauses(clauses)}.`
-}
-
-const plural = (n, word) => (n === 1 ? word : word + 's')
-
-function joinClauses(clauses) {
-  if (clauses.length === 1) return clauses[0]
-  return clauses.slice(0, -1).join(', ') + ', and ' + clauses[clauses.length - 1]
+  const n = totalClaims
+  const f = flaggedClaims
+  if (n === 0) return `We found no claims in this ${noun} to weigh.`
+  if (f === 0) return n === 1 ? 'Its one claim stays within what its evidence shows.' : `All ${n} claims stay within what their evidence shows.`
+  if (f === n) return n === 1 ? 'Its one claim says more than its evidence shows.' : `All ${n} claims say more than their evidence shows.`
+  return f === 1 ? `1 of ${n} claims says more than its evidence shows.` : `${f} of ${n} claims say more than their evidence shows.`
 }

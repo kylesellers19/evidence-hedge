@@ -17,11 +17,26 @@ export const NAV = [
 ]
 
 export default function SiteLayout() {
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
   const home = pathname === '/'
 
-  // A new page starts at its top, as a page load would.
-  useEffect(() => { window.scrollTo(0, 0) }, [pathname])
+  // A new page starts at its top, as a page load would. A link to an anchor
+  // (/method#score-3, from a score on a brief or The List) lands on that
+  // heading instead, on a click as on a direct load: the page renders after
+  // the browser's own jump, so wait for the element.
+  useEffect(() => {
+    if (!hash) { window.scrollTo(0, 0); return }
+    const id = decodeURIComponent(hash.slice(1))
+    let frame = 0
+    let tries = 0
+    const go = () => {
+      const el = document.getElementById(id)
+      if (el) el.scrollIntoView({ block: 'start' })
+      else if (tries++ < 60) frame = requestAnimationFrame(go)
+    }
+    go()
+    return () => cancelAnimationFrame(frame)
+  }, [pathname, hash])
 
   return (
     <>

@@ -5,6 +5,7 @@ import { LIST_FIELDS, MAX_SORTS, DIR_WORDS, fieldByKey } from '../list/fields.js
 import { sortEntries, clickHeading, setLevel, defaultDir } from '../list/sort.js'
 import { apDate } from '../list/entry.js'
 import { loadList, LIST_IS_LIVE } from '../list/store.js'
+import { METHOD, scoreAnchor } from '../components/results/briefTop.js'
 
 /**
  * The List — every report weighed and added, with its score.
@@ -183,12 +184,15 @@ function SortControls({ sorts, onChange }) {
   )
 }
 
+// The score links to what it means: the brief shows it rounded, so The List's
+// 2.5 is a 3 on the brief and links to the 3.
 function ScoreCell({ score }) {
   const pct = Math.max(0, Math.min(1, (score - 1) / 9)) * 100
+  const shown = Math.round(score)
   return (
     <span className="eh-score">
       <span className="eh-score-bar" aria-hidden="true"><span style={{ width: `${pct}%` }} /></span>
-      <span className="eh-score-num">{score.toFixed(1)}</span>
+      <Link className="eh-score-num eh-score-link" to={`${METHOD}#${scoreAnchor(shown)}`} aria-label={`Score ${score.toFixed(1)}: what a ${shown} means`}>{score.toFixed(1)}</Link>
     </span>
   )
 }

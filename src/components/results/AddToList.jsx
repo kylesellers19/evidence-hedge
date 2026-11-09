@@ -4,6 +4,7 @@ import { INDUSTRIES, REPORT_TYPES } from '../../list/fields.js'
 import { draftEntry, validateEntry, buildEntry, docHash, LIMITS } from '../../list/entry.js'
 import { addToList, LIST_IS_LIVE } from '../../list/store.js'
 import { ENGINE_VERSION } from '../../engine/version.js'
+import { METHOD, scoreAnchor } from './briefTop.js'
 
 // The last part of the evidence brief: add this report to The List. The engine
 // cannot tell who published a report or when, so the person fills those in;
@@ -42,7 +43,7 @@ export default function AddToList({ text, meta, result }) {
         <p className="label-tag">The List</p>
         <p className="eh-addlist-done">
           {status === 'added'
-            ? <>Added, with its score of {score.toFixed(1)}. <Link to="/list">See it on The List</Link>.</>
+            ? <>Added, with its score of <Link className="eh-score-link" to={`${METHOD}#${scoreAnchor(Math.round(score))}`}>{score.toFixed(1)}</Link>. <Link to="/list">See it on The List</Link>.</>
             : <>This report is already on The List. <Link to="/list">See The List</Link>.</>}
         </p>
       </section>
@@ -64,7 +65,7 @@ export default function AddToList({ text, meta, result }) {
       <h2 id="addlist-h" className="eh-addlist-h">Add this report to The List</h2>
       <p className="eh-addlist-dek">
         The List shows every report added, with its score of{' '}
-        <span className="tabular-nums font-semibold">{score.toFixed(1)}</span>, so anyone can sort and
+        <Link className="tabular-nums font-semibold eh-score-link" to={`${METHOD}#${scoreAnchor(Math.round(score))}`}>{score.toFixed(1)}</Link>, so anyone can sort and
         compare them. Fill in who published it and when; the engine cannot read those reliably.
       </p>
 

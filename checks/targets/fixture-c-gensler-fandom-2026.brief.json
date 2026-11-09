@@ -1,7 +1,7 @@
 {
   "fixture": "fixture-c-gensler-fandom-2026",
   "recorded": "2026-11-09",
-  "engine_commit": "4549f66-dirty",
+  "engine_commit": "a445526-dirty",
   "source": "The brief Kyle pasted on 2026-11-08 from the app at build e3fc8a7 (src unchanged since dc34856), recorded with --write and checked against the paste field by field: header, counts, judgment, profile, the 5 signals, the 3 patterns and their 8 example lines, the distribution and the 21 provenance entries.",
   "brief": {
     "header": {
@@ -11,7 +11,7 @@
       "draft": false,
       "genreNote": "Read as research from an interested publisher: held to research reporting standards, with its own data graded as self-reported."
     },
-    "verdict": "This research report makes 397 claims, 16 of them strongly stated; of these, 212 rest on no cited evidence, 5 cite sources too weak to carry them, and 23 claim more cause than the study design supports.",
+    "verdict": "This research report makes 397 claims, 16 of them strongly stated; of these, 212 rest on no cited evidence, 5 cite sources too weak to carry them, and 23 claim more cause, or give firmer advice, than the study design supports.",
     "counts": {
       "claimsWeighed": 397,
       "readAsStrong": 16,

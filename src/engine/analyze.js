@@ -266,7 +266,9 @@ export function buildVerdict({ rubric, totalClaims, strongClaims, flagCounts }) 
   }
   const overreach = flagCounts['causal-overreach'] || 0
   if (overreach > 0) {
-    clauses.push(`${overreach} ${overreach === 1 ? 'claims' : 'claim'} more cause than the study design supports`)
+    // Causal overreach fires on the causal wording or the advice (overreachOf),
+    // so the clause names both, as the pattern and the Method page do.
+    clauses.push(`${overreach} ${overreach === 1 ? 'claims more cause, or gives firmer advice,' : 'claim more cause, or give firmer advice,'} than the study design supports`)
   }
 
   if (clauses.length === 0) {

@@ -127,7 +127,13 @@ export function isTitleLine(s) {
   const t = s.trim()
   // A figure with a percentage or a unit is a finding, not a title.
   if (/\d\s*(?:%|percent|per cent|x\b|times\b|kwh|mwh|mw\b|tons?\b|tonnes?\b|\$)|\$\s*\d/i.test(t)) return false
-  return /\S:\s+[A-Z“"‘']/.test(t) && wordCount(t) <= 25 && !FINITE_VERB.test(t) && !MORE_VERBS.test(t)
+  if (!/\S:\s+[A-Z“"‘']/.test(t) || wordCount(t) > 25 || FINITE_VERB.test(t) || MORE_VERBS.test(t)) return false
+  // A title reads as one: most of its words capitalized, or a publication's
+  // marks (a quoted title, a year, a link, "Retrieved"). "Rachael McCarrison:
+  // Impactful benchmarking starts with …" is a person's statement, not a title.
+  const words = t.split(/\s+/).filter((w) => /^[\p{L}“"‘']/u.test(w) && !/^(?:a|an|the|and|or|of|for|to|in|on|at|by|with|from|as|vs\.?)$/i.test(w))
+  const capitalized = words.filter((w) => /^[“"‘']?\p{Lu}/u.test(w)).length
+  return capitalized / Math.max(1, words.length) >= 0.6 || /[“"‘][^”"’]{6,}[”"’]|\b(?:19|20)\d{2}\b|https?:\/\/|www\.|\bretrieved\b/i.test(t)
 }
 
 // ── DEMOTE predicates ────────────────────────────────────────────────────────

@@ -102,7 +102,7 @@ export const HYBRIDS = [
     genres: ['corporate', 'research'],
     when: (r) => stakeIs(r, 'advocacy') || (speakerIs(r, 'corporate') && (evidenceIs(r, 'own') || formIs(r, 'research-paper', 'research-report'))),
     name: 'Research published by a firm or interest group',
-    noun: 'research report',
+    noun: 'report', // a firm's newsletter, index, white paper or study alike; "research report" overstated most (engine cleanup, Nov. 2026)
     standard: 'corporate',
     why: 'Its findings come from a publisher with a stake in them: they count as self-reported until a third party or peer review checks them.',
     audits: ['limitations-absent', 'abstract-body-confidence-delta', 'undisclosed-interest'],

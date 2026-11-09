@@ -94,6 +94,7 @@ const VENUE = [
   { signal: 'abstract + keywords', re: /\bAbstract\b[\s\S]{0,4000}\bKeywords?\s*:/, points: 1, front: true },
 ]
 const FRONT_CHARS = 6000
+const FRONT_ONLY = new Set(['government'])
 
 // Text cues per kind (points each, capped at 3 hits per cue). "Foundation" counts
 // only in a name ("the Kresge Foundation", "Foundation for …"): in building
@@ -107,6 +108,9 @@ const TEXT_CUES = {
     [/\bPew Research Center\b/, 3], [/\b(?:non-?profit|nonpartisan|non-partisan|not-for-profit)\b/i, 2], [/\bthink tank\b|\bfact tank\b/i, 2],
     [/\bcoalition\b/i, 1], [/\b[Tt]he\s+(?:(?:[A-Z][\w.'’-]*|&)\s+){1,5}Foundation\b|\bFoundation\s+for\s+[A-Z]/, 1],
   ],
+  // A government publisher names itself on its title page; a report that
+  // cites an agency mentions it anywhere, so the agency cue reads the front only
+  // (FRONT_ONLY). Engine cleanup, Nov. 2026. PROVISIONAL — not ratified.
   government: [
     [/\b(?:U\.S\.|United States)\s+(?:Department|Environmental Protection Agency|Government)\b/, 2], [/\bofficial website of the\b/i, 2], [/\bpublic domain\b/i, 1],
   ],
@@ -114,6 +118,10 @@ const TEXT_CUES = {
     [/\b(?:add to cart|shop now|buy now|request a demo|contact sales|free shipping|checkout|our products|our clients|our solutions|our customers)\b/i, 2],
     [/©\s*(?:19|20)\d{2}\s+[\w&.,'’ -]{2,40}\b(?:Inc|LLC|Ltd|Corporation|Corp|GmbH|Oy|Company)\b/i, 2],
     [/\bPosted by\s+[A-Z]\w+\s+on\b/, 1], [/\b[A-Z][a-z]+\s+Research\s+Institute\b/, 1],
+    // A firm speaking for its own services, as engineering, design and
+    // construction firms do ("our team", "our experts", "contact us").
+    [/\b(?:our|we)\s+(?:team|teams|experts|people|services|projects|offices|firm|company|practice|engineers|architects|designers|consultants|specialists|portfolio|expertise|capabilities|professionals)\b/i, 1],
+    [/\b(?:contact us|get in touch|reach out to us|partner with us|work with us|talk to us|speak (?:to|with) (?:us|one of our))\b/i, 2],
   ],
   'news-outlet': [[/\bstaff (?:writer|reporter)\b|\bcorrespondent\b|\(AP\)|\(Reuters\)/i, 2], [/\bcontributed (?:to this )?report(?:ing)?\b/i, 2]],
   'trade-press': [[/\b(?:senior|contributing|managing|executive)?\s?editor\b/i, 1], [/\bmagazine\b|\be-?newsletter\b/i, 1]],
@@ -141,9 +149,10 @@ function textScores(body) {
   const ownWords = body.split(/\n\n+/).filter((p) => !isReferenceEntry(p.replace(/\s+/g, ' '))).join('\n\n')
   const scores = {}
   const evidence = {}
+  const front = ownWords.slice(0, FRONT_CHARS)
   for (const [kind, cues] of Object.entries(TEXT_CUES)) {
     for (const [re, pts] of cues) {
-      const spans = spansFor(ownWords, re)
+      const spans = spansFor(FRONT_ONLY.has(kind) ? front : ownWords, re)
       if (!spans.length) continue
       scores[kind] = (scores[kind] || 0) + pts * Math.min(spans.length, 3)
       ;(evidence[kind] ||= []).push({ signal: `text: ${re.source.slice(0, 40)}`, span: spans[0].slice(0, 120) })

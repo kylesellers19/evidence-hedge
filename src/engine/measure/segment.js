@@ -6,7 +6,10 @@
 //   reference list. The heading counts only past REFERENCE_MIN_POSITION of the
 //   text, not followed by prose ("References to workers include…") or a page
 //   range (a table of contents), and only if the next stretch reads as
-//   references. The list is split into entries for analysis.references.
+//   references. A document with more than one list (a journal issue, a report
+//   in chapters) loses each list but the last only up to where prose resumes,
+//   and its earlier lists count wherever they fall. The lists are split into
+//   entries for analysis.references.
 //
 // nonClaimRule(sentence) → rule name | null
 //   Sentence-level drops anywhere in the body: reference entries, affiliations,
@@ -55,17 +58,66 @@ function splitEntries(text) {
     .filter((s) => s.length > 8)
 }
 
+// A heading opens a reference list: not followed by prose or a page range,
+// and the next stretch reads as references.
+function opensList(t, m) {
+  const after = t.slice(m.index + m[0].length, m.index + m[0].length + LOOKAHEAD)
+  if (PROSE_AFTER.test(after) || TOC_AFTER.test(after)) return false
+  return splitEntries(after).slice(0, 6).filter(isReferenceEntry).length >= 2
+}
+
+// Where prose resumes after a list, before the next list's heading: the start
+// of the first run of PROSE_RUN_MIN characters of paragraphs that are neither
+// reference entries nor numbered like one ("[3] …", "3. …"). PROVISIONAL — not ratified.
+export const PROSE_RUN_MIN = 1000
+const NUMBERED = /^\s*(?:\[\d{1,3}\]|\d{1,3}\.)\s/
+function proseResumes(t, from, limit) {
+  const breaks = /\n\n+/g
+  breaks.lastIndex = from
+  let start = from
+  let runStart = -1
+  let run = 0
+  while (start < limit) {
+    const m = breaks.exec(t)
+    const end = m && m.index < limit ? m.index : limit
+    const para = t.slice(start, end)
+    if (isReferenceEntry(para.replace(/\s+/g, ' ')) || NUMBERED.test(para)) {
+      runStart = -1
+      run = 0
+    } else {
+      if (runStart < 0) runStart = start
+      run += para.trim().length
+      if (run >= PROSE_RUN_MIN) return runStart
+    }
+    if (end === limit) break
+    start = m.index + m[0].length
+  }
+  return limit
+}
+
 export function segmentDocument(text) {
   const t = text || ''
-  for (const m of t.matchAll(HEADING_RE)) {
-    if (m.index < t.length * REFERENCE_MIN_POSITION) continue
-    const after = t.slice(m.index + m[0].length, m.index + m[0].length + LOOKAHEAD)
-    if (PROSE_AFTER.test(after) || TOC_AFTER.test(after)) continue
-    const entries = splitEntries(after).slice(0, 6)
-    if (entries.filter(isReferenceEntry).length < 2) continue
-    return { body: t.slice(0, m.index), references: splitEntries(t.slice(m.index + m[0].length)), cut: m.index }
+  const heads = [...t.matchAll(HEADING_RE)].filter((m) => opensList(t, m))
+  const first = heads.findIndex((m) => m.index >= t.length * REFERENCE_MIN_POSITION)
+  if (first < 0) return { body: t, references: [], cut: -1 }
+  // One list runs to the end. With more, each but the last ends where prose resumes.
+  const lists = heads.length > 1 ? heads : [heads[first]]
+  const spans = []
+  for (const [i, m] of lists.entries()) {
+    if (spans.length && m.index < spans[spans.length - 1].end) continue
+    const next = lists[i + 1]
+    spans.push({ start: m.index, from: m.index + m[0].length, end: next ? proseResumes(t, m.index + m[0].length, next.index) : t.length })
   }
-  return { body: t, references: [], cut: -1 }
+  const body = []
+  const references = []
+  let at = 0
+  for (const s of spans) {
+    body.push(t.slice(at, s.start))
+    references.push(...splitEntries(t.slice(s.from, s.end)))
+    at = s.end
+  }
+  body.push(t.slice(at))
+  return { body: body.filter((b) => b.trim()).join('\n\n'), references, cut: spans[0].start }
 }
 
 // An affiliation or postal address split mid-line by the sentence splitter:

@@ -53,7 +53,7 @@ Of the 1,580 the gates passed, 1,568 receive a score and 12 have no claims to we
 
 **Repeat runs.** All 1,580 documents give identical output when run twice.
 
-**In bulk, in the browser.** The flagged documents were uploaded one by one into a local build of the baseline commit, through the page's own file input, and the rendered brief was compared with the ledger. The result is in section 10.
+**In bulk, in the browser.** Documents were uploaded one by one into a local build of the baseline commit, through the page's own file input, and the rendered brief was compared with the ledger: 1,085 of the 1,116 documents with a LOW, HIGH, ROUTE or reviewer TEXT code; the other 31, among the largest files, were not opened, because the browser tabs running them closed before they finished (the harness ran all of them). 0 differ.
 
 ## 4. Scores
 
@@ -360,7 +360,26 @@ The live screenshots are listed in section 10. The four quality-test questions w
 
 ## 10. Publish
 
-Recorded at publish time; see the end of this file.
+- **Commits.** `5160fcd..f3cc18d` on main, fast-forwarded from `corpus-audit-method-scale` (origin had not moved), plus this report's final commit:
+  - `024655e` and `9ba9022`: checkpoints with the harness, the brief's top, links to Method, and the numbers and scale on Method.
+  - `44d04ff`, `948cd42`, `6ec5524`, `128936c`: Method wording and scale examples.
+  - `e40e9a1`: spot-check viewer.
+  - `f94fc09`: marketing dek.
+  - `7ebf2a2`: this report and the decision log.
+  - `f3cc18d`: the mixed-genre "Read as" line.
+- **Workflow runs.** "Deploy to GitHub Pages", both succeeded:
+  - [42691265585](https://github.com/kylesellers19/evidence-hedge/actions/runs/42691265585) for `7ebf2a2`.
+  - [42691988875](https://github.com/kylesellers19/evidence-hedge/actions/runs/42691988875) for `f3cc18d`.
+- **Live build stamp.** `f3cc18d`, read from the live bundle and from the footer ("Engine f3cc18d"). The bundle also carries `5160fcd`, the build the Method scale's examples were scored on, as the page says.
+- **Second push.** `f3cc18d` was not a fix forward for a live-versus-local difference. It is a wording fix found while preparing the live checks (decision 34), pushed before them so they ran on the final build. No revert was needed.
+- **Live checks, Chrome, on `f3cc18d`.**
+  - **Nine uploads.** The four Part 7 documents and five parity documents match the harness on every field of the brief's top: read as, held to, headline, dek, score, score link, verdict sentence, stats, breakdown and strictest-setting line.
+  - **In-app links.** Eleven link types each landed 16 pixels below the top, as designed, and Back returned the same results every time: score, claims weighed, read as strong, flagged, each flag, two signals, read as and held to. Every Method link on a brief points at an anchor that exists.
+  - **Direct loads.** `#score-1`, `#score-7`, `#score-10`, `#flagged`, `#standard-journalism` and `#signal-limitations-absent` each landed at 16 pixels, and all ten score anchors exist.
+  - **Method scale.** Read at all three widths; its numbers agree with the formula.
+  - **Widths.** Screenshots at 1,440, 1,280 and 390 of the four documents and the scale; no horizontal scroll at any width. Files: `checks/data/audit/screens/live-*`.
+  - **One test artifact.** Clicking a link within 300 ms of Back lands the next page off by the restored scroll; at a second's pause every link landed exactly.
+- **Bulk confirmation in the browser** (baseline build, the page's own upload): 1,085 of the 1,116 documents with a LOW, HIGH, ROUTE or reviewer TEXT code; the other 31, among the largest files, were not opened, because the browser tabs running them closed before they finished (the harness ran all of them), 1,088 documents in all. 0 differ from the ledger and 0 failed to run.
 
 ## 11. Decision log
 

@@ -364,7 +364,7 @@ Recorded at publish time; see the end of this file.
 
 ## 11. Decision log
 
-[corpus-audit-decisions.md](corpus-audit-decisions.md), rows 1 to 34.
+[corpus-audit-decisions.md](corpus-audit-decisions.md), rows 1 to 36.
 
 ## 12. Self-audit corrections
 
@@ -386,7 +386,7 @@ Every row is PROVISIONAL — not ratified. Each names where it lives, so a decis
 | R2 | "Flagged" on a brief | Claims with any flag (unsupported, overconfident or causal overreach), each counted once | `src/engine/analyze.js` (`summary.flaggedClaims`), `src/components/results/briefTop.js: statsOf` |
 | R3 | Stats-row breakdown | "Of the F flagged, U cite nothing, O cite too little and C claim more cause than the study shows (K claims have two flags)." | `briefTop.js: breakdownText` |
 | R4 | Strictest-setting line | "For the score, every claim is held to the strictest setting, where X of N cite nothing or too little." Shown when the score's own count differs from the brief's | `briefTop.js: strictText` |
-| R5 | Tag row, now the title block's "Read as" | A hybrid's scenario name; a single genre's reading by posture | `src/engine/scoreDocument.js: READ_AS`, `src/rubrics/hybrids.js` (`name`, `readAs`) |
+| R5 | Tag row, now the title block's "Read as" | A hybrid's scenario name ("A mix of {genres} writing" when no scenario fits); a single genre's reading by posture | `src/engine/scoreDocument.js: READ_AS`, `src/rubrics/hybrids.js` (`name`, `readAs`) |
 | R6 | Title block's "Held to" | "The {standard} standard" (", still a draft" for a draft standard) | `briefTop.js: readingOf` |
 | R7 | Dek (genre notes) | Advice only, never naming a standard; one per scenario and per posture | `src/rubrics/hybrids.js` (`note`), `scoreDocument.js: GENRE_NOTES` |
 | R8 | Verdict-box sentences | weak, mixed, carried, gate and unscored sentences | `scoreDocument.js: SUMMARY, GATE_SUMMARY, UNSCORED_SUMMARY` |

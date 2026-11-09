@@ -193,7 +193,9 @@ function fallbackScenario(genres, roles) {
   return {
     id: 'mixed',
     genres,
-    name: 'Mixed genres with no specific scenario',
+    // What the brief says it was read as: the genres it mixes, in plain words.
+    // PROVISIONAL — not ratified.
+    name: `A mix of ${genres.map((g) => GENRE_LABELS[g].toLowerCase()).join(' and ')} writing`,
     noun: BASE[standard].documentNoun,
     standard,
     why: `No hybrid scenario fits this mix, so its claims are held to the ${GENRE_LABELS[standard].toLowerCase()} standard and ${others.map((g) => GENRE_LABELS[g].toLowerCase()).join(' and ')} add${others.length === 1 ? 's' : ''} only ${others.length === 1 ? 'its' : 'their'} own audits.`,

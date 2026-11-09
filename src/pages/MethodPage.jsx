@@ -966,9 +966,9 @@ function ScoreScale() {
       <h2 id="scale">What makes a 1 through a 10</h2>
       <p>
         A brief shows the score rounded to the nearest whole number. The score is {W.START_BUDGET} minus what
-        the document loses: its flagged claims as a rate, up to {W.OVERREACH_CAP} for causal overreach, and the
-        costs of the checks on the whole document, of missing reporting items, of platitudes and of
-        self-citation (see <a href="#score">From flags to a score</a>). It is held between {W.MIN} and {W.MAX}{' '}
+        the document loses. It loses points for its flagged claims, counted as a rate, and up to{' '}
+        {W.OVERREACH_CAP} for causal overreach; it also pays for the checks on the whole document, missing
+        reporting items, platitudes and self-citation (see <a href="#score">From flags to a score</a>). It is held between {W.MIN} and {W.MAX}{' '}
         and kept to one decimal. So a whole number on a brief means the document lost more than half a point
         below what would round to the next number up, and at most half a point above it.
       </p>
@@ -980,7 +980,7 @@ function ScoreScale() {
       <p className="eh-note">
         The examples below are documents from our corpus that scored each number and that a reviewer read
         alongside their text and found the output sound. They were scored by engine build {SCALE.engine} on{' '}
-        {apDate(SCALE.generated)}, each as its PDF uploaded, and they change when the engine changes. Pasting
+        {apDate(SCALE.generated)}, each as its PDF uploaded, and they change when the scoring changes. Pasting
         the link instead can give a different reading, because the web address names the publisher. We name
         and link them; we do not quote them.
       </p>

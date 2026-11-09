@@ -18,6 +18,7 @@ const EXTRACT = {
   'unsupported-type': 'That file type isn’t supported — upload a PDF, DOCX, TXT or MD file, or paste the text.',
   blocked: 'That file is a saved bot-check page, not the document — open the original, get past the check, and save or paste the real text.',
   'reader-error': 'That file is a link-reader error message, not the document — open the original page and paste its text instead.',
+  'not-english': 'This file isn’t in English, and we read English only, so upload or paste an English version if there is one.',
 }
 
 const site = (host) => host || 'that site'
@@ -36,6 +37,7 @@ const COPY = {
   timeout: () => 'The link reader timed out on that page — try again, or paste the text here.',
   network: () => 'The link reader could not be reached — check your connection and try again, or paste the text here.',
   empty: () => 'No readable text came back — paste the text here instead.',
+  'not-english': () => 'This document isn’t in English, and we read English only, so paste or link an English version if there is one.',
   status: (f) =>
     `The link reader got an error ${f.detail?.status ?? ''} from ${site(f.host)} — check the address, or paste the text here.`.replace('error  from', 'error from'),
 }

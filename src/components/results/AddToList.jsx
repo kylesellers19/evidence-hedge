@@ -16,7 +16,8 @@ export default function AddToList({ text, meta, result }) {
   const [status, setStatus] = useState('idle') // idle | sending | added | duplicate | failed
   const today = new Date().toISOString().slice(0, 10)
 
-  if (!LIST_IS_LIVE || !result?.documentScore) return null
+  // A document with no claims has no score to list.
+  if (!LIST_IS_LIVE || result?.documentScore?.score == null) return null
   const score = result.documentScore.score
 
   const set = (key) => (e) => {

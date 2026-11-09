@@ -227,6 +227,11 @@ export default function MethodPage() {
             A scanned PDF has no text layer, and we do not run character recognition on it, so it is refused;
             so are password-protected PDFs and the old Word format (.doc).
           </p>
+          <p>
+            A document that is not in English is refused too, since the word lists and sentence rules below are
+            English ones. We call a text English unless most of its letters are in another script, or it uses
+            more of another language’s common short words (les, und, una, het) than of English’s (the, of, and).
+          </p>
 
           {/* ── 2 ─────────────────────────────────────────────────────────── */}
           <h2 id="kind">What kind of document it is</h2>
@@ -530,7 +535,8 @@ export default function MethodPage() {
           <h2 id="score">From flags to a score</h2>
           <p>
             Every document starts with {W.START_BUDGET} points and loses them in four ways. The score cannot fall
-            below {W.MIN} or rise above {W.MAX}, and it is shown to one decimal place.
+            below {W.MIN} or rise above {W.MAX}, and it is shown to one decimal place. A document in which we find
+            no claims gets no score at all, not a perfect one: there is nothing for its evidence to carry.
           </p>
           <ol className="eh-steps">
             <li>

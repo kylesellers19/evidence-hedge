@@ -13,7 +13,9 @@
 //     weights; zero-weight notes (self-disclaimed causality) never count
 //   · platitude density
 //   · self-citation share
-// Floors at 1, caps at 10.
+// Floors at 1, caps at 10. A document with no claims gets no score (null):
+// there is nothing for its evidence to carry or fail to carry, and starting
+// from the full budget would call it strong.
 //
 // GENRE-INVARIANT (D1). The score never reads the selected posture: claims are
 // re-judged against the rubric's evidence standard (rubric.strictestPosture),
@@ -30,9 +32,9 @@ import { detectMismatch } from './detectMismatch.js'
 
 /**
  * @typedef {Object} DocumentScore
- * @property {number} score      1–10, one decimal place
- * @property {number} display    Math.round(score) — the annotation numeral
- * @property {string} band       'failing' | 'weak' | 'mixed' | 'carried' | 'strong'
+ * @property {number|null} score    1–10, one decimal place; null with no claims
+ * @property {number|null} display  Math.round(score) — the annotation numeral
+ * @property {string} band       'failing' | 'weak' | 'mixed' | 'carried' | 'strong' | 'unscored'
  * @property {string} summary    the verdict sentence (posture-templated)
  * @property {string} genreNote  one line naming the genre it was read as
  * @property {Object} breakdown  per-component contributions, for auditability
@@ -101,6 +103,8 @@ const PROMOTIONAL_SUMMARY = {
 }
 const PROMOTIONAL = new Set(['marketing', 'press-release'])
 const GATE_SUMMARY = (n) => `This ${n} makes no expert claims — there is no evidence obligation to assess.`
+// No claims found, so no score. PROVISIONAL — not ratified (template).
+export const UNSCORED_SUMMARY = (n) => `We found no claims in this ${n} to weigh, so it has no score.`
 
 // One line naming the genre the document was read as. PROVISIONAL — not ratified.
 export const GENRE_NOTES = {
@@ -177,6 +181,18 @@ export function scoreDocument(analysis) {
       summary: GATE_SUMMARY(noun),
       genreNote,
       breakdown: { gate: true, start: W.START_BUDGET, flagContribution: 0, signalPenalty: 0, platitudePenalty: 0, flagRate: 0, claimCount: claims.length },
+    }
+  }
+
+  // No claims: no score, rather than the full budget.
+  if (claims.length === 0) {
+    return {
+      score: null,
+      display: null,
+      band: 'unscored',
+      summary: UNSCORED_SUMMARY(noun),
+      genreNote,
+      breakdown: { gate: false, unscored: true, start: W.START_BUDGET, claimCount: 0 },
     }
   }
 

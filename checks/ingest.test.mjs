@@ -35,6 +35,15 @@ log('long article that mentions "access denied" is not a wall',
   validateText(LONG + ' The tenant was told access denied at the door.', { path: 'link' }).ok)
 log('ordinary JSON-looking text without an error code passes', validateText('{"note": "a quoted object"} ' + LONG, { path: 'link' }).ok)
 
+// Not English: written for this check, not taken from any document.
+const FRENCH = 'Les villes doivent préparer leurs réseaux pour une hausse des températures et des pluies plus fortes, selon une étude qui porte sur les transports et les bâtiments publics. '.repeat(6)
+const CHINESE = '城市需要为更高的气温和更强的降雨做好准备，这项研究关注交通网络和公共建筑。'.repeat(30)
+const AEC_ENGLISH = 'The concrete pour for Level 3 is scheduled for May (est. cost $1.2M). LOS at the intersection drops from C to E, and the project adds 240 DU across two buildings. Costs per square foot rose 4% in the quarter. '.repeat(5)
+log('French text → not-english (every path)', ['link', 'file', 'paste'].every((path) => validateText(FRENCH, { path }).reason === 'not-english'))
+log('Chinese text → not-english', validateText(CHINESE, { path: 'file' }).reason === 'not-english', JSON.stringify(validateText(CHINESE, { path: 'file' }).detail))
+log('English with construction shorthand (pour, est., LOS, DU, per) passes', validateText(AEC_ENGLISH, { path: 'paste' }).ok)
+log('a short line in another language is not judged', validateText('Les villes doivent préparer leurs réseaux.', { path: 'paste' }).ok)
+
 // ── failure copy: one actionable sentence per reason, never one generic line ──
 const reasons = [
   { reason: 'reader-error', detail: re.detail, host: 'sciencealert.com' },
@@ -43,6 +52,7 @@ const reasons = [
   { reason: 'rate-limited' }, { reason: 'timeout' }, { reason: 'network' }, { reason: 'empty' },
   { reason: 'status', detail: { status: 502 }, host: 'example.com' },
   { reason: 'extract', kind: 'scanned' },
+  { reason: 'not-english' }, { reason: 'extract', kind: 'not-english' },
 ]
 const copies = reasons.map(failureCopy)
 log('each reason has its own sentence', new Set(copies).size === copies.length)

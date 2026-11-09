@@ -84,6 +84,13 @@ if (data.score === undefined) {
     `frozen=${data.score}/${data.band} now=${baselineScore.score}/${baselineScore.band}`)
 }
 
+// ── (d) no claims, no score ──────────────────────────────────────────────────
+// A document with no claims has nothing for its evidence to carry: no score,
+// never the full budget.
+const none = scoreDocument({ claims: [], signals: [], posture: 'research-like', rubric })
+log('(d) no claims → no score, not the full budget', none.score === null && none.display === null && none.band === 'unscored' && /no score/.test(none.summary),
+  JSON.stringify({ score: none.score, band: none.band, summary: none.summary }))
+
 if (!ok) { console.error('\nscore invariants failed.'); process.exit(1) }
 console.log('\nAll score invariants passed.')
 process.exit(0)

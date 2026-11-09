@@ -20,9 +20,14 @@ const markSize = (score) => SIZE_MIN + ((score - 1) / 9) * (SIZE_MAX - SIZE_MIN)
 const markIntensity = (score) => (score - 1) / 9                                  // 1→0 (gray), 10→1 (full hue)
 const markCoherence = (score) => (score - 1) / 9                                  // 1→0 (dispersed), 10→1 (lattice)
 
+// A document with no claims has no score: the smallest mark, no hue, and
+// neither gathered nor scattered.
+const UNSCORED_COHERENCE = 0.5
+
 export default function VerdictMark({ score, rubricId }) {
   const s = score.score
-  const size = Math.round(markSize(s))
+  const scored = s != null
+  const size = Math.round(scored ? markSize(s) : SIZE_MIN)
   const hue = accentFor(rubricId)
   const diameter = Math.round(size * BRACKET_DIAMETER_FACTOR)
   const lift = Math.round(size * BRACKET_LIFT_FACTOR)
@@ -32,8 +37,8 @@ export default function VerdictMark({ score, rubricId }) {
       <ParticleMark
         size={size}
         hue={hue}
-        intensity={markIntensity(s)}
-        coherence={markCoherence(s)}
+        intensity={scored ? markIntensity(s) : 0}
+        coherence={scored ? markCoherence(s) : UNSCORED_COHERENCE}
       />
 
       {/* Dimension bracket — literally spans the mark's diameter (square end
@@ -64,7 +69,7 @@ export default function VerdictMark({ score, rubricId }) {
         style={{ maxWidth: 320 }}
       >
         <div className="font-serif font-bold text-2xl text-gray-900 leading-none tabular-nums">
-          {score.display} / 10
+          {scored ? `${score.display} / 10` : 'No score'}
         </div>
         <p className="font-sans text-[13px] text-muted leading-snug mt-2">
           {score.summary}

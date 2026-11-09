@@ -156,9 +156,23 @@ export function sectionOpenedBy(s) {
   return null
 }
 
+// A footnote or endnote outside a recognized list (at a page's foot, set in a
+// small font and moved below the page's text): a note number, then a source:
+// a quoted title, a link or locator, or an author and a year. PROVISIONAL — not ratified.
+const NOTE_LEAD = /^\s*(?:\d{1,3}|[⁰¹²³⁴⁵⁶⁷⁸⁹]{1,3})[.)]?\s+(?=[“"‘A-Z])/u
+const NOTE_TITLE = /[“"‘][^”"’]{10,}[”"’]/
+const NOTE_LOCATOR = /https?:\/\/|www\.|\bdoi\b|\b(?:retrieved|accessed|available at|online at)\b|\bpp?\.\s*\d/i
+const NOTE_AUTHOR = /^\s*(?:\d{1,3}|[⁰¹²³⁴⁵⁶⁷⁸⁹]{1,3})[.)]?\s+[A-Z][\p{L}'’-]+(?:\s+[A-Z][\p{L}'’.-]+){0,3},\s[^.]{0,200}\b(?:19|20)\d{2}\b/u
+// …or a run of comma-separated parts ending on its date ("18 Form S-1, Uber
+// Technologies, Inc., Securities and Exchange Commission, 2019.").
+const NOTE_PARTS = /^[^.]*,[^,]+,.*\b(?:19|20)\d{2}[a-z]?[.)]?\s*$/
+export function isNoteEntry(s) {
+  return NOTE_LEAD.test(s) && (NOTE_TITLE.test(s) || NOTE_LOCATOR.test(s) || ((NOTE_AUTHOR.test(s) || NOTE_PARTS.test(s)) && !FINITE_VERB.test(s)))
+}
+
 /** @returns {string|null} the rule that drops this sentence, or null */
 export function nonClaimRule(s) {
-  if (isReferenceEntry(s)) return 'reference-entry'
+  if (isReferenceEntry(s) || isNoteEntry(s)) return 'reference-entry'
   for (const [rule, res] of FRONT) if (res.some((re) => re.test(s))) return rule
   if (isAffiliationFragment(s)) return 'affiliation'
   return null

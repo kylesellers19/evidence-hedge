@@ -7,7 +7,11 @@
 
 // The heading that opens the reference list. Everything after it is dropped,
 // provided the next stretch actually reads as references (segment.js).
-export const REFERENCE_HEADINGS = ['References', 'REFERENCES', 'Bibliography', 'BIBLIOGRAPHY', 'Works Cited', 'WORKS CITED', 'Literature Cited', 'Reference List', 'Sources and References']
+// Firm reports and journals also head their lists "Endnotes", "Notes",
+// "Sources" or "Citations"; a heading counts only when the stretch after it
+// reads as references (segment.js opensList). PROVISIONAL — not ratified.
+export const REFERENCE_HEADINGS = ['References', 'REFERENCES', 'Bibliography', 'BIBLIOGRAPHY', 'Works Cited', 'WORKS CITED', 'Literature Cited', 'Reference List', 'Sources and References',
+  'Endnotes', 'ENDNOTES', 'End Notes', 'Notes', 'NOTES', 'Footnotes', 'FOOTNOTES', 'Sources', 'SOURCES', 'Citations', 'CITATIONS', 'Further Reading', 'FURTHER READING', 'Works Consulted']
 
 // Reference-entry cues; an entry shows several (segment.js scores them).
 export const REFERENCE_CUES = {

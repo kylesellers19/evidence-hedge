@@ -11,6 +11,7 @@
 
 import { isDropped, demotionPenalty, FINITE_VERB as PROBE_VERB } from './nonClaimFilter.js'
 import { nonClaimRule, sectionOpenedBy } from './measure/segment.js'
+import { escapeRe } from './signals/util.js'
 
 /** @typedef {import('./types.js').ExtractionConfig} ExtractionConfig */
 /** @typedef {import('./types.js').Citation} Citation */
@@ -60,7 +61,8 @@ function splitBlock(text) {
 const CITATION_PATTERNS = [
   { type: 'doi',         re: /\b(?:doi:\s*)?10\.\d{4,}\/\S+|doi\.org\/\S+/gi },
   { type: 'url',         re: /https?:\/\/[^\s)]+/gi },
-  { type: 'numeric',     re: /\[\d+(?:\s*[-,]\s*\d+)*\]/g },
+  // "[3]", "[3, 5]", "[3-10]", and as some PDFs set them, "[ 73 ]", "[ 3 – 10 ]".
+  { type: 'numeric',     re: /\[\s*\d+(?:\s*[-–—,]\s*\d+)*\s*\]/g },
   // "(Allen 2016)", "(Allen et al. 2016)", "(Allen & Ma, 2016; Satish et al. 2012)"
   { type: 'author-year', re: /\([A-Z][\p{L}.'’-]+(?:\s+(?:et al\.?|and|&)(?:\s+[A-Z][\p{L}.'’-]+)?)?,?\s*(?:19|20)\d{2}[a-z]?(?:[;,][^()]{0,120})?\)/gu },
   { type: 'year',        re: /\((?:19|20)\d{2}[a-z]?\)/g },
@@ -93,6 +95,36 @@ export function isLabel(sentence) {
   return !/[.!?]["'”’)]?$/.test(t) && !FINITE_VERB.test(t) && !PROBE_VERB.test(t)
 }
 
+// A heading fused to the sentence it heads ("ADVANCED INDUSTRIES Within the
+// team, …", "Market Overview The economy grew …"): the claim is the sentence.
+// Two or more words in capitals, or a short run of capitalized words before a
+// sentence's opening word, are the heading. A headline that stands alone is
+// untouched (journalism weighs it as a claim); one fused to a sentence is an
+// extraction defect under every standard. PROVISIONAL — not ratified.
+const CAPS_HEADING = /^(?:[A-Z0-9][A-Z0-9&'’.,:/+–-]*\s+){2,}(?=[A-Z][a-z])/
+const OPENER = '(?:The|A|An|In|On|At|Our|This|These|Those|We|It|Its|As|For|With|While|When|Over|After|Since|Despite|Although|According|By|From|Many|Most|Some|Today|Recent|Across|During|Each|Every|One|Two|Three)'
+const TITLE_HEADING = new RegExp(`^(?:[A-Z][\\p{L}'’&-]*\\s+){2,5}(?=${OPENER}\\s)`, 'u')
+export function stripHeadingPrefix(s) {
+  let t = s.replace(CAPS_HEADING, '')
+  const m = t.match(TITLE_HEADING)
+  if (m && !/[.,;:]/.test(m[0])) t = t.slice(m[0].length)
+  return t.length >= 20 && t !== s ? t : s
+}
+
+// The publisher describing itself ("About Arup …", "AECOM is a global
+// infrastructure firm …"): the boilerplate block at a report's end, not part
+// of its argument. PROVISIONAL — not ratified.
+const SELF_NOUN = /\b(?:firm|company|consultancy|consultants?|provider|practice|contractor|builder|organi[sz]ation|leader|group|partnership|collective|business|agency|enterprise|network|studio|corporation|manufacturer|developer)s?\b/i
+export function isSelfDescription(s, publisher = []) {
+  const t = s.trim()
+  return publisher.some((name) => {
+    if (!name || name.length < 3) return false
+    const n = escapeRe(name)
+    if (new RegExp(`^about\\s+${n}\\b`, 'i').test(t)) return true
+    return new RegExp(`^${n}(?:\\s*\\([^)]*\\))?,?\\s+(?:is|are|has been)\\s+(?:a|an|the|one of)\\b`, 'i').test(t) && SELF_NOUN.test(t.slice(0, 220))
+  })
+}
+
 function claimLikelihood(sentence) {
   let score = 0.35
   const words = sentence.split(/\s+/).length
@@ -109,20 +141,23 @@ function claimLikelihood(sentence) {
 /**
  * @param {string} text
  * @param {ExtractionConfig} extraction
- * @param {{ rubricId?: string, onDrop?: (sentence:string, rule:string) => void }} [options]
- *   rubricId gates the journalism heading exemption; onDrop sees apparatus drops
+ * @param {{ rubricId?: string, onDrop?: (sentence:string, rule:string) => void, publisher?: string[] }} [options]
+ *   rubricId gates the journalism heading exemption; onDrop sees apparatus drops;
+ *   publisher names the document's publisher, whose self-description is boilerplate
  * @returns {Array<{ id:number, text:string, citations:Citation[], section:string|null }>}
  */
 export function extractClaims(text, extraction, options = {}) {
-  const { rubricId, onDrop } = options
+  const { rubricId, onDrop, publisher = [] } = options
   const sentences = splitSentences(text || '')
   const claims = []
   let id = 0
   let section = null
-  for (const sentence of sentences) {
+  for (const whole of sentences) {
     // Track the IMRaD section a claim sits in (headings are often too short to be claims).
-    section = sectionOpenedBy(sentence) || section
+    section = sectionOpenedBy(whole) || section
+    const sentence = stripHeadingPrefix(whole)
     if (sentence.length < extraction.minClaimLength) continue
+    if (isSelfDescription(sentence, publisher)) continue
     // Non-claim filter — DROP hard exclusions, then DEMOTE via the likelihood.
     if (isDropped(sentence)) continue
     const rule = nonClaimRule(sentence)

@@ -81,6 +81,9 @@ const PRONOUN = new RegExp(PRONOUN_SUBJECT)
 const URL_RE = /https?:\/\/[^\s)]+/g
 
 const first = (re, text) => { const m = text.match(re); return m ? { span: m[0].trim(), index: m.index } : null }
+// "SMITH: …", "JANE SMITH: …", "Q: …": a speaker's name in capitals, then a
+// colon. Labels that are not people (NOTE:, SOURCE:, STEP 2:) are not speakers.
+const SPEAKER_LABEL = /^(?!(?:NOTE|NOTES|SOURCE|SOURCES|WARNING|CAUTION|TIP|KEY|SUMMARY|OBJECTIVES?|BACKGROUND|RESULTS?|METHODS?|CONCLUSIONS?|FIGURE|TABLE|STEP|PHASE|GOAL|OUTCOMES?|CHALLENGES?|SOLUTIONS?|PROBLEM|ISSUE|IMPACT|BENEFITS?|LOCATION|CLIENT|PROJECT|SCOPE|STATUS|DATE|UPDATE|NEW|EXAMPLE|DEFINITION|FINDINGS?|INSIGHTS?|TAKEAWAYS?|ACTION|OPPORTUNITY|RISK|PRIORITY)\b)((?:[A-Z][A-Z'’.-]+)(?:\s+[A-Z][A-Z'’.-]+){0,2}|Q|A):\s+\S/
 
 // ── The publisher ────────────────────────────────────────────────────────────
 
@@ -212,6 +215,15 @@ export function attributeSentence(text, ctx = {}) {
     ...(extra.buildsOn ? { buildsOn: extra.buildsOn } : {}),
     ...(extra.speaker ? { speaker: extra.speaker } : {}),
   })
+
+  // An interview transcript's speaker label ("BERNSTEIN: …", "Q: …"), or a
+  // sentence inside a quotation that runs over several sentences (it opens on a
+  // quotation mark, or closes on one it never opened): someone else's words.
+  // PROVISIONAL — not ratified.
+  const t = text.trim()
+  const label = t.match(SPEAKER_LABEL)
+  if (label) return out('quoted', 'high', { strength: 'strong', speaker: label[1] })
+  if (!quote && (/^[“"]/.test(t) || (/[”"]$/.test(t) && !/[“"]/.test(t)))) return out('quoted', 'low', { strength: 'strong', speaker: speakerOf(text) })
 
   if ((quote && speech) || reported) {
     const speaker = speakerOf(text)

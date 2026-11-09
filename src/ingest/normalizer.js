@@ -23,8 +23,15 @@ import { HYPHENATED_COMPOUNDS } from './hyphenatedCompounds.js'
 // ratification: a line is treated as a running header/footer if it appears on at
 // least this fraction of pages.
 export const HEADER_FOOTER_PAGE_FRACTION = 0.4
-const HEADER_FOOTER_MAX_LEN = 70 // "short line" cap for header/footer candidates
+const HEADER_FOOTER_MAX_LEN = 160 // a running header can carry a title, an author and a page number
 const MIN_PAGES_FOR_HF = 3       // need enough pages for the fraction to be meaningful
+// A line in a page's top or bottom few lines is where running headers and
+// footers sit; there a smaller share of pages is enough, since body text does
+// not repeat word for word at a page's edge (alternating left and right
+// headers, section headers that change every few pages). PROVISIONAL.
+export const EDGE_LINES = 3
+export const EDGE_PAGE_FRACTION = 0.15
+const EDGE_MIN_PAGES = 3
 
 // ── (a) hyphenation rejoin ───────────────────────────────────────────────────
 export function rejoinHyphenation(text) {
@@ -56,23 +63,30 @@ export function stripFusedPageNumbers(text) {
 }
 
 // ── (b) repeated header/footer strip across pages ────────────────────────────
-const hfNorm = (s) => s.trim().toLowerCase().replace(/\d+/g, '#').replace(/\s+/g, ' ')
+// Page numbers, arabic or roman, do not make a header line differ from page to page.
+const hfNorm = (s) => s.trim().toLowerCase().replace(/\d+/g, '#').replace(/\b[ivxlc]{1,6}\b(?=\s*(?:$|of\b|\||[-–—]))/g, '#').replace(/\s+/g, ' ')
 
 export function stripHeadersFooters(pages) {
   if (!Array.isArray(pages) || pages.length < MIN_PAGES_FOR_HF) return pages
   const linesPerPage = pages.map((p) => p.split('\n'))
   const presence = new Map()
+  const atEdge = new Map()
   for (const lines of linesPerPage) {
     const seen = new Set()
-    for (const l of lines) {
-      const t = l.trim()
-      if (!t || t.length > HEADER_FOOTER_MAX_LEN) continue
+    const seenEdge = new Set()
+    const filled = lines.map((l, i) => [l.trim(), i]).filter(([t]) => t)
+    const edge = new Set([...filled.slice(0, EDGE_LINES), ...filled.slice(-EDGE_LINES)].map(([, i]) => i))
+    for (const [t, i] of filled) {
+      if (t.length > HEADER_FOOTER_MAX_LEN) continue
       const k = hfNorm(t)
       if (!seen.has(k)) { seen.add(k); presence.set(k, (presence.get(k) || 0) + 1) }
+      if (edge.has(i) && !seenEdge.has(k)) { seenEdge.add(k); atEdge.set(k, (atEdge.get(k) || 0) + 1) }
     }
   }
   const threshold = HEADER_FOOTER_PAGE_FRACTION * pages.length
+  const edgeThreshold = Math.max(EDGE_MIN_PAGES, EDGE_PAGE_FRACTION * pages.length)
   const repeated = new Set([...presence].filter(([, n]) => n >= threshold).map(([k]) => k))
+  for (const [k, n] of atEdge) if (n >= edgeThreshold) repeated.add(k)
   return linesPerPage.map((lines) =>
     lines.filter((l) => {
       const t = l.trim()

@@ -98,6 +98,7 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
   const references = listed.map((text) => ({ text, via: 'reference-list' }))
   const raw = extractClaims(body, rubric.extraction, {
     rubricId: rubric.base || rubric.id,
+    publisher: profile.provenance.publisher || [],
     onDrop: (text, rule) => { if (rule === 'reference-entry') references.push({ text, via: 'pattern' }) },
   }).map((c0) => ({ ...c0, citations: markOwnSiteUrls(c0.citations, profile.provenance) }))
 
@@ -126,7 +127,12 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
     // link (caption or section scope) lifting it to the in-document rung as an
     // own result is.
     const tier = measureAssertiveness(c, rubric, m.certainty.tier)
-    const linked = { text: c.text, citations: linkedCitations }
+    // Reported speech is the speaker's claim, not the document's: it is graded
+    // as attributed, as "according to …" is, so a quote stated no more firmly
+    // than an attributed statement may be is not charged as citing nothing.
+    // PROVISIONAL — not ratified.
+    const spoken = attribution.claims[i]?.label === 'quoted' ? [{ type: 'phrase', raw: `quoted: ${attribution.claims[i].speaker || 'speaker'}` }] : []
+    const linked = { text: c.text, citations: [...linkedCitations, ...spoken] }
     const cited = gradeEvidence(linked, rubric.ladder)
     const rung = gradeEvidence(linked, rubric.ladder, { inDocumentRung: m.function === 'own-result' || ownStudy ? rubric.ownResultRung : null })
     // Did the rung come from the document's own evidence rather than a citation?

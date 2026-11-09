@@ -66,6 +66,11 @@ const CHANNEL_SIDE_SHARE = 0.25  // PROVISIONAL — …and this share of rows ha
 const CHANNEL_NEAR = 40          // PROVISIONAL — px: text this close counts as beside the channel
 const WORD_GAP = 0.6             // PROVISIONAL — × text height: same-size glyphs either side of a
                                  //   gutter closer than this are one line running across it
+const SIZE_SHIFT = 0.15           // PROVISIONAL — rows whose text heights differ by more than this
+                                 //   share of the smaller are different blocks (a heading over
+                                 //   body text, body text over a caption): a paragraph break
+const HEADING_ROW_WORDS = 12     // PROVISIONAL — a row this short, with no closing punctuation,
+                                 //   set in another face than the row next to it, is a heading
 
 // Most common glyph height on the page = body text size.
 function modalHeight(glyphs) {
@@ -90,6 +95,10 @@ function toRows(glyphs) {
   rows.sort((a, b) => b.y - a.y)
   for (const r of rows) {
     r.items.sort((a, b) => a.x - b.x)
+    // The row's own size and face: those of most of its characters.
+    const weight = (pick) => { const t = new Map(); for (const i of r.items) { const k = pick(i); t.set(k, (t.get(k) || 0) + i.str.length) } return [...t].sort((a, b) => b[1] - a[1])[0]?.[0] }
+    r.h = weight((i) => Math.round(i.h * 10) / 10) || r.h
+    r.font = weight((i) => i.font || '')
     // An inline super/subscript is glued to the word it follows ("comfort⁷,¹²")
     // and what touches it is glued to it ("¹²."), unless that text opens with
     // its own space ("CO₂ levels").
@@ -103,16 +112,29 @@ function toRows(glyphs) {
   return rows.filter((r) => r.text)
 }
 
-// Emit rows with the original paragraph-gap logic (unchanged single-column path).
+// A heading row: short, with no closing punctuation.
+const headingLike = (r) => r.text.split(' ').length <= HEADING_ROW_WORDS && !/[.!?:;,]["'”’)]?$/.test(r.text)
+
+// A new block starts at a vertical gap, at a change of text size (a heading
+// over body text, body text over a caption), or where a heading-like row is
+// set in another face than its neighbour (a bold heading at body size). Without
+// the break the normalizer would join the heading to the sentence below it.
+function blockBreak(prev, r, prevH) {
+  if (prev.y - r.y > prevH * PARA_GAP_FACTOR) return true
+  if (Math.abs(prev.h - r.h) > SIZE_SHIFT * Math.min(prev.h, r.h)) return true
+  return prev.font !== r.font && (headingLike(prev) || headingLike(r))
+}
+
+// Emit rows with the paragraph-gap logic (unchanged single-column path).
 function emitRows(glyphs) {
   const rows = toRows(glyphs)
   let out = ''
-  let prevY = null
+  let prev = null
   let prevH = 10
   for (const r of rows) {
-    if (prevY !== null) out += prevY - r.y > prevH * PARA_GAP_FACTOR ? '\n\n' : '\n'
+    if (prev) out += blockBreak(prev, r, prevH) ? '\n\n' : '\n'
     out += r.text
-    prevY = r.y
+    prev = r
     prevH = r.h || prevH
   }
   return out
@@ -250,6 +272,7 @@ function toGlyphs(items) {
       y: it.transform[5],
       w: it.width || 0,
       h: Math.abs(it.transform[3]) || it.height || 10,
+      font: it.fontName || '',
     }))
 }
 

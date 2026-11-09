@@ -53,7 +53,7 @@ export function resolveMarker(anchor, entries) {
   if (anchor.type === 'numeric') {
     const nums = []
     for (const part of anchor.raw.replace(/[[\]]/g, '').split(',')) {
-      const range = part.match(/(\d+)\s*[-–]\s*(\d+)/)
+      const range = part.match(/(\d+)\s*[-–—]\s*(\d+)/)
       if (range) { for (let n = Number(range[1]); n <= Number(range[2]) && nums.length < 50; n++) nums.push(n) }
       else if (/\d/.test(part)) nums.push(Number(part.trim()))
     }

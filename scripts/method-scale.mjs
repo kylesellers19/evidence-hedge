@@ -15,6 +15,8 @@
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { ROOT } from '../checks/lib/corpus.mjs'
+import { HYBRIDS } from '../src/rubrics/hybrids.js'
+import { READ_AS } from '../src/engine/scoreDocument.js'
 
 const arg = (name, dflt) => {
   const i = process.argv.indexOf(`--${name}`)
@@ -28,7 +30,8 @@ const rows = readFileSync(join(AUDIT, `ledger-${TAG}.jsonl`), 'utf8').trim().spl
 const reviewDir = join(AUDIT, `reviews-${TAG}`)
 const verdicts = new Map()
 if (existsSync(reviewDir)) {
-  for (const f of readdirSync(reviewDir).filter((f) => f.endsWith('.jsonl'))) {
+  // Sorted, so a re-review (r001…) replaces the first verdict (c001…).
+  for (const f of readdirSync(reviewDir).filter((f) => f.endsWith('.jsonl')).sort()) {
     for (const l of readFileSync(join(reviewDir, f), 'utf8').split('\n').filter(Boolean)) {
       try { const v = JSON.parse(l); verdicts.set(v.id, v) } catch {}
     }
@@ -64,6 +67,15 @@ const GOLD_TITLES = {
   'gold:jcu-timber-pilot': 'Timber pilot study (research online)',
 }
 
+// What the brief says it was read as (src/components/results/briefTop.js):
+// the hybrid's first scenario's name, or the single genre's reading.
+function readAsOf(r) {
+  const first = r.rubric.hybrid?.[0]
+  if (first === 'mixed') return 'Mixed genres with no specific scenario'
+  if (first) return HYBRIDS.find((h) => h.id === first)?.name || r.rubric.judgedAs
+  return READ_AS[r.posture] || r.rubric.judgedAs
+}
+
 // Anchor choice, deterministic: an `ok` verdict, a link a reader can open,
 // then the score nearest the middle of its whole number, then the id.
 function anchorFor(n) {
@@ -78,7 +90,7 @@ function anchorFor(n) {
     publisher: r.firm || GOLD_PUBLISHERS[r.id] || null,
     url: r.url,
     score: r.score,
-    readAs: r.rubric.judgedAs,
+    readAs: readAsOf(r),
     standard: r.rubric.standard,
     published: r.published || null,
   }

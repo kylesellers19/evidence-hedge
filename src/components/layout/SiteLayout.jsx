@@ -31,7 +31,9 @@ export default function SiteLayout() {
     let tries = 0
     const go = () => {
       const el = document.getElementById(id)
-      if (el) el.scrollIntoView({ block: 'start' })
+      // Instant: the page's smooth scrolling would still be travelling a long
+      // page when the reader starts reading.
+      if (el) el.scrollIntoView({ block: 'start', behavior: 'instant' })
       else if (tries++ < 60) frame = requestAnimationFrame(go)
     }
     go()

@@ -64,7 +64,7 @@ export const general = {
 
   provenance: [
     {
-      criterion: 'E-E-A-T and YMYL authority thresholds',
+      criterion: 'E-E-A-T (experience, expertise, authoritativeness and trustworthiness) and YMYL (“your money or your life”) authority thresholds',
       standard: 'Google Search Quality Rater Guidelines',
       citation: 'Google Search Quality Rater Guidelines — E-E-A-T and YMYL.',
       url: 'https://developers.google.com/search/docs/fundamentals/creating-helpful-content',

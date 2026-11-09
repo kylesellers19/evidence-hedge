@@ -76,6 +76,7 @@ const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
 const postureName = (p) => cap(humanize(p))
 const tierFor = (weight) => TIERS.find((t) => t.weight === weight)?.label || String(weight)
 const pct = (x) => `${Math.round(x * 100)}%`
+const num = (n) => Number(n).toLocaleString('en-US')
 const list = (items, and = 'and') => (items.length < 2 ? items.join('') : `${items.slice(0, -1).join(', ')} ${and} ${items[items.length - 1]}`)
 const DISCOUNTED = W.DISCOUNTED_PROVENANCE.map((k) => PROVENANCE_LABELS[k].toLowerCase())
 const REPO = 'https://github.com/kylesellers19/evidence-hedge'
@@ -314,8 +315,8 @@ export default function MethodPage() {
           </p>
           <p>
             This step is the same under every standard but one. Under the journalism standard, headlines and
-            labels count as claims, because a news headline makes one; of the {SCALE.corpus.scored} documents
-            in our corpus that received a score, {SCALE.moreClaimsUnderJournalism} have more claims under
+            labels count as claims, because a news headline makes one; of the {num(SCALE.corpus.scored)} documents
+            in our corpus that received a score, {num(SCALE.moreClaimsUnderJournalism)} have more claims under
             journalism than under the other three. A check holds the rest: every claim found under two
             standards is measured the same way under both, and the extra journalism claims are all headlines
             or labels.
@@ -583,8 +584,9 @@ export default function MethodPage() {
             </li>
           </ol>
           <p>
-            For the score, every claim is judged again at the standard’s strictest posture, which is why the
-            posture you choose can change the flags on the brief but not the number. The score never reads the
+            For the score, every claim is judged again at the standard’s strictest posture (a brief calls it the
+            strictest setting), which is why the posture you choose can change the flags on the brief but not the
+            number. The score never reads the
             date or anything random, so the same text and the same standard always produce the same score.
           </p>
           <div className="eh-table-scroll">
@@ -803,12 +805,12 @@ const BENCH_TASKS = [
   { source: 'yu2019_pubmed', metric: 'macroF1', task: 'Causal language in research findings', data: 'Yu, Li and Wang 2019 (PubMed abstracts)' },
   { source: 'yu2020_eureka', metric: 'macroF1', task: 'Causal language in press releases', data: 'Yu and colleagues 2020 (EurekAlert! releases)' },
   { source: 'pei2021', metric: 'spearman', task: 'How certain a finding is stated', data: 'Pei and Jurgens 2021' },
-  { source: 'cessc_ssc', metric: 'f1', task: 'Whether a sentence claims cause', data: 'Causal sentences (CESSC)' },
+  { source: 'cessc_ssc', metric: 'f1', task: 'Whether a sentence claims cause', data: 'Causal sentences from social-science papers' },
 ]
 const SYSTEM_NAMES = {
   'yu2019-causal': 'Yu and colleagues’ model',
   'certainty-estimator-sentence': 'Pei and Jurgens’ certainty estimator',
-  cessc: 'CESSC model',
+  cessc: 'that data set’s own model',
   'unicausal-seq': 'UniCausal (our training run)',
   'unicausal-seq-released': 'UniCausal (released weights)',
 }
@@ -875,7 +877,7 @@ function SourceList({ title, entries }) {
 // Each label on a brief's top links to its definition here (briefTop.js).
 // PROVISIONAL — not ratified (definitions).
 function BriefNumbers({ rubrics }) {
-  const strictest = rubrics.map((r) => `${r.label.toLowerCase()}, ${humanize(r.strictestPosture)}`)
+  const strictest = rubrics.map((r) => `${r.strictestPosture} for ${r.label.toLowerCase()}`)
   const firmResearch = HYBRIDS.find((h) => h.id === 'firm-research')
   const strongTiers = TIERS.filter((t) => t.weight >= 3).map((t) => t.label.toLowerCase())
   return (
@@ -922,7 +924,7 @@ function BriefNumbers({ rubrics }) {
         <dd>
           A brief flags claims at the setting the document was read with, so a marketing page may sound surer
           than a research report without a flag on every line. The score does not: it judges every claim again
-          at the strictest setting of its standard ({list(strictest, 'and')}), and counts a firm’s or a press
+          at the strictest setting of its standard ({list(strictest)}), and counts a firm’s or a press
           office’s own data one step lower on the ladder. When the two differ, the brief says how many claims
           the score counted.
         </dd>
@@ -945,8 +947,8 @@ const BAND_MEANING = {
   failing: 'The evidence does not support what it claims.',
 }
 const SCALE_NOTE = {
-  10: 'Nothing in it says more than its evidence shows, and the document passes its whole-document checks.',
-  9: null,
+  10: 'A 10 and a 9 give the same verdict; a 10 lost almost nothing.',
+  9: 'A 10 and a 9 give the same verdict; a 9 lost a little more.',
   8: `A 7 and an 8 give the same verdict; they differ only in points lost. Writing from personal experience, which is not weighed, gets ${W.GATE_SCORE} and shows as ${Math.round(W.GATE_SCORE)}.`,
   7: 'A 7 and an 8 give the same verdict; they differ only in points lost.',
   5: 'A 5 straddles two verdicts: a score of 5.0 or more is “mixed” and anything lower is “weak,” so two documents showing 5 can read differently.',
@@ -995,11 +997,11 @@ function ScoreScale() {
       </p>
       <div className="eh-table-scroll">
         <table className="eh-data">
-          <caption>The same {SCALE.corpus.scored} documents, scored under each standard</caption>
+          <caption>The same {num(SCALE.corpus.scored)} documents, scored under each standard</caption>
           <thead><tr><th scope="col">Standard</th><th scope="col" className="n">Median score</th><th scope="col" className="n">Shown as a 1</th></tr></thead>
           <tbody>
             {stdRows.map((r) => (
-              <tr key={r.id}><td>{r.label}</td><td className="n">{r.median?.toFixed(1)}</td><td className="n">{r.shownAsOne}</td></tr>
+              <tr key={r.id}><td>{r.label}</td><td className="n">{r.median?.toFixed(1)}</td><td className="n">{num(r.shownAsOne)}</td></tr>
             ))}
           </tbody>
         </table>
@@ -1013,10 +1015,15 @@ function ScoreScale() {
   )
 }
 
+const aN = (n) => (n === 8 || n === 11 || n === 18 ? `an ${n}` : `a ${n}`)
+const MONTHS = ['Jan.', 'Feb.', 'March', 'April', 'May', 'June', 'July', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.']
+// A manifest's publication date ("2024" or "2024-04") in AP style.
+const published = (p) => { const m = /^(\d{4})(?:-(\d{2}))?/.exec(p || ''); return m ? (m[2] ? `${MONTHS[Number(m[2]) - 1]} ${m[1]}` : m[1]) : null }
+
 function ScaleEntry({ n, plainCost }) {
   const lost = { lo: Math.max(0, 9.5 - n), hi: 10.5 - n }
-  const bands = [...new Set([bandFor(Math.max(W.MIN, n - 0.5)), bandFor(Math.min(W.MAX, n + 0.4))])]
-  const meaning = bands.length > 1 ? `${BAND_MEANING[bands[1]]} Or, at the low end: ${BAND_MEANING[bands[0]].charAt(0).toLowerCase()}${BAND_MEANING[bands[0]].slice(1)}` : BAND_MEANING[bands[0]]
+  const bands = [...new Set([bandFor(Math.min(W.MAX, n + 0.4)), bandFor(Math.max(W.MIN, n - 0.5))])]
+  const meaning = bands.length > 1 ? `${BAND_MEANING[bands[0]]} Or, at the low end: ${BAND_MEANING[bands[1]].charAt(0).toLowerCase()}${BAND_MEANING[bands[1]].slice(1)}` : BAND_MEANING[bands[0]]
   const at = SCALE.byScore[n]
   const lostText = n === 10
     ? `It lost no more than ${lost.hi.toFixed(1)} points.`
@@ -1031,15 +1038,15 @@ function ScaleEntry({ n, plainCost }) {
       : `If plain statements that cite nothing were its only loss, ${share(lost.lo)}% to ${Math.min(100, share(lost.hi))}% of its claims would be like that.`
   return (
     <li id={scoreAnchor(n)} className="eh-scale-entry">
-      <h3><span className="eh-scale-n">{n}</span> {bands.map((b) => cap(b)).join(' or ')}</h3>
+      <h3><span className="eh-scale-n">{n}</span> {cap(bands.join(' or '))}</h3>
       <p><strong>{meaning}</strong> {SCALE_NOTE[n] || ''}</p>
       <p>{lostText} {plainText}</p>
       <p className="eh-scale-example">
         {at.documents === 0
-          ? `No document in our corpus scored a ${n}, so there is no example; the arithmetic allows it.`
+          ? `No document in our corpus scored ${aN(n)}, so there is no example; the arithmetic allows it.`
           : at.anchor
-            ? <>Example: <a href={at.anchor.url}>{at.anchor.title}</a>{at.anchor.publisher ? `, ${at.anchor.publisher}` : ''}{at.anchor.published ? ` (${at.anchor.published})` : ''}, read as {at.anchor.readAs.toLowerCase()}, scored {at.anchor.score.toFixed(1)}. {at.documents} {at.documents === 1 ? 'document' : 'documents'} in our corpus scored a {n}.</>
-            : `No clean example yet: ${at.documents} ${at.documents === 1 ? 'document' : 'documents'} in our corpus scored a ${n}, and none has passed review.`}
+            ? <>Example: <a href={at.anchor.url}>{at.anchor.title}</a>{at.anchor.publisher ? `, ${at.anchor.publisher}` : ''}{published(at.anchor.published) ? ` (${published(at.anchor.published)})` : ''}, read as {at.anchor.readAs.toLowerCase()}, scored {at.anchor.score.toFixed(1)}. {num(at.documents)} {at.documents === 1 ? 'document' : 'documents'} in our corpus scored {aN(n)}.</>
+            : `No clean example yet: ${num(at.documents)} ${at.documents === 1 ? 'document' : 'documents'} in our corpus scored ${aN(n)}, and none has passed review.`}
       </p>
     </li>
   )

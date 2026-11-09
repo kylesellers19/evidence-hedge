@@ -4,21 +4,21 @@
  "corpus": {
   "documents": 1603,
   "scored": 1568,
-  "reviewed": 59
+  "reviewed": 416
  },
  "byScore": {
   "1": {
    "documents": 807,
-   "reviewedOk": 2,
+   "reviewedOk": 3,
    "anchor": {
-    "id": "aec:top100/gray/gray-graywayapril2010",
-    "title": "GraywayApril2010",
-    "publisher": "Gray",
-    "url": "https://media-cdn.gray.com/wp-content/uploads/2020/02/GraywayApril2010.pdf",
+    "id": "aec:architecture/dlr-group/dlr-evolution-of-campus-4-0-research-outcomes",
+    "title": "Evolution of Campus 4.0: Research Outcomes",
+    "publisher": "DLR Group",
+    "url": "https://www.dlrgroup.com/media/Evolution-of-Campus-4.0-Research-Outcomes-Booklet_DIGITAL.pdf",
     "score": 1,
-    "readAs": "Corporate",
+    "readAs": "Research published by a firm or interest group",
     "standard": "corporate",
-    "published": null
+    "published": "2024-04"
    }
   },
   "2": {

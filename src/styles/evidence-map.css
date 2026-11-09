@@ -1,0 +1,141 @@
+/* The evidence map (src/components/results/EvidenceMap.jsx), the lead figure
+   of the brief. Tokens only from src/index.css :root.
+
+   Where the small things come from:
+   · the rows are set like a table of contents: a source's name, then a leader
+     rule running across to what it carries (the rule's style is the grade of
+     the link: solid, dashed, dotted, none);
+   · the Via column uses the scholarly apparatus itself as its marks: [12],
+     (Author 2014), †, §, ¶, "see", quotation marks;
+   · the reach is drawn like a dimension line on a technical drawing: it stops
+     at a tick, and on the active row its value is written along it;
+   · a source split by grade continues on the next line with a ditto mark, as
+     in a ledger;
+   · the panel is a provenance line (museum catalogues) over a title block
+     (technical drawings), with the engine's own note as a footnote dagger.
+   Grey is the population and blue is the subject: a claim stated past its
+   source's reach. Square corners; rules and borders separate; no shadows,
+   no fills behind text, no monospace. */
+
+.em { --em-row: 22px; --em-mid: 11px; }
+
+.em-title { font: 600 26px/1.2 var(--eh-serif); color: var(--eh-ink); letter-spacing: -0.005em; margin: 0; }
+.em-dek { font: 19px/1.5 var(--eh-serif); color: var(--eh-ink-soft); margin: 8px 0 0; max-width: 40em; }
+
+/* The figure breaks out of the text column to the wide measure. */
+.em-figure {
+  width: min(var(--eh-wide), calc(100vw - 48px));
+  margin: 28px 0 0 calc((100% - min(var(--eh-wide), calc(100vw - 48px))) / 2);
+}
+
+.em-grid { display: grid; grid-template-columns: 19rem 8rem minmax(0, 1fr); column-gap: 0; align-items: start; }
+.em-colheads { border-bottom: 1px solid var(--eh-ink); padding-bottom: 8px; }
+.em-colhead { display: block; font: 600 12px/1.3 var(--eh-sans); color: var(--eh-ink); }
+.em-tiers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 6px; }
+.em-tier { padding-left: 8px; border-left: 1px solid var(--eh-hairline); }
+.em-tier b { display: block; font: 600 12px/1.3 var(--eh-sans); color: var(--eh-ink); }
+.em-tier i { display: block; font: italic 12px/1.35 var(--eh-serif); color: var(--eh-ink-faint); }
+
+.em-row { position: relative; padding: 8px 0 9px; border-bottom: 1px solid var(--eh-hairline); transition: opacity 0.2s; }
+.em-row[data-continued='true'] { border-top: 0; padding-top: 2px; }
+.em-row.has-next { border-bottom-color: transparent; }
+.em-rows[data-focus='row'] .em-row[data-active='false'] { opacity: 0.32; }
+
+/* From: the source, its leader rule, and what it is. */
+.em-from { display: block; align-self: start; width: 100%; text-align: left; background: none; border: 0; padding: 0; cursor: pointer; color: inherit; }
+.em-from-line { display: flex; align-items: center; min-height: var(--em-row); }
+.em-src { font: 15px/1.35 var(--eh-serif); color: var(--eh-ink); max-width: 15rem; }
+.em-from[aria-pressed='true'] .em-src { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.em-ditto { font: 15px/1 var(--eh-serif); color: var(--eh-ink-faint); padding-left: 2px; }
+.em-n { font: 12px var(--eh-sans); color: var(--eh-ink-faint); font-variant-numeric: tabular-nums; margin: 0 6px 0 7px; }
+.em-sub { display: block; font: 12px/1.4 var(--eh-sans); color: var(--eh-ink-faint); margin-top: 1px; padding-right: 12px; }
+.em-line { flex: 1 1 auto; min-width: 10px; height: 0; border-top: 1.5px solid var(--eh-ink); }
+.em-row[data-grade='loose'] .em-line { border-top-style: dashed; border-top-width: 1.25px; }
+.em-row[data-grade='presumed'] .em-line { border-top-style: dotted; border-top-width: 2px; }
+.em-row[data-grade='none'] .em-line { border-top-color: transparent; }
+
+/* Via: the citation mark, set on the rule like a station on a line. */
+.em-via { display: flex; align-items: center; min-height: var(--em-row); align-self: start; }
+.em-via-mark { font: 13px/1 var(--eh-serif); color: var(--eh-ink-soft); padding: 0 6px; white-space: nowrap; max-width: 7.5rem; overflow: hidden; text-overflow: ellipsis; }
+.em-via-mark.is-quoted { font-style: italic; }
+.em-via-short { display: none; }
+
+/* To: the reach, and the claims placed by how sure they sound. */
+.em-to { position: relative; }
+.em-reach { position: absolute; left: 0; top: var(--em-mid); height: 0; border-top: 1.5px solid var(--eh-ink); }
+.em-row[data-grade='loose'] .em-reach { border-top-style: dashed; border-top-width: 1.25px; }
+.em-row[data-grade='presumed'] .em-reach { border-top-style: dotted; border-top-width: 2px; }
+.em-row[data-grade='none'] .em-reach { border-top: 1px solid var(--eh-hairline); }
+.em-reach::after { content: ''; position: absolute; right: -1px; top: -6px; height: 11px; border-right: 1.5px solid var(--eh-ink); }
+.em-gap { position: absolute; top: var(--em-mid); height: 0; border-top: 2px dotted var(--eh-accent); }
+.em-dim-text { position: absolute; bottom: calc(100% - var(--em-mid) + 5px); font: italic 12px/1 var(--eh-serif); color: var(--eh-ink-soft); white-space: nowrap; }
+.em-dim-text.is-gap { color: var(--eh-accent); }
+
+.em-bands { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.em-band { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 2px; padding: 7px 6px 0 8px; min-height: var(--em-row); border-left: 1px solid var(--eh-hairline); }
+
+.em-sq { position: relative; z-index: 1; width: 7px; height: 7px; padding: 0; margin: 0; border: 0; border-radius: 0; background: var(--eh-dot); cursor: pointer; }
+.em-sq[data-j='outruns'] { background: var(--eh-accent); }
+.em-sq[data-j='overreach'] { background: var(--eh-paper); border: 1.5px solid var(--eh-accent); }
+.em-sq[data-j='unjudged'] { background: var(--eh-paper); border: 1px solid var(--eh-ink-faint); }
+.em-sq[aria-pressed='true'] { outline: 1.5px solid var(--eh-ink); outline-offset: 2px; }
+.em-sq:focus-visible, .em-from:focus-visible, .em-panel button:focus-visible { outline: 2px solid var(--eh-accent); outline-offset: 2px; }
+
+/* The figure legend, with the rules drawn inline as a map key would. */
+.em-legend { font: 13px/1.55 var(--eh-sans); color: var(--eh-ink-soft); margin: 14px 0 0; max-width: 46rem; }
+.em-key { display: inline-block; width: 22px; height: 0; vertical-align: middle; margin: 0 2px; border-top: 1.5px solid var(--eh-ink); }
+.em-key.is-loose { border-top-style: dashed; border-top-width: 1.25px; }
+.em-key.is-presumed { border-top-style: dotted; border-top-width: 2px; }
+.em-key-sq { display: inline-block; width: 7px; height: 7px; vertical-align: 1px; margin: 0 2px; background: var(--eh-accent); }
+.em-key-sq.is-overreach { background: var(--eh-paper); border: 1.5px solid var(--eh-accent); }
+.em-key-sq.is-unjudged { background: var(--eh-paper); border: 1px solid var(--eh-ink-faint); }
+
+/* The panel: a provenance line over a title block. */
+.em-panel { margin-top: 36px; max-width: var(--eh-prose); }
+.em-runin { font-weight: 600; font-style: normal; color: var(--eh-ink); }
+.em-quote { font: 20px/1.45 var(--eh-serif); color: var(--eh-ink); margin: 0; }
+.em-prov { font: 16px/1.6 var(--eh-serif); color: var(--eh-ink-soft); margin: 10px 0 0; }
+.em-prov.is-past { color: var(--eh-ink); }
+.em-block { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 18px; border-top: 1px solid var(--eh-ink); border-bottom: 1px solid var(--eh-ink); }
+.em-cell { padding: 7px 10px 9px; border-left: 1px solid var(--eh-hairline); }
+.em-cell:first-child { border-left: 0; padding-left: 0; }
+.em-cell dt { font: 12px/1.3 var(--eh-sans); color: var(--eh-ink-faint); }
+.em-cell dd { margin: 3px 0 0; font: 15px/1.35 var(--eh-serif); color: var(--eh-ink); font-variant-numeric: tabular-nums; }
+.em-cell dd.is-past { color: var(--eh-accent); }
+.em-entry { font: 14px/1.55 var(--eh-serif); color: var(--eh-ink-soft); margin: 12px 0 0; }
+.em-note { font: 12px/1.5 var(--eh-sans); color: var(--eh-ink-faint); margin: 10px 0 0; }
+.em-pager { display: flex; align-items: center; gap: 12px; margin-top: 18px; font: 13px var(--eh-sans); color: var(--eh-ink-soft); font-variant-numeric: tabular-nums; }
+.em-pager button { font: 18px/1 var(--eh-serif); color: var(--eh-ink); background: none; border: 1px solid var(--eh-hairline); width: 30px; height: 30px; cursor: pointer; }
+.em-pager button:hover { border-color: var(--eh-ink); }
+.em-list { list-style: none; margin: 14px 0 0; padding: 0; border-top: 1px solid var(--eh-ink); }
+.em-list li { border-bottom: 1px solid var(--eh-hairline); }
+.em-list button { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; gap: 10px; align-items: baseline; width: 100%; text-align: left; background: none; border: 0; padding: 8px 0; cursor: pointer; font: 15px/1.45 var(--eh-serif); color: var(--eh-ink); }
+.em-list button > span:last-child { font: 12px var(--eh-sans); color: var(--eh-ink-faint); }
+.em-list .em-sq { pointer-events: none; }
+.em-more { font: 600 13px var(--eh-sans); color: var(--eh-ink-soft); background: none; border: 0; padding: 10px 0 0; cursor: pointer; }
+
+/* Phones: each row stacks; the source reads above its rule. */
+@media (max-width: 719px) {
+  .em-figure { width: 100%; margin-left: 0; }
+  .em-grid { grid-template-columns: 3rem minmax(0, 1fr); }
+  .em-from { grid-column: 1 / -1; }
+  .em-from .em-line { display: none; }
+  .em-colheads .em-colhead-from, .em-colheads .em-colhead-via { display: none; }
+  .em-colheads .em-col-to { grid-column: 2 / -1; }
+  .em-via-long { display: none; }
+  .em-via-short { display: inline; }
+  .em-tier i { display: none; }
+  .em-dim-text { display: none; }
+  .em-via-mark { font-size: 12px; padding-left: 0; }
+  .em-band { padding-left: 4px; padding-right: 2px; }
+  .em-block { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .em-cell:nth-child(3) { border-left: 0; padding-left: 0; }
+  .em-cell:nth-child(n + 3) { border-top: 1px solid var(--eh-hairline); }
+}
+@media (prefers-reduced-motion: reduce) { .em-row { transition: none; } }
+
+/* A long source name wraps; its rule stays on the first line. */
+.em-from-line { align-items: flex-start; }
+.em-src { line-height: var(--em-row); }
+.em-n { line-height: var(--em-row); }
+.em-from .em-line { margin-top: calc(var(--em-mid) - 0.75px); }

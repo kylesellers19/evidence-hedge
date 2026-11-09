@@ -16,6 +16,7 @@ import { signalTitle } from '../../src/engine/signals/titles.js'
 import { PATTERN_META } from '../../src/engine/patterns.js'
 import { GENRE_LABELS, PROVENANCE_LABELS, roleText } from '../../src/components/genre/labels.js'
 import { textHash } from './units.mjs'
+import { buildEvidenceMap, provenanceOf } from '../../src/engine/evidenceMap.js'
 
 // Copied from src/components/results/DocumentProfile.jsx (not exported there).
 const REGISTER_LABELS = {
@@ -65,6 +66,7 @@ export function briefOf(run) {
     },
     verdict: summary.verdict,
     counts: { claimsWeighed: summary.totalClaims, readAsStrong: summary.strongClaims, flagged: ua + oc },
+    evidenceMap: evidenceMapOf(result, rubric),
     howJudged: profile.genre ? {
       reading: 'detected automatically',
       genres: h ? h.genres.map((g) => GENRE_LABELS[g]) : [standard.label],
@@ -119,11 +121,49 @@ export function briefOf(run) {
   }
 }
 
+// The evidence map as the page shows it (src/components/results/EvidenceMap.jsx):
+// the dek, every From → Via → To row and the claim the panel opens on. Text
+// that comes from the document is recorded whole (a reference entry, the
+// claim), never as a clipped label, so redact() can hash it.
+function evidenceMapOf(result, rubric) {
+  const map = buildEvidenceMap(result, rubric)
+  if (!map.claims.length) return null
+  const standard = getRubric(rubric.base || rubric.id)
+  const lead = map.claims[map.lead]
+  const tierLabel = (w) => map.tiers.find((t) => t.weight === w)?.label || null
+  return {
+    dek: map.dek,
+    rows: map.rows.map((r) => ({
+      from: r.continued ? '″' : (r.span || r.label),
+      sub: r.sub,
+      via: r.via ? r.via.mark : null,
+      grade: r.grade,
+      claims: r.claims.length,
+      reaches: r.reach,
+      pastIt: r.outruns,
+      overreach: r.overreach,
+    })),
+    panel: {
+      claim: lead.index + 1,
+      text: lead.text,
+      provenance: provenanceOf(lead, map.rows, standard.label, map.tiers),
+      statedAs: lead.tier.label,
+      sourceReaches: tierLabel(lead.ceiling),
+      pastItsReach: Math.max(0, lead.tier.weight - lead.ceiling),
+      whoseFinding: lead.attribution.label,
+      entry: lead.kind === 'reference' ? lead.targetSpan : null,
+    },
+  }
+}
+
 const QUOTED = [
   (b) => (b.howJudged ? Object.values(b.howJudged.roles).flatMap((r) => r.evidence) : []).map((e) => [e, 'span']),
   (b) => [[b.profile, 'provenanceSpans'], [b.profile, 'studyDesignSpans']],
   (b) => b.signals.map((s) => [s, 'evidence']),
   (b) => b.patterns.map((p) => [p, 'examples']),
+  (b) => (b.evidenceMap
+    ? [[b.evidenceMap.panel, 'text'], [b.evidenceMap.panel, 'entry'], ...b.evidenceMap.rows.map((r) => [r, 'from'])]
+    : []),
 ]
 
 /**

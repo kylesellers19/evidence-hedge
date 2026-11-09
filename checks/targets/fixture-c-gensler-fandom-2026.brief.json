@@ -1,7 +1,7 @@
 {
   "fixture": "fixture-c-gensler-fandom-2026",
-  "recorded": "2026-11-08",
-  "engine_commit": "1c6f4eb-dirty",
+  "recorded": "2026-11-09",
+  "engine_commit": "9bc2011-dirty",
   "source": "The brief Kyle pasted on 2026-11-08 from the app at build e3fc8a7 (src unchanged since dc34856), recorded with --write and checked against the paste field by field: header, counts, judgment, profile, the 5 signals, the 3 patterns and their 8 example lines, the distribution and the 21 provenance entries.",
   "brief": {
     "header": {
@@ -16,6 +16,104 @@
       "claimsWeighed": 397,
       "readAsStrong": 16,
       "flagged": 217
+    },
+    "evidenceMap": {
+      "dek": "263 of 397 claims cite nothing, and 211 of them are stated more firmly than no source can carry. 7 more describe its methods, which the engine does not judge.",
+      "rows": [
+        {
+          "from": "Its own study (cross-sectional)",
+          "sub": "reported in its results",
+          "via": "§",
+          "grade": "linked",
+          "claims": 17,
+          "reaches": "measured",
+          "pastIt": 1,
+          "overreach": 0
+        },
+        {
+          "from": "Its own study (cross-sectional)",
+          "sub": "read as its own result; nothing cited; graded third-party / analyst",
+          "via": "¶",
+          "grade": "loose",
+          "claims": 1,
+          "reaches": "assertive",
+          "pastIt": 0,
+          "overreach": 0
+        },
+        {
+          "from": "″",
+          "sub": "graded self-reported metric",
+          "via": "¶",
+          "grade": "loose",
+          "claims": 107,
+          "reaches": "measured",
+          "pastIt": 4,
+          "overreach": 6
+        },
+        {
+          "from": "Citations found nearby",
+          "sub": "in the sentence, not attached to the claim",
+          "via": "≈",
+          "grade": "loose",
+          "claims": 5,
+          "reaches": "measured",
+          "pastIt": 0,
+          "overreach": 0
+        },
+        {
+          "from": "The publisher itself",
+          "sub": "one claim",
+          "via": "↺",
+          "grade": "loose",
+          "claims": 1,
+          "reaches": "hedged",
+          "pastIt": 1,
+          "overreach": 0
+        },
+        {
+          "from": "A kind of source, named",
+          "sub": "graded third-party / analyst",
+          "via": "—",
+          "grade": "loose",
+          "claims": 2,
+          "reaches": "assertive",
+          "pastIt": 0,
+          "overreach": 0
+        },
+        {
+          "from": "″",
+          "sub": "graded internal assertion",
+          "via": "—",
+          "grade": "loose",
+          "claims": 1,
+          "reaches": "measured",
+          "pastIt": 0,
+          "overreach": 0
+        },
+        {
+          "from": "No source",
+          "sub": "no citation, link, quote or named source",
+          "via": null,
+          "grade": "none",
+          "claims": 263,
+          "reaches": "hedged",
+          "pastIt": 211,
+          "overreach": 3
+        }
+      ],
+      "panel": {
+        "claim": 63,
+        "text": {
+          "sha": "a3beba1e0f4b",
+          "chars": 93
+        },
+        "provenance": "Stated as absolute, with no citation, to The publisher itself. Unsourced carries up to hedged under the corporate standard, so the claim is stated 3 steps past its reach.",
+        "statedAs": "Absolute",
+        "sourceReaches": "Hedged",
+        "pastItsReach": 3,
+        "whoseFinding": "own-prior",
+        "entry": null
+      }
     },
     "howJudged": {
       "reading": "detected automatically",

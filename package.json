@@ -16,7 +16,7 @@
     "check:verdict": "node checks/verdict-binding.test.mjs",
     "check:filter": "node checks/nonclaim-filter.test.mjs",
     "check:normalizer": "node checks/normalizer.mjs",
-    "check": "npm run check:rubrics && npm run check:regression && npm run check:posture && npm run check:nullseverity && npm run check:rightofreply && npm run check:score && npm run check:verdict && npm run check:filter && npm run check:normalizer && npm run check:pdfcolumns && npm run check:fetchlink && npm run check:ingest && npm run check:invariance && npm run check:register && npm run check:design && npm run check:routing && npm run check:corpus && npm run check:ordering && npm run check:hybrid && npm run check:targets && npm run check:attribution && npm run check:linkage && npm run check:records && npm run check:list",
+    "check": "npm run check:rubrics && npm run check:regression && npm run check:posture && npm run check:nullseverity && npm run check:rightofreply && npm run check:score && npm run check:verdict && npm run check:filter && npm run check:normalizer && npm run check:pdfcolumns && npm run check:fetchlink && npm run check:ingest && npm run check:invariance && npm run check:register && npm run check:design && npm run check:routing && npm run check:corpus && npm run check:ordering && npm run check:hybrid && npm run check:targets && npm run check:attribution && npm run check:linkage && npm run check:records && npm run check:list && npm run check:evidencemap",
     "check:pdfcolumns": "node checks/pdf-column-fix.mjs",
     "check:fetchlink": "node checks/fetch-link.test.mjs",
     "fixtures:fetch": "node scripts/fetch-corpus.mjs",
@@ -32,7 +32,8 @@
     "check:attribution": "node checks/attribution.test.mjs",
     "check:linkage": "node checks/linkage.test.mjs",
     "check:records": "node checks/claim-record.test.mjs",
-    "check:list": "node checks/list.test.mjs"
+    "check:list": "node checks/list.test.mjs",
+    "check:evidencemap": "node checks/evidence-map.test.mjs"
   },
   "dependencies": {
     "@fontsource-variable/libre-franklin": "^5.3.0",

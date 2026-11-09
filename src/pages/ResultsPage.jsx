@@ -11,11 +11,13 @@ import { ENGINE_VERSION } from '../engine/version.js'
 import RubricProvenance from '../components/results/RubricProvenance.jsx'
 import VerdictMark from '../components/results/VerdictMark.jsx'
 import AddToList from '../components/results/AddToList.jsx'
+import EvidenceMap from '../components/results/EvidenceMap.jsx'
 
 // The one-page evidence brief — a standalone editorial report, three layers
 // top to bottom, serving three readers at once (with how it was judged — the
 // genre reading and the standard it set — between the verdict and the profile):
-//   1. Verdict       — plain-language, Source Serif display headline
+//   1. Verdict       — plain-language, Source Serif display headline, led by
+//                      the evidence map: what each claim stands on
 //   2. Patterns      — named patterns + verbatim examples (the heart)
 //   3. Distribution  — the structural ladder view, understated (the analyst)
 // Shares the global token source: blue accent, hairline rules, mono figures.
@@ -77,6 +79,14 @@ export default function ResultsPage() {
       </div>
 
       <hr className="brief-rule" />
+
+      {/* ── Evidence map — the lead figure: what each claim stands on ─────── */}
+      {result.claims?.length > 0 && (
+        <>
+          <EvidenceMap key={result.claims.length + ':' + (result.claims[0]?.text || '')} result={result} rubric={rubric} standardLabel={standard.label} />
+          <hr className="brief-rule" />
+        </>
+      )}
 
       {/* ── How it was judged — genre roles, standard, added audits ───────── */}
       {result.profile?.genre && (

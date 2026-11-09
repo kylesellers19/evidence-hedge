@@ -23,8 +23,11 @@
 //   9. a PDF's claims all land on one of its pages
 //  10. the brief records the section with no document text left readable
 // Against recorded numbers:
-//  11. Fixture A equals the build target's recorded engine output
-//      (checks/targets/evidence-section-fixture-a.json, from the design brief)
+//  11. Fixture A's frozen text equals the build target's recorded engine
+//      output (checks/targets/evidence-section-fixture-a.json, from the design
+//      brief). The brief recorded fixtures/cadre-neuroarchitecture-normalized.txt,
+//      extracted before the column fix (5f24dfc); Fixture A itself now reads the
+//      PDF as an upload, and is held by 12
 //  12. counts and rows equal checks/targets/evidence-section.json for each
 //      document it lists. A change that moves them on purpose re-records:
 //        node checks/evidence-section.test.mjs --write
@@ -48,6 +51,7 @@ const check = (name, ok, detail = '') => {
 
 const TARGETS = join(ROOT, 'checks', 'targets', 'evidence-section.json')
 const REFERENCE_A = join(ROOT, 'checks', 'targets', 'evidence-section-fixture-a.json')
+const REFERENCE_A_TEXT = join(ROOT, 'fixtures', 'cadre-neuroarchitecture-normalized.txt')
 const WRITE = process.argv.includes('--write')
 const BANNED = /\b(?:reach(?:es)?|carr(?:y|ies)|rung|tiers?|ground|grades?|ceiling|posture|outruns?|whose finding|the engine|stated past|linked|loose|presumed)\b|″|^(?:From|Via|To)$/i
 const LETTER = { backed: 'b', overstates: 'o', fact: 'f', cautious: 'h', method: 'm' }
@@ -152,20 +156,19 @@ for (const f of FIXTURES) {
 // 11
 {
   const ref = JSON.parse(readFileSync(REFERENCE_A, 'utf8'))
-  const doc = loadCorpus().find((d) => d.id === ref.fixture)
-  const loaded = doc ? await loadDocText(doc) : { status: 'missing' }
-  if (loaded.status !== 'ok') console.log(`SKIP ${ref.fixture} reference — text absent`)
+  if (!existsSync(REFERENCE_A_TEXT)) console.log(`SKIP ${ref.fixture} reference — text absent`)
   else {
-    const route = routeDocument(loaded.text, {})
-    const s = buildEvidenceSection(analyze(loaded.text, route.judgment.rubric, route.posture, {}), route.judgment.rubric)
+    const text = readFileSync(REFERENCE_A_TEXT, 'utf8')
+    const route = routeDocument(text, {})
+    const s = buildEvidenceSection(analyze(text, route.judgment.rubric, route.posture, {}), route.judgment.rubric)
     const counts = { backed: s.counts.backed, overstates: s.counts.overstates, fact: s.counts.fact, cautious: s.counts.cautious, methods: s.counts.method }
     const want = Object.fromEntries(Object.entries(ref.verdicts).map(([k, v]) => [k, v.count]))
-    check('Fixture A: the four counts match the build target', JSON.stringify(counts) === JSON.stringify(want), JSON.stringify(counts))
-    check('Fixture A: claim by claim, the same verdicts', s.claims.map((c) => LETTER[c.verdict]).join('') === ref.sequence.value)
-    check('Fixture A: the dek matches the build target', s.dek === ref.dek, s.dek)
+    check('Fixture A, frozen text: the four counts match the build target', JSON.stringify(counts) === JSON.stringify(want), JSON.stringify(counts))
+    check('Fixture A, frozen text: claim by claim, the same verdicts', s.claims.map((c) => LETTER[c.verdict]).join('') === ref.sequence.value)
+    check('Fixture A, frozen text: the dek matches the build target', s.dek === ref.dek, s.dek)
     const rows = s.sources.rows.map((r) => [r.label, r.backed, r.overstates, r.fact, r.cautious])
     const wantRows = ref.sources.map((r) => [r.label, r.backed, r.overstates, r.fact, r.cautious])
-    check('Fixture A: the source rows match the build target', JSON.stringify(rows) === JSON.stringify(wantRows), JSON.stringify(rows.map((r) => r[0])))
+    check('Fixture A, frozen text: the source rows match the build target', JSON.stringify(rows) === JSON.stringify(wantRows), JSON.stringify(rows.map((r) => r[0])))
   }
 }
 

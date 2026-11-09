@@ -1,6 +1,6 @@
 {
   "recorded": "2026-11-09",
-  "engine_commit": "852e7b8-dirty",
+  "engine_commit": "d6714e6",
   "rows": {
     "allen-ehp-2016": [
       {
@@ -776,7 +776,34 @@
         "kind": "reference",
         "grade": "linked",
         "rung": "third-party",
-        "claims": 29,
+        "claims": 2,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "reference",
+        "grade": "linked",
+        "rung": "third-party",
+        "claims": 2,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "reference",
+        "grade": "linked",
+        "rung": "third-party",
+        "claims": 2,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "reference",
+        "grade": "linked",
+        "rung": "third-party",
+        "claims": 59,
         "reaches": "assertive",
         "pastIt": 0,
         "overreach": 3
@@ -785,8 +812,17 @@
         "kind": "own-implied",
         "grade": "loose",
         "rung": "self-reported",
-        "claims": 1,
+        "claims": 2,
         "reaches": "measured",
+        "pastIt": 1,
+        "overreach": 1
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 1,
+        "reaches": "hedged",
         "pastIt": 1,
         "overreach": 0
       },
@@ -794,35 +830,26 @@
         "kind": "unresolved",
         "grade": "loose",
         "rung": "third-party",
-        "claims": 22,
+        "claims": 16,
         "reaches": "assertive",
         "pastIt": 0,
-        "overreach": 2
+        "overreach": 1
       },
       {
         "kind": "unresolved",
         "grade": "loose",
         "rung": "unsourced",
-        "claims": 4,
+        "claims": 3,
         "reaches": "hedged",
-        "pastIt": 4,
+        "pastIt": 3,
         "overreach": 0
       },
       {
         "kind": "proximity",
         "grade": "loose",
         "rung": "third-party",
-        "claims": 13,
+        "claims": 6,
         "reaches": "assertive",
-        "pastIt": 0,
-        "overreach": 0
-      },
-      {
-        "kind": "proximity",
-        "grade": "loose",
-        "rung": "self-reported",
-        "claims": 1,
-        "reaches": "measured",
         "pastIt": 0,
         "overreach": 1
       },
@@ -830,9 +857,9 @@
         "kind": "proximity",
         "grade": "loose",
         "rung": "internal",
-        "claims": 6,
+        "claims": 4,
         "reaches": "measured",
-        "pastIt": 2,
+        "pastIt": 1,
         "overreach": 0
       },
       {
@@ -848,19 +875,19 @@
         "kind": "unnamed",
         "grade": "presumed",
         "rung": "unsourced",
-        "claims": 2,
+        "claims": 1,
         "reaches": "hedged",
-        "pastIt": 2,
+        "pastIt": 1,
         "overreach": 0
       },
       {
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 154,
+        "claims": 224,
         "reaches": "hedged",
-        "pastIt": 144,
-        "overreach": 0
+        "pastIt": 209,
+        "overreach": 2
       }
     ],
     "fixture-b-pew-html": [
@@ -924,7 +951,7 @@
         "kind": "own",
         "grade": "linked",
         "rung": "primary",
-        "claims": 45,
+        "claims": 41,
         "reaches": "absolute",
         "pastIt": 0,
         "overreach": 0
@@ -1005,7 +1032,7 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 86,
+        "claims": 88,
         "reaches": "hedged",
         "pastIt": 6,
         "overreach": 0

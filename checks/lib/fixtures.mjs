@@ -2,19 +2,20 @@
 // Benchmark fixtures A–C (change set 1) and the app's path through them.
 //
 //   A  fixture-a-cadre                 CADRE coalition report. Text: the corpus
-//                                      loader's (committed normalized text, as
-//                                      the corpus audit reads it); pages: the
-//                                      committed PDF.
+//                                      loader's, which reads the committed PDF
+//                                      as an upload (as the corpus audit reads
+//                                      it); pages: the same PDF.
 //   B  fixture-b-pew-report            Pew Research Center report PDF (cached,
 //                                      fixtures/cache/). Text: the corpus loader's
-//                                      extraction; pages: the same PDF.
+//                                      upload read of it; pages: the same PDF.
 //   C  fixture-c-gensler-fandom-2026   Gensler, "The Fandom Effect 2026" (89 pp.).
 //                                      Read exactly as an upload: the app's PDF
 //                                      reconstruction, then normalizeDocument.
 //                                      Lives in the gitignored checks/data/.
 //
-// A and B pass the corpus link to analyze(), as the corpus audit does; C has no
-// link (an upload). Routing is the app's: routeDocument → judgment.rubric and
+// All three texts are what a reader uploading the PDF gets, in Node as in the
+// browser (checks/pdf-upload.test.mjs holds both). A and B pass the corpus link
+// to analyze(), as the corpus audit does; C has no link (an upload). Routing is the app's: routeDocument → judgment.rubric and
 // posture → analyze(), as RubricBranch does before the user changes anything.
 // ─────────────────────────────────────────────────────────────────────────────
 

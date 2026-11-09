@@ -238,7 +238,7 @@
     {
       "id": "fixture-a-cadre",
       "source": "committed",
-      "path": "fixtures/cadre-neuroarchitecture-normalized.txt",
+      "path": "fixtures/cadre-neuroarchitecture.pdf",
       "gold": {
         "rubric": "corporate",
         "posture": "research-like",

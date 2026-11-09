@@ -41,7 +41,9 @@ const check = (name, ok, detail = '') => {
 // Labels read off the documents by hand (unit id → label). The fragment is a
 // few words so a reader can find the sentence; the text itself stays in the
 // gitignored unit files. Ids re-pointed to the same sentences when headings
-// stopped running into the sentence below them (two lost a leading heading).
+// stopped running into the sentence below them (two lost a leading heading),
+// and Fixture A's to its unspliced sentence when the checks began reading its
+// PDF as an upload.
 const EXPECTED = [
   ['fixture-c-gensler-fandom-2026:p5:10:d7349569e625', 'own-current', '"we surveyed 2,752 people"'],
   ['fixture-c-gensler-fandom-2026:p6:2:dadabb4d65ad', 'own-current', '"our post-World Cup survey found"'],
@@ -53,7 +55,7 @@ const EXPECTED = [
   ['fixture-b-pew-report:p28:10:4f00bfd1c87b', 'own-current', '"Center researchers performed" (the publisher)'],
   ['fixture-b-pew-report:p32:14:6c95e5bad710', 'own-prior', '"Pew Research Center\'s previous work"'],
   ['fixture-b-pew-report:p29:5:5af73d295c1a', 'cited-other', '"procedures from Hur, Achen (2013)"'],
-  ['fixture-a-cadre:p7:11:5f788c852f6e', 'cited-other', '"World Economic Forum (2024)"'],
+  ['fixture-a-cadre:p7:7:b144b010c53d', 'cited-other', '"World Economic Forum (2024)"'],
 ]
 
 const runs = {}

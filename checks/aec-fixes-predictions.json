@@ -3,7 +3,41 @@
   "baseline": {
     "app": "519810d (engine 519810d)",
     "corpus": "checks/data/aec, run with scripts/weigh-folder.mjs from a git archive of 519810d (ENGINE_SHA=519810d)",
-    "corpusMetrics": {"files": 1584, "weighed": 1555, "notWeighed": {"no-text": 29, "error": 0, "missing": 0, "not-english": 0}, "deterministic": 1555, "zeroClaims": 6, "zeroClaimsScored": 6, "floorLink": 720, "medianLink": 1.2, "bands": {"failing": 1260, "weak": 244, "mixed": 38, "strong": 7, "carried": 6}, "pressLink": 295, "pressUpload": 248, "provenanceUploadUnknown": 985, "provenanceLinkUnknown": 22, "provenanceDiffers": 1141, "judgmentDiffers": 1048, "moveHalf": 393, "claimsTotal": 419316, "examples": 9018, "leakExamples": 344, "reportsWithLeak": 228, "unstableSeries": 21, "_definitions": "pressLink/pressUpload: posture or form role press-release. provenanceDiffers: link and upload give different provenance kinds. judgmentDiffers: different standard, scenario or posture. moveHalf: link and upload scores differ by 0.5 or more. leakExamples: brief example lines matching plain non-claim markers (dot leaders, 'Page x of y', 'Suite n', author-list labels, \u00a9, four or more capitalized words at the start). unstableSeries: a firm's report series judged under more than one standard or scenario. Same numbers on engine 7178387."}
+    "corpusMetrics": {
+      "files": 1584,
+      "weighed": 1555,
+      "notWeighed": {
+        "no-text": 29,
+        "error": 0,
+        "missing": 0,
+        "not-english": 0
+      },
+      "deterministic": 1555,
+      "zeroClaims": 6,
+      "zeroClaimsScored": 6,
+      "floorLink": 720,
+      "medianLink": 1.2,
+      "bands": {
+        "failing": 1260,
+        "weak": 244,
+        "mixed": 38,
+        "strong": 7,
+        "carried": 6
+      },
+      "pressLink": 295,
+      "pressUpload": 248,
+      "provenanceUploadUnknown": 985,
+      "provenanceLinkUnknown": 22,
+      "provenanceDiffers": 1141,
+      "judgmentDiffers": 1048,
+      "moveHalf": 393,
+      "claimsTotal": 419316,
+      "examples": 9018,
+      "leakExamples": 344,
+      "reportsWithLeak": 228,
+      "unstableSeries": 21,
+      "_definitions": "pressLink/pressUpload: posture or form role press-release. provenanceDiffers: link and upload give different provenance kinds. judgmentDiffers: different standard, scenario or posture. moveHalf: link and upload scores differ by 0.5 or more. leakExamples: brief example lines matching plain non-claim markers (dot leaders, 'Page x of y', 'Suite n', author-list labels, ©, four or more capitalized words at the start). unstableSeries: a firm's report series judged under more than one standard or scenario. Same numbers on engine 7178387."
+    }
   },
   "step0": {
     "dateline": "classifyPosture.js scores the 'dateline' cue anywhere in the text and up to three times (weight 2 each), so two chart headings of the form 'Word - Word' reach PRESS_MIN 4 on their own. On the corpus (link reading), 295 reports are read as press releases (posture or form); 266 of them carry no press cue but the dateline, 7 have other cues reaching PRESS_MIN, 22 have 2 or 3 points of other cues, and none has its first dateline in the first 1,500 characters alongside another cue of 2 or more. Gold-corpus press releases: hsph-press-2015 has its dateline at character 534 plus a release line (3); sciencedaily-2015 and gensler-press-2024 carry no dateline and score 6 on other cues. Fixture C (Gensler, upload) is read as a press release today on a media-contact line (2) plus two datelines from character 47,020 on.",
@@ -22,44 +56,190 @@
   },
   "predictions": {
     "A": {
-      "corpusPressLink": [5, 40],
-      "corpusPressUpload": [5, 40],
+      "corpusPressLink": [
+        5,
+        40
+      ],
+      "corpusPressUpload": [
+        5,
+        40
+      ],
       "goldCorpus": "hsph-press-2015, sciencedaily-2015 and gensler-press-2024 stay press releases; npm run check passes with no other gold change",
       "fixtureA": "unchanged (no press cues)",
       "fixtureB": "unchanged (one release line, 3; no dateline)",
-      "fixtureC": { "posture": "not press-release", "formRole": "not press-release", "score": [1.0, 1.5], "briefTarget": "moves (posture, genre note, verdict sentence); re-recorded in the same commit" },
-      "unstableSeries": [5, 18]
+      "fixtureC": {
+        "posture": "not press-release",
+        "formRole": "not press-release",
+        "score": [
+          1.0,
+          1.5
+        ],
+        "briefTarget": "moves (posture, genre note, verdict sentence); re-recorded in the same commit"
+      },
+      "unstableSeries": [
+        5,
+        18
+      ]
     },
     "B": {
-      "corpusUploadProvenanceUnknown": [330, 550],
-      "corpusProvenanceDiffersLinkUpload": [350, 750],
-      "corpusJudgmentDiffersLinkUpload": [350, 750],
-      "corpusScoreMovesHalfPoint": [120, 300],
+      "corpusUploadProvenanceUnknown": [
+        330,
+        550
+      ],
+      "corpusProvenanceDiffersLinkUpload": [
+        350,
+        750
+      ],
+      "corpusJudgmentDiffersLinkUpload": [
+        350,
+        750
+      ],
+      "corpusScoreMovesHalfPoint": [
+        120,
+        300
+      ],
       "fixtures": "unchanged: A has no address on its edges and no copyright line; B has its link; C's copyright lines are photo credits and gensler.com is not on its first or last 3,000 characters",
       "goldCorpus": "unchanged (the two corpus documents without a link have no matching address on their edges)"
     },
     "C": {
-      "corpusNotEnglish": [2, 5],
-      "corpusNoScoreLink": [4, 7],
+      "corpusNotEnglish": [
+        2,
+        5
+      ],
+      "corpusNoScoreLink": [
+        4,
+        7
+      ],
       "corpusZeroClaimsScored": 0,
       "fixtures": "unchanged (all English, all with claims)",
       "checks": "npm run check passes; no check scores a document without claims"
     },
     "D": {
-      "fixtureA": { "claims": [225, 260], "flagged": [140, 172], "score": [1.0, 1.5] },
-      "fixtureB": { "claims": [210, 250], "unsupported": [5, 12], "causalOverreach": [2, 4], "score": [6.8, 7.8] },
-      "fixtureC": { "claims": [360, 430], "flagged": [200, 245], "score": [1.0, 1.5] },
+      "fixtureA": {
+        "claims": [
+          225,
+          260
+        ],
+        "flagged": [
+          140,
+          172
+        ],
+        "score": [
+          1.0,
+          1.5
+        ]
+      },
+      "fixtureB": {
+        "claims": [
+          210,
+          250
+        ],
+        "unsupported": [
+          5,
+          12
+        ],
+        "causalOverreach": [
+          2,
+          4
+        ],
+        "score": [
+          6.8,
+          7.8
+        ]
+      },
+      "fixtureC": {
+        "claims": [
+          360,
+          430
+        ],
+        "flagged": [
+          200,
+          245
+        ],
+        "score": [
+          1.0,
+          1.5
+        ]
+      },
       "fixtureExamplesStartingWithAGluedHeading": "0 in all three",
-      "corpusLeakExamples": [40, 200],
-      "corpusReportsWithLeak": [30, 150],
-      "corpusClaims": [385000, 440000],
-      "corpusFloor": [600, 790],
+      "corpusLeakExamples": [
+        40,
+        200
+      ],
+      "corpusReportsWithLeak": [
+        30,
+        150
+      ],
+      "corpusClaims": [
+        385000,
+        440000
+      ],
+      "corpusFloor": [
+        600,
+        790
+      ],
       "targets": "check:targets and check:evidencesection move on every fixture whose claims change; re-recorded in the same commit with the differences listed in the report",
       "unitsGuard": "benchmark-guards.test.mjs passes (units cover every claim, in order)"
     },
     "all": {
       "determinism": "every weighed report repeats exactly",
       "build": "npm run check and npm run build pass after each fix"
+    }
+  },
+  "addendum": {
+    "_comment": "Found after fix D (852e7b8) was committed and run, before any code for this addendum: committed on its own before the code.",
+    "observedD": "Corpus claims rose from 418,550 to 446,843 (+6.8%), above the predicted 385,000–440,000. Four of the five no-claim sheets gained claims (map labels, a title line, a matrix's cells, a page of undecoded glyphs) and now score 2.3 instead of no score. On a sample of 106 report texts (every fifteenth cached text), claims went from 29,838 to 31,308: fix D added 2,356 closed sentences and removed 2,462 glued ones, as intended, and added 1,595 fragments with no closing punctuation: 593 short and 391 long with no finite verb (headings, chart labels, table rows), 136 short and 475 long with one (headline claims, pull quotes, sentences cut at a page break). Before fix D a fragment with no closing punctuation could only be a document's last piece (24 in the sample).",
+    "fix": "D2: a sentence with no closing punctuation and no finite verb (either verb list the engine already keeps: extractClaims's likelihood list or nonClaimFilter's) is a label, not a claim, and is not extracted. Journalism keeps its headline exemption, as for title-case headings.",
+    "predictions": {
+      "corpusClaims": [
+        420000,
+        440000
+      ],
+      "corpusNoScoreLink": [
+        3,
+        6
+      ],
+      "corpusLeakExamples": [
+        90,
+        150
+      ],
+      "corpusReportsWithLeak": [
+        80,
+        130
+      ],
+      "fixtureA": {
+        "claims": [
+          225,
+          245
+        ],
+        "score": [
+          1.0,
+          1.5
+        ]
+      },
+      "fixtureB": {
+        "claims": [
+          220,
+          243
+        ],
+        "score": [
+          7.0,
+          7.8
+        ],
+        "gluedExamples": 0
+      },
+      "fixtureC": {
+        "claims": [
+          395,
+          442
+        ],
+        "score": [
+          1.0,
+          1.5
+        ]
+      },
+      "targets": "move again on every fixture whose claims change; re-recorded in the same commit",
+      "checks": "npm run check, npm run build and benchmark-guards pass"
     }
   }
 }

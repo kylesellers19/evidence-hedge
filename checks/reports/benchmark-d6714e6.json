@@ -1,0 +1,2042 @@
+{
+  "engine_commit": "d6714e6",
+  "baseline": "dc34856",
+  "generated": "2026-11-09",
+  "inputs": {
+    "bundle": {
+      "path": "checks/data/foundations-v2/unified_eval.jsonl",
+      "rows": 18427,
+      "labelConflictsSkipped": 4
+    },
+    "predictions": {
+      "files": [
+        "certainty-estimator-aspect-97a130c.jsonl",
+        "certainty-estimator-sentence-97a130c.jsonl",
+        "cessc-42819b2.jsonl",
+        "unicausal-seq-96ed92b.jsonl",
+        "unicausal-seq-released-96ed92b.jsonl",
+        "unscientify-24f12a6.jsonl",
+        "yu2019-causal-84abecc.jsonl"
+      ],
+      "tools": [
+        "certainty-estimator-aspect@97a130c",
+        "certainty-estimator-sentence@97a130c",
+        "cessc@42819b2",
+        "unicausal-seq@96ed92b",
+        "unicausal-seq-released@96ed92b",
+        "unscientify@24f12a6",
+        "yu2019-causal@84abecc"
+      ]
+    }
+  },
+  "checks": {
+    "fixture:fixture-a-cadre": {
+      "status": "ok",
+      "reviewed": true
+    },
+    "fixture:fixture-b-pew-report": {
+      "status": "ok",
+      "reviewed": true
+    },
+    "fixture:fixture-c-gensler-fandom-2026": {
+      "status": "ok",
+      "reviewed": true
+    },
+    "yu2019_pubmed": {
+      "status": "ok",
+      "encoding": {
+        "encoding": "upstream",
+        "joined": 3051,
+        "telling": 1489,
+        "asUpstream": 1489,
+        "asOrdinal": 0
+      }
+    },
+    "yu2020_eureka": {
+      "status": "ok",
+      "encoding": {
+        "encoding": "ordinal",
+        "basis": "declared by the bundle (labels.encoding: yu2020-ordinal, after junwang4/correlation-to-causation-exaggeration LABEL_NAME)"
+      }
+    },
+    "pei2021": {
+      "status": "ok",
+      "rowsWithoutCertainty": 615
+    },
+    "wright2021_pairs": {
+      "status": "ok",
+      "strengthEncoding": "assumed ordinal 0–3 (none, correlational, conditional causal, direct causal); unverified"
+    },
+    "cessc_ssc": {
+      "status": "ok"
+    },
+    "spiced": {
+      "status": "skip",
+      "reason": "fields reported; loader not written until Kyle reviews them",
+      "files": [
+        "dev.csv",
+        "dev.jsonl",
+        "test.csv",
+        "test.jsonl",
+        "train.csv",
+        "train.jsonl"
+      ],
+      "fields": [
+        "DOI",
+        "instance_id",
+        "News Finding",
+        "Paper Finding",
+        "News Context",
+        "Paper Context",
+        "scores",
+        "field",
+        "split",
+        "final_score",
+        "source",
+        "News URL"
+      ]
+    }
+  },
+  "leftOut": [
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "system": "certainty-estimator-aspect@97a130c",
+      "reason": "supplies no label this check scores, on all 3051 eligible rows"
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "system": "certainty-estimator-sentence@97a130c",
+      "reason": "supplies no label this check scores, on all 3051 eligible rows"
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "system": "cessc@42819b2",
+      "reason": "supplies no label this check scores, on all 3051 eligible rows"
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2020_eureka",
+      "system": "certainty-estimator-aspect@97a130c",
+      "reason": "supplies no label this check scores, on all 2073 eligible rows"
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2020_eureka",
+      "system": "certainty-estimator-sentence@97a130c",
+      "reason": "supplies no label this check scores, on all 2073 eligible rows"
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2020_eureka",
+      "system": "cessc@42819b2",
+      "reason": "supplies no label this check scores, on all 2073 eligible rows"
+    },
+    {
+      "check": "certainty",
+      "source": "pei2021",
+      "system": "certainty-estimator-aspect@97a130c",
+      "reason": "supplies no label this check scores, on all 278 eligible rows"
+    }
+  ],
+  "fixtures": {
+    "fixture-a-cadre": {
+      "route": {
+        "standard": "corporate",
+        "rubric": "hybrid:firm-research",
+        "posture": "research-like",
+        "genres": [
+          "research",
+          "corporate"
+        ]
+      },
+      "units": 332,
+      "unitsOnPage": 322,
+      "claims": 240,
+      "flagCounts": {
+        "unsupported-assertion": 150,
+        "overconfident": 3,
+        "causal-overreach": 14
+      },
+      "score": 1,
+      "signals": [
+        "register-mismatch",
+        "undisclosed-interest"
+      ]
+    },
+    "fixture-b-pew-report": {
+      "route": {
+        "standard": "research",
+        "rubric": "research",
+        "posture": "standard",
+        "genres": [
+          "research"
+        ]
+      },
+      "units": 351,
+      "unitsOnPage": 348,
+      "claims": 237,
+      "flagCounts": {
+        "unsupported-assertion": 7,
+        "overconfident": 0,
+        "causal-overreach": 3
+      },
+      "score": 7.4,
+      "signals": [
+        "limitations-absent",
+        "completeness-gaps"
+      ]
+    },
+    "fixture-c-gensler-fandom-2026": {
+      "route": {
+        "standard": "corporate",
+        "rubric": "hybrid:firm-research",
+        "posture": "research-like",
+        "genres": [
+          "corporate",
+          "research"
+        ]
+      },
+      "units": 1053,
+      "unitsOnPage": 1046,
+      "claims": 417,
+      "flagCounts": {
+        "unsupported-assertion": 224,
+        "overconfident": 4,
+        "causal-overreach": 21
+      },
+      "score": 1,
+      "signals": [
+        "register-mismatch",
+        "completeness-gaps",
+        "limitations-absent",
+        "undisclosed-interest"
+      ]
+    }
+  },
+  "metrics": [
+    {
+      "check": "fixture-counts",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "claims",
+      "value": 240,
+      "rows": 332,
+      "predicted": {
+        "value": 242,
+        "exact": true
+      },
+      "match": false
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "unsupported-assertion",
+      "value": 150,
+      "rows": 240,
+      "predicted": {
+        "value": 148,
+        "exact": true
+      },
+      "match": false
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "overconfident",
+      "value": 3,
+      "rows": 240,
+      "predicted": {
+        "value": 3,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "causal-overreach",
+      "value": 14,
+      "rows": 240,
+      "predicted": {
+        "value": 16,
+        "exact": true
+      },
+      "match": false
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "flagRows",
+      "value": 167,
+      "rows": 240,
+      "predicted": {
+        "value": 167,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "unsupportedShare",
+      "value": 0.625,
+      "rows": 240
+    },
+    {
+      "check": "fixture-review",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "gold",
+      "system": "engine@d6714e6",
+      "metric": "precision:causal-overreach",
+      "value": null,
+      "rows": 0
+    },
+    {
+      "check": "fixture-review",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "gold",
+      "system": "engine@d6714e6",
+      "metric": "precision:overconfident",
+      "value": null,
+      "rows": 0
+    },
+    {
+      "check": "fixture-review",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "gold",
+      "system": "engine@d6714e6",
+      "metric": "precision:unsupported-assertion",
+      "value": null,
+      "rows": 0
+    },
+    {
+      "check": "fixture-review",
+      "source": "fixture-a-cadre",
+      "split": "fixture-sample",
+      "label_tier": "gold",
+      "system": "engine@d6714e6",
+      "metric": "missRate",
+      "value": null,
+      "rows": 0
+    },
+    {
+      "check": "fixture-review",
+      "source": "fixture-a-cadre",
+      "split": "fixture",
+      "label_tier": "gold",
+      "system": "engine@d6714e6",
+      "metric": "nonClaimLeakage",
+      "value": null,
+      "rows": 0
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-b-pew-report",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "claims",
+      "value": 237,
+      "rows": 351,
+      "predicted": {
+        "value": 231,
+        "exact": true
+      },
+      "match": false
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-b-pew-report",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "unsupported-assertion",
+      "value": 7,
+      "rows": 237,
+      "predicted": {
+        "value": 9,
+        "exact": true
+      },
+      "match": false
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-b-pew-report",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "overconfident",
+      "value": 0,
+      "rows": 237,
+      "predicted": {
+        "value": 0,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-b-pew-report",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "causal-overreach",
+      "value": 3,
+      "rows": 237,
+      "predicted": {
+        "value": 3,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-b-pew-report",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "flagRows",
+      "value": 10,
+      "rows": 237
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-b-pew-report",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "unsupportedShare",
+      "value": 0.03,
+      "rows": 237
+    },
+    {
+      "check": "fixture-review",
+      "source": "fixture-b-pew-report",
+      "split": "fixture",
+      "label_tier": "gold",
+      "system": "engine@d6714e6",
+      "metric": "precision:causal-overreach",
+      "value": null,
+      "rows": 0
+    },
+    {
+      "check": "fixture-review",
+      "source": "fixture-b-pew-report",
+      "split": "fixture",
+      "label_tier": "gold",
+      "system": "engine@d6714e6",
+      "metric": "precision:unsupported-assertion",
+      "value": null,
+      "rows": 0
+    },
+    {
+      "check": "fixture-review",
+      "source": "fixture-b-pew-report",
+      "split": "fixture-sample",
+      "label_tier": "gold",
+      "system": "engine@d6714e6",
+      "metric": "missRate",
+      "value": null,
+      "rows": 0
+    },
+    {
+      "check": "fixture-review",
+      "source": "fixture-b-pew-report",
+      "split": "fixture",
+      "label_tier": "gold",
+      "system": "engine@d6714e6",
+      "metric": "nonClaimLeakage",
+      "value": null,
+      "rows": 0
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "claims",
+      "value": 417,
+      "rows": 1053,
+      "predicted": {
+        "value": 300,
+        "range": [
+          180,
+          450
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "unsupported-assertion",
+      "value": 224,
+      "rows": 417
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "overconfident",
+      "value": 4,
+      "rows": 417,
+      "predicted": {
+        "value": 2,
+        "range": [
+          0,
+          5
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "causal-overreach",
+      "value": 21,
+      "rows": 417,
+      "predicted": {
+        "value": 10,
+        "range": [
+          4,
+          25
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "flagRows",
+      "value": 249,
+      "rows": 417
+    },
+    {
+      "check": "fixture-counts",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "predicted",
+      "system": "engine@d6714e6",
+      "metric": "unsupportedShare",
+      "value": 0.537,
+      "rows": 417,
+      "predicted": {
+        "value": 0.75,
+        "range": [
+          0.65,
+          0.85
+        ]
+      },
+      "match": false
+    },
+    {
+      "check": "fixture-review",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "gold",
+      "system": "engine@d6714e6",
+      "metric": "precision:causal-overreach",
+      "value": null,
+      "rows": 0
+    },
+    {
+      "check": "fixture-review",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "gold",
+      "system": "engine@d6714e6",
+      "metric": "precision:overconfident",
+      "value": null,
+      "rows": 0
+    },
+    {
+      "check": "fixture-review",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "gold",
+      "system": "engine@d6714e6",
+      "metric": "precision:unsupported-assertion",
+      "value": null,
+      "rows": 0
+    },
+    {
+      "check": "fixture-review",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture-sample",
+      "label_tier": "gold",
+      "system": "engine@d6714e6",
+      "metric": "missRate",
+      "value": null,
+      "rows": 0
+    },
+    {
+      "check": "fixture-review",
+      "source": "fixture-c-gensler-fandom-2026",
+      "split": "fixture",
+      "label_tier": "gold",
+      "system": "engine@d6714e6",
+      "metric": "nonClaimLeakage",
+      "value": null,
+      "rows": 0,
+      "predicted": {
+        "value": 0.25,
+        "range": [
+          0.15,
+          0.4
+        ]
+      },
+      "match": null
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "all",
+      "rows": 3051,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "rows",
+      "value": 3051
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "all",
+      "rows": 3051,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "macroF1",
+      "value": 0.708
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "all",
+      "rows": 3051,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "accuracy",
+      "value": 0.758
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "all",
+      "rows": 3051,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "perClass",
+      "value": {
+        "none": {
+          "n": 1350,
+          "precision": 0.821,
+          "recall": 0.819,
+          "f1": 0.82
+        },
+        "correlational": {
+          "n": 995,
+          "precision": 0.777,
+          "recall": 0.752,
+          "f1": 0.764
+        },
+        "conditional-causal": {
+          "n": 212,
+          "precision": 0.541,
+          "recall": 0.66,
+          "f1": 0.594
+        },
+        "direct-causal": {
+          "n": 494,
+          "precision": 0.66,
+          "recall": 0.644,
+          "f1": 0.652
+        }
+      }
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "all",
+      "rows": 3051,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "confusion",
+      "value": {
+        "none": {
+          "none": 1106,
+          "correlational": 122,
+          "conditional-causal": 44,
+          "direct-causal": 78
+        },
+        "correlational": {
+          "none": 134,
+          "correlational": 748,
+          "conditional-causal": 30,
+          "direct-causal": 83
+        },
+        "conditional-causal": {
+          "none": 37,
+          "correlational": 32,
+          "conditional-causal": 140,
+          "direct-causal": 3
+        },
+        "direct-causal": {
+          "none": 70,
+          "correlational": 61,
+          "conditional-causal": 45,
+          "direct-causal": 318
+        }
+      }
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "bundle-test",
+      "rows": 342,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "rows",
+      "value": 342
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "bundle-test",
+      "rows": 342,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "macroF1",
+      "value": 0.681,
+      "predicted": {
+        "value": 0.7,
+        "range": [
+          0.66,
+          0.74
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "bundle-test",
+      "rows": 342,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "accuracy",
+      "value": 0.722
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "bundle-test",
+      "rows": 342,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "perClass",
+      "value": {
+        "none": {
+          "n": 148,
+          "precision": 0.756,
+          "recall": 0.797,
+          "f1": 0.776
+        },
+        "correlational": {
+          "n": 103,
+          "precision": 0.71,
+          "recall": 0.689,
+          "f1": 0.7
+        },
+        "conditional-causal": {
+          "n": 25,
+          "precision": 0.538,
+          "recall": 0.56,
+          "f1": 0.549
+        },
+        "direct-causal": {
+          "n": 66,
+          "precision": 0.733,
+          "recall": 0.667,
+          "f1": 0.698
+        }
+      }
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "bundle-test",
+      "rows": 342,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "confusion",
+      "value": {
+        "none": {
+          "none": 118,
+          "correlational": 17,
+          "conditional-causal": 5,
+          "direct-causal": 8
+        },
+        "correlational": {
+          "none": 22,
+          "correlational": 71,
+          "conditional-causal": 3,
+          "direct-causal": 7
+        },
+        "conditional-causal": {
+          "none": 4,
+          "correlational": 6,
+          "conditional-causal": 14,
+          "direct-causal": 1
+        },
+        "direct-causal": {
+          "none": 12,
+          "correlational": 6,
+          "conditional-causal": 4,
+          "direct-causal": 44
+        }
+      }
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "engine-tuning",
+      "rows": 1707,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "rows",
+      "value": 1707,
+      "predicted": {
+        "value": 1712,
+        "range": [
+          1703,
+          1712
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "engine-tuning",
+      "rows": 1707,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "macroF1",
+      "value": 0.717,
+      "predicted": {
+        "value": 0.718,
+        "exact": true
+      },
+      "match": false
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "engine-tuning",
+      "rows": 1707,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "accuracy",
+      "value": 0.764,
+      "predicted": {
+        "value": 0.765,
+        "exact": true
+      },
+      "match": false
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "engine-tuning",
+      "rows": 1707,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "perClass",
+      "value": {
+        "none": {
+          "n": 747,
+          "precision": 0.81,
+          "recall": 0.829,
+          "f1": 0.819
+        },
+        "correlational": {
+          "n": 563,
+          "precision": 0.805,
+          "recall": 0.748,
+          "f1": 0.775
+        },
+        "conditional-causal": {
+          "n": 126,
+          "precision": 0.552,
+          "recall": 0.675,
+          "f1": 0.607
+        },
+        "direct-causal": {
+          "n": 271,
+          "precision": 0.673,
+          "recall": 0.661,
+          "f1": 0.667
+        }
+      }
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "engine-tuning",
+      "rows": 1707,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "confusion",
+      "value": {
+        "none": {
+          "none": 619,
+          "correlational": 59,
+          "conditional-causal": 27,
+          "direct-causal": 42
+        },
+        "correlational": {
+          "none": 82,
+          "correlational": 421,
+          "conditional-causal": 17,
+          "direct-causal": 43
+        },
+        "conditional-causal": {
+          "none": 23,
+          "correlational": 16,
+          "conditional-causal": 85,
+          "direct-causal": 2
+        },
+        "direct-causal": {
+          "none": 40,
+          "correlational": 27,
+          "conditional-causal": 25,
+          "direct-causal": 179
+        }
+      }
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "engine-held-out",
+      "rows": 734,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "rows",
+      "value": 734,
+      "predicted": {
+        "value": 734,
+        "range": [
+          725,
+          734
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "engine-held-out",
+      "rows": 734,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "macroF1",
+      "value": 0.701,
+      "predicted": {
+        "value": 0.702,
+        "exact": true
+      },
+      "match": false
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "engine-held-out",
+      "rows": 734,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "accuracy",
+      "value": 0.753,
+      "predicted": {
+        "value": 0.755,
+        "exact": true
+      },
+      "match": false
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "engine-held-out",
+      "rows": 734,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "perClass",
+      "value": {
+        "none": {
+          "n": 334,
+          "precision": 0.847,
+          "recall": 0.796,
+          "f1": 0.821
+        },
+        "correlational": {
+          "n": 232,
+          "precision": 0.739,
+          "recall": 0.767,
+          "f1": 0.753
+        },
+        "conditional-causal": {
+          "n": 44,
+          "precision": 0.518,
+          "recall": 0.659,
+          "f1": 0.58
+        },
+        "direct-causal": {
+          "n": 124,
+          "precision": 0.65,
+          "recall": 0.645,
+          "f1": 0.648
+        }
+      }
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "engine-held-out",
+      "rows": 734,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "confusion",
+      "value": {
+        "none": {
+          "none": 266,
+          "correlational": 38,
+          "conditional-causal": 8,
+          "direct-causal": 22
+        },
+        "correlational": {
+          "none": 27,
+          "correlational": 178,
+          "conditional-causal": 6,
+          "direct-causal": 21
+        },
+        "conditional-causal": {
+          "none": 5,
+          "correlational": 10,
+          "conditional-causal": 29,
+          "direct-causal": 0
+        },
+        "direct-causal": {
+          "none": 16,
+          "correlational": 15,
+          "conditional-causal": 13,
+          "direct-causal": 80
+        }
+      }
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "never-seen",
+      "rows": 610,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "rows",
+      "value": 610,
+      "predicted": {
+        "value": 606,
+        "range": [
+          597,
+          615
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "never-seen",
+      "rows": 610,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "macroF1",
+      "value": 0.689,
+      "predicted": {
+        "value": 0.68,
+        "range": [
+          0.62,
+          0.74
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "never-seen",
+      "rows": 610,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "accuracy",
+      "value": 0.746
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "never-seen",
+      "rows": 610,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "perClass",
+      "value": {
+        "none": {
+          "n": 269,
+          "precision": 0.822,
+          "recall": 0.822,
+          "f1": 0.822
+        },
+        "correlational": {
+          "n": 200,
+          "precision": 0.749,
+          "recall": 0.745,
+          "f1": 0.747
+        },
+        "conditional-causal": {
+          "n": 42,
+          "precision": 0.531,
+          "recall": 0.619,
+          "f1": 0.571
+        },
+        "direct-causal": {
+          "n": 99,
+          "precision": 0.634,
+          "recall": 0.596,
+          "f1": 0.615
+        }
+      }
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "never-seen",
+      "rows": 610,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "confusion",
+      "value": {
+        "none": {
+          "none": 221,
+          "correlational": 25,
+          "conditional-causal": 9,
+          "direct-causal": 14
+        },
+        "correlational": {
+          "none": 25,
+          "correlational": 149,
+          "conditional-causal": 7,
+          "direct-causal": 19
+        },
+        "conditional-causal": {
+          "none": 9,
+          "correlational": 6,
+          "conditional-causal": 26,
+          "direct-causal": 1
+        },
+        "direct-causal": {
+          "none": 14,
+          "correlational": 19,
+          "conditional-causal": 7,
+          "direct-causal": 59
+        }
+      }
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "never-seen",
+      "rows": 610,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "perClassF1Order",
+      "value": [
+        "none",
+        "correlational",
+        "direct-causal",
+        "conditional-causal"
+      ],
+      "predicted": {
+        "value": [
+          "none",
+          "correlational",
+          "direct-causal",
+          "conditional-causal"
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "model-eligible",
+      "rows": 3045,
+      "label_tier": "published-human",
+      "droppedTrainedOn": 0,
+      "droppedWithoutLabel": 0,
+      "metric": "macroF1",
+      "system": "yu2019-causal@84abecc",
+      "system_tier": "predicted",
+      "value": 0.873
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2019_pubmed",
+      "split": "model-eligible",
+      "rows": 3045,
+      "label_tier": "published-human",
+      "droppedTrainedOn": 0,
+      "droppedWithoutLabel": 0,
+      "metric": "macroF1",
+      "system": "engine@d6714e6",
+      "system_tier": "predicted",
+      "value": 0.708
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2020_eureka",
+      "split": "all",
+      "rows": 2073,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "rows",
+      "value": 2073,
+      "predicted": {
+        "value": 2073,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2020_eureka",
+      "split": "all",
+      "rows": 2073,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "macroF1",
+      "value": 0.626,
+      "predicted": {
+        "value": 0.58,
+        "range": [
+          0.5,
+          0.66
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2020_eureka",
+      "split": "all",
+      "rows": 2073,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "accuracy",
+      "value": 0.63,
+      "predicted": {
+        "value": 0.65,
+        "range": [
+          0.57,
+          0.72
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2020_eureka",
+      "split": "all",
+      "rows": 2073,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "perClass",
+      "value": {
+        "none": {
+          "n": 484,
+          "precision": 0.512,
+          "recall": 0.709,
+          "f1": 0.594
+        },
+        "correlational": {
+          "n": 738,
+          "precision": 0.727,
+          "recall": 0.641,
+          "f1": 0.681
+        },
+        "conditional-causal": {
+          "n": 284,
+          "precision": 0.601,
+          "recall": 0.648,
+          "f1": 0.624
+        },
+        "direct-causal": {
+          "n": 567,
+          "precision": 0.686,
+          "recall": 0.54,
+          "f1": 0.604
+        }
+      }
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2020_eureka",
+      "split": "all",
+      "rows": 2073,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "confusion",
+      "value": {
+        "none": {
+          "none": 343,
+          "correlational": 58,
+          "conditional-causal": 18,
+          "direct-causal": 65
+        },
+        "correlational": {
+          "none": 157,
+          "correlational": 473,
+          "conditional-causal": 35,
+          "direct-causal": 73
+        },
+        "conditional-causal": {
+          "none": 65,
+          "correlational": 33,
+          "conditional-causal": 184,
+          "direct-causal": 2
+        },
+        "direct-causal": {
+          "none": 105,
+          "correlational": 87,
+          "conditional-causal": 69,
+          "direct-causal": 306
+        }
+      }
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2020_eureka",
+      "split": "bundle-test",
+      "rows": 193,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "rows",
+      "value": 193
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2020_eureka",
+      "split": "bundle-test",
+      "rows": 193,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "macroF1",
+      "value": 0.624
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2020_eureka",
+      "split": "bundle-test",
+      "rows": 193,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "accuracy",
+      "value": 0.632
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2020_eureka",
+      "split": "bundle-test",
+      "rows": 193,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "perClass",
+      "value": {
+        "none": {
+          "n": 42,
+          "precision": 0.452,
+          "recall": 0.667,
+          "f1": 0.538
+        },
+        "correlational": {
+          "n": 80,
+          "precision": 0.879,
+          "recall": 0.637,
+          "f1": 0.739
+        },
+        "conditional-causal": {
+          "n": 24,
+          "precision": 0.581,
+          "recall": 0.75,
+          "f1": 0.655
+        },
+        "direct-causal": {
+          "n": 47,
+          "precision": 0.595,
+          "recall": 0.532,
+          "f1": 0.562
+        }
+      }
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2020_eureka",
+      "split": "bundle-test",
+      "rows": 193,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "confusion",
+      "value": {
+        "none": {
+          "none": 28,
+          "correlational": 4,
+          "conditional-causal": 2,
+          "direct-causal": 8
+        },
+        "correlational": {
+          "none": 19,
+          "correlational": 51,
+          "conditional-causal": 1,
+          "direct-causal": 9
+        },
+        "conditional-causal": {
+          "none": 6,
+          "correlational": 0,
+          "conditional-causal": 18,
+          "direct-causal": 0
+        },
+        "direct-causal": {
+          "none": 9,
+          "correlational": 3,
+          "conditional-causal": 10,
+          "direct-causal": 25
+        }
+      }
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2020_eureka",
+      "split": "model-eligible",
+      "rows": 2073,
+      "label_tier": "published-human",
+      "droppedTrainedOn": 0,
+      "droppedWithoutLabel": 0,
+      "metric": "macroF1",
+      "system": "yu2019-causal@84abecc",
+      "system_tier": "predicted",
+      "value": 0.831
+    },
+    {
+      "check": "causal-register",
+      "source": "yu2020_eureka",
+      "split": "model-eligible",
+      "rows": 2073,
+      "label_tier": "published-human",
+      "droppedTrainedOn": 0,
+      "droppedWithoutLabel": 0,
+      "metric": "macroF1",
+      "system": "engine@d6714e6",
+      "system_tier": "predicted",
+      "value": 0.626
+    },
+    {
+      "check": "certainty",
+      "source": "pei2021",
+      "split": "all",
+      "rows": 1551,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "rows",
+      "value": 1551,
+      "predicted": {
+        "value": 2166,
+        "exact": true
+      },
+      "match": false
+    },
+    {
+      "check": "certainty",
+      "source": "pei2021",
+      "split": "all",
+      "rows": 1551,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "spearman",
+      "value": 0.599,
+      "predicted": {
+        "value": 0.25,
+        "range": [
+          0.15,
+          0.35
+        ]
+      },
+      "match": false
+    },
+    {
+      "check": "certainty",
+      "source": "pei2021",
+      "split": "all",
+      "rows": 1551,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "measuredShare",
+      "value": 0.647,
+      "predicted": {
+        "value": 0.6,
+        "range": [
+          0.6,
+          1
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "certainty",
+      "source": "pei2021",
+      "split": "all",
+      "rows": 1551,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "tierCounts",
+      "value": {
+        "hedged": 498,
+        "measured": 1004,
+        "assertive": 36,
+        "absolute": 13
+      }
+    },
+    {
+      "check": "certainty",
+      "source": "pei2021",
+      "split": "bundle-test",
+      "rows": 164,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "rows",
+      "value": 164
+    },
+    {
+      "check": "certainty",
+      "source": "pei2021",
+      "split": "bundle-test",
+      "rows": 164,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "spearman",
+      "value": 0.558
+    },
+    {
+      "check": "certainty",
+      "source": "pei2021",
+      "split": "bundle-test",
+      "rows": 164,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "measuredShare",
+      "value": 0.634
+    },
+    {
+      "check": "certainty",
+      "source": "pei2021",
+      "split": "bundle-test",
+      "rows": 164,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "tierCounts",
+      "value": {
+        "hedged": 53,
+        "measured": 104,
+        "assertive": 5,
+        "absolute": 2
+      }
+    },
+    {
+      "check": "certainty",
+      "source": "pei2021",
+      "split": "model-eligible",
+      "rows": 331,
+      "label_tier": "published-human",
+      "droppedTrainedOn": 0,
+      "droppedWithoutLabel": 0,
+      "metric": "spearman",
+      "system": "certainty-estimator-sentence@97a130c",
+      "system_tier": "predicted",
+      "value": 0.616
+    },
+    {
+      "check": "certainty",
+      "source": "pei2021",
+      "split": "model-eligible",
+      "rows": 331,
+      "label_tier": "published-human",
+      "droppedTrainedOn": 0,
+      "droppedWithoutLabel": 0,
+      "metric": "spearman",
+      "system": "engine@d6714e6",
+      "system_tier": "predicted",
+      "value": 0.635
+    },
+    {
+      "check": "restatement-gap",
+      "source": "wright2021_pairs",
+      "split": "all",
+      "rows": 663,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "rows",
+      "value": 663,
+      "predicted": {
+        "value": 663,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "restatement-gap",
+      "source": "wright2021_pairs",
+      "split": "all",
+      "rows": 663,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "agreement",
+      "value": 0.511,
+      "predicted": {
+        "value": 0.45,
+        "range": [
+          0.35,
+          0.55
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "restatement-gap",
+      "source": "wright2021_pairs",
+      "split": "all",
+      "rows": 663,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "macroF1",
+      "value": 0.454,
+      "predicted": {
+        "value": 0.35,
+        "range": [
+          0.25,
+          0.45
+        ]
+      },
+      "match": false
+    },
+    {
+      "check": "restatement-gap",
+      "source": "wright2021_pairs",
+      "split": "all",
+      "rows": 663,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "abstractStrengthAccuracy",
+      "value": 0.59,
+      "predicted": {
+        "value": 0.7,
+        "range": [
+          0.62,
+          0.78
+        ]
+      },
+      "match": false
+    },
+    {
+      "check": "restatement-gap",
+      "source": "wright2021_pairs",
+      "split": "all",
+      "rows": 663,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "pressStrengthAccuracy",
+      "value": 0.504,
+      "predicted": {
+        "value": 0.62,
+        "range": [
+          0.54,
+          0.7
+        ]
+      },
+      "match": false
+    },
+    {
+      "check": "restatement-gap",
+      "source": "wright2021_pairs",
+      "split": "all",
+      "rows": 663,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "confusion",
+      "value": {
+        "same": {
+          "same": 228,
+          "exaggerates": 89,
+          "downplays": 89
+        },
+        "exaggerates": {
+          "same": 46,
+          "exaggerates": 51,
+          "downplays": 47
+        },
+        "downplays": {
+          "same": 24,
+          "exaggerates": 29,
+          "downplays": 60
+        }
+      }
+    },
+    {
+      "check": "restatement-gap",
+      "source": "wright2021_pairs",
+      "split": "bundle-test",
+      "rows": 50,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "rows",
+      "value": 50
+    },
+    {
+      "check": "restatement-gap",
+      "source": "wright2021_pairs",
+      "split": "bundle-test",
+      "rows": 50,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "agreement",
+      "value": 0.54
+    },
+    {
+      "check": "restatement-gap",
+      "source": "wright2021_pairs",
+      "split": "bundle-test",
+      "rows": 50,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "macroF1",
+      "value": 0.483
+    },
+    {
+      "check": "restatement-gap",
+      "source": "wright2021_pairs",
+      "split": "bundle-test",
+      "rows": 50,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "abstractStrengthAccuracy",
+      "value": 0.6
+    },
+    {
+      "check": "restatement-gap",
+      "source": "wright2021_pairs",
+      "split": "bundle-test",
+      "rows": 50,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "pressStrengthAccuracy",
+      "value": 0.42
+    },
+    {
+      "check": "restatement-gap",
+      "source": "wright2021_pairs",
+      "split": "bundle-test",
+      "rows": 50,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "confusion",
+      "value": {
+        "same": {
+          "same": 18,
+          "exaggerates": 3,
+          "downplays": 5
+        },
+        "exaggerates": {
+          "same": 5,
+          "exaggerates": 5,
+          "downplays": 4
+        },
+        "downplays": {
+          "same": 5,
+          "exaggerates": 1,
+          "downplays": 4
+        }
+      }
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "all",
+      "rows": 1058,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "rows",
+      "value": 1058,
+      "predicted": {
+        "value": 1058,
+        "exact": true
+      },
+      "match": true
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "all",
+      "rows": 1058,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "precision",
+      "value": 0.772,
+      "predicted": {
+        "value": 0.65,
+        "range": [
+          0.5,
+          0.8
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "all",
+      "rows": 1058,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "recall",
+      "value": 0.473,
+      "predicted": {
+        "value": 0.45,
+        "range": [
+          0.3,
+          0.6
+        ]
+      },
+      "match": true
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "all",
+      "rows": 1058,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "counts",
+      "value": {
+        "tp": 250,
+        "fp": 74,
+        "fn": 279,
+        "tn": 455
+      }
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "all",
+      "rows": 1058,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "precision (wide: + correlational)",
+      "value": 0.714
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "all",
+      "rows": 1058,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "recall (wide: + correlational)",
+      "value": 0.656
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "bundle-test",
+      "rows": 117,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "rows",
+      "value": 117
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "bundle-test",
+      "rows": 117,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "precision",
+      "value": 0.795
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "bundle-test",
+      "rows": 117,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "recall",
+      "value": 0.554
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "bundle-test",
+      "rows": 117,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "counts",
+      "value": {
+        "tp": 31,
+        "fp": 8,
+        "fn": 25,
+        "tn": 53
+      }
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "bundle-test",
+      "rows": 117,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "precision (wide: + correlational)",
+      "value": 0.731
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "bundle-test",
+      "rows": 117,
+      "label_tier": "published-human",
+      "system": "engine@d6714e6",
+      "metric": "recall (wide: + correlational)",
+      "value": 0.679
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "model-eligible",
+      "rows": 246,
+      "label_tier": "published-human",
+      "droppedTrainedOn": 0,
+      "droppedWithoutLabel": 0,
+      "metric": "f1",
+      "system": "cessc@42819b2",
+      "system_tier": "predicted",
+      "value": 0.89
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "model-eligible",
+      "rows": 246,
+      "label_tier": "published-human",
+      "droppedTrainedOn": 0,
+      "droppedWithoutLabel": 0,
+      "metric": "f1",
+      "system": "engine@d6714e6",
+      "system_tier": "predicted",
+      "value": 0.508
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "model-eligible",
+      "rows": 1058,
+      "label_tier": "published-human",
+      "droppedTrainedOn": 0,
+      "droppedWithoutLabel": 0,
+      "metric": "f1",
+      "system": "unicausal-seq@96ed92b",
+      "system_tier": "predicted",
+      "value": 0.609
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "model-eligible",
+      "rows": 1058,
+      "label_tier": "published-human",
+      "droppedTrainedOn": 0,
+      "droppedWithoutLabel": 0,
+      "metric": "f1",
+      "system": "engine@d6714e6",
+      "system_tier": "predicted",
+      "value": 0.586
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "model-eligible",
+      "rows": 1058,
+      "label_tier": "published-human",
+      "droppedTrainedOn": 0,
+      "droppedWithoutLabel": 0,
+      "metric": "f1",
+      "system": "unicausal-seq-released@96ed92b",
+      "system_tier": "predicted",
+      "value": 0.705
+    },
+    {
+      "check": "causal-sentence",
+      "source": "cessc_ssc",
+      "split": "model-eligible",
+      "rows": 1058,
+      "label_tier": "published-human",
+      "droppedTrainedOn": 0,
+      "droppedWithoutLabel": 0,
+      "metric": "f1",
+      "system": "engine@d6714e6",
+      "system_tier": "predicted",
+      "value": 0.586
+    }
+  ],
+  "selfCheck": {
+    "metrics": 112,
+    "unlabeled": 0
+  }
+}

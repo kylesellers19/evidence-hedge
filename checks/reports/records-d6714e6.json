@@ -1,0 +1,134 @@
+{
+  "engine_commit": "d6714e6",
+  "label_tier": "predicted",
+  "source": "fixtures A–C",
+  "split": "fixture",
+  "fixtures": {
+    "fixture-a-cadre": {
+      "rows": 240,
+      "fill": {
+        "causal_strength": 1,
+        "certainty": 1,
+        "attribution": 0.996,
+        "evidence": 0.329,
+        "generic": 0.275,
+        "present_tense": 0.304,
+        "action_guiding": 0.033,
+        "identification_strategy": 0,
+        "population": 0,
+        "exposure": 0,
+        "comparator": 0,
+        "outcome": 0,
+        "timeframe": 0,
+        "setting": 0,
+        "genre": 1
+      },
+      "unresolved": {
+        "causal_strength": 0,
+        "certainty": 0,
+        "attribution": 1,
+        "evidence": 161,
+        "generic": 0,
+        "present_tense": 0,
+        "action_guiding": 0,
+        "identification_strategy": 240,
+        "population": 240,
+        "exposure": 240,
+        "comparator": 240,
+        "outcome": 240,
+        "timeframe": 240,
+        "setting": 240,
+        "genre": 0
+      },
+      "genre": {
+        "commercial": 240
+      }
+    },
+    "fixture-b-pew-report": {
+      "rows": 237,
+      "fill": {
+        "causal_strength": 1,
+        "certainty": 1,
+        "attribution": 1,
+        "evidence": 0.388,
+        "generic": 0.068,
+        "present_tense": 0.156,
+        "action_guiding": 0.059,
+        "identification_strategy": 0.557,
+        "population": 0,
+        "exposure": 0,
+        "comparator": 0,
+        "outcome": 0,
+        "timeframe": 0,
+        "setting": 0,
+        "genre": 1
+      },
+      "unresolved": {
+        "causal_strength": 0,
+        "certainty": 0,
+        "attribution": 0,
+        "evidence": 145,
+        "generic": 0,
+        "present_tense": 0,
+        "action_guiding": 0,
+        "identification_strategy": 105,
+        "population": 237,
+        "exposure": 237,
+        "comparator": 237,
+        "outcome": 237,
+        "timeframe": 237,
+        "setting": 237,
+        "genre": 0
+      },
+      "genre": {
+        "research": 237
+      }
+    },
+    "fixture-c-gensler-fandom-2026": {
+      "rows": 417,
+      "fill": {
+        "causal_strength": 1,
+        "certainty": 1,
+        "attribution": 0.998,
+        "evidence": 0.293,
+        "generic": 0.062,
+        "present_tense": 0.094,
+        "action_guiding": 0.065,
+        "identification_strategy": 0.285,
+        "population": 0,
+        "exposure": 0,
+        "comparator": 0,
+        "outcome": 0,
+        "timeframe": 0,
+        "setting": 0,
+        "genre": 1
+      },
+      "unresolved": {
+        "causal_strength": 0,
+        "certainty": 0,
+        "attribution": 1,
+        "evidence": 295,
+        "generic": 0,
+        "present_tense": 0,
+        "action_guiding": 0,
+        "identification_strategy": 298,
+        "population": 417,
+        "exposure": 417,
+        "comparator": 417,
+        "outcome": 417,
+        "timeframe": 417,
+        "setting": 417,
+        "genre": 0
+      },
+      "genre": {
+        "commercial": 417
+      }
+    }
+  },
+  "mismatches": [
+    "fixture-b-pew-report present_tense: predicted [0.2,0.6], actual 0.156",
+    "fixture-b-pew-report identification_strategy: predicted [0.08,0.35], actual 0.557",
+    "fixture-c-gensler-fandom-2026 generic: predicted [0.1,0.45], actual 0.062",
+    "fixture-c-gensler-fandom-2026 present_tense: predicted [0.25,0.65], actual 0.094"
+  ]
+}

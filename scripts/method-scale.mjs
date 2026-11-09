@@ -65,6 +65,19 @@ const GOLD_TITLES = {
   'gold:fixture-b-pew-html': 'U.S. Workers Are More Worried Than Hopeful About Future AI Use in the Workplace',
   'academic:satish-ehp-2012': 'Is CO2 an indoor pollutant? Direct effects of low-to-moderate CO2 concentrations on human decision-making performance',
   'gold:jcu-timber-pilot': 'Timber pilot study (research online)',
+  // Manifest titles that are a category or a file name, given the document's own title.
+  'aec:top100/wsp/transitioning-to-zero-emission-technology-white-paper-final': 'Transitioning to Zero Emission Technology',
+  'aec:top100/arcadis-north-america/the-rapid-emergence-of-pfass': 'The Rapid Emergence of PFASs to Prominent Contaminants of Concern',
+  'aec:top100/nv5-global/nv5-which-radiation-detection-instrument-do-i-choose': 'What Radiation Detection Instrument Do I Choose to Meet My Needs?',
+}
+
+// A manifest title that is a file name ("NV5-Which-Radiation-…", "Rail and
+// Transit (transitioning-to-…_final)") reads as words; a lowercase one gets
+// its first letter capitalized.
+function cleanTitle(t = '') {
+  let s = t.replace(/\s*\([^)]*[_-][^)]*\)\s*$/, '')
+  if (!/\s/.test(s)) s = s.replace(/[-_]+/g, ' ')
+  return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
 // What the brief says it was read as (src/components/results/briefTop.js):
@@ -86,7 +99,7 @@ function anchorFor(n) {
   if (!r) return null
   return {
     id: r.id,
-    title: GOLD_TITLES[r.id] || r.title,
+    title: GOLD_TITLES[r.id] || cleanTitle(r.title),
     publisher: r.firm || GOLD_PUBLISHERS[r.id] || null,
     url: r.url,
     score: r.score,

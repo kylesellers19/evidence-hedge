@@ -113,7 +113,26 @@ out.examples = Object.fromEntries(CODES.map((c) => [c, reviewed.filter((v) => (v
 // ── 5. LOW and HIGH, strongest first ─────────────────────────────────────────
 // Strength = the reviewer's fair estimate (the midpoint of the first number
 // range in `fair`) minus the score, for LOW; the reverse for HIGH.
-const fairMid = (s) => { const m = /(\d+(?:\.\d+)?)\s*(?:to|-|–)\s*(\d+(?:\.\d+)?)/.exec(s || '') || /about (\d+(?:\.\d+)?)/.exec(s || ''); return m ? (m[2] ? (Number(m[1]) + Number(m[2])) / 2 : Number(m[1])) : null }
+// A reviewer's fair score, from phrases like "about 4", "4 to 5", "closer to 5.5"
+// or "4 on my read". Counts ("about 350 junk lines") and deltas ("about 1.5
+// high") are not scores, so only values from 1 to 10 not followed by a unit count.
+const NUM = String.raw`(\d+(?:\.\d+)?)(?!\.?\d)`
+const NOT_SCORE = String.raw`(?!\s*(?:%|points?|high|low|lines?|junk|of|claims|flags|words|times|x\b|pages|percent|per cent))`
+const FAIR_PATTERNS = [
+  new RegExp(String.raw`(?:about|near|nearer|closer to|roughly|around|perhaps|maybe|at|be|is|sit nearer)\s+${NUM}\s*(?:to|-|–)\s*${NUM}${NOT_SCORE}`, 'gi'),
+  new RegExp(String.raw`(?:about|near|nearer|closer to|roughly|around|perhaps|maybe|fairer at|fair at|would be)\s+${NUM}${NOT_SCORE}`, 'gi'),
+  new RegExp(String.raw`${NUM}\s*(?:to|-|–)\s*${NUM}\s+on my read`, 'gi'),
+  new RegExp(String.raw`${NUM}\s+on my read`, 'gi'),
+]
+const fairMid = (s) => {
+  for (const re of FAIR_PATTERNS) {
+    for (const m of String(s || '').matchAll(re)) {
+      const a = Number(m[1]); const b = m[2] != null ? Number(m[2]) : a
+      if (a >= 1 && a <= 10 && b >= 1 && b <= 10) return (a + b) / 2
+    }
+  }
+  return null
+}
 const byId = new Map(before.map((r) => [r.id, r]))
 const rank = (code, sign) => reviewed.filter((v) => (v.codes || []).some((x) => x.code === code)).map((v) => {
   const r = byId.get(v.id); const f = fairMid(v.fair)

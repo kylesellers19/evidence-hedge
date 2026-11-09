@@ -4,42 +4,78 @@
  "corpus": {
   "documents": 1603,
   "scored": 1568,
-  "reviewed": 416
+  "reviewed": 1603
  },
  "byScore": {
   "1": {
    "documents": 807,
-   "reviewedOk": 3,
+   "reviewedOk": 2,
    "anchor": {
-    "id": "aec:architecture/dlr-group/dlr-evolution-of-campus-4-0-research-outcomes",
-    "title": "Evolution of Campus 4.0: Research Outcomes",
-    "publisher": "DLR Group",
-    "url": "https://www.dlrgroup.com/media/Evolution-of-Campus-4.0-Research-Outcomes-Booklet_DIGITAL.pdf",
-    "score": 1,
-    "readAs": "Research published by a firm or interest group",
+    "id": "aec:top100/wsp/transitioning-to-zero-emission-technology-white-paper-final",
+    "title": "Transitioning to Zero Emission Technology",
+    "publisher": "WSP",
+    "url": "https://www.wsp.com/-/media/hubs/us/fact-sheets/transitioning-to-zero-emission-technology_white-paper_final.pdf",
+    "score": 1.1,
+    "readAs": "Thought leadership",
     "standard": "corporate",
-    "published": "2024-04"
+    "published": null
    }
   },
   "2": {
    "documents": 304,
-   "reviewedOk": 0,
-   "anchor": null
+   "reviewedOk": 1,
+   "anchor": {
+    "id": "aec:top100/nv5-global/nv5-which-radiation-detection-instrument-do-i-choose",
+    "title": "What Radiation Detection Instrument Do I Choose to Meet My Needs?",
+    "publisher": "NV5 Global",
+    "url": "https://www.nv5.com/wp-content/uploads/2019/01/NV5-Which-Radiation-Detection-Instrument-Do-I-Choose.pdf",
+    "score": 2,
+    "readAs": "Advice on a consequential topic",
+    "standard": "general",
+    "published": "2019-01"
+   }
   },
   "3": {
    "documents": 202,
-   "reviewedOk": 0,
-   "anchor": null
+   "reviewedOk": 5,
+   "anchor": {
+    "id": "aec:top100/suffolk/whitepaper-yahoo-building-sustainability",
+    "title": "Building Sustainability (Yahoo) white paper",
+    "publisher": "Suffolk",
+    "url": "https://suffolk.com/wp-content/uploads/2025/08/Yahoo_WhitePaper-1.pdf",
+    "score": 2.8,
+    "readAs": "Marketing copy",
+    "standard": "corporate",
+    "published": "2023-05"
+   }
   },
   "4": {
    "documents": 133,
-   "reviewedOk": 0,
-   "anchor": null
+   "reviewedOk": 1,
+   "anchor": {
+    "id": "aec:top100/arcadis-north-america/the-rapid-emergence-of-pfass",
+    "title": "The Rapid Emergence of PFASs to Prominent Contaminants of Concern",
+    "publisher": "Arcadis North America",
+    "url": "https://media.arcadis.com/-/media/project/arcadiscom/com/perspectives/global/2018/the-emerging-issue-pfas/the-rapid-emergence-of-pfass.pdf",
+    "score": 3.6,
+    "readAs": "Marketing copy",
+    "standard": "corporate",
+    "published": "2018"
+   }
   },
   "5": {
    "documents": 87,
-   "reviewedOk": 0,
-   "anchor": null
+   "reviewedOk": 1,
+   "anchor": {
+    "id": "aec:top100/swinerton/lead-times-highlight-q4-2023",
+    "title": "Lead Times Highlight (Q4 2023)",
+    "publisher": "Swinerton",
+    "url": "https://swinerton.com/wp-content/uploads/2023/11/Lead-Times_Highlight_Q4.pdf",
+    "score": 4.8,
+    "readAs": "Advice on a consequential topic",
+    "standard": "general",
+    "published": "2023-11"
+   }
   },
   "6": {
    "documents": 20,
@@ -53,8 +89,17 @@
   },
   "8": {
    "documents": 4,
-   "reviewedOk": 0,
-   "anchor": null
+   "reviewedOk": 1,
+   "anchor": {
+    "id": "aec:top100/perkins-eastman/latrobe-educational-adequacy-1",
+    "title": "Latrobe Prize Study: Educational Adequacy",
+    "publisher": "Perkins Eastman",
+    "url": "https://www.perkinseastman.com/wp-content/uploads/2023/11/Latrobe-Educational-Adequacy-1.pdf",
+    "score": 7.9,
+    "readAs": "Advice on a consequential topic",
+    "standard": "general",
+    "published": "2023-11"
+   }
   },
   "9": {
    "documents": 0,

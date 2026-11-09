@@ -980,8 +980,9 @@ function ScoreScale() {
       <p className="eh-note">
         The examples below are documents from our corpus that scored each number and that a reviewer read
         alongside their text and found the output sound. They were scored by engine build {SCALE.engine} on{' '}
-        {apDate(SCALE.generated)}, and they change when the engine changes. We name and link them; we do not
-        quote them.
+        {apDate(SCALE.generated)}, each as its PDF uploaded, and they change when the engine changes. Pasting
+        the link instead can give a different reading, because the web address names the publisher. We name
+        and link them; we do not quote them.
       </p>
       <ol className="eh-scale">
         {scores.map((n) => <ScaleEntry key={n} n={n} plainCost={plainCost} />)}

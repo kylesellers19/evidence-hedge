@@ -37,6 +37,7 @@ if (process.argv.includes('--sample')) {
 }
 
 const show = arg('show', null)
+const brief = process.argv.includes('--brief')
 if (show) {
   for (const id of show.split(',')) {
     const v = reviews.find((x) => x.id === id)
@@ -47,11 +48,11 @@ if (show) {
     console.log(`\n=== ${id} [${v.chunk}] ${r.url || ''}`)
     console.log(`score ${r.score} · ${r.rubric.judgedAs} · ${r.posture} · prov ${r.provenance} · ${r.claims}c ${r.strong}s · U${r.flags['unsupported-assertion']} O${r.flags.overconfident} C${r.flags['causal-overreach']} · refs ${r.references} · ${r.words}w`)
     console.log(`what: ${v.what} · lines read ${v.read?.lines}`)
-    console.log(`HEAD: ${d.head.slice(0, 260).replace(/\s+/g, ' ')}`)
+    if (!brief) console.log(`HEAD: ${d.head.slice(0, 260).replace(/\s+/g, ' ')}`)
     console.log(`VERDICT ${v.verdict}${v.fair ? ` · fair: ${v.fair}` : ''}`)
     for (const c of v.codes || []) {
       console.log(`  ${c.code}: ${c.note} [${c.evidence}]`)
-      const idx = [...String(c.evidence || '').matchAll(/#(\d+)/g)].map((m) => Number(m[1])).slice(0, 2)
+      const idx = [...String(c.evidence || '').matchAll(/#(\d+)/g)].map((m) => Number(m[1])).slice(0, brief ? 1 : 2)
       for (const i of idx) {
         const p = byIdx.get(i)
         if (p) console.log(`     #${i} ${p.flag || ''}${p.overreach ? ' C' + p.overreach : ''} ${p.tier} ${p.fn}${p.s ? ' (strict)' : ''}| ${p.text.replace(/\s+/g, ' ').slice(0, 130)}`)

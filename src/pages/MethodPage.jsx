@@ -969,8 +969,8 @@ function ScoreScale() {
         the document loses. It loses points for its flagged claims, counted as a rate, and up to{' '}
         {W.OVERREACH_CAP} for causal overreach; it also pays for the checks on the whole document, missing
         reporting items, platitudes and self-citation (see <a href="#score">From flags to a score</a>). It is held between {W.MIN} and {W.MAX}{' '}
-        and kept to one decimal. So a whole number on a brief means the document lost more than half a point
-        below what would round to the next number up, and at most half a point above it.
+        and kept to one decimal. So a whole number on a brief stands for any score within half a point of it,
+        and each entry below gives the losses that produce it.
       </p>
       <p>
         One way to picture the losses: under a strict standard, a plain statement that cites nothing costs a

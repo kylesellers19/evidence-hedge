@@ -8,9 +8,9 @@
    This file only consumes them. */
 
 /* ═══════════════ LANDING — "a single question in a white room" ═══════════════
-   First paint contains ONLY: the mark, one italic serif question and the
-   quiet input panel, under the site masthead (src/components/layout/), which
-   floats over this page and carries the name. Nothing else. */
+   First paint contains ONLY: the mark, the italic serif headline with its dek
+   and the quiet input panel, under the site masthead (src/components/layout/),
+   which floats over this page and carries the name. Nothing else. */
 
 .eh-landing {
   min-height: 100vh;
@@ -43,8 +43,8 @@
   text-align: center;
 }
 
-/* The one prominent line on the page: the question, large italic display serif. */
-.eh-question {
+/* The one prominent line on the page: the headline, large italic display serif. */
+.eh-landing-hed {
   font-family: var(--eh-serif);
   font-style: italic;
   font-weight: 500;
@@ -53,12 +53,23 @@
   letter-spacing: -0.01em;
   color: var(--eh-ink);
   text-align: center;
-  margin: 26px 0 40px;
-  max-width: 15ch;
+  text-wrap: balance;
+  margin: 26px 0 18px;
+  max-width: 20ch;
+}
+
+/* The dek: what the tool does, in the soft serif of the editorial pages. */
+.eh-landing-dek {
+  font: 400 18px/1.5 var(--eh-serif);
+  color: var(--eh-ink-soft);
+  text-align: center;
+  text-wrap: pretty;
+  margin: 0 0 36px;
 }
 
 /* Input panel: a hairline at rest, no shadow. Focus-within darkens the line. */
 .eh-input-panel {
+  position: relative;
   width: 100%;
   background: #fff;
   border: 1px solid var(--eh-hairline);
@@ -69,36 +80,24 @@
   border-color: var(--eh-ink-soft);
 }
 
-/* Two small text buttons above the field — not a full-width tab bar. They read
-   like the masthead's links: grey at rest, ink and underlined when current. */
-.eh-toggle {
+/* A file dragged over the page: the line turns to the accent and a cue covers
+   the panel. pointer-events stay off the cue so the drop lands on the page. */
+.eh-input-panel.is-dragging {
+  border-color: var(--eh-accent);
+}
+
+.eh-drop-cue {
+  position: absolute;
+  inset: 0;
   display: flex;
-  gap: 18px;
-  padding: 14px 16px 4px;
-}
-
-.eh-toggle button {
-  appearance: none;
-  background: none;
-  border: 0;
-  padding: 0 0 3px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.94);
   font-family: var(--eh-sans);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
-  color: var(--eh-ink-soft);
-  cursor: pointer;
-}
-
-.eh-toggle button:hover {
-  color: var(--eh-ink);
-}
-
-.eh-toggle button.is-active {
-  color: var(--eh-ink);
-  text-decoration: underline;
-  text-decoration-color: var(--eh-accent);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 6px;
+  color: var(--eh-accent);
+  pointer-events: none;
 }
 
 .eh-notice {
@@ -112,8 +111,7 @@
   padding: 10px 0 0;
 }
 
-.eh-textarea,
-.eh-urlinput {
+.eh-textarea {
   width: 100%;
   border: 0;
   padding: 14px 16px;
@@ -126,23 +124,59 @@
   box-sizing: border-box;
 }
 
-.eh-textarea::placeholder,
-.eh-urlinput::placeholder {
+.eh-textarea::placeholder {
   color: var(--eh-ink-soft);
   opacity: 0.7;
 }
 
-.eh-textarea:focus,
-.eh-urlinput:focus {
+.eh-textarea:focus {
   outline: none; /* the panel's focus-within treatment is the signal */
 }
 
-/* Submit: the accent, compact, content-width — right-aligned within the panel. */
+/* Loading state: a plain mono line, no colored spinner. */
+.eh-status {
+  font-family: var(--eh-mono);
+  font-size: 12px;
+  color: var(--eh-ink-soft);
+  margin: 4px 16px 0;
+}
+
+/* Upload on the left as a hairline control, submit on the right in the accent;
+   both content-width, the same height. */
 .eh-submit-row {
   display: flex;
-  justify-content: flex-end;
-  padding: 4px 16px 16px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px 14px;
 }
+
+.eh-upload {
+  appearance: none;
+  border: 1px solid var(--eh-hairline);
+  border-radius: 3px;
+  background: var(--eh-paper);
+  color: var(--eh-ink);
+  font-family: var(--eh-sans);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: border-color 0.18s ease;
+}
+
+.eh-upload:hover:not(:disabled) {
+  border-color: var(--eh-ink-soft);
+}
+
+.eh-upload:disabled {
+  color: var(--eh-ink-soft);
+  cursor: default;
+}
+
+/* Submit: the accent, compact, content-width. */
 
 .eh-submit {
   display: inline-block;
@@ -156,9 +190,23 @@
   font-size: 14px;
   font-weight: 600;
   line-height: 1.2;
+  white-space: nowrap;
   padding: 11px 22px;
   cursor: pointer;
   transition: background-color 0.18s ease;
+}
+
+/* Phones: a 16px gutter and tighter buttons keep both on one line. */
+@media (max-width: 479px) {
+  .eh-landing {
+    padding: 48px 16px;
+  }
+  .eh-upload {
+    padding: 10px 13px;
+  }
+  .eh-landing .eh-submit {
+    padding: 11px 16px;
+  }
 }
 
 .eh-submit:hover:not(:disabled) {
@@ -171,8 +219,18 @@
   cursor: default;
 }
 
+/* Disclosure under the controls: small and quiet. */
+.eh-disclosure {
+  font-family: var(--eh-sans);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--eh-ink-soft);
+  margin: 0 16px 14px;
+  opacity: 0.85;
+}
+
 /* Shared focus ring. */
-.eh-toggle button:focus-visible,
+.eh-upload:focus-visible,
 .eh-submit:focus-visible,
 .eh-rubric-card:focus-visible,
 .eh-backlink:focus-visible {

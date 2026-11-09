@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ParticleMark from "../components/ParticleMark.jsx";
-import FileDropZone from "../components/FileDropZone.jsx";
-import { extractFileDocument } from "../ingest/extractFile.js";
+import { extractFileDocument, ACCEPT_ATTR } from "../ingest/extractFile.js";
 import { ExtractionError } from "../ingest/errors.js";
 import { normalizeText } from "../ingest/normalizer.js";
 import { fetchLink, looksLikeUrl } from "../ingest/fetchLink.js";
@@ -12,41 +11,44 @@ import "../styles/landing.css";
 /**
  * LandingPage — the app's front door. "A single question in a white room."
  *
- * First paint shows only: the animated mark, one italic serif question and a
- * quiet input panel, under the site masthead. One decision on screen:
- * give the tool a document, by text or by link. On submit, the parent runs
- * autodetect and pushes to the rubric branch screen.
+ * First paint shows only: the animated mark, the italic serif headline, its
+ * dek and a quiet input panel, under the site masthead. One decision on
+ * screen: give the tool a document. The panel takes it any of three ways with
+ * no mode to pick: paste text into the box, paste a link into the same box, or
+ * drop a file anywhere on the page (or click "Upload a file"). On submit, the
+ * parent runs autodetect and pushes to the rubric branch screen.
  *
  * Props:
  *   onAnalyze(text, meta)  — meta: { sourceUrl?: string }
  *
- * A pasted link (in Paste link mode, or a bare URL pasted into the text box) is
- * fetched by ingest/fetchLink.js: a PDF/DOCX/TXT/MD the host lets the browser
- * download runs through the upload extractors; everything else is read through
- * the Jina Reader service (r.jina.ai). On any failure the person sees one
- * actionable sentence for that reason (ingest/failureCopy.js) — a designed
- * fallback state, not an error toast.
+ * A box holding only a URL is fetched by ingest/fetchLink.js: a PDF/DOCX/TXT/MD
+ * the host lets the browser download runs through the upload extractors;
+ * everything else is read through the Jina Reader service (r.jina.ai). On any
+ * failure the person sees one actionable sentence for that reason
+ * (ingest/failureCopy.js) — a designed fallback state, not an error toast.
  */
 
+const hasFiles = (e) => Array.from(e.dataTransfer?.types || []).includes("Files");
+
 export default function LandingPage({ onAnalyze }) {
-  const [mode, setMode] = useState("text"); // "text" | "link"
+  const fileRef = useRef(null);
   const [text, setText] = useState("");
-  const [url, setUrl] = useState("");
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState(null);
   const [extracting, setExtracting] = useState(false);
   const [filename, setFilename] = useState(null);
+  const [dragging, setDragging] = useState(false);
 
-  const canSubmit = mode === "text" ? text.trim().length > 0 : url.trim().length > 0;
+  const working = busy || extracting;
+  const canSubmit = text.trim().length > 0;
 
   async function handleSubmit() {
     setNotice(null);
-    const raw = (mode === "text" ? text : url).trim();
+    const raw = text.trim();
     if (!raw) return;
 
-    // Link mode always fetches; text mode fetches only if the value is a lone URL.
-    const isUrl = mode === "link" || looksLikeUrl(raw);
-    if (!isUrl) {
+    // A box holding only a URL is fetched; anything else is the document.
+    if (!looksLikeUrl(raw)) {
       // Pasted text runs through the SAME normalizer as extracted files.
       const pasted = normalizeText(raw);
       const check = validateText(pasted, { path: "paste" });
@@ -66,12 +68,12 @@ export default function LandingPage({ onAnalyze }) {
     }
 
     // Designed fallback: route the person to paste the article text.
-    setMode("text");
     setNotice(failureCopy(result));
   }
 
   // File upload → extract → normalize → hand to the pipeline as if pasted.
   async function handleFile(file) {
+    if (!file || working) return;
     setNotice(null);
     setFilename(file.name);
     setExtracting(true);
@@ -83,114 +85,108 @@ export default function LandingPage({ onAnalyze }) {
     } catch (err) {
       const kind = err instanceof ExtractionError ? err.kind : "corrupt";
       setExtracting(false);
-      setMode("text");
       setNotice(failureCopy({ reason: "extract", kind }));
     }
   }
 
+  // The whole page takes a dropped file, so a near miss doesn't open it in
+  // the browser. Text dragged into the box keeps the browser's own behaviour.
+  const dropProps = {
+    onDragOver: (e) => {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      if (!working) setDragging(true);
+    },
+    onDragLeave: (e) => {
+      if (!e.currentTarget.contains(e.relatedTarget)) setDragging(false);
+    },
+    onDrop: (e) => {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      setDragging(false);
+      handleFile(e.dataTransfer.files[0]);
+    },
+  };
+
+  // A file copied in the Finder and pasted into the box reads as an upload.
+  function handlePaste(e) {
+    const file = e.clipboardData?.files?.[0];
+    if (file && !e.clipboardData.getData("text/plain")) {
+      e.preventDefault();
+      handleFile(file);
+    }
+  }
+
   return (
-    <main className="eh-landing">
+    <main className="eh-landing" {...dropProps}>
       <div className="eh-landing-inner">
         {/* The masthead carries the name; the mark is the identity. */}
         <ParticleMark size={300} />
 
         {/* The only prominent text on the page. */}
-        <h1 className="eh-question">Does the evidence carry the claim?</h1>
+        <h1 className="eh-landing-hed">The evidence–assertion gap is where we hedge.</h1>
+        <p className="eh-landing-dek">
+          Find out where research falls short—across academic publications, conference proceedings,
+          press releases, and corporate reports. Where evidence is selectively presented, claims
+          overstate findings, and conclusions aren’t justified by the underlying data.
+        </p>
 
-        <div className="eh-input-panel">
-          <div className="eh-toggle" role="tablist" aria-label="Input method">
-            <button
-              role="tab"
-              aria-selected={mode === "text"}
-              className={mode === "text" ? "is-active" : ""}
-              onClick={() => { setMode("text"); setNotice(null); }}
-            >
-              Paste text
-            </button>
-            <button
-              role="tab"
-              aria-selected={mode === "link"}
-              className={mode === "link" ? "is-active" : ""}
-              onClick={() => { setMode("link"); setNotice(null); }}
-            >
-              Paste link
-            </button>
-          </div>
-
+        <div className={"eh-input-panel" + (dragging ? " is-dragging" : "")}>
           {notice && <p className="eh-notice">{notice}</p>}
 
-          {mode === "text" ? (
-            <textarea
-              className="eh-textarea"
-              placeholder="Paste the text of a report, a white paper or a press release."
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              rows={7}
-              spellCheck={false}
-            />
-          ) : (
-            <input
-              className="eh-urlinput"
-              type="url"
-              placeholder="https://vendor.example/whitepaper"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && canSubmit && handleSubmit()}
-              spellCheck={false}
-            />
-          )}
+          <textarea
+            className="eh-textarea"
+            aria-label="Paste the text of a document or a link to it"
+            placeholder="Paste text or a link, or drop a PDF, DOCX, TXT or MD file here."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onPaste={handlePaste}
+            rows={7}
+            spellCheck={false}
+          />
 
           {/* Loading state — a plain mono line, no colored spinner. */}
-          {busy && (
-            <p
-              style={{
-                fontFamily: "var(--eh-mono)",
-                fontSize: "12px",
-                color: "var(--eh-ink-soft)",
-                margin: "10px 16px 0",
-              }}
-              aria-live="polite"
-            >
-              fetching…
+          {working && (
+            <p className="eh-status" aria-live="polite">
+              {extracting ? (
+                <>
+                  <span style={{ color: "var(--eh-ink)" }}>{filename}</span> — reading…
+                </>
+              ) : (
+                "fetching…"
+              )}
             </p>
           )}
 
           <div className="eh-submit-row">
-            <button
-              className="eh-submit"
-              disabled={!canSubmit || busy || extracting}
-              onClick={handleSubmit}
-            >
-              {busy ? "Fetching…" : "Weigh the evidence"}
+            <button className="eh-upload" disabled={working} onClick={() => fileRef.current?.click()}>
+              Upload a file
+            </button>
+            <button className="eh-submit" disabled={!canSubmit || working} onClick={handleSubmit}>
+              {busy ? "Fetching…" : extracting ? "Reading…" : "Weigh the evidence"}
             </button>
           </div>
 
-          {/* File upload — drop or browse. Filename renders in mono. */}
-          <div style={{ borderTop: "1px solid var(--eh-hairline)", margin: "0 16px", padding: "12px 0 4px" }}>
-            <FileDropZone onFile={handleFile} disabled={extracting || busy} />
-            {extracting && (
-              <p style={{ margin: "10px 0 0", fontSize: "12px" }} aria-live="polite">
-                <span style={{ fontFamily: "var(--eh-mono)", color: "var(--eh-ink)" }}>{filename}</span>
-                <span style={{ fontFamily: "var(--eh-mono)", color: "var(--eh-ink-soft)" }}> — reading…</span>
-              </p>
-            )}
-          </div>
-
           {/* Disclosure: URL fetches route through a third-party reader. */}
-          <p
-            style={{
-              fontFamily: "var(--eh-sans)",
-              fontSize: "11px",
-              lineHeight: 1.5,
-              color: "var(--eh-ink-soft)",
-              margin: "0 16px 14px",
-              opacity: 0.85,
-            }}
-          >
+          <p className="eh-disclosure">
             Links are read through r.jina.ai, a third-party reader service, unless they point to a PDF
             or DOCX the site lets your browser download directly.
           </p>
+
+          {dragging && (
+            <div className="eh-drop-cue" aria-hidden="true">
+              Drop the file to read it.
+            </div>
+          )}
         </div>
+
+        <input
+          ref={fileRef}
+          type="file"
+          accept={ACCEPT_ATTR}
+          hidden
+          onChange={(e) => { handleFile(e.target.files?.[0]); e.target.value = ""; }}
+        />
       </div>
     </main>
   );

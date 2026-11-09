@@ -23,7 +23,7 @@ const URL_RE = /https?:\/\/[^\s)]+/g
 export function profileDocument(text, { sourceUrl = '' } = {}) {
   const { body, references } = segmentDocument(text || '')
   const claimUrls = (body.match(URL_RE) || [])
-  const provenance = profileProvenance(body, { sourceUrl, references: references.map((t) => ({ text: t })), claimUrls })
+  const provenance = profileProvenance(body, { sourceUrl, references: references.map((t) => ({ text: t })), claimUrls, text: text || '' })
   const publisher = publisherNames(provenance, body)
   const design = profileDesign(body, { provenance: provenance.kind, references: references.length, publisher })
   const genre = profileGenre(body, { sourceUrl, provenance, design })

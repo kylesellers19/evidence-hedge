@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// profileProvenance(body, { sourceUrl, references }) → who is speaking
+// profileProvenance(body, { sourceUrl, references, text }) → who is speaking
 //
 //   kind: peer-reviewed-journal | academic-press-office | government |
 //         nonprofit-research | firm-vendor | news-outlet | trade-press |
@@ -12,7 +12,7 @@
 // Order of evidence: (1) the document's OWN venue block — DOI, journal line,
 // received/accepted dates in the body, never DOIs inside the reference list;
 // (2) the link's host, or with no link the web address the document gives as
-// its own (ownHost); (3) text cues. Rubric-invariant. AACODS grounds the
+// its own (ownHost, read on the whole text); (3) text cues. Rubric-invariant. AACODS grounds the
 // criterion (rubric provenance footer).
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -171,10 +171,13 @@ export function selfCitationShare(org, references, claimUrls) {
 
 /**
  * @param {string} body  document text without its reference list
- * @param {{ sourceUrl?: string, references?: {text:string}[], claimUrls?: string[] }} [options]
+ * @param {{ sourceUrl?: string, references?: {text:string}[], claimUrls?: string[], text?: string }} [options]
+ *   text: the whole document. The own address is read on its edges, since a back
+ *   cover after the reference list is not in the body; on the body's edges when
+ *   the whole text gives none (an address just before the reference list).
  */
-export function profileProvenance(body, { sourceUrl = '', references = [], claimUrls = [] } = {}) {
-  const own = sourceUrl ? null : ownHost(body)
+export function profileProvenance(body, { sourceUrl = '', references = [], claimUrls = [], text = body } = {}) {
+  const own = sourceUrl ? null : ownHost(text) || ownHost(body)
   const host = hostOf(sourceUrl) || own?.host || ''
   const venue = venueEvidence(body)
   const { scores, evidence: textEvidence } = textScores(body)

@@ -1,10 +1,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Sentence units — the app's own segmentation, with stable ids (change set 1).
 //
-// splitSentences is copied verbatim from src/engine/extractClaims.js, where it
-// is not exported (the engine is frozen for this change set).
-// checks/units-drift.test.mjs fails if extractClaims ever returns a claim that
-// is not, in order, one of these units, so the copy cannot drift silently.
+// splitSentences is the engine's own (src/engine/extractClaims.js). It was a
+// copy while the engine was frozen (change set 1); the copy had already fallen
+// behind on superscript markers when paragraph-aware splitting came in, so the
+// units now import it. checks/benchmark-guards.test.mjs fails if extractClaims
+// ever returns a claim that is not, in order, one of these units.
 //
 // A unit is one sentence of the body analyze() reads (the text before the
 // reference list, measure/segment.js), in document order:
@@ -21,26 +22,7 @@
 import { createHash } from 'node:crypto'
 import { segmentDocument, sectionOpenedBy } from '../../src/engine/measure/segment.js'
 import { pageLocator } from '../../src/engine/pages.js'
-
-// ── Copied from src/engine/extractClaims.js @ dc34856 (lines 18–35) ──────────
-const ABBREV = /\b(?:e\.g|i\.e|vs|etc|al|Dr|Mr|Mrs|Ms|Inc|Ltd|Corp|Fig|No|pp|cf)\.$/i
-
-function splitSentences(text) {
-  const rough = text
-    .replace(/\s+/g, ' ')
-    .split(/(?<=[.!?])\s+(?=["'“(]?[A-Z0-9])/)
-  // Re-join fragments that split on a known abbreviation.
-  const out = []
-  for (const frag of rough) {
-    if (out.length && ABBREV.test(out[out.length - 1])) {
-      out[out.length - 1] += ' ' + frag
-    } else {
-      out.push(frag)
-    }
-  }
-  return out.map(s => s.trim()).filter(Boolean)
-}
-// ── End of copy ──────────────────────────────────────────────────────────────
+import { splitSentences } from '../../src/engine/extractClaims.js'
 
 export { splitSentences }
 

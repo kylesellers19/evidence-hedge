@@ -1,12 +1,12 @@
 {
   "recorded": "2026-11-09",
-  "engine_commit": "7178387-dirty",
+  "engine_commit": "070850f-dirty",
   "documents": {
     "allen-ehp-2016": {
       "counts": {
         "backed": 67,
         "overstates": 0,
-        "fact": 40,
+        "fact": 41,
         "cautious": 6,
         "method": 115
       },
@@ -64,24 +64,24 @@
           "Nothing",
           0,
           0,
-          36,
+          37,
           6
         ]
       ],
       "checkFirst": [
-        213,
-        217,
-        22,
-        3,
-        185,
-        2
+        214,
+        218,
+        23,
+        4,
+        186,
+        3
       ]
     },
     "hsph-press-2015": {
       "counts": {
-        "backed": 1,
+        "backed": 2,
         "overstates": 0,
-        "fact": 16,
+        "fact": 18,
         "cautious": 3,
         "method": 2
       },
@@ -101,6 +101,13 @@
           1
         ],
         [
+          "Its own figures",
+          1,
+          0,
+          0,
+          0
+        ],
+        [
           "“Research shows”",
           0,
           0,
@@ -111,31 +118,31 @@
           "Nothing",
           0,
           0,
-          15,
+          17,
           1
         ]
       ],
       "checkFirst": [
-        10,
-        0,
-        8,
         11,
-        21,
-        9
+        0,
+        13,
+        9,
+        12,
+        24
       ]
     },
     "sciencedaily-2015": {
       "counts": {
-        "backed": 8,
+        "backed": 9,
         "overstates": 0,
-        "fact": 27,
-        "cautious": 5,
+        "fact": 28,
+        "cautious": 6,
         "method": 1
       },
       "rows": [
         [
           "Links and notes",
-          2,
+          3,
           0,
           0,
           0
@@ -172,16 +179,16 @@
           "Nothing",
           0,
           0,
-          26,
-          2
+          27,
+          3
         ]
       ],
       "checkFirst": [
         12,
+        21,
         20,
-        19,
         10,
-        39,
+        40,
         13
       ]
     },
@@ -189,8 +196,8 @@
       "counts": {
         "backed": 5,
         "overstates": 0,
-        "fact": 26,
-        "cautious": 3,
+        "fact": 37,
+        "cautious": 5,
         "method": 7
       },
       "rows": [
@@ -199,7 +206,7 @@
           3,
           0,
           2,
-          0
+          1
         ],
         [
           "The study it reports",
@@ -219,16 +226,16 @@
           "Nothing",
           0,
           0,
-          22,
-          2
+          33,
+          3
         ]
       ],
       "checkFirst": [
-        39,
+        52,
         16,
         17,
-        37,
-        24,
+        50,
+        28,
         10
       ]
     },
@@ -275,8 +282,8 @@
         7,
         5,
         1,
-        15,
-        18
+        0,
+        15
       ]
     },
     "naava-allen": {
@@ -322,7 +329,7 @@
       "counts": {
         "backed": 1,
         "overstates": 1,
-        "fact": 24,
+        "fact": 25,
         "cautious": 1,
         "method": 2
       },
@@ -345,26 +352,26 @@
           "Nothing",
           0,
           0,
-          23,
+          24,
           1
         ]
       ],
       "checkFirst": [
-        4,
+        27,
         5,
         9,
+        4,
         25,
-        27,
         28
       ]
     },
     "gensler-press-2024": {
       "counts": {
-        "backed": 6,
+        "backed": 7,
         "overstates": 2,
-        "fact": 18,
+        "fact": 20,
         "cautious": 2,
-        "method": 3
+        "method": 2
       },
       "rows": [
         [
@@ -383,7 +390,7 @@
         ],
         [
           "Its own data or figures",
-          3,
+          4,
           1,
           0,
           0
@@ -392,25 +399,25 @@
           "Nothing",
           0,
           0,
-          18,
+          20,
           2
         ]
       ],
       "checkFirst": [
         5,
         2,
-        6,
-        19,
+        10,
+        30,
         1,
-        29
+        13
       ]
     },
     "bdc-gensler-news-2024": {
       "counts": {
-        "backed": 3,
+        "backed": 2,
         "overstates": 0,
-        "fact": 24,
-        "cautious": 5,
+        "fact": 30,
+        "cautious": 6,
         "method": 1
       },
       "rows": [
@@ -430,7 +437,7 @@
         ],
         [
           "Its own figures",
-          3,
+          2,
           0,
           0,
           0
@@ -446,17 +453,17 @@
           "Nothing",
           0,
           0,
-          19,
-          4
+          25,
+          5
         ]
       ],
       "checkFirst": [
-        29,
-        23,
-        7,
+        31,
+        25,
+        0,
         1,
-        19,
-        11
+        7,
+        12
       ]
     },
     "co2meter-plants": {
@@ -464,7 +471,7 @@
         "backed": 1,
         "overstates": 2,
         "fact": 4,
-        "cautious": 102,
+        "cautious": 104,
         "method": 1
       },
       "rows": [
@@ -494,14 +501,15 @@
           0,
           1,
           4,
-          101
+          103
         ]
       ],
       "checkFirst": [
-        8,
-        46,
+        2,
+        45,
+        7,
         6,
-        7
+        5
       ]
     },
     "jcu-timber-pilot": {
@@ -567,10 +575,10 @@
     },
     "fixture-a-cadre": {
       "counts": {
-        "backed": 75,
-        "overstates": 10,
-        "fact": 148,
-        "cautious": 9,
+        "backed": 71,
+        "overstates": 9,
+        "fact": 155,
+        "cautious": 10,
         "method": 0
       },
       "rows": [
@@ -590,8 +598,8 @@
         ],
         [
           "A citation nearby",
-          21,
-          4,
+          17,
+          3,
           0,
           0
         ],
@@ -620,17 +628,17 @@
           "Nothing",
           0,
           0,
-          142,
-          9
+          149,
+          10
         ]
       ],
       "checkFirst": [
-        94,
-        132,
+        95,
+        135,
+        89,
         88,
-        87,
-        56,
-        172
+        127,
+        175
       ]
     },
     "fixture-b-pew-html": {
@@ -672,16 +680,16 @@
         ]
       ],
       "checkFirst": [
-        2
+        1
       ]
     },
     "fixture-b-pew-report": {
       "counts": {
-        "backed": 121,
+        "backed": 123,
         "overstates": 3,
-        "fact": 9,
+        "fact": 8,
         "cautious": 5,
-        "method": 93
+        "method": 104
       },
       "rows": [
         [
@@ -699,13 +707,6 @@
           0
         ],
         [
-          "People it quotes",
-          1,
-          0,
-          0,
-          0
-        ],
-        [
           "A kind of source, named",
           2,
           1,
@@ -714,7 +715,7 @@
         ],
         [
           "Its own study",
-          31,
+          34,
           0,
           0,
           0
@@ -737,17 +738,17 @@
           "Nothing",
           0,
           0,
-          8,
+          7,
           5
         ]
       ],
       "checkFirst": [
         21,
-        10,
-        195,
-        214,
-        197,
-        220
+        226,
+        203,
+        205,
+        232,
+        13
       ]
     }
   }

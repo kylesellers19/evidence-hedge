@@ -16,12 +16,32 @@ import { nonClaimRule, sectionOpenedBy } from './measure/segment.js'
 /** @typedef {import('./types.js').Citation} Citation */
 
 // Sentence splitter — breaks on .!? followed by whitespace + a capital/quote,
-// while leaving common abbreviations intact.
+// while leaving common abbreviations intact. A short paragraph that neither
+// ends a sentence nor leads into the next (a heading, a label, a cover line)
+// also ends at its paragraph break, so it never runs into the sentence below
+// it; a next paragraph that starts in lower case still continues it.
 const ABBREV = /\b(?:e\.g|i\.e|vs|etc|al|Dr|Mr|Mrs|Ms|Inc|Ltd|Corp|Fig|No|pp|cf)\.$/i
+export const HEADING_MAX_WORDS = 12 // PROVISIONAL — not ratified
+const ENDS_OR_LEADS_ON = /[.!?:;,]["'”’)]?$/
 
 export function splitSentences(text) {
+  const paras = text.split(/\n\s*\n/).map((p) => p.replace(/\s+/g, ' ').trim()).filter(Boolean)
+  const blocks = []
+  let open = []
+  paras.forEach((p, i) => {
+    open.push(p)
+    const next = paras[i + 1]
+    if (next && !/^\p{Ll}/u.test(next) && !ENDS_OR_LEADS_ON.test(p) && p.split(' ').length <= HEADING_MAX_WORDS) {
+      blocks.push(open.join(' '))
+      open = []
+    }
+  })
+  if (open.length) blocks.push(open.join(' '))
+  return blocks.flatMap(splitBlock)
+}
+
+function splitBlock(text) {
   const rough = text
-    .replace(/\s+/g, ' ')
     // A superscript marker may follow the stop ("jobs.¹ The …").
     .split(/(?<=[.!?](?:[⁰¹²³⁴⁵⁶⁷⁸⁹]+(?:[,–-][⁰¹²³⁴⁵⁶⁷⁸⁹]+)*)?)\s+(?=["'“(]?[A-Z0-9])/)
   // Re-join fragments that split on a known abbreviation.

@@ -289,13 +289,16 @@ export default function MethodPage() {
           {/* ── 3 ─────────────────────────────────────────────────────────── */}
           <h2 id="claims">Finding the claims</h2>
           <p>
-            The text is split into sentences, with care for abbreviations such as “et al.” and “Fig.” A
+            The text is split into sentences, with care for abbreviations such as “et al.” and “Fig.” A short
+            paragraph with no closing punctuation, such as a heading, a label or a line of a cover, ends where
+            the paragraph does, so it is not read as the start of the sentence below it. A
             reference list is set aside first, once a heading such as References appears in the last{' '}
             {pct(1 - REFERENCE_MIN_POSITION)} of the text and the lines under it read as reference entries;
             claims come only from the body.
           </p>
           <p>
-            Lines that make no claim are dropped: boilerplate, bylines and reading times, navigation, author
+            Lines that make no claim are dropped: boilerplate, bylines and reading times, navigation, contents
+            lines with dot leaders, author
             affiliations and contact lines, received and accepted dates, licenses, funding and acknowledgment
             blocks, chart notes and fragments under {SHARED_EXTRACTION.minClaimLength} characters. Questions,
             all-capital lines, captions and title-style headings are marked down. In practice nearly every

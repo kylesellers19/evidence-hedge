@@ -1,7 +1,7 @@
 {
   "fixture": "fixture-c-gensler-fandom-2026",
   "recorded": "2026-11-09",
-  "engine_commit": "519810d-dirty",
+  "engine_commit": "070850f-dirty",
   "source": "The brief Kyle pasted on 2026-11-08 from the app at build e3fc8a7 (src unchanged since dc34856), recorded with --write and checked against the paste field by field: header, counts, judgment, profile, the 5 signals, the 3 patterns and their 8 example lines, the distribution and the 21 provenance entries.",
   "brief": {
     "header": {
@@ -11,37 +11,37 @@
       "draft": false,
       "genreNote": "Read as research from an interested publisher: held to research reporting standards, with its own data graded as self-reported."
     },
-    "verdict": "This research report makes 397 claims, 16 of them strongly stated; of these, 212 rest on no cited evidence, 5 cite sources too weak to carry them, and 23 claim more cause, or give firmer advice, than the study design supports.",
+    "verdict": "This research report makes 442 claims, 14 of them strongly stated; of these, 246 rest on no cited evidence, 4 cite sources too weak to carry them, and 21 claim more cause, or give firmer advice, than the study design supports.",
     "counts": {
-      "claimsWeighed": 397,
-      "readAsStrong": 16,
-      "flagged": 217
+      "claimsWeighed": 442,
+      "readAsStrong": 14,
+      "flagged": 250
     },
     "evidenceSection": {
-      "dek": "212 of 397 claims are stated as fact with nothing cited. Another 14 say more than the source they cite.",
+      "dek": "246 of 442 claims are stated as fact with nothing cited. Another 11 say more than the source they cite.",
       "bar": [
         {
           "verdict": "Backed by a source",
-          "count": 109
+          "count": 118
         },
         {
           "verdict": "Overstates its source",
-          "count": 14
+          "count": 11
         },
         {
           "verdict": "Stated as fact, nothing cited",
-          "count": 212
+          "count": 246
         },
         {
           "verdict": "Said cautiously, nothing cited",
-          "count": 39
+          "count": 43
         }
       ],
-      "methods": "23 more sentences describe its methods and aren’t judged.",
-      "needChecking": 226,
+      "methods": "24 more sentences describe its methods and aren’t judged.",
+      "needChecking": 257,
       "checkFirst": [
         {
-          "claim": 63,
+          "claim": 66,
           "text": {
             "sha": "a3beba1e0f4b",
             "chars": 93
@@ -57,18 +57,18 @@
           ]
         },
         {
-          "claim": 285,
+          "claim": 274,
           "text": {
-            "sha": "12d71ce29f1d",
-            "chars": 156
+            "sha": "0db8fa0ed29c",
+            "chars": 192
           },
           "verdict": "Stated as fact, nothing cited",
           "reason": "States a cause. Nothing is cited.",
-          "where": "Page 66",
+          "where": "Page 54",
           "underlined": [
             {
-              "sha": "f09ab558c79d",
-              "chars": 6
+              "sha": "1e40954c019c",
+              "chars": 7
             },
             {
               "sha": "76720b4a1184",
@@ -77,7 +77,7 @@
           ]
         },
         {
-          "claim": 31,
+          "claim": 32,
           "text": {
             "sha": "52cfb1119e94",
             "chars": 164
@@ -97,7 +97,7 @@
           ]
         },
         {
-          "claim": 298,
+          "claim": 337,
           "text": {
             "sha": "6d961d1b1fff",
             "chars": 67
@@ -113,7 +113,7 @@
           ]
         },
         {
-          "claim": 75,
+          "claim": 85,
           "text": {
             "sha": "52188c629c10",
             "chars": 97
@@ -129,22 +129,18 @@
           ]
         },
         {
-          "claim": 245,
+          "claim": 371,
           "text": {
-            "sha": "fc24ebef71f7",
-            "chars": 236
+            "sha": "d3f293474f8f",
+            "chars": 62
           },
           "verdict": "Stated as fact, nothing cited",
           "reason": "States a cause. Nothing is cited.",
-          "where": "Page 54",
+          "where": "Page 80",
           "underlined": [
             {
-              "sha": "1e40954c019c",
-              "chars": 7
-            },
-            {
-              "sha": "76720b4a1184",
-              "chars": 5
+              "sha": "deb72353e699",
+              "chars": 9
             }
           ]
         }
@@ -159,8 +155,8 @@
           },
           {
             "label": "Page 2",
-            "claims": 1,
-            "needChecking": 1
+            "claims": 0,
+            "needChecking": 0
           },
           {
             "label": "Page 3",
@@ -169,8 +165,8 @@
           },
           {
             "label": "Page 4",
-            "claims": 8,
-            "needChecking": 7
+            "claims": 9,
+            "needChecking": 8
           },
           {
             "label": "Page 5",
@@ -179,17 +175,17 @@
           },
           {
             "label": "Page 6",
-            "claims": 4,
+            "claims": 3,
             "needChecking": 0
           },
           {
             "label": "Page 7",
-            "claims": 4,
+            "claims": 5,
             "needChecking": 1
           },
           {
             "label": "Page 8",
-            "claims": 5,
+            "claims": 6,
             "needChecking": 1
           },
           {
@@ -199,43 +195,43 @@
           },
           {
             "label": "Page 10",
-            "claims": 5,
+            "claims": 6,
             "needChecking": 5
           },
           {
             "label": "Page 11",
-            "claims": 7,
-            "needChecking": 5
-          },
-          {
-            "label": "Page 12",
             "claims": 6,
             "needChecking": 4
           },
           {
+            "label": "Page 12",
+            "claims": 6,
+            "needChecking": 5
+          },
+          {
             "label": "Page 13",
-            "claims": 7,
+            "claims": 8,
             "needChecking": 1
           },
           {
             "label": "Page 14",
-            "claims": 7,
-            "needChecking": 0
+            "claims": 11,
+            "needChecking": 3
           },
           {
             "label": "Page 15",
-            "claims": 2,
-            "needChecking": 1
+            "claims": 4,
+            "needChecking": 3
           },
           {
             "label": "Page 16",
             "claims": 11,
-            "needChecking": 6
+            "needChecking": 5
           },
           {
             "label": "Page 17",
-            "claims": 8,
-            "needChecking": 7
+            "claims": 9,
+            "needChecking": 8
           },
           {
             "label": "Page 18",
@@ -244,18 +240,18 @@
           },
           {
             "label": "Page 19",
-            "claims": 2,
-            "needChecking": 2
+            "claims": 0,
+            "needChecking": 0
           },
           {
             "label": "Page 20",
-            "claims": 3,
-            "needChecking": 1
+            "claims": 5,
+            "needChecking": 3
           },
           {
             "label": "Page 21",
             "claims": 7,
-            "needChecking": 4
+            "needChecking": 3
           },
           {
             "label": "Page 22",
@@ -264,8 +260,8 @@
           },
           {
             "label": "Page 23",
-            "claims": 3,
-            "needChecking": 1
+            "claims": 5,
+            "needChecking": 4
           },
           {
             "label": "Page 24",
@@ -275,7 +271,7 @@
           {
             "label": "Page 25",
             "claims": 2,
-            "needChecking": 2
+            "needChecking": 1
           },
           {
             "label": "Page 26",
@@ -284,8 +280,8 @@
           },
           {
             "label": "Page 27",
-            "claims": 8,
-            "needChecking": 5
+            "claims": 9,
+            "needChecking": 6
           },
           {
             "label": "Page 28",
@@ -294,8 +290,8 @@
           },
           {
             "label": "Page 29",
-            "claims": 6,
-            "needChecking": 2
+            "claims": 8,
+            "needChecking": 4
           },
           {
             "label": "Page 30",
@@ -304,23 +300,23 @@
           },
           {
             "label": "Page 31",
+            "claims": 10,
+            "needChecking": 5
+          },
+          {
+            "label": "Page 32",
             "claims": 7,
             "needChecking": 3
           },
           {
-            "label": "Page 32",
-            "claims": 5,
-            "needChecking": 2
-          },
-          {
             "label": "Page 33",
-            "claims": 5,
-            "needChecking": 1
+            "claims": 6,
+            "needChecking": 2
           },
           {
             "label": "Page 34",
             "claims": 6,
-            "needChecking": 3
+            "needChecking": 2
           },
           {
             "label": "Page 35",
@@ -329,17 +325,17 @@
           },
           {
             "label": "Page 36",
-            "claims": 4,
-            "needChecking": 1
-          },
-          {
-            "label": "Page 37",
-            "claims": 7,
+            "claims": 5,
             "needChecking": 2
           },
           {
+            "label": "Page 37",
+            "claims": 8,
+            "needChecking": 3
+          },
+          {
             "label": "Page 38",
-            "claims": 6,
+            "claims": 7,
             "needChecking": 3
           },
           {
@@ -350,11 +346,11 @@
           {
             "label": "Page 40",
             "claims": 4,
-            "needChecking": 3
+            "needChecking": 4
           },
           {
             "label": "Page 41",
-            "claims": 3,
+            "claims": 4,
             "needChecking": 2
           },
           {
@@ -369,8 +365,8 @@
           },
           {
             "label": "Page 44",
-            "claims": 6,
-            "needChecking": 3
+            "claims": 8,
+            "needChecking": 5
           },
           {
             "label": "Page 45",
@@ -389,23 +385,23 @@
           },
           {
             "label": "Page 48",
-            "claims": 11,
-            "needChecking": 10
+            "claims": 12,
+            "needChecking": 11
           },
           {
             "label": "Page 49",
-            "claims": 9,
-            "needChecking": 7
+            "claims": 10,
+            "needChecking": 8
           },
           {
             "label": "Page 50",
-            "claims": 14,
-            "needChecking": 12
+            "claims": 13,
+            "needChecking": 11
           },
           {
             "label": "Page 51",
-            "claims": 9,
-            "needChecking": 6
+            "claims": 10,
+            "needChecking": 7
           },
           {
             "label": "Page 52",
@@ -424,13 +420,13 @@
           },
           {
             "label": "Page 55",
-            "claims": 8,
-            "needChecking": 7
+            "claims": 9,
+            "needChecking": 8
           },
           {
             "label": "Page 56",
-            "claims": 6,
-            "needChecking": 5
+            "claims": 9,
+            "needChecking": 8
           },
           {
             "label": "Page 57",
@@ -454,8 +450,8 @@
           },
           {
             "label": "Page 61",
-            "claims": 2,
-            "needChecking": 1
+            "claims": 3,
+            "needChecking": 2
           },
           {
             "label": "Page 62",
@@ -464,13 +460,13 @@
           },
           {
             "label": "Page 63",
-            "claims": 3,
-            "needChecking": 1
+            "claims": 4,
+            "needChecking": 2
           },
           {
             "label": "Page 64",
-            "claims": 5,
-            "needChecking": 3
+            "claims": 6,
+            "needChecking": 4
           },
           {
             "label": "Page 65",
@@ -479,13 +475,13 @@
           },
           {
             "label": "Page 66",
-            "claims": 4,
-            "needChecking": 1
+            "claims": 6,
+            "needChecking": 3
           },
           {
             "label": "Page 67",
-            "claims": 3,
-            "needChecking": 2
+            "claims": 4,
+            "needChecking": 3
           },
           {
             "label": "Page 68",
@@ -494,13 +490,13 @@
           },
           {
             "label": "Page 69",
-            "claims": 6,
-            "needChecking": 4
+            "claims": 5,
+            "needChecking": 3
           },
           {
             "label": "Page 70",
             "claims": 2,
-            "needChecking": 2
+            "needChecking": 1
           },
           {
             "label": "Page 71",
@@ -509,8 +505,8 @@
           },
           {
             "label": "Page 72",
-            "claims": 5,
-            "needChecking": 4
+            "claims": 4,
+            "needChecking": 3
           },
           {
             "label": "Page 73",
@@ -524,8 +520,8 @@
           },
           {
             "label": "Page 75",
-            "claims": 3,
-            "needChecking": 1
+            "claims": 5,
+            "needChecking": 2
           },
           {
             "label": "Page 76",
@@ -544,12 +540,12 @@
           },
           {
             "label": "Page 79",
-            "claims": 5,
-            "needChecking": 2
+            "claims": 8,
+            "needChecking": 5
           },
           {
             "label": "Page 80",
-            "claims": 5,
+            "claims": 6,
             "needChecking": 3
           },
           {
@@ -559,18 +555,18 @@
           },
           {
             "label": "Page 82",
-            "claims": 1,
+            "claims": 3,
             "needChecking": 1
           },
           {
             "label": "Page 83",
-            "claims": 5,
+            "claims": 3,
             "needChecking": 1
           },
           {
             "label": "Page 84",
-            "claims": 2,
-            "needChecking": 2
+            "claims": 3,
+            "needChecking": 3
           },
           {
             "label": "Page 85",
@@ -589,7 +585,7 @@
           },
           {
             "label": "Page 88",
-            "claims": 17,
+            "claims": 18,
             "needChecking": 11
           },
           {
@@ -599,16 +595,16 @@
           }
         ],
         "opensOn": {
-          "label": "Page 50",
+          "label": "Page 48",
           "example": {
-            "claim": 217,
+            "claim": 224,
             "text": {
-              "sha": "9bc354325be8",
-              "chars": 97
+              "sha": "eed93addb911",
+              "chars": 81
             },
             "verdict": "Stated as fact, nothing cited",
             "reason": "Stated as fact. Nothing is cited.",
-            "where": "Page 50"
+            "where": "Page 48"
           }
         }
       },
@@ -617,8 +613,8 @@
           {
             "label": "A citation nearby",
             "sub": "in the same sentence, not tied to the claim",
-            "claims": 5,
-            "backed": 5,
+            "claims": 6,
+            "backed": 6,
             "overstates": 0,
             "fact": 0,
             "cautious": 0,
@@ -637,8 +633,8 @@
           {
             "label": "Its own study",
             "sub": "its results, pointed to",
-            "claims": 11,
-            "backed": 10,
+            "claims": 13,
+            "backed": 12,
             "overstates": 1,
             "fact": 0,
             "cautious": 0,
@@ -647,12 +643,12 @@
           {
             "label": "Its own data or figures",
             "sub": "read as its own result, nothing pointed to",
-            "claims": 101,
-            "backed": 91,
-            "overstates": 10,
+            "claims": 104,
+            "backed": 97,
+            "overstates": 7,
             "fact": 0,
             "cautious": 0,
-            "needChecking": 10
+            "needChecking": 7
           },
           {
             "label": "Its own earlier work",
@@ -667,29 +663,29 @@
           {
             "label": "Nothing",
             "sub": "no citation, link or named source",
-            "claims": 253,
+            "claims": 291,
             "backed": 0,
             "overstates": 3,
-            "fact": 211,
-            "cautious": 39,
-            "needChecking": 214
+            "fact": 245,
+            "cautious": 43,
+            "needChecking": 248
           }
         ],
         "opensOn": {
           "label": "Nothing",
           "examples": [
             {
-              "claim": 285,
+              "claim": 274,
               "text": {
-                "sha": "12d71ce29f1d",
-                "chars": 156
+                "sha": "0db8fa0ed29c",
+                "chars": 192
               },
               "verdict": "Stated as fact, nothing cited",
               "reason": "States a cause. Nothing is cited.",
-              "where": "Page 66"
+              "where": "Page 54"
             },
             {
-              "claim": 298,
+              "claim": 337,
               "text": {
                 "sha": "6d961d1b1fff",
                 "chars": 67
@@ -699,7 +695,7 @@
               "where": "Page 69"
             },
             {
-              "claim": 254,
+              "claim": 283,
               "text": {
                 "sha": "0687149dcdc1",
                 "chars": 110
@@ -822,7 +818,7 @@
         "id": "register-mismatch",
         "title": "Register mismatch",
         "tag": "Flag",
-        "summary": "Adopts a research-like register, yet 16 of 16 top-tier claims fall short of independent (third-party or audited) evidence — marketing in a lab coat.",
+        "summary": "Adopts a research-like register, yet 14 of 14 top-tier claims fall short of independent (third-party or audited) evidence — marketing in a lab coat.",
         "evidence": [
           {
             "sha": "52cfb1119e94",
@@ -874,12 +870,12 @@
       {
         "key": "unsupported-assertion",
         "name": "Unsupported assertion",
-        "count": 212,
+        "count": 246,
         "description": "A polished, quotable sentence that reads like a settled conclusion but cites little or nothing. The confidence is rhetorical, not evidential — the line carries no backing a reader could check.",
         "examples": [
           {
-            "sha": "d3c1bc7110e9",
-            "chars": 237
+            "sha": "e75cec736b44",
+            "chars": 42
           },
           {
             "sha": "ea1451188f2b",
@@ -894,7 +890,7 @@
       {
         "key": "overconfident",
         "name": "Overconfident relative to source",
-        "count": 5,
+        "count": 4,
         "description": "The claim does cite a source, but asserts more certainty than that grade of evidence can carry — the language outruns what the citation actually establishes.",
         "examples": [
           {
@@ -914,12 +910,12 @@
       {
         "key": "causal-overreach",
         "name": "Causal overreach",
-        "count": 23,
+        "count": 21,
         "description": "The claim asserts more cause — or gives firmer advice — than the study design behind it can license. A survey or uncontrolled comparison can show that things move together, not that one produces the other.",
         "examples": [
           {
-            "sha": "18f99c53b538",
-            "chars": 490
+            "sha": "fb40a53768fe",
+            "chars": 223
           },
           {
             "sha": "d05e3621ce5c",
@@ -940,23 +936,23 @@
       },
       {
         "rung": "Third-party / analyst",
-        "count": 3,
-        "percent": 1
+        "count": 2,
+        "percent": 0
       },
       {
         "rung": "Self-reported metric",
-        "count": 124,
-        "percent": 31
+        "count": 131,
+        "percent": 30
       },
       {
         "rung": "Internal assertion",
-        "count": 6,
+        "count": 7,
         "percent": 2
       },
       {
         "rung": "Unsourced",
-        "count": 264,
-        "percent": 66
+        "count": 302,
+        "percent": 68
       }
     ],
     "distributionNote": "How this document's claims spread across the corporate ladder, strongest evidence to unsourced.",

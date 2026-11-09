@@ -4,6 +4,7 @@
 //   DROP (hard exclusion, regardless of likelihood):
 //     · disclosure/legal boilerplate (lexicon)
 //     · bylines / datelines / metadata (regex + no predicate)
+//     · contents lines: a run of dot leaders ("Overview ........ 3")
 //     · nav / UI chrome (≤4 words + no finite verb + no terminal punctuation +
 //       CTA lexicon) — GUARDED by the imperative-advice / YMYL lexicons so real
 //       short advice survives
@@ -51,6 +52,11 @@ export function isBylineOrMeta(s) {
   return false
 }
 
+// A table-of-contents line: dot leaders between an entry and its page number.
+export function isContentsLine(s) {
+  return /\.{5,}|(?:\. ){4,}\.|…{2,}/.test(s)
+}
+
 export function hasAdviceGuard(s) {
   return anyPhrase(s, IMPERATIVE_ADVICE) || YMYL_TERMS.some((term) => wordRe(term).test(s))
 }
@@ -78,7 +84,7 @@ export function isFigureCaption(s) {
 
 // ── Combined tier decisions ──────────────────────────────────────────────────
 export function isDropped(s) {
-  return isBoilerplate(s) || isBylineOrMeta(s) || (isNavChrome(s) && !hasAdviceGuard(s))
+  return isBoilerplate(s) || isBylineOrMeta(s) || isContentsLine(s) || (isNavChrome(s) && !hasAdviceGuard(s))
 }
 
 // Penalty subtracted from claimLikelihood; enough to sink a borderline heading
@@ -96,6 +102,7 @@ export function demotionPenalty(s, rubricId) {
 export function classifyNonClaim(s, rubricId) {
   if (isBoilerplate(s)) return { action: 'drop', rule: 'boilerplate' }
   if (isBylineOrMeta(s)) return { action: 'drop', rule: 'byline-meta' }
+  if (isContentsLine(s)) return { action: 'drop', rule: 'contents-line' }
   if (isNavChrome(s) && !hasAdviceGuard(s)) return { action: 'drop', rule: 'nav-chrome' }
   if (isFigureCaption(s)) return { action: 'demote', rule: 'figure-caption' }
   if (isTitleCaseHeading(s) && rubricId !== 'journalism') return { action: 'demote', rule: 'title-heading' }

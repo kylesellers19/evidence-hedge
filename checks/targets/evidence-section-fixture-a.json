@@ -1,27 +1,27 @@
 {
- "_about": "Recorded engine output for Fixture A (fixtures/cadre-neuroarchitecture-normalized.txt) at engine 9bc2011, read through the four plain verdicts. These are the numbers evidence-section.html shows. Recorded output, not predictions; re-derive them from the engine and report any difference before building.",
+ "_about": "Recorded engine output for Fixture A (fixtures/cadre-neuroarchitecture-normalized.txt) at engine 9bc2011, read through the four plain verdicts. These are the numbers evidence-section.html shows. Recorded output, not predictions; re-derive them from the engine and report any difference before building. Re-derived at 070850f-dirty (headings no longer run into the sentence below them; was 242 claims at 9bc2011). paragraph, checkFirst and examples are the mockup's, recorded at 9bc2011: their claim indexes follow that engine's claims.",
  "fixture": "fixture-a-cadre",
- "engine": "9bc2011",
- "claims": 242,
+ "engine": "070850f-dirty",
+ "claims": 245,
  "verdicts": {
   "backed": {
    "label": "Backed by a source",
-   "count": 75,
+   "count": 71,
    "rule": "no flag, no causal overreach, rung rank > 0, not a method statement"
   },
   "overstates": {
    "label": "Overstates its source",
-   "count": 10,
+   "count": 9,
    "rule": "flag overconfident, or causal overreach"
   },
   "fact": {
    "label": "Stated as fact, nothing cited",
-   "count": 148,
+   "count": 155,
    "rule": "flag unsupported-assertion"
   },
   "cautious": {
    "label": "Said cautiously, nothing cited",
-   "count": 9,
+   "count": 10,
    "rule": "no flag, rung rank 0, not a method statement"
   },
   "methods": {
@@ -30,8 +30,8 @@
    "rule": "function method"
   }
  },
- "needsChecking": 158,
- "dek": "148 of 242 claims are stated as fact with nothing cited. Another 10 say more than the source they cite.",
+ "needsChecking": 164,
+ "dek": "155 of 245 claims are stated as fact with nothing cited. Another 9 say more than the source they cite.",
  "sources": [
   {
    "label": "Its reference list",
@@ -61,8 +61,8 @@
    "kinds": [
     "proximity"
    ],
-   "backed": 21,
-   "overstates": 4,
+   "backed": 17,
+   "overstates": 3,
    "fact": 0,
    "cautious": 0
   },
@@ -107,13 +107,13 @@
    ],
    "backed": 0,
    "overstates": 0,
-   "fact": 142,
-   "cautious": 9
+   "fact": 149,
+   "cautious": 10
   }
  ],
  "sequence": {
   "_about": "one letter per claim in document order: b backed, o overstates, f fact, h cautious, m method",
-  "value": "ffffffffffffffffffffffffffffffffffoffffffffffbbffffbbfobfbfbffffbfffbffbffbbfofbbfbbbhbfobfhfbfhbbfbbhffbbffbfoffbbhbhffbbbffbfbfbbbffffffbfffbffbffbhfffbffbfbfffbbfbfhfffbfbfffofbfobfbffbbbfboffbobfbfbfffbfbfbfofbfbfbbfbbfbbbfhffffffbfffffbf"
+  "value": "fffffffffffffffffffffffffffffffffffoffffffffffbbffffbffobfbfbffffbfffbffbffbbfofbbfbbbhbfobfhfbfhbbfbbhffbbfffbfoffbbhbhffbbbfffbfbfbbbffffffbfffbffbffbhfffbffbfbfffbbfbfhfffbfbfffofbfobfbffbbbfboffbobfbfbfffbfbffffffbfbbfbbfbbbhfhffffffbfffffff"
  },
  "paragraph": {
   "_about": "paragraph index of each claim, same order; the mockup groups paragraphs 0–165 into 12 parts of 14 because pasted text has no pages",

@@ -40,19 +40,20 @@ const check = (name, ok, detail = '') => {
 
 // Labels read off the documents by hand (unit id → label). The fragment is a
 // few words so a reader can find the sentence; the text itself stays in the
-// gitignored unit files.
+// gitignored unit files. Ids re-pointed to the same sentences when headings
+// stopped running into the sentence below them (two lost a leading heading).
 const EXPECTED = [
-  ['fixture-c-gensler-fandom-2026:p5:7:d4d41cc4b1e6', 'own-current', '"we surveyed 2,752 people"'],
-  ['fixture-c-gensler-fandom-2026:p6:1:dadabb4d65ad', 'own-current', '"our post-World Cup survey found"'],
-  ['fixture-c-gensler-fandom-2026:p11:4:88b25065f798', 'own-current', '"Our pre-World Cup survey data shows"'],
-  ['fixture-c-gensler-fandom-2026:p44:1:196cc4cfb4c6', 'own-current', '"Our analysis found"'],
-  ['fixture-c-gensler-fandom-2026:p13:6:a3beba1e0f4b', 'own-prior', '"Gensler research has found"'],
-  ['fixture-c-gensler-fandom-2026:p28:1:d3d6705d6798', 'undetermined', '"They also show" (no attributed antecedent)'],
-  ['fixture-b-pew-report:p3:0:aa72dd5a1a11', 'own-current', '"For this analysis, we surveyed"'],
-  ['fixture-b-pew-report:p28:8:5135d673c6d1', 'own-current', '"Center researchers performed" (the publisher)'],
-  ['fixture-b-pew-report:p32:12:6c95e5bad710', 'own-prior', '"Pew Research Center\'s previous work"'],
+  ['fixture-c-gensler-fandom-2026:p5:10:d7349569e625', 'own-current', '"we surveyed 2,752 people"'],
+  ['fixture-c-gensler-fandom-2026:p6:2:dadabb4d65ad', 'own-current', '"our post-World Cup survey found"'],
+  ['fixture-c-gensler-fandom-2026:p11:5:88b25065f798', 'own-current', '"Our pre-World Cup survey data shows"'],
+  ['fixture-c-gensler-fandom-2026:p44:3:196cc4cfb4c6', 'own-current', '"Our analysis found"'],
+  ['fixture-c-gensler-fandom-2026:p13:7:a3beba1e0f4b', 'own-prior', '"Gensler research has found"'],
+  ['fixture-c-gensler-fandom-2026:p28:2:d3d6705d6798', 'undetermined', '"They also show" (no attributed antecedent)'],
+  ['fixture-b-pew-report:p3:1:aa72dd5a1a11', 'own-current', '"For this analysis, we surveyed"'],
+  ['fixture-b-pew-report:p28:10:4f00bfd1c87b', 'own-current', '"Center researchers performed" (the publisher)'],
+  ['fixture-b-pew-report:p32:14:6c95e5bad710', 'own-prior', '"Pew Research Center\'s previous work"'],
   ['fixture-b-pew-report:p29:5:5af73d295c1a', 'cited-other', '"procedures from Hur, Achen (2013)"'],
-  ['fixture-a-cadre:p7:8:5f788c852f6e', 'cited-other', '"World Economic Forum (2024)"'],
+  ['fixture-a-cadre:p7:11:5f788c852f6e', 'cited-other', '"World Economic Forum (2024)"'],
 ]
 
 const runs = {}

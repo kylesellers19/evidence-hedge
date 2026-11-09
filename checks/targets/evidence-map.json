@@ -1,6 +1,6 @@
 {
   "recorded": "2026-11-09",
-  "engine_commit": "4549f66-dirty",
+  "engine_commit": "070850f-dirty",
   "rows": {
     "allen-ehp-2016": [
       {
@@ -214,13 +214,22 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 142,
+        "claims": 143,
         "reaches": "hedged",
-        "pastIt": 36,
+        "pastIt": 37,
         "overreach": 0
       }
     ],
     "hsph-press-2015": [
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "self-reported",
+        "claims": 1,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
       {
         "kind": "described-study",
         "grade": "loose",
@@ -252,9 +261,9 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 16,
+        "claims": 18,
         "reaches": "hedged",
-        "pastIt": 15,
+        "pastIt": 17,
         "overreach": 0
       }
     ],
@@ -262,18 +271,27 @@
       {
         "kind": "link",
         "grade": "linked",
-        "rung": "audited",
+        "rung": "self-reported",
         "claims": 1,
-        "reaches": "absolute",
+        "reaches": "measured",
         "pastIt": 0,
         "overreach": 0
       },
       {
         "kind": "link",
         "grade": "linked",
-        "rung": "self-reported",
+        "rung": "internal",
         "claims": 1,
         "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "link",
+        "grade": "linked",
+        "rung": "audited",
+        "claims": 1,
+        "reaches": "absolute",
         "pastIt": 0,
         "overreach": 0
       },
@@ -326,9 +344,9 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 28,
+        "claims": 30,
         "reaches": "hedged",
-        "pastIt": 26,
+        "pastIt": 27,
         "overreach": 0
       }
     ],
@@ -355,7 +373,7 @@
         "kind": "speaker",
         "grade": "loose",
         "rung": "unsourced",
-        "claims": 3,
+        "claims": 4,
         "reaches": "hedged",
         "pastIt": 2,
         "overreach": 0
@@ -391,9 +409,9 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 27,
+        "claims": 39,
         "reaches": "hedged",
-        "pastIt": 22,
+        "pastIt": 33,
         "overreach": 0
       }
     ],
@@ -496,9 +514,9 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 25,
+        "claims": 26,
         "reaches": "hedged",
-        "pastIt": 23,
+        "pastIt": 24,
         "overreach": 0
       }
     ],
@@ -507,7 +525,7 @@
         "kind": "own-implied",
         "grade": "loose",
         "rung": "self-reported",
-        "claims": 4,
+        "claims": 5,
         "reaches": "measured",
         "pastIt": 0,
         "overreach": 1
@@ -543,9 +561,9 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 23,
+        "claims": 24,
         "reaches": "hedged",
-        "pastIt": 18,
+        "pastIt": 20,
         "overreach": 0
       }
     ],
@@ -554,7 +572,7 @@
         "kind": "own-implied",
         "grade": "loose",
         "rung": "documented",
-        "claims": 3,
+        "claims": 2,
         "reaches": "absolute",
         "pastIt": 0,
         "overreach": 0
@@ -599,9 +617,9 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 24,
+        "claims": 31,
         "reaches": "hedged",
-        "pastIt": 19,
+        "pastIt": 25,
         "overreach": 0
       }
     ],
@@ -637,7 +655,7 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 106,
+        "claims": 108,
         "reaches": "measured",
         "pastIt": 4,
         "overreach": 1
@@ -803,10 +821,10 @@
         "kind": "proximity",
         "grade": "loose",
         "rung": "third-party",
-        "claims": 18,
+        "claims": 13,
         "reaches": "assertive",
         "pastIt": 0,
-        "overreach": 1
+        "overreach": 0
       },
       {
         "kind": "proximity",
@@ -848,9 +866,9 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 151,
+        "claims": 159,
         "reaches": "hedged",
-        "pastIt": 142,
+        "pastIt": 149,
         "overreach": 0
       }
     ],
@@ -915,7 +933,7 @@
         "kind": "own",
         "grade": "linked",
         "rung": "primary",
-        "claims": 42,
+        "claims": 45,
         "reaches": "absolute",
         "pastIt": 0,
         "overreach": 0
@@ -924,19 +942,10 @@
         "kind": "own-implied",
         "grade": "loose",
         "rung": "primary",
-        "claims": 89,
+        "claims": 93,
         "reaches": "absolute",
         "pastIt": 0,
         "overreach": 2
-      },
-      {
-        "kind": "speaker",
-        "grade": "loose",
-        "rung": "primary",
-        "claims": 1,
-        "reaches": "absolute",
-        "pastIt": 0,
-        "overreach": 0
       },
       {
         "kind": "unresolved",
@@ -1005,9 +1014,9 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 83,
+        "claims": 89,
         "reaches": "hedged",
-        "pastIt": 8,
+        "pastIt": 7,
         "overreach": 0
       }
     ]

@@ -1,0 +1,83 @@
+/* The evidence section (src/components/results/EvidenceSection.jsx), after
+   docs/evidence-section.md. Tokens only from src/index.css :root.
+   Blue means needs checking, grey means backed; an outline means overstates
+   (blue) or said cautiously (grey). Square corners, hairline rules, no
+   shadows, no fills behind text. */
+
+.es-title { font: 600 24px/1.2 var(--eh-serif); color: var(--eh-ink); margin: 0; }
+.es-dek { font: 18px/1.45 var(--eh-serif); color: var(--eh-ink-soft); margin: 6px 0 20px; }
+.es-h { font: 600 16px/1.3 var(--eh-sans); color: var(--eh-ink); margin: 36px 0 6px; }
+
+/* The four verdicts as marks: bar segments, page lines, row bars. */
+.es-seg { display: block; height: 100%; }
+.es-seg[data-v='backed'] { background: var(--eh-dot); }
+.es-seg[data-v='overstates'] { border: 2px solid var(--eh-accent); }
+.es-seg[data-v='fact'] { background: var(--eh-accent); }
+.es-seg[data-v='cautious'] { border: 1px solid var(--eh-ink-soft); }
+
+/* 1. The bar, with each count under its segment. */
+.es-bar { display: flex; gap: 2px; height: 28px; }
+.es-labels { position: relative; height: calc(var(--lines) * 54px); margin-top: 6px; }
+.es-lab { position: absolute; top: calc(var(--line) * 54px); font: 13px/1.3 var(--eh-sans); color: var(--eh-ink-soft); white-space: nowrap; }
+.es-lab b { display: block; font: 600 21px/1.1 var(--eh-serif); color: var(--eh-ink); }
+.es-lab.is-tick { padding-top: 12px; }
+.es-lab.is-tick::before { content: ''; position: absolute; top: -8px; left: 0; height: 16px; border-left: 1px solid var(--eh-ink-soft); }
+.es-lab.is-right { text-align: right; }
+.es-lab.is-right::before { left: auto; right: 0; }
+.es-note { font: 13px/1.5 var(--eh-sans); color: var(--eh-ink-faint); margin: 4px 0 0; }
+
+/* 2. Check these first. */
+.es-check { list-style: none; margin: 0; padding: 0; }
+.es-check li { display: grid; grid-template-columns: 30px minmax(0, 1fr); padding: 14px 0; border-top: 1px solid var(--eh-hairline); }
+.es-check li:last-child { border-bottom: 1px solid var(--eh-hairline); }
+.es-num { font: 600 21px/1.3 var(--eh-serif); color: var(--eh-accent); }
+.es-q { font: 17px/1.5 var(--eh-serif); color: var(--eh-ink); margin: 0; }
+.es-q u, .es-ex u { text-decoration-color: var(--eh-accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.es-why { font: 14px/1.5 var(--eh-sans); color: var(--eh-accent); margin: 6px 0 0; }
+.es-where { font: 12.5px/1.4 var(--eh-sans); color: var(--eh-ink-faint); margin: 4px 0 0; }
+.es-more { display: inline-block; background: none; border: 0; padding: 12px 0 0; font: 600 14px var(--eh-sans); color: var(--eh-ink); cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
+.es-all { margin-top: 8px; }
+.es-group { font: 600 13px/1.4 var(--eh-sans); color: var(--eh-ink-soft); margin: 18px 0 0; }
+
+/* 3. Where they are: one box per page or part, one line per claim. */
+.es-key { font: 13px var(--eh-sans); color: var(--eh-ink-soft); margin: 0 0 12px; }
+.es-key i { display: inline-block; width: 18px; height: 3px; background: var(--eh-accent); vertical-align: middle; margin-right: 6px; }
+.es-pages { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 8px; align-items: start; }
+.es-pg { display: flex; flex-direction: column; gap: 2px; min-height: 80px; padding: 6px 5px; border: 1px solid var(--eh-hairline); background: transparent; cursor: pointer; }
+.es-pg:hover { border-color: var(--eh-ink-soft); }
+.es-pg[aria-pressed='true'] { border-color: var(--eh-ink); outline: 1px solid var(--eh-ink); }
+.es-ln { display: block; height: 3px; flex: none; }
+.es-ln[data-v='needs'] { background: var(--eh-accent); }
+.es-ln[data-v='backed'] { background: var(--eh-dot); }
+.es-ln[data-v='cautious'] { background: var(--eh-hairline); }
+.es-ends { display: flex; justify-content: space-between; font: 12px var(--eh-sans); color: var(--eh-ink-faint); margin-top: 6px; }
+.es-panel { margin-top: 14px; }
+.es-count { font: 600 16px/1.4 var(--eh-serif); color: var(--eh-ink); margin: 0; }
+.es-ex { font: 16px/1.5 var(--eh-serif); color: var(--eh-ink); padding: 10px 0; border-bottom: 1px solid var(--eh-hairline); margin: 0; }
+.es-ex span { display: block; font: 13.5px/1.4 var(--eh-sans); color: var(--eh-ink-soft); margin-top: 4px; }
+.es-ex span.is-needs { color: var(--eh-accent); }
+
+/* 4. What they lean on: one row per kind of source. */
+.es-rows { border-bottom: 1px solid var(--eh-hairline); }
+.es-row { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 14px; align-items: center; width: 100%; padding: 9px 0; border: 0; border-top: 1px solid var(--eh-hairline); background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.es-row[aria-pressed='true'] .es-src { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.es-src-cell { display: block; }
+.es-src { display: block; font: 15px/1.3 var(--eh-serif); color: var(--eh-ink); }
+.es-sub { display: block; font: 12px/1.35 var(--eh-sans); color: var(--eh-ink-faint); margin-top: 2px; }
+.es-track { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.es-bars { display: flex; gap: 1px; height: 14px; flex: 0 0 auto; min-width: 3px; }
+.es-n { font: 13px var(--eh-sans); color: var(--eh-ink-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.es-n em { font-style: normal; color: var(--eh-accent); }
+
+.es button:focus-visible { outline: 2px solid var(--eh-accent); outline-offset: 2px; }
+
+/* Phones: labels in a two-by-two grid, six pages a row, each source over its bar. */
+@media (max-width: 600px) {
+  .es-labels { position: static; height: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+  .es-lab { position: static; white-space: normal; }
+  .es-lab.is-tick { padding-top: 0; }
+  .es-lab.is-tick::before { display: none; }
+  .es-lab.is-right { text-align: left; }
+  .es-pages { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .es-row { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+}

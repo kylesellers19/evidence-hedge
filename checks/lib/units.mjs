@@ -20,6 +20,7 @@
 
 import { createHash } from 'node:crypto'
 import { segmentDocument, sectionOpenedBy } from '../../src/engine/measure/segment.js'
+import { pageLocator } from '../../src/engine/pages.js'
 
 // ── Copied from src/engine/extractClaims.js @ dc34856 (lines 18–35) ──────────
 const ABBREV = /\b(?:e\.g|i\.e|vs|etc|al|Dr|Mr|Mrs|Ms|Inc|Ltd|Corp|Fig|No|pp|cf)\.$/i
@@ -44,50 +45,10 @@ function splitSentences(text) {
 export { splitSentences }
 
 export const HASH_CHARS = 12      // PROVISIONAL — not ratified
-export const PAGE_PREFIX = 40     // PROVISIONAL — not ratified (key chars matched to place a unit)
-export const PAGE_PREFIX_MIN = 20 // PROVISIONAL — not ratified (shorter retry)
+// The page locator lives in src/engine/pages.js, where the results page uses it too.
+export { PAGE_PREFIX, PAGE_PREFIX_MIN } from '../../src/engine/pages.js'
 
 export const textHash = (s) => createHash('sha256').update(s).digest('hex').slice(0, HASH_CHARS)
-
-// Letters and digits only, lowercased: survives hyphenation, line breaks and
-// header/footer stripping between the per-page text and the normalized text.
-const key = (s) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '')
-
-function pageLocator(pages) {
-  const keys = pages.map(key)
-  const starts = []
-  let at = 0
-  for (const k of keys) { starts.push(at); at += k.length }
-  const all = keys.join('')
-  const pageAt = (i) => {
-    let p = 0
-    while (p + 1 < starts.length && starts[p + 1] <= i) p++
-    return p + 1
-  }
-  let cursor = 0
-  // In order first (repeated lines resolve to the next occurrence), then anywhere.
-  const find = (probe) => {
-    let i = all.indexOf(probe, cursor)
-    if (i < 0) i = all.indexOf(probe)
-    if (i >= 0) cursor = i + probe.length
-    return i
-  }
-  return (text) => {
-    const k = key(text)
-    if (!k) return { page: null, reason: 'no letters or digits' }
-    for (const n of [PAGE_PREFIX, PAGE_PREFIX_MIN]) {
-      const i = find(k.slice(0, n))
-      if (i >= 0) return { page: pageAt(i) }
-    }
-    // The start differs from the page text (an older extraction, or chart labels
-    // the normalizer moved): place the unit by a later window, and say so.
-    for (let at = PAGE_PREFIX_MIN; at + PAGE_PREFIX_MIN <= k.length; at += PAGE_PREFIX_MIN) {
-      const i = find(k.slice(at, at + PAGE_PREFIX_MIN))
-      if (i >= 0) return { page: pageAt(i), basis: `window at key offset ${at}` }
-    }
-    return { page: null, reason: 'not found on any page' }
-  }
-}
 
 /**
  * @param {string} fixture  fixture id

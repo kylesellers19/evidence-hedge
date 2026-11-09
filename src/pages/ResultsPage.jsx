@@ -11,13 +11,13 @@ import { ENGINE_VERSION } from '../engine/version.js'
 import RubricProvenance from '../components/results/RubricProvenance.jsx'
 import VerdictMark from '../components/results/VerdictMark.jsx'
 import AddToList from '../components/results/AddToList.jsx'
-import EvidenceMap from '../components/results/EvidenceMap.jsx'
+import EvidenceSection from '../components/results/EvidenceSection.jsx'
 
 // The one-page evidence brief — a standalone editorial report, three layers
 // top to bottom, serving three readers at once (with how it was judged — the
 // genre reading and the standard it set — between the verdict and the profile):
-//   1. Verdict       — plain-language, Source Serif display headline, led by
-//                      the evidence map: what each claim stands on
+//   1. Verdict       — plain-language, Source Serif display headline, then
+//                      the evidence section: what each claim stands on
 //   2. Patterns      — named patterns + verbatim examples (the heart)
 //   3. Distribution  — the structural ladder view, understated (the analyst)
 // Shares the global token source: blue accent, hairline rules, mono figures.
@@ -80,10 +80,10 @@ export default function ResultsPage() {
 
       <hr className="brief-rule" />
 
-      {/* ── Evidence map — the lead figure: what each claim stands on ─────── */}
+      {/* ── Evidence section — what each claim stands on (docs/evidence-section.md) ── */}
       {result.claims?.length > 0 && (
         <>
-          <EvidenceMap key={result.claims.length + ':' + (result.claims[0]?.text || '')} result={result} rubric={rubric} standardLabel={standard.label} />
+          <EvidenceSection key={result.claims.length + ':' + (result.claims[0]?.text || '')} result={result} rubric={rubric} pages={state.meta?.pages || null} />
           <hr className="brief-rule" />
         </>
       )}

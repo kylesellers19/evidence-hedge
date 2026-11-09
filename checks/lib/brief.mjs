@@ -16,7 +16,7 @@ import { signalTitle } from '../../src/engine/signals/titles.js'
 import { PATTERN_META } from '../../src/engine/patterns.js'
 import { GENRE_LABELS, PROVENANCE_LABELS, roleText } from '../../src/components/genre/labels.js'
 import { textHash } from './units.mjs'
-import { buildEvidenceMap, provenanceOf, noteOf, ATTRIBUTION_LABELS } from '../../src/engine/evidenceMap.js'
+import { buildEvidenceSection, VERDICTS } from '../../src/engine/evidenceSection.js'
 
 // Copied from src/components/results/DocumentProfile.jsx (not exported there).
 const REGISTER_LABELS = {
@@ -66,7 +66,7 @@ export function briefOf(run) {
     },
     verdict: summary.verdict,
     counts: { claimsWeighed: summary.totalClaims, readAsStrong: summary.strongClaims, flagged: ua + oc },
-    evidenceMap: evidenceMapOf(result, rubric),
+    evidenceSection: evidenceSectionOf(result, rubric, run.loaded?.pages || null),
     howJudged: profile.genre ? {
       reading: 'detected automatically',
       genres: h ? h.genres.map((g) => GENRE_LABELS[g]) : [standard.label],
@@ -121,38 +121,36 @@ export function briefOf(run) {
   }
 }
 
-// The evidence map as the page shows it (src/components/results/EvidenceMap.jsx):
-// the dek, every From → Via → To row and the claim the panel opens on. Text
-// that comes from the document is recorded whole (a reference entry, the
-// claim), never as a clipped label, so redact() can hash it.
-function evidenceMapOf(result, rubric) {
-  const map = buildEvidenceMap(result, rubric)
-  if (!map.claims.length) return null
-  const standard = getRubric(rubric.base || rubric.id)
-  const lead = map.claims[map.lead]
-  const tierLabel = (w) => map.tiers.find((t) => t.weight === w)?.label || null
+// The evidence section as the page shows it (src/components/results/EvidenceSection.jsx),
+// in the four verdicts' own words: the dek, the bar, the claims to check first,
+// the pages or parts with the one each opens on, and the rows of sources with
+// the examples the open row shows. Quoted claims and their underlined words are
+// recorded whole, so redact() can hash them.
+const VERDICT_LABEL = Object.fromEntries(VERDICTS.map((v) => [v.key, v.label]))
+function evidenceSectionOf(result, rubric, pages) {
+  if (!result.claims?.length) return null
+  const s = buildEvidenceSection(result, rubric, { pages })
+  if (s.gated) return { sentence: s.sentence }
+  const claim = (i) => {
+    const c = s.claims[i]
+    return { claim: i + 1, text: c.text, verdict: VERDICT_LABEL[c.verdict], reason: c.reason, where: s.where.places[c.place].label }
+  }
+  const place = s.where.places[s.where.opensOn]
+  const row = s.sources.rows.find((r) => r.key === s.sources.opensOn)
   return {
-    dek: map.dek,
-    rows: map.rows.map((r) => ({
-      from: r.continued ? '″' : (r.span || r.label),
-      sub: r.sub,
-      via: r.via ? r.via.mark : null,
-      grade: r.grade,
-      claims: r.claims.length,
-      reaches: r.reach,
-      pastIt: r.outruns,
-      overreach: r.overreach,
-    })),
-    panel: {
-      claim: lead.index + 1,
-      text: lead.text,
-      provenance: provenanceOf(lead, map.rows, standard.label, map.tiers),
-      statedAs: lead.tier.label,
-      sourceReaches: tierLabel(lead.ceiling),
-      pastItsReach: Math.max(0, lead.tier.weight - lead.ceiling),
-      whoseFinding: ATTRIBUTION_LABELS[lead.attribution.label] || lead.attribution.label,
-      entry: lead.kind === 'reference' ? lead.targetSpan : null,
-      note: noteOf(lead),
+    dek: s.dek,
+    bar: VERDICTS.map((v) => ({ verdict: v.label, count: s.counts[v.key] })),
+    methods: s.methods,
+    needChecking: s.needs,
+    checkFirst: s.checkFirst.map((i) => ({ ...claim(i), underlined: s.claims[i].underline.map(([a, b]) => s.claims[i].text.slice(a, b)) })),
+    where: {
+      unit: s.where.unit,
+      boxes: s.where.places.map((p) => ({ label: p.label, claims: p.claims.length, needChecking: p.needs })),
+      opensOn: { label: place.label, example: place.example != null ? claim(place.example) : null },
+    },
+    sources: {
+      rows: s.sources.rows.map((r) => ({ label: r.label, sub: r.sub, claims: r.claims, backed: r.backed, overstates: r.overstates, fact: r.fact, cautious: r.cautious, needChecking: r.needs })),
+      opensOn: row ? { label: row.label, examples: row.examples.map(claim) } : null,
     },
   }
 }
@@ -162,9 +160,12 @@ const QUOTED = [
   (b) => [[b.profile, 'provenanceSpans'], [b.profile, 'studyDesignSpans']],
   (b) => b.signals.map((s) => [s, 'evidence']),
   (b) => b.patterns.map((p) => [p, 'examples']),
-  (b) => (b.evidenceMap
-    ? [[b.evidenceMap.panel, 'text'], [b.evidenceMap.panel, 'entry'], ...b.evidenceMap.rows.map((r) => [r, 'from'])]
-    : []),
+  (b) => {
+    const e = b.evidenceSection
+    if (!e || e.sentence) return []
+    const quoted = [...e.checkFirst, ...(e.where.opensOn.example ? [e.where.opensOn.example] : []), ...(e.sources.opensOn?.examples || [])]
+    return [...quoted.map((c) => [c, 'text']), ...e.checkFirst.map((c) => [c, 'underlined'])]
+  },
 ]
 
 /**

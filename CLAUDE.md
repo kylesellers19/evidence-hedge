@@ -11,7 +11,7 @@ Three independent apps share this repo. Each keeps its own dependencies; nothing
 ## Commands
 
 Evidence Hedge (repo root):
-- `npm run check` (24 check scripts) · `npm run build`
+- `npm run check` (26 check scripts) · `npm run build`
 
 DELIB, `decision-precision/backend/`:
 - `uv sync --all-extras` (plain `uv sync` removes the `api`/`llm` extras the tests need)
@@ -38,6 +38,7 @@ Every Vite config sets `strictPort: true`, so a busy port fails instead of movin
 
 - Evidence Hedge judges mixed-genre documents (a firm's research report, a press release about a study, news built on one firm's survey) as hybrids, with no manual choice. `src/engine/profile/genre.js` reads four roles (speaker, form, stake, evidence), and `src/rubrics/hybrids.js` maps the mix to a scenario: one evidence standard, added audits, frameworks (`src/rubrics/frameworks.js`). Spec: `docs/hybrid-genres.md`. Corpus gold carries `genres` and `hybrid`; `npm run check:hybrid` holds them.
 - `checks/targets/<fixture>.brief.json` records what the evidence brief showed for a benchmark fixture, every field of the page (`checks/lib/brief.mjs`); `npm run check:targets` fails on any field that moves. Quotes from the document are stored as hashes, since fixture text stays out of the public repo. A change that moves a brief on purpose re-records it in the same commit with `node checks/brief-targets.test.mjs --write <fixture-id>`. Fixture C's PDF lives in the gitignored `checks/data/`, so without it the check skips.
+- The brief's evidence section ("What each claim stands on") follows `docs/evidence-section.md`: four plain verdicts, reason lines from templates, a list of words never shown to readers, and the decisions taken where the design brief was open. `src/engine/evidenceSection.js` reads it from the analysis (and `evidenceMap.js`'s grounds); `npm run check:evidencesection` holds it, Fixture A against the design brief's recorded numbers. A PDF upload keeps its per-page text in `meta.pages` so claims show on their page (`src/engine/pages.js`).
 - Evidence Hedge's look follows Delgam (delgam.org): its typefaces (Source Serif 4, Libre Franklin), tokens in `src/index.css`, the site frame and editorial pages in `src/styles/site.css`, and Delgam's copy rules on the new pages. The orbit (`src/components/ParticleMark.jsx`) stays as it is.
 - The List (`/list`, `src/list/`) reads and writes a Supabase table (`docs/the-list.sql`) when the build has `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (repository variables `SUPABASE_URL` and `SUPABASE_ANON_KEY` in CI); without them it reads `public/the-list.json` and the add form on the evidence brief is hidden. Entries never carry the document text; `npm run check:list` holds that.
 - The repo is public: anything pushed is published.

@@ -44,6 +44,16 @@ const A = compile(ABSOLUTES)
 const AT = compile(ATTITUDE)
 const NEG = new RegExp(`(?:\\b(?:${NEGATORS.filter((n) => /^\w/.test(n)).join('|')})\\b|n't)(?:\\s+\\S+){0,1}\\s*$`, 'i')
 
+/**
+ * Where recorded terms (a claim's boosters or hedges) sit in its text, for
+ * display only: [{ index, length }], matched the way measureCertainty matched them.
+ */
+export function termSpans(text, terms) {
+  const out = []
+  for (const t of terms) for (const m of text.matchAll(termRe(t))) out.push({ index: m.index, length: m[0].length })
+  return out
+}
+
 function hits(text, compiled) {
   const out = []
   for (const [term, re] of compiled) {

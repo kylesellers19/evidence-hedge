@@ -23,11 +23,22 @@ export function extOf(name) {
  * @returns {Promise<string>} normalized plain text ready for the pipeline
  */
 export async function extractFile(file) {
-  const text = await extractText(file)
+  return (await extractFileDocument(file)).text
+}
+
+/**
+ * The same text, with a PDF's per-page text kept beside it for display (which
+ * page a claim is on, src/engine/pages.js). The text analyze() reads is the
+ * same either way.
+ * @param {File} file
+ * @returns {Promise<{ text: string, pages: string[]|null }>}
+ */
+export async function extractFileDocument(file) {
+  const { text, pages } = await extractText(file)
   // A saved bot-check page or reader error body is not a document (validateText).
   const check = validateText(text, { path: 'file' })
   if (!check.ok && check.reason !== 'empty') throw new ExtractionError(check.reason)
-  return text
+  return { text, pages }
 }
 
 async function extractText(file) {
@@ -36,15 +47,16 @@ async function extractText(file) {
   if (ext === '.doc') throw new ExtractionError('legacy-doc')
 
   if (ext === '.txt' || ext === '.md') {
-    return normalizeText(await file.text())
+    return { text: normalizeText(await file.text()), pages: null }
   }
   if (ext === '.pdf') {
     const { extractPdf } = await import('./extractPdf.js')
-    return normalizeDocument(await extractPdf(file)) // pages[] → header/footer strip → normalize
+    const pages = await extractPdf(file)
+    return { text: normalizeDocument(pages), pages } // pages[] → header/footer strip → normalize
   }
   if (ext === '.docx') {
     const { extractDocx } = await import('./extractDocx.js')
-    return normalizeDocument({ text: await extractDocx(file) })
+    return { text: normalizeDocument({ text: await extractDocx(file) }), pages: null }
   }
   throw new ExtractionError('unsupported-type')
 }

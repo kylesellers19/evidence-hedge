@@ -67,12 +67,11 @@ function verbalChange(text, m) {
   return /(?:s|ed)$/i.test(m[0]) && AFTER_OBJECT.test(after)
 }
 
-/**
- * @param {string} text
- * @returns {{ register: string, cues: {root:string, strength:number}[], strength: number, conditioned: boolean }}
- */
-export function causalRegister(text) {
+// The cues causalRegister records, each with where the word that matched sits
+// (the first match for a root; for a change verb, the strongest use).
+function scanCues(text) {
   const cues = []
+  const spans = []
   const belief = beliefStart(text)
   const reported = (i) => belief >= 0 && i >= belief
   for (const c of CUES) {
@@ -80,23 +79,43 @@ export function causalRegister(text) {
       if (reported(m.index)) continue
       if (PURPOSE_RE.test(text.slice(Math.max(0, m.index - 40), m.index))) continue
       cues.push({ root: c.root, strength: c.strength })
+      spans.push({ index: m.index, length: m[0].length })
       break
     }
   }
   for (const c of CHANGE) {
     let best = null
+    let at = null
     for (const m of text.matchAll(c.re)) {
       if (reported(m.index)) continue
       const verbal = verbalChange(text, m)
       if (verbal === null) continue
       const s = verbal ? Math.max(HABER_ROOT_STRENGTH[c.root] ?? 0, VERBAL_CHANGE_STRENGTH)
         : Math.min(HABER_ROOT_STRENGTH[c.root] ?? NOMINAL_CHANGE_STRENGTH, NOMINAL_CHANGE_STRENGTH)
-      if (best === null || s > best) best = s
+      if (best === null || s > best) { best = s; at = { index: m.index, length: m[0].length } }
     }
-    if (best !== null) cues.push({ root: c.root, strength: best })
+    if (best !== null) { cues.push({ root: c.root, strength: best }); spans.push(at) }
   }
-  if (CHANGE_NOUN_RE.test(text) && !cues.length) cues.push({ root: 'change-noun', strength: NOMINAL_CHANGE_STRENGTH })
+  if (CHANGE_NOUN_RE.test(text) && !cues.length) {
+    const m = text.match(CHANGE_NOUN_RE)
+    cues.push({ root: 'change-noun', strength: NOMINAL_CHANGE_STRENGTH })
+    spans.push({ index: m.index, length: m[0].length })
+  }
+  return { cues, spans }
+}
 
+/**
+ * Where the causal cue words of a sentence sit, for display only:
+ * [{ index, length }], one per cue causalRegister records.
+ */
+export const causalCueSpans = (text) => scanCues(text).spans
+
+/**
+ * @param {string} text
+ * @returns {{ register: string, cues: {root:string, strength:number}[], strength: number, conditioned: boolean }}
+ */
+export function causalRegister(text) {
+  const { cues } = scanCues(text)
   if (cues.length === 0 || NO_FINDING_RES.some((re) => re.test(text))) {
     return { register: 'none', cues, strength: 0, conditioned: false }
   }

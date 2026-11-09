@@ -1,0 +1,490 @@
+{
+ "_about": "Recorded engine output for Fixture A (fixtures/cadre-neuroarchitecture-normalized.txt) at engine 9bc2011, read through the four plain verdicts. These are the numbers evidence-section.html shows. Recorded output, not predictions; re-derive them from the engine and report any difference before building.",
+ "fixture": "fixture-a-cadre",
+ "engine": "9bc2011",
+ "claims": 242,
+ "verdicts": {
+  "backed": {
+   "label": "Backed by a source",
+   "count": 75,
+   "rule": "no flag, no causal overreach, rung rank > 0, not a method statement"
+  },
+  "overstates": {
+   "label": "Overstates its source",
+   "count": 10,
+   "rule": "flag overconfident, or causal overreach"
+  },
+  "fact": {
+   "label": "Stated as fact, nothing cited",
+   "count": 148,
+   "rule": "flag unsupported-assertion"
+  },
+  "cautious": {
+   "label": "Said cautiously, nothing cited",
+   "count": 9,
+   "rule": "no flag, rung rank 0, not a method statement"
+  },
+  "methods": {
+   "label": "Describes its methods (not judged)",
+   "count": 0,
+   "rule": "function method"
+  }
+ },
+ "needsChecking": 158,
+ "dek": "148 of 242 claims are stated as fact with nothing cited. Another 10 say more than the source they cite.",
+ "sources": [
+  {
+   "label": "Its reference list",
+   "sub": "a citation that matches an entry",
+   "kinds": [
+    "reference"
+   ],
+   "backed": 30,
+   "overstates": 3,
+   "fact": 0,
+   "cautious": 0
+  },
+  {
+   "label": "Citations it never lists",
+   "sub": "(Author, year) with no matching entry",
+   "kinds": [
+    "unresolved"
+   ],
+   "backed": 20,
+   "overstates": 2,
+   "fact": 4,
+   "cautious": 0
+  },
+  {
+   "label": "A citation nearby",
+   "sub": "in the same sentence, not tied to the claim",
+   "kinds": [
+    "proximity"
+   ],
+   "backed": 21,
+   "overstates": 4,
+   "fact": 0,
+   "cautious": 0
+  },
+  {
+   "label": "A kind of source, named",
+   "sub": "“analysts”, “an independent survey”",
+   "kinds": [
+    "keyword"
+   ],
+   "backed": 4,
+   "overstates": 0,
+   "fact": 0,
+   "cautious": 0
+  },
+  {
+   "label": "Its own review",
+   "sub": "the report’s own reading of the field",
+   "kinds": [
+    "own-implied"
+   ],
+   "backed": 0,
+   "overstates": 1,
+   "fact": 0,
+   "cautious": 0
+  },
+  {
+   "label": "“Research shows”",
+   "sub": "research it never names",
+   "kinds": [
+    "unnamed"
+   ],
+   "backed": 0,
+   "overstates": 0,
+   "fact": 2,
+   "cautious": 0
+  },
+  {
+   "label": "Nothing",
+   "sub": "no citation, link or named source",
+   "kinds": [
+    "none"
+   ],
+   "backed": 0,
+   "overstates": 0,
+   "fact": 142,
+   "cautious": 9
+  }
+ ],
+ "sequence": {
+  "_about": "one letter per claim in document order: b backed, o overstates, f fact, h cautious, m method",
+  "value": "ffffffffffffffffffffffffffffffffffoffffffffffbbffffbbfobfbfbffffbfffbffbffbbfofbbfbbbhbfobfhfbfhbbfbbhffbbffbfoffbbhbhffbbbffbfbfbbbffffffbfffbffbffbhfffbffbfbfffbbfbfhfffbfbfffofbfobfbffbbbfboffbobfbfbfffbfbfbfofbfbfbbfbbfbbbfhffffffbfffffbf"
+ },
+ "paragraph": {
+  "_about": "paragraph index of each claim, same order; the mockup groups paragraphs 0–165 into 12 parts of 14 because pasted text has no pages",
+  "value": [
+   0,
+   2,
+   2,
+   3,
+   6,
+   6,
+   6,
+   8,
+   8,
+   8,
+   10,
+   10,
+   13,
+   13,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   17,
+   17,
+   17,
+   17,
+   17,
+   17,
+   17,
+   17,
+   17,
+   17,
+   18,
+   18,
+   18,
+   18,
+   20,
+   20,
+   20,
+   21,
+   21,
+   21,
+   25,
+   25,
+   25,
+   26,
+   26,
+   26,
+   26,
+   26,
+   26,
+   26,
+   26,
+   28,
+   29,
+   30,
+   30,
+   30,
+   30,
+   30,
+   30,
+   30,
+   30,
+   30,
+   31,
+   31,
+   31,
+   35,
+   35,
+   35,
+   35,
+   35,
+   35,
+   35,
+   35,
+   35,
+   35,
+   38,
+   38,
+   38,
+   38,
+   38,
+   38,
+   38,
+   40,
+   40,
+   40,
+   40,
+   40,
+   41,
+   42,
+   48,
+   48,
+   48,
+   49,
+   49,
+   50,
+   50,
+   50,
+   50,
+   53,
+   53,
+   53,
+   53,
+   54,
+   54,
+   55,
+   55,
+   59,
+   59,
+   59,
+   60,
+   61,
+   61,
+   61,
+   61,
+   61,
+   61,
+   61,
+   61,
+   61,
+   62,
+   63,
+   64,
+   64,
+   65,
+   65,
+   73,
+   73,
+   73,
+   75,
+   75,
+   75,
+   75,
+   75,
+   75,
+   76,
+   76,
+   82,
+   83,
+   83,
+   83,
+   83,
+   83,
+   83,
+   85,
+   85,
+   85,
+   85,
+   85,
+   85,
+   85,
+   85,
+   85,
+   86,
+   90,
+   91,
+   91,
+   91,
+   91,
+   91,
+   91,
+   91,
+   91,
+   91,
+   93,
+   94,
+   94,
+   94,
+   94,
+   94,
+   95,
+   95,
+   95,
+   98,
+   98,
+   99,
+   99,
+   107,
+   107,
+   107,
+   107,
+   107,
+   107,
+   107,
+   107,
+   107,
+   109,
+   109,
+   109,
+   109,
+   109,
+   109,
+   109,
+   109,
+   109,
+   109,
+   109,
+   109,
+   111,
+   112,
+   117,
+   117,
+   118,
+   118,
+   119,
+   119,
+   119,
+   119,
+   119,
+   119,
+   122,
+   124,
+   124,
+   126,
+   126,
+   131,
+   132,
+   133,
+   133,
+   136,
+   137,
+   137,
+   139,
+   139,
+   141,
+   143,
+   144,
+   155,
+   155,
+   155,
+   155,
+   155,
+   155,
+   155,
+   155,
+   155,
+   155,
+   157,
+   158,
+   158,
+   159,
+   161,
+   165
+  ]
+ },
+ "checkFirst": {
+  "_about": "the six the mockup shows, hand-picked because most of Fixture A's flagged claims are spliced across PDF columns; the build must reach a comparable list by rule (quotable filter + ranking), not by hand",
+  "order": [
+   172,
+   92,
+   88,
+   94,
+   118,
+   37
+  ]
+ },
+ "examples": {
+  "37": {
+   "verdict": "Stated as fact, nothing cited",
+   "text": "As global economic paradigms shift, a new impact driven field is emerging that sits at the convergence of public health imperatives, environmental sustainability, inclusion, and economic productivity.",
+   "boosters": [],
+   "causalCues": [
+    "impact",
+    "drive"
+   ],
+   "citation": null
+  },
+  "88": {
+   "verdict": "Overstates its source",
+   "text": "The reciprocal relationship between healthy environmental factors and healthy brains suggests that we need to design for not just direct environmental factors, such as air quality, heat, noise mitigation, and urban greening, but also indirect factors, such as place-attachment (creating stronger connections between people and the places they live in) and developing co-benefit communication frameworks (Nanda, 2024; Houghton et al., 2021).",
+   "boosters": [],
+   "causalCues": [
+    "benefit",
+    "relate"
+   ],
+   "citation": "Nanda, 2024"
+  },
+  "92": {
+   "verdict": "Stated as fact, nothing cited",
+   "text": "Photic environmental parameters directly influence circadian rhythm regulation through the suprachiasmatic nucleus, with implications for sleep quality, mood stability, cognitive performance, and metabolic function.",
+   "boosters": [],
+   "causalCues": [
+    "influence"
+   ],
+   "citation": null
+  },
+  "94": {
+   "verdict": "Stated as fact, nothing cited",
+   "text": "Acoustic environmental conditions demonstrate profound effects on stress response systems, with excessive noise exposure or poor acoustic design activating hypothalamic-pituitary-adrenal axis responses that elevate cortisol concentrations and impair working memory, attention regulation, and emotional stability.",
+   "boosters": [
+    "demonstrate"
+   ],
+   "causalCues": [
+    "effect",
+    "impair",
+    "elevate"
+   ],
+   "citation": null
+  },
+  "95": {
+   "verdict": "Said cautiously, nothing cited",
+   "text": "Both impulse and chronic exposure to occupational or recreational sounds may result in noise-induced hearing loss (NIHL).",
+   "boosters": [],
+   "causalCues": [
+    "result",
+    "induce"
+   ],
+   "citation": null
+  },
+  "96": {
+   "verdict": "Backed by a source",
+   "text": "By 2050, nearly 2.5 billion people are projected to have some degree of hearing loss, and more than 700 million will require hearing rehabilitation (WHO, 2021).",
+   "boosters": [],
+   "causalCues": [],
+   "citation": "WHO, 2021)"
+  },
+  "97": {
+   "verdict": "Backed by a source",
+   "text": "The WHO reports that the age at which hearing loss begins in young men (20-39yrs) now equals that in older men (40-59yrs), with women catching up (WHO, 2024).",
+   "boosters": [],
+   "causalCues": [],
+   "citation": "WHO, 2024)"
+  },
+  "101": {
+   "verdict": "Said cautiously, nothing cited",
+   "text": "Conversely, more confined environments may heighten arousal and anxiety-related responses, potentially engaging limbic stress circuits, such as the amygdala.",
+   "boosters": [],
+   "causalCues": [],
+   "citation": null
+  },
+  "113": {
+   "verdict": "Backed by a source",
+   "text": "Cognitive and behavioral problems have been linked to prenatal and early life Some of the work on multi-sensory integration has exposure to phthalates (Whyatt et al., 2012).",
+   "boosters": [],
+   "causalCues": [
+    "link"
+   ],
+   "citation": "Whyatt et al., 2012)"
+  },
+  "118": {
+   "verdict": "Stated as fact, nothing cited",
+   "text": "Mercury and arsenic are associated with nervous and cardiovascular system health impacts.",
+   "boosters": [],
+   "causalCues": [
+    "impact",
+    "associate"
+   ],
+   "citation": null
+  },
+  "172": {
+   "verdict": "Stated as fact, nothing cited",
+   "text": "Biophilic design elements, including natural materials, plant integration, natural lighting, and fractal patterns, demonstrate measurable effects on prefrontal cortex activation, stress reduction, and cognitive performance enhancement.",
+   "boosters": [
+    "demonstrate"
+   ],
+   "causalCues": [
+    "effect"
+   ],
+   "citation": null
+  },
+  "211": {
+   "verdict": "Overstates its source",
+   "text": "UDMH’s research Organizations and advocacy efforts highlight the population-level mental health implications of urban design deciand Advocacy sions while providing practical guidance for mental health-informed city planning. https://www.urbandesignmentalhealth.com/ NeuroLandscape represents a specialized research organization focused on landscape and urban environment impacts on brain health through transdisciplinary research combining neuroscience, landscape architecture, and computational analysis.",
+   "boosters": [],
+   "causalCues": [
+    "impact"
+   ],
+   "citation": "https://www.urbandesignmentalhealth.com/"
+  }
+ }
+}

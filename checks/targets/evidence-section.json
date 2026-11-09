@@ -1,0 +1,754 @@
+{
+  "recorded": "2026-11-09",
+  "engine_commit": "7178387-dirty",
+  "documents": {
+    "allen-ehp-2016": {
+      "counts": {
+        "backed": 67,
+        "overstates": 0,
+        "fact": 40,
+        "cautious": 6,
+        "method": 115
+      },
+      "rows": [
+        [
+          "Its reference list",
+          13,
+          0,
+          0,
+          0
+        ],
+        [
+          "Links and notes",
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          "Citations it never lists",
+          12,
+          0,
+          0,
+          0
+        ],
+        [
+          "A citation nearby",
+          3,
+          0,
+          0,
+          0
+        ],
+        [
+          "A kind of source, named",
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          "Its own data or figures",
+          37,
+          0,
+          3,
+          0
+        ],
+        [
+          "“Research shows”",
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          "Nothing",
+          0,
+          0,
+          36,
+          6
+        ]
+      ],
+      "checkFirst": [
+        213,
+        217,
+        22,
+        3,
+        185,
+        2
+      ]
+    },
+    "hsph-press-2015": {
+      "counts": {
+        "backed": 1,
+        "overstates": 0,
+        "fact": 16,
+        "cautious": 3,
+        "method": 2
+      },
+      "rows": [
+        [
+          "A citation nearby",
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          "The study it reports",
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          "“Research shows”",
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          "Nothing",
+          0,
+          0,
+          15,
+          1
+        ]
+      ],
+      "checkFirst": [
+        10,
+        0,
+        8,
+        11,
+        21,
+        9
+      ]
+    },
+    "sciencedaily-2015": {
+      "counts": {
+        "backed": 8,
+        "overstates": 0,
+        "fact": 27,
+        "cautious": 5,
+        "method": 1
+      },
+      "rows": [
+        [
+          "Links and notes",
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          "A citation nearby",
+          5,
+          0,
+          0,
+          0
+        ],
+        [
+          "The study it reports",
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          "Its own figures",
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          "“Research shows”",
+          0,
+          0,
+          0,
+          2
+        ],
+        [
+          "Nothing",
+          0,
+          0,
+          26,
+          2
+        ]
+      ],
+      "checkFirst": [
+        12,
+        20,
+        19,
+        10,
+        39,
+        13
+      ]
+    },
+    "gba-news-2015": {
+      "counts": {
+        "backed": 5,
+        "overstates": 0,
+        "fact": 26,
+        "cautious": 3,
+        "method": 7
+      },
+      "rows": [
+        [
+          "People it quotes",
+          3,
+          0,
+          2,
+          0
+        ],
+        [
+          "The study it reports",
+          0,
+          0,
+          2,
+          1
+        ],
+        [
+          "A kind of source, named",
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          "Nothing",
+          0,
+          0,
+          22,
+          2
+        ]
+      ],
+      "checkFirst": [
+        39,
+        16,
+        17,
+        37,
+        24,
+        10
+      ]
+    },
+    "bdc-blog-allen": {
+      "counts": {
+        "backed": 3,
+        "overstates": 0,
+        "fact": 14,
+        "cautious": 2,
+        "method": 1
+      },
+      "rows": [
+        [
+          "A citation nearby",
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          "The study it reports",
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          "Its own figures",
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          "Nothing",
+          0,
+          0,
+          12,
+          2
+        ]
+      ],
+      "checkFirst": [
+        12,
+        7,
+        5,
+        1,
+        15,
+        18
+      ]
+    },
+    "naava-allen": {
+      "counts": {
+        "backed": 2,
+        "overstates": 0,
+        "fact": 7,
+        "cautious": 1,
+        "method": 1
+      },
+      "rows": [
+        [
+          "The study it reports",
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          "Its own figures",
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          "Nothing",
+          0,
+          0,
+          7,
+          0
+        ]
+      ],
+      "checkFirst": [
+        4,
+        7,
+        3,
+        10,
+        9
+      ]
+    },
+    "gensler-gws-2024": {
+      "counts": {
+        "backed": 1,
+        "overstates": 1,
+        "fact": 24,
+        "cautious": 1,
+        "method": 2
+      },
+      "rows": [
+        [
+          "Its own data or figures",
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          "Its own earlier work",
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          "Nothing",
+          0,
+          0,
+          23,
+          1
+        ]
+      ],
+      "checkFirst": [
+        4,
+        5,
+        9,
+        25,
+        27,
+        28
+      ]
+    },
+    "gensler-press-2024": {
+      "counts": {
+        "backed": 6,
+        "overstates": 2,
+        "fact": 18,
+        "cautious": 2,
+        "method": 3
+      },
+      "rows": [
+        [
+          "A citation nearby",
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          "A kind of source, named",
+          3,
+          0,
+          0,
+          0
+        ],
+        [
+          "Its own data or figures",
+          3,
+          1,
+          0,
+          0
+        ],
+        [
+          "Nothing",
+          0,
+          0,
+          18,
+          2
+        ]
+      ],
+      "checkFirst": [
+        5,
+        2,
+        6,
+        19,
+        1,
+        29
+      ]
+    },
+    "bdc-gensler-news-2024": {
+      "counts": {
+        "backed": 3,
+        "overstates": 0,
+        "fact": 24,
+        "cautious": 5,
+        "method": 1
+      },
+      "rows": [
+        [
+          "People it quotes",
+          0,
+          0,
+          3,
+          1
+        ],
+        [
+          "The study it reports",
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          "Its own figures",
+          3,
+          0,
+          0,
+          0
+        ],
+        [
+          "“Research shows”",
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          "Nothing",
+          0,
+          0,
+          19,
+          4
+        ]
+      ],
+      "checkFirst": [
+        29,
+        23,
+        7,
+        1,
+        19,
+        11
+      ]
+    },
+    "co2meter-plants": {
+      "counts": {
+        "backed": 1,
+        "overstates": 2,
+        "fact": 4,
+        "cautious": 102,
+        "method": 1
+      },
+      "rows": [
+        [
+          "A citation nearby",
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          "Its own data or figures",
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          "“Research shows”",
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          "Nothing",
+          0,
+          1,
+          4,
+          101
+        ]
+      ],
+      "checkFirst": [
+        8,
+        46,
+        6,
+        7
+      ]
+    },
+    "jcu-timber-pilot": {
+      "counts": {
+        "backed": 124,
+        "overstates": 25,
+        "fact": 92,
+        "cautious": 21,
+        "method": 49
+      },
+      "rows": [
+        [
+          "Links and notes",
+          10,
+          1,
+          0,
+          0
+        ],
+        [
+          "A citation nearby",
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          "A kind of source, named",
+          7,
+          0,
+          0,
+          0
+        ],
+        [
+          "Its own data or figures",
+          101,
+          12,
+          0,
+          1
+        ],
+        [
+          "“Research shows”",
+          0,
+          0,
+          2,
+          1
+        ],
+        [
+          "Nothing",
+          0,
+          12,
+          90,
+          19
+        ]
+      ],
+      "checkFirst": [
+        39,
+        20,
+        251,
+        21,
+        36,
+        4
+      ]
+    },
+    "fixture-a-cadre": {
+      "counts": {
+        "backed": 75,
+        "overstates": 10,
+        "fact": 148,
+        "cautious": 9,
+        "method": 0
+      },
+      "rows": [
+        [
+          "Its reference list",
+          30,
+          3,
+          0,
+          0
+        ],
+        [
+          "Citations it never lists",
+          20,
+          2,
+          4,
+          0
+        ],
+        [
+          "A citation nearby",
+          21,
+          4,
+          0,
+          0
+        ],
+        [
+          "A kind of source, named",
+          4,
+          0,
+          0,
+          0
+        ],
+        [
+          "Its own review",
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          "“Research shows”",
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          "Nothing",
+          0,
+          0,
+          142,
+          9
+        ]
+      ],
+      "checkFirst": [
+        94,
+        132,
+        88,
+        87,
+        56,
+        172
+      ]
+    },
+    "fixture-b-pew-html": {
+      "counts": {
+        "backed": 32,
+        "overstates": 1,
+        "fact": 5,
+        "cautious": 2,
+        "method": 0
+      },
+      "rows": [
+        [
+          "A citation nearby",
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          "A kind of source, named",
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          "Its own data or figures",
+          28,
+          1,
+          0,
+          0
+        ],
+        [
+          "Nothing",
+          0,
+          0,
+          5,
+          2
+        ]
+      ],
+      "checkFirst": [
+        2
+      ]
+    },
+    "fixture-b-pew-report": {
+      "counts": {
+        "backed": 121,
+        "overstates": 3,
+        "fact": 9,
+        "cautious": 5,
+        "method": 93
+      },
+      "rows": [
+        [
+          "Citations it never lists",
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          "A citation nearby",
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          "People it quotes",
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          "A kind of source, named",
+          2,
+          1,
+          0,
+          0
+        ],
+        [
+          "Its own study",
+          31,
+          0,
+          0,
+          0
+        ],
+        [
+          "Its own data or figures",
+          84,
+          2,
+          0,
+          0
+        ],
+        [
+          "Its own earlier work",
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          "Nothing",
+          0,
+          0,
+          8,
+          5
+        ]
+      ],
+      "checkFirst": [
+        21,
+        10,
+        195,
+        214,
+        197,
+        220
+      ]
+    }
+  }
+}

@@ -18,7 +18,7 @@
 // reason into one actionable sentence on the landing page.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { extractFile, extOf } from './extractFile.js'
+import { extractFileDocument, extOf } from './extractFile.js'
 import { ExtractionError } from './errors.js'
 import { normalizeText } from './normalizer.js'
 import { stripChromeLines } from './chromeLines.js'
@@ -155,11 +155,11 @@ export async function fetchLink(rawUrl) {
     const file = await downloadDocument(url, controller.signal)
     if (file) {
       try {
-        const text = await extractFile(file)
+        const { text, pages } = await extractFileDocument(file)
         if (!text.trim()) throw new ExtractionError('empty')
         const check = validateText(text, { path: 'link' })
         if (!check.ok) return { ok: false, reason: check.reason, detail: check.detail, host }
-        return { ok: true, text, sourceUrl: url, via: 'download' }
+        return { ok: true, text, sourceUrl: url, via: 'download', ...(pages ? { pages } : {}) }
       } catch (err) {
         return { ok: false, reason: 'extract', kind: err instanceof ExtractionError ? err.kind : 'corrupt', host }
       }

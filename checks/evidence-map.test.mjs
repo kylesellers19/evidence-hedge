@@ -1,6 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // node checks/evidence-map.test.mjs — the evidence map (src/engine/evidenceMap.js)
-// is a reading of the analysis, never a judgment of its own.
+// is a reading of the analysis, never a judgment of its own. The evidence
+// section reads its grounds; checks/evidence-section.test.mjs holds the page.
 //
 // On every corpus document whose text is present (committed or cached; real
 // documents only, a missing one is a SKIP that is printed):
@@ -21,11 +22,8 @@
 //      the posture gate fired
 //  10. a source split by grade continues on a ditto line: no two adjacent rows
 //      of one kind carry the same name
-// On the benchmark fixtures (checks/lib/fixtures.mjs) that load:
-//  11. the brief records the map with no document text left readable: every
-//      string of 30+ characters the document contains verbatim is hashed
 // Against the recorded rows:
-//  12. row counts equal checks/targets/evidence-map.json for each document it
+//  11. row counts equal checks/targets/evidence-map.json for each document it
 //      lists (recorded output at a known commit, not a prediction). A change
 //      that moves them on purpose re-records in the same commit:
 //        node checks/evidence-map.test.mjs --write
@@ -34,9 +32,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { ROOT, loadCorpus, loadDocText } from './lib/corpus.mjs'
-import { FIXTURES, runFixture } from './lib/fixtures.mjs'
 import { engineCommit } from './lib/engine-rows.mjs'
-import { briefOf, redact } from './lib/brief.mjs'
 import { routeDocument } from '../src/rubrics/route.js'
 import { analyze } from '../src/engine/analyze.js'
 import { getRubric, RUBRIC_ORDER } from '../src/rubrics/index.js'
@@ -139,23 +135,6 @@ for (const doc of docs) {
 check('at least one real document ran', ran > 0, `${ran} of ${docs.length}`)
 
 // 11
-for (const f of FIXTURES) {
-  const run = await runFixture(f)
-  if (run.status !== 'ok') { console.log(`SKIP ${f.id} — ${run.reason}`); continue }
-  const brief = redact(briefOf(run), run.loaded.text)
-  const flat = run.loaded.text.replace(/\s+/g, ' ')
-  const leaks = []
-  const walk = (v) => {
-    if (typeof v === 'string') {
-      const s = v.replace(/\s+/g, ' ')
-      for (let i = 0; i + 30 <= s.length; i += 10) if (flat.includes(s.slice(i, i + 30))) { leaks.push(s.slice(0, 60)); break }
-    } else if (v && typeof v === 'object') for (const x of Object.values(v)) walk(x)
-  }
-  walk(brief.evidenceMap)
-  check(`the brief's map keeps document text hashed [${f.id}]`, brief.evidenceMap && leaks.length === 0, leaks.slice(0, 2).join(' | '))
-}
-
-// 12
 if (WRITE) {
   writeFileSync(TARGETS, JSON.stringify({ recorded: new Date().toISOString().slice(0, 10), engine_commit: engineCommit(), rows: recorded }, null, 2) + '\n')
   console.log(`WROTE checks/targets/evidence-map.json at engine ${engineCommit()} (${Object.keys(recorded).length} documents)`)

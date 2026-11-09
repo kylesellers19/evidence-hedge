@@ -1,21 +1,19 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// buildEvidenceMap(result, rubric) → what each claim stands on, as one figure.
+// buildEvidenceMap(result, rubric) → what each claim stands on.
 //
 // Read-only, after every judgment (like claim records): it reads the claims'
 // links (Stage 4, linkEvidence.js), attribution (attribution.js), rung, tier,
 // flags and causal overreach exactly as analyze() left them, and changes none
 // of them. analyze() never imports this file, so no flag, signal or score can
-// move because of it. The results page and checks/lib/brief.mjs both call it.
+// move because of it. The evidence section (evidenceSection.js) reads its
+// grounds; checks/evidence-map.test.mjs holds its rows.
 //
 // Every claim lands in exactly one ground: the strongest thing it leans on,
-// in GROUND_KINDS order. The figure reads left to right, From → Via → To:
-// one row per source (a named source that carries two or more claims gets a
-// row of its own; the rest are gathered by kind), the citation mechanism it
-// reaches the claim by, and the claims placed by how sure each sentence sounds.
-// A row's rule runs as far as its source can carry a claim (its reach: the
-// rubric's ceiling at that rung), so a claim past the end of its rule is a
-// claim the engine flagged. The rule's style is the grade of the link
-// (after Delgam's decisions map: solid, dashed, dotted, none):
+// in GROUND_KINDS order. Rows group the grounds by source (a named source that
+// carries two or more claims gets a row of its own; the rest are gathered by
+// kind), with the citation mechanism that reaches the claim (via) and each
+// row's ceiling under the rubric, so a claim above its row's ceiling is a claim
+// the engine flagged. The grade of the link:
 //
 //   linked    solid    resolved to a reference entry, a URL or DOI, a note, a
 //                      "Source:" caption in its own paragraph, or its own study
@@ -55,21 +53,6 @@ export const GROUND_KINDS = [
 ]
 const KIND = Object.fromEntries(GROUND_KINDS.map((g, i) => [g.kind, { ...g, order: i }]))
 
-export const GRADE_LABELS = {
-  linked: 'Linked',
-  loose: 'Attributed, not linked',
-  presumed: 'Presumed',
-  none: 'Nothing on file',
-}
-
-const REGISTER_LABELS = {
-  none: 'no causal',
-  correlational: 'associational',
-  'conditional-causal': 'hedged causal',
-  'direct-causal': 'direct causal',
-}
-const REGISTER_ORDER = ['none', 'correlational', 'conditional-causal', 'direct-causal']
-const ADVICE_LABELS = { none: 'none', weak: 'tentative', strong: 'firm' }
 const BASIS_LABELS = {
   marker: 'Citation marker',
   footnote: 'Footnote',
@@ -78,35 +61,6 @@ const BASIS_LABELS = {
   'section-scope': 'Results section',
   proximity: 'Found nearby',
   speaker: 'Quoted speaker',
-}
-// The same links inside the provenance sentence ("by way of a footnote").
-const BY_WAY_OF = {
-  marker: 'a citation marker',
-  footnote: 'a footnote',
-  caption: 'a source line or figure',
-  hyperlink: 'a link or DOI',
-  'section-scope': 'its results section',
-  proximity: 'a citation found nearby',
-  speaker: 'a quoted speaker',
-}
-// Whose finding a claim reports, as the panel and the brief name it.
-export const ATTRIBUTION_LABELS = {
-  'own-current': 'The document’s own',
-  'own-prior': 'The publisher’s earlier work',
-  'cited-other': 'Someone else’s',
-  quoted: 'A quoted speaker’s',
-  unattributed: 'Not attributed',
-  undetermined: 'Undetermined',
-}
-// What the engine looked for when a claim has no link (the routes in
-// linkEvidence.js), as the panel's footnote names them.
-const TRIED_LABELS = {
-  marker: 'a citation marker',
-  footnote: 'a footnote',
-  hyperlink: 'a link or DOI',
-  caption: 'a source line or caption',
-  'section-scope': 'a results section around it',
-  speaker: 'a named speaker',
 }
 const NAMED_STUDY_CUES = new Set(['named-source', 'study-by', 'published-in', 'according-to', 'definite-study'])
 export const DESIGN_LABELS = {
@@ -124,16 +78,10 @@ export const DESIGN_LABELS = {
   'none-reported': 'no reported',
 }
 const designLabel = (d) => DESIGN_LABELS[d] || String(d).replace(/-/g, ' ')
-const withArticle = (w) => `${/^[aeiou]/i.test(w) ? 'an' : 'a'} ${w}`
 const clip = (s, n) => {
   const t = String(s || '').replace(/^[^\p{L}\p{N}“"(\[]+/u, '')
   return t.length > n ? t.slice(0, n - 1).trimEnd() + '…' : t
 }
-// A row's name inside a sentence: "to the publisher itself", "rest on citations
-// found nearby". The map's own labels lose their capital; a source's name
-// ("Zeitzer et al., 2000", "WHO, 2024", "Figure 3") keeps it.
-const OWN_LABEL = /^(?:The|Its|A|An|Citations|Research|Nothing|No|Links|Quoted|Nearby|Source)\s/
-const inSentence = (label) => (OWN_LABEL.test(label) ? label.charAt(0).toLowerCase() + label.slice(1) : label)
 
 function hostPath(url) {
   try {
@@ -235,28 +183,6 @@ function ceilingFor(rubric, posture, rank) {
   return table[rank] ?? table[table.length - 1]
 }
 
-// Causal overreach as a sentence. analyze() flags it when the causal wording or
-// the advice goes past the design's ceiling, so it names whichever one did.
-function overreachSentence(ex, also) {
-  const design = ex.design === 'none-reported' ? 'no reported design' : `${withArticle(designLabel(ex.design))} design`
-  const past = also ? 'also goes past' : 'goes past'
-  return REGISTER_ORDER.indexOf(ex.causalRegister) > REGISTER_ORDER.indexOf(ex.designCeiling.maxRegister)
-    ? `Its causal wording (${REGISTER_LABELS[ex.causalRegister]}) ${past} what ${design} licenses (${REGISTER_LABELS[ex.designCeiling.maxRegister]}).`
-    : `Its advice (${ADVICE_LABELS[ex.recommendation]}) ${past} what ${design} licenses (${ADVICE_LABELS[ex.designCeiling.maxRecommendation]}).`
-}
-
-// The one-line caption a claim carries in the panel (after Delgam's captions).
-function captionOf(c, tiers) {
-  const tierName = (w) => (tiers.find((t) => t.weight === w)?.label || `tier ${w}`).toLowerCase()
-  const asserted = c.tier.label.toLowerCase()
-  if (c.judgment === 'gated') return 'Experiential writing: no evidence obligation.'
-  if (c.flag === 'unsupported-assertion') return `Stated as ${asserted} with nothing on file to carry it.`
-  if (c.flag === 'overconfident') return `${c.rung.label} carries up to ${tierName(c.ceiling)}; this is stated as ${asserted}.`
-  if (c.overreach) return overreachSentence(c.overreach.explanation, false)
-  if (c.rung.rank === 0) return c.disclosed ? 'No source, and stated tentatively enough to stand.' : `No source, but stated softly enough (${asserted}) to stand.`
-  return `${c.rung.label} carries a ${asserted} statement.`
-}
-
 /**
  * @param {import('./types.js').AnalysisResult & { claims: any[] }} result
  * @param {import('./types.js').RubricConfig} rubric   the rubric analyze() ran under
@@ -309,7 +235,6 @@ export function buildEvidenceMap(result, rubric) {
       evidenceTried: c.evidence?.tried || [],
     }
     out.judgment = judgmentOf(out, gated)
-    out.caption = captionOf(out, tiers)
     out.via = viaOf(out, c)
     return out
   })
@@ -343,21 +268,13 @@ export function buildEvidenceMap(result, rubric) {
     overreach: count((c) => c.judgment === 'overreach'),
     gated,
   }
-  census.sentence = censusSentence(census)
-
-  // The panel opens on the strongest claim that outruns its ground, else the
-  // strongest causal overreach, else the strongest claim.
-  const rankOf = (c) => (c.judgment === 'outruns' ? 2 : c.judgment === 'overreach' ? 1 : 0)
-  const lead = [...claims].sort((a, b) => rankOf(b) - rankOf(a) || b.tier.weight - a.tier.weight || a.index - b.index)[0]
 
   return {
     claims,
     grounds,
     rows,
-    dek: dekOf(claims, rows),
     census,
     tiers: tiers.map((t) => ({ key: t.key, label: t.label, weight: t.weight })),
-    lead: lead ? lead.index : null,
   }
 }
 
@@ -543,105 +460,4 @@ function gatheredLabel(kind, targets, count, others, ctx) {
     case 'own-implied': return { label: others ? `${targets} ${targets === 1 ? noun[0] : noun[1]}` : ctx.ownStudyLabel, sub: others ? claimsWord : 'read as its own result; nothing cited', via: { mark: '¶', word: 'read as its own' } }
     default: return { label: others ? `${targets} ${targets === 1 ? noun[0] : noun[1]}` : GROUND_KINDS.find((g) => g.kind === kind).label, sub: claimsWord, via: undefined }
   }
-}
-
-// The figure's dek: the one finding a reader should leave with.
-function dekOf(claims, rows) {
-  const n = claims.length
-  if (!n) return 'No claims to map.'
-  const outruns = claims.filter((c) => c.judgment === 'outruns').length
-  const none = rows.find((r) => r.kind === 'none')
-  if (claims.every((c) => c.judgment === 'gated')) return 'Written from experience, so no claim here owes a source.'
-  if (none && none.outruns / n >= 0.2) {
-    const all = none.outruns === none.claims.length
-    const methods = none.methods ? ` ${none.methods} more ${none.methods === 1 ? 'describes' : 'describe'} its methods, which the engine does not judge.` : ''
-    return `${none.claims.length} of ${n} claims cite nothing, and ${all ? 'every one of them is' : `${none.outruns} of them ${none.outruns === 1 ? 'is' : 'are'}`} stated more firmly than no source can carry.${methods}`
-  }
-  const top = rows.filter((r) => r.kind !== 'none').sort((a, b) => b.claims.length - a.claims.length)[0]
-  if (top && top.claims.length / n >= 0.3) {
-    // "Citations found nearby" is plural and "Zeitzer et al., 2000" singular, so
-    // the claims are the subject, and the pager's words say how far they go.
-    const past = top.outruns
-    return `${top.claims.length} of ${n} claims rest on ${inSentence(top.label)}${past ? `, and ${past === 1 ? 'one is stated past its reach' : `${past} are stated past their reach`} (${top.reach})` : ', and every one is within its reach'}.`
-  }
-  if (!outruns) return `Every one of ${n} claims stays within what its source can carry.`
-  return `${outruns} of ${n} claims are stated more firmly than their sources can carry.`
-}
-
-/** One claim's chain as a sentence (after museum provenance lines). */
-export function provenanceOf(c, rows, standardLabel, tiers) {
-  const tierLabel = (w) => (tiers.find((t) => t.weight === w)?.label || '').toLowerCase()
-  const row = rows.find((r) => r.claims.includes(c.index))
-  const parts = [`Stated as ${c.tier.label.toLowerCase()}`]
-  if (c.kind === 'none') parts.push('citing nothing')
-  else if (c.kind === 'keyword') parts.push('naming a kind of source but citing none')
-  else if (c.kind === 'unnamed') parts.push('appealing to research it doesn’t name')
-  else if (c.link) {
-    // A marker reads as the figure's Via column sets it: "(Houghton 2021)", not
-    // the raw anchor's "Houghton et al., 2021)".
-    const anchor = c.link.basis === 'marker' && c.via?.mark ? c.via.mark : c.link.anchor
-    parts.push(`by way of ${BY_WAY_OF[c.link.basis] || c.link.basisLabel.toLowerCase()} ${anchor && anchor.length < 40 ? `“${anchor}”` : ''}`.trim())
-  }
-  else parts.push('with no citation')
-  // Where it leads, unless the words above already say ("found nearby"). A
-  // gathered row is one source of many: "to one of 29 other references".
-  if (!['none', 'keyword', 'unnamed', 'proximity'].includes(c.kind)) {
-    const many = row && row.label.match(/^(\d+) (.+)$/)
-    const to = many ? (many[1] === '1' ? `one ${many[2]}` : `one of ${row.label}`) : inSentence(row ? row.label : c.targetLabel)
-    parts.push(`to ${to}`)
-  }
-  const head = parts.join(', ') + '.'
-  const std = (standardLabel || '').toLowerCase()
-  const reach = c.kind === 'none'
-    ? `With no source, the ${std} standard allows up to ${tierLabel(c.ceiling)}`
-    : `${c.rung.label} carries up to ${tierLabel(c.ceiling)} under the ${std} standard`
-  const steps = c.tier.weight - c.ceiling
-  let gap
-  if (c.judgment === 'gated') gap = ', but this is experiential writing, which owes no source.'
-  else if (steps <= 0) gap = ', so the claim is within reach.'
-  else if (c.method) gap = `; this is a method statement, which the engine does not judge.`
-  else if (!c.flag) gap = `; it is ${steps} ${steps === 1 ? 'step' : 'steps'} past that, but hedged, so not flagged.`
-  else gap = `, so the claim is stated ${steps} ${steps === 1 ? 'step' : 'steps'} past its reach.`
-  let causal = ''
-  if (c.overreach) {
-    const ex = c.overreach.explanation
-    causal = ` ${overreachSentence(ex, steps > 0)}`
-  }
-  return `${head} ${reach}${gap}${causal}`
-}
-
-/**
- * The panel's footnote, or null: why a claim has no link (what the engine
- * looked for), or why its link is weak. Read from Stage 4 as it left the claim.
- */
-export function noteOf(c) {
-  if (c.link) return c.link.confidence === 'low' ? `Linked with low confidence${c.groundReason ? `: ${c.groundReason}` : ''}.` : null
-  if (!c.evidenceTried.length) return null
-  const looked = [...c.evidenceTried.map((t) => TRIED_LABELS[t] || t), 'a citation in the same sentence']
-  return `The engine looked for ${joinOr(looked)}, and found none.`
-}
-const joinOr = (p) => (p.length <= 2 ? p.join(' or ') : `${p.slice(0, -1).join(', ')}, or ${p[p.length - 1]}`)
-
-const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`
-
-export function censusSentence(c) {
-  if (!c.claims) return 'No claims to map.'
-  const parts = []
-  if (c.linked) parts.push(`${c.linked} ${c.linked === 1 ? 'is' : 'are'} linked to a source`)
-  if (c.ownImplied) parts.push(`${c.ownImplied} ${c.ownImplied === 1 ? 'reports' : 'report'} the document’s own results without pointing to them`)
-  if (c.loose) parts.push(`${c.loose} ${c.loose === 1 ? 'names' : 'name'} a source without linking it`)
-  if (c.presumed) parts.push(`${c.presumed} ${c.presumed === 1 ? 'appeals' : 'appeal'} to research it doesn’t name`)
-  if (c.none) parts.push(`${c.none} ${c.none === 1 ? 'has' : 'have'} nothing on file`)
-  const lead = `Of ${plural(c.claims, 'claim', 'claims')}, ${joinParts(parts)}.`
-  if (c.gated) return `${lead} As experiential writing, none carries an evidence obligation.`
-  if (!c.outruns && !c.overreach) return `${lead} None outruns what it stands on.`
-  const parts2 = []
-  if (c.outruns) parts2.push(`${c.outruns} ${c.outruns === 1 ? 'outruns what it stands' : 'outrun what they stand'} on`)
-  if (c.overreach) parts2.push(`${c.outruns ? `${c.overreach} more` : c.overreach} ${c.overreach === 1 ? 'claims' : 'claim'} more cause or firmer advice than the design licenses`)
-  return `${lead} ${parts2.join('; ')}.`
-}
-
-function joinParts(p) {
-  if (p.length <= 1) return p[0] || 'none is mapped'
-  return p.length === 2 ? `${p[0]} and ${p[1]}` : p.slice(0, -1).join(', ') + ', and ' + p[p.length - 1]
 }

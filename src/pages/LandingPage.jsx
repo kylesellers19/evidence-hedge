@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ParticleMark from "../components/ParticleMark.jsx";
 import FileDropZone from "../components/FileDropZone.jsx";
-import { extractFile } from "../ingest/extractFile.js";
+import { extractFileDocument } from "../ingest/extractFile.js";
 import { ExtractionError } from "../ingest/errors.js";
 import { normalizeText } from "../ingest/normalizer.js";
 import { fetchLink, looksLikeUrl } from "../ingest/fetchLink.js";
@@ -61,7 +61,7 @@ export default function LandingPage({ onAnalyze }) {
 
     if (result.ok) {
       // fetchLink has already run the text through the shared normalizer.
-      onAnalyze(result.text, { sourceUrl: result.sourceUrl });
+      onAnalyze(result.text, { sourceUrl: result.sourceUrl, ...(result.pages ? { pages: result.pages } : {}) });
       return;
     }
 
@@ -76,9 +76,10 @@ export default function LandingPage({ onAnalyze }) {
     setFilename(file.name);
     setExtracting(true);
     try {
-      const extracted = await extractFile(file);
+      // A PDF's per-page text rides along in meta, for which page a claim is on.
+      const { text: extracted, pages } = await extractFileDocument(file);
       if (!extracted.trim()) throw new ExtractionError("empty");
-      onAnalyze(extracted, { source: "file", filename: file.name });
+      onAnalyze(extracted, { source: "file", filename: file.name, ...(pages ? { pages } : {}) });
     } catch (err) {
       const kind = err instanceof ExtractionError ? err.kind : "corrupt";
       setExtracting(false);

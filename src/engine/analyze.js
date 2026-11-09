@@ -17,7 +17,7 @@ import { linkEvidence } from './linkEvidence.js'
 import { parseReferences } from './references.js'
 import { buildClaimRecord } from './claimRecord.js'
 import { measureAssertiveness } from './measureAssertiveness.js'
-import { measureClaim } from './measure/index.js'
+import { measureClaim, REQUIREMENT } from './measure/index.js'
 import { segmentDocument } from './measure/segment.js'
 import { registerRank } from './measure/causalRegister.js'
 import { strengthRank } from './measure/recommendation.js'
@@ -35,6 +35,8 @@ import { scoreDocument } from './scoreDocument.js'
 /** @typedef {import('./types.js').Claim} Claim */
 
 const STRONG_WEIGHT = 3 // tier weight at/above which a claim reads as "strong"
+const RULE_CITE = /\b\d+\s+(?:CFR|C\.F\.R\.|U\.S\.C\.)\b|§\s*\d|\bFinal\s+Rule\b|\b(?:Subpart|Part)\s+\d+[A-Z]?\b|\bSection\s+\d+(?:\.\d+)*\s+of\s+the\b/g
+const REGULATORY_MIN = 3 // PROVISIONAL — not ratified
 // Claim functions checked against the design ceiling (a method statement or a
 // background claim about others' work is not this document's causal claim).
 const CEILING_FUNCTIONS = new Set(['own-result', 'interpretation', 'recommendation'])
@@ -117,9 +119,14 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
     references: references.map((r) => r.text), design: profile.design, publisher,
   })
 
+  // A document that summarizes a rule cites its sections again and again
+  // ("40 CFR 112", "§ 1910.1001", "Final Rule", "Subpart F"). Its sentences in
+  // the rule's language report the rule, and link to it. PROVISIONAL — not ratified.
+  const regulatory = (body.match(RULE_CITE) || []).length >= REGULATORY_MIN
+
   /** @type {Claim[]} */
   const claims = raw.map((c, i) => {
-    const m = measureClaim(c, { design: profile.design.inherited ? 'none-reported' : profile.design.design })
+    const m = measureClaim(c, { design: profile.design.inherited ? 'none-reported' : profile.design.design, regulatory })
     const { citations: linkedCitations, ownStudy, ...ev } = evidence[i]
     const attr = attribution.claims[i]
     // ── Judgment (the rubric's) ─────────────────────────────────────────────
@@ -132,7 +139,8 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
     // than an attributed statement may be is not charged as citing nothing.
     // PROVISIONAL — not ratified.
     const spoken = attribution.claims[i]?.label === 'quoted' ? [{ type: 'phrase', raw: `quoted: ${attribution.claims[i].speaker || 'speaker'}` }] : []
-    const linked = { text: c.text, citations: [...linkedCitations, ...spoken] }
+    const ruled = regulatory && m.function === 'background' && REQUIREMENT.test(c.text) ? [{ type: 'phrase', raw: 'the rule this document summarizes' }] : []
+    const linked = { text: c.text, citations: [...linkedCitations, ...spoken, ...ruled] }
     const cited = gradeEvidence(linked, rubric.ladder)
     const rung = gradeEvidence(linked, rubric.ladder, { inDocumentRung: m.function === 'own-result' || ownStudy ? rubric.ownResultRung : null })
     // Did the rung come from the document's own evidence rather than a citation?

@@ -70,3 +70,25 @@ export const SURVEY_RESULT = [
   '\\b(?:workers|respondents|employees|adults|americans|people|users|consumers|leaders|executives|managers|parents|students|occupants|members|staff|those)\\b[^.]{0,80}\\b(?:say|says|said|report|reported|are|were|have|had|feel|felt|think|thought|use|used|expect|prefer|want|agree|describe|rate|trust|worry)\\b',
   '\\b(?:most|many|few|some|half|majority|minority|third|quarter|fifth|share|shares|one-in-\\w+|\\d+(?:\\.\\d+)?\\s?%)\\b[^.]{0,60}\\b(?:of|among)\\s+(?:all\\s+|U\\.S\\.\\s+)?(?:\\w+\\s+){0,2}(?:workers|respondents|employees|adults|americans|people|users)\\b',
 ]
+
+// A firm's or a team's own study reported in its own words: the survey's
+// population, the model's outputs, the index's movement, the project's
+// measured result. Read only in a document that reports its own study
+// (claimFunction gates it on the design), so an uncited market figure in a
+// brochure is not mistaken for one. Engine cleanup, Nov. 2026. PROVISIONAL — not ratified.
+export const OWN_STUDY_RESULT = [
+  // survey populations: "% of owners", "most contractors", "respondents in Ontario"
+  String.raw`\b\d+(?:\.\d+)?\s?%\s+(?:of\s+)?(?:the\s+)?(?:[\w-]+\s+){0,3}(?:owners|contractors|architects|engineers|designers|firms|companies|organi[sz]ations|leaders|executives|managers|professionals|employees|workers|respondents|participants|members|markets|projects|clients|users|occupants|students|teachers|facilities|cities|agencies|utilities|operators|subcontractors|specialty contractors|builders|developers|tenants|residents)\b`,
+  String.raw`\b(?:most|many|few|half|a majority|the majority|a third|a quarter|nearly all|almost all|all but|one in \w+)\s+(?:of\s+(?:the\s+)?)?(?:owners|contractors|architects|engineers|firms|companies|organi[sz]ations|leaders|executives|respondents|participants|members|clients|users|occupants|employees|workers)\b`,
+  String.raw`\b(?:surveyed|polled|interviewed)\b|\bof\s+those\s+(?:surveyed|polled|asked|interviewed)\b|\bsurvey\s+(?:respondents|results|responses|data)\b`,
+  // models and simulations: "the model predicts", "was predicted to be 173.4 °C", "under the high scenario"
+  String.raw`\b(?:the|our|this)\s+(?:\w+\s+){0,2}(?:model|models|simulation|simulations|scenario|scenarios|analysis|calculations?|modell?ing|forecast|projections?)\s+(?:\w+\s+){0,2}(?:shows?|showed|found|finds|predicts?|predicted|indicates?|indicated|suggests?|estimates?|estimated|results?|resulted|yields?|yielded)\b`,
+  String.raw`\b(?:was|were|is|are)\s+(?:\w+ly\s+)?(?:predicted|modell?ed|simulated|calculated|estimated|projected|measured|recorded|observed)\s+(?:to\s+be|at|as)\b`,
+  String.raw`\bunder\s+(?:the|a|this|each|both)\s+(?:[\w-]+\s+){0,3}scenarios?\b`,
+  // indexes: "the index rose 2.1%", "cost movements were mixed"
+  String.raw`\b(?:the|our|this)\s+(?:[\w-]+\s+){0,4}index\b[^.]{0,60}\b(?:rose|fell|increased|decreased|declined|grew|climbed|dropped|remained|stood|was|is|moved|averaged)\b`,
+  String.raw`\b(?:cost|price|labor|labour|material|escalation)\s+(?:movements?|changes?|escalation|increases?)\s+(?:were|was|have been|has been|remained)\b`,
+  // the project, pilot or prototype's own measured result
+  String.raw`\b(?:the|this|our)\s+(?:[\w-]+\s+){0,3}(?:project|facility|building|site|pilot|prototype|retrofit|installation|campus|plant|system|design)\s+(?:\w+\s+){0,2}(?:achieved|reduced|cut|saved|used|uses|consumed|reached|recorded|delivered|generated|produced|lowered|increased|improved|eliminated|avoided)\b`,
+]
+

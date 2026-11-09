@@ -16,7 +16,7 @@
 // Rubric-invariant: every rubric reads the same tier for the same sentence.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { HEDGES, BOOSTERS, ABSOLUTES, ATTITUDE, NEGATORS, NEGATED_HEDGES } from '../lexicons/hyland.js'
+import { HEDGES, BOOSTERS, ABSOLUTES, ATTITUDE, NEGATORS, NEGATED_HEDGES, NOT_CERTAINTY } from '../lexicons/hyland.js'
 import { escapeRe } from '../signals/util.js'
 
 // The four tiers every rubric shares (labels, weights). Cues are the lexicon,
@@ -66,7 +66,18 @@ function hits(text, compiled) {
  * @param {string} text
  * @returns {{ tier: 'hedged'|'measured'|'assertive'|'absolute', hedges: string[], boosters: string[], attitude: string[] }}
  */
-export function measureCertainty(text) {
+// Mask a marker's word where it asserts nothing about certainty (NOT_CERTAINTY):
+// the span is blanked out with spaces, so positions and the rest of the
+// sentence are untouched.
+const NOT_CERTAIN = NOT_CERTAINTY.map((src) => new RegExp(src, 'gi'))
+function maskIdioms(text) {
+  let t = text
+  for (const re of NOT_CERTAIN) t = t.replace(re, (m) => ' '.repeat(m.length))
+  return t
+}
+
+export function measureCertainty(raw) {
+  const text = maskIdioms(raw)
   const hedges = hits(text, H).map((h) => h.term)
   const boosters = []
   const absolutes = []

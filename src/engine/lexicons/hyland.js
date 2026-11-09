@@ -61,3 +61,25 @@ export const ATTITUDE = [
 // ("not always", "does not prove", "not necessarily").
 export const NEGATORS = ['not', "n't", 'no', 'never', 'nor', 'without']
 export const NEGATED_HEDGES = ['not necessarily', 'not always', 'not clear', 'not clearly', 'not certain']
+
+// Uses of a marker that assert nothing about certainty, so the marker does not
+// count there (engine cleanup, Nov. 2026). Each pattern masks the marker's word
+// where it means something else: "established" as founded or set up, "proof"
+// in a compound, a quantity of 100%, "always" and "the best" in idioms, a
+// financial guarantee. "established that", "well established" and "the best"
+// as a ranking still count. PROVISIONAL — not ratified.
+export const NOT_CERTAINTY = [
+  // establish = set up or found, not "show to be true"
+  String.raw`\b(?:was|were|been|be|is|are|being|newly|recently|first|long|an?|the|its|our|their|to|and|help|helped|helps|will|would|must|should|can|could)\s+(?:(?!well\b|firmly\b|clearly\b)\w+\s+)?establish(?:ed|es|ing)?\b(?!\s+that\b)`,
+  String.raw`\bestablish(?:ed|es|ing)?\s+(?:in|by|during|since|on|at|under|through|a|an|the|new|its|their|our|clear|common|baseline|guidelines|goals|targets|mechanisms|partnerships?|programs?|processes|standards|criteria|frameworks?|policies|procedures|protocols|teams?|offices?)\b`,
+  String.raw`\b(?:long|well|newly|recently|an|already)[-\s]established\s+(?!that\b)(?:[a-z]+\s+){0,2}(?:sector|industry|market|firm|company|practice|business|network|brand|player|technology|process|route|presence|community|neighbou?rhood|organi[sz]ation)s?\b`,
+  // "proof" inside a compound or a phrase
+  String.raw`[\w]-proof\b|\bproof[-\s]of[-\s]concept\b|\bproof\s+of\s+(?:payment|purchase|insurance|delivery|identity|address|residency|ownership)\b|\b(?:fire|water|weather|sound|flood|bullet|rust|child|future|paris)\s*proof(?:ing|ed)?\b`,
+  // 100% as a quantity, not certainty ("100% renewable", "100% of 1990 levels")
+  String.raw`\b100\s?%(?!\s+(?:sure|certain|confident|guaranteed|effective|accurate|reliable|safe|proven|correct|true|of\s+the\s+time))`,
+  // idioms with "always" and "the best"
+  String.raw`\bas\s+always\b|\balways[-\s](?:on|connected|available)\b`,
+  String.raw`\b(?:in|to)\s+the\s+best\s+interests?\b|\bthe\s+best\s+of\s+both\s+worlds\b|\bto\s+the\s+best\s+of\s+(?:our|my|their|his|her)\s+(?:knowledge|ability|abilities)\b|\b(?:one|some|many)\s+of\s+the\s+best\b|\bthe\s+best\s+(?:way|ways|approach|practices?|route|time|place|fit|balance|option|options|use)\s+(?:to|for|of|is|are)\b|\bmake\s+the\s+best\s+of\b|\bat\s+best\b`,
+  // a financial or contractual guarantee, a noun
+  String.raw`\b(?:loan|government|federal|state|bank|credit|performance|price|financial|bid|payment|sovereign|public|export)\s+guarantees?\b`,
+]

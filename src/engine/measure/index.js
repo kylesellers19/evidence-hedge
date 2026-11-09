@@ -30,11 +30,16 @@ export const SHARED_EXTRACTION = {
  * @param {{ text: string, citations?: {type:string, raw:string}[], section?: string|null }} claim
  * @param {{ design?: string }} [doc]  document-level measurement (profile design)
  */
+// "must", "shall", "is required to": the language of a rule's requirement.
+export const REQUIREMENT = /\b(?:must|shall|(?:is|are|will\s+be)\s+required\s+to|requires?|mandates?|prohibits?)\b/i
+
 export function measureClaim(claim, doc = {}) {
   const certainty = measureCertainty(claim.text)
-  const recommendation = recommendationStrength(claim.text)
+  let recommendation = recommendationStrength(claim.text)
   // A derivative document's sections are not its own study's.
-  const fn = claimFunction(claim.text, { citations: claim.citations, recommendation, section: claim.section, design: doc.design })
+  const fn = claimFunction(claim.text, { citations: claim.citations, recommendation, section: claim.section, design: doc.design, regulatory: doc.regulatory })
+  // A rule's requirement, reported, is not the document's own advice.
+  if (fn === 'background' && doc.regulatory && recommendation.strength !== 'none' && REQUIREMENT.test(claim.text)) recommendation = { ...recommendation, strength: 'none', reported: true }
   const register = causalRegister(claim.text)
   return { certainty, function: fn, register, recommendation }
 }

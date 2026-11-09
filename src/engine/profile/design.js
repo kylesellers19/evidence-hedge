@@ -48,6 +48,7 @@ const PRECEDENCE = ['rct', 'controlled-experiment', 'quasi-experimental', 'cohor
 const DERIVATIVE = new Set(['academic-press-office', 'news-outlet', 'trade-press', 'firm-vendor', 'individual'])
 export const CITATION_DENSE_MIN = 15 // PROVISIONAL — not ratified (citations to others → narrative review)
 const CUE_CAP = 3
+const BY_NAME_DESIGNS = new Set(['cross-sectional', 'repeated-cross-sectional', 'modeling'])
 
 const CUES = Object.fromEntries(Object.entries(DESIGN_CUES).map(([d, list]) => [d, list.map((src) => new RegExp(src, 'i'))]))
 const FRAME = new RegExp(OWN_STUDY_FRAME, 'i')
@@ -70,14 +71,21 @@ export function profileDesign(body, { provenance = 'unknown', references = 0, pu
   const evidence = {}
   let firstPerson = false
   let otherCitations = 0
+  const names = publisher.filter((n) => n && n.length > 2).map((n) => new RegExp(`\\b${n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:['’]s)?\\b`, 'i'))
   for (const s of sentencesOf(body || '')) {
     const a = attributeSentence(s, { publisher })
     const ownCurrent = a.label === 'own-current' && a.strength === 'strong'
     if (!ownCurrent && OTHER_WORK.test(s)) { otherCitations++; continue }
-    const own = ownCurrent || FRAME.test(s)
-    if (!own) continue
+    // A sentence that names the publisher ("the Mortenson Construction Cost
+    // Index", "Gensler's survey of 2,000 workers") reports the publisher's own
+    // survey, index or model; a menu that names it and lists "Case Studies" does
+    // not, so only those designs, in a sentence-sized span. PROVISIONAL — not ratified.
+    const framed = ownCurrent || FRAME.test(s)
+    const byName = !framed && s.split(/\s+/).length <= 60 && names.some((re) => re.test(s))
+    if (!framed && !byName) continue
     const firstParty = FIRST_PERSON.test(s) || (ownCurrent && a.cues.some((c) => c.cue === 'publisher-verb'))
     for (const [design, res] of Object.entries(CUES)) {
+      if (byName && !BY_NAME_DESIGNS.has(design)) continue
       const m = res.map((re) => s.match(re)).find((x) => x && !NEGATED_BEFORE.test(s.slice(0, x.index)))
       if (!m) continue
       if ((scores[design] || 0) >= CUE_CAP) continue

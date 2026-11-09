@@ -68,7 +68,14 @@ const CITATION_PATTERNS = [
   { type: 'year',        re: /\((?:19|20)\d{2}[a-z]?\)/g },
   // Attribution phrases that signal a cited source even without a formal ref.
   { type: 'phrase',      re: /\b(?:according to|cited in|as reported by|per the|source:|published in|data from|drawn from|based on (?:a|the|our)|et al\.?)\b[^.;]*/gi },
+  // A named organization reporting it ("Reuters notes", "the EIA projects",
+  // "a study by the National Renewable Energy Lab", "the latest CBRE figures
+  // show"): an attribution, as "according to" is. Generic subjects ("research
+  // shows", "experts say") name no one. PROVISIONAL — not ratified.
+  { type: 'phrase',      re: /\b(?:(?:a|an|the)\s+(?:\d{4}\s+)?(?:study|report|survey|analysis|review|paper|forecast|outlook)\s+(?:by|from)\s+(?:the\s+)?[A-Z][\w&.'’-]*(?:\s+(?:of|for|and|&|on)?\s*[A-Z][\w&.'’-]*){0,6}|(?:the\s+latest\s+)?(?:(?:the\s+)?[A-Z]{2,8}|[A-Z][a-z]+(?:\s+[A-Z][\w&.'’-]*){0,5})(?:['’]s)?\s+(?:\d{4}\s+)?(?:data|figures|statistics|estimates|survey|report|analysis|forecast|index)\s+(?:show|shows|showed|indicate|indicates|indicated|suggest|suggests|found|finds|put|puts|estimate|estimates|project|projects)|(?:(?:the\s+)?[A-Z]{2,8}|[A-Z][a-z]+(?:\s+[A-Z][\w&.'’-]*){0,5})\s+(?:reports?|reported|found|finds|estimates?|estimated|projects?|projected|forecasts?|forecasted|predicts?|predicted|notes?|noted|says|said)\b)[^.;]*/g },
 ]
+// Subjects that name no one ("Research shows", "Experts say", "Studies found").
+const GENERIC_SOURCE = /^(?:the\s+latest\s+)?(?:The\s+)?(?:Research|Data|Evidence|Studies|Study|Experts?|Analysts?|Science|History|Experience|Surveys?|Reports?|Analysis|It|This|That|One|Many|Most|Some|Others?|Everyone|People|Industry|Demand|Growth|Prices?|Costs?|Spending|Construction|Employment|Inflation|Activity|Output|Revenue|Sales|Investment|Management|Leadership|Everybody|Nobody|He|She|They|We|You|I)\b/
 
 /** @returns {Citation[]} */
 function detectCitations(sentence) {
@@ -76,7 +83,7 @@ function detectCitations(sentence) {
   const found = []
   for (const { type, re } of CITATION_PATTERNS) {
     const matches = sentence.match(re)
-    if (matches) for (const raw of matches) found.push({ type, raw: raw.trim() })
+    if (matches) for (const raw of matches) if (!GENERIC_SOURCE.test(raw.trim())) found.push({ type, raw: raw.trim() })
   }
   return found
 }

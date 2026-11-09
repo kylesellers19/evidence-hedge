@@ -36,7 +36,7 @@ import { detectMismatch } from './detectMismatch.js'
  * @property {number|null} display  Math.round(score) — the annotation numeral
  * @property {string} band       'failing' | 'weak' | 'mixed' | 'carried' | 'strong' | 'unscored'
  * @property {string} summary    the verdict sentence (posture-templated)
- * @property {string} genreNote  one line naming the genre it was read as
+ * @property {string} genreNote  one line of advice for the reading (it never names the standard)
  * @property {Object} breakdown  per-component contributions, for auditability
  */
 

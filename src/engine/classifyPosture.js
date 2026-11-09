@@ -32,14 +32,16 @@ function spansFor(text, re) {
 }
 
 // Score a set of {signal, re, weight} groups; collect evidence for matches.
+// A group with `head` is read only in the text's first `head` characters and
+// counts once.
 function scoreGroups(text, groups) {
   let score = 0
   const evidence = []
   for (const g of groups) {
-    const spans = spansFor(text, g.re)
+    const spans = spansFor(g.head ? text.slice(0, g.head) : text, g.re)
     if (spans.length) {
       // cap per-signal contribution so one repeated phrase can't dominate
-      score += g.weight * Math.min(spans.length, 3)
+      score += g.weight * Math.min(spans.length, g.head ? 1 : 3)
       evidence.push({ signal: g.signal, span: spans[0] })
     }
   }
@@ -68,13 +70,16 @@ const CORP_MARKETING = [
   { signal: 'uncompared superlative', re: /\b(#1|best-in-class|world-class|unmatched|unrivaled|the best|industry-leading|revolutionary)\b/i, weight: 1 },
 ]
 // Press release: a dated, issued announcement (university press office or firm).
+// A release's dateline opens its first paragraph, so it is read only near the
+// top, once: a report's chart headings ("Labor - Costs rose") also match the pattern.
+export const DATELINE_HEAD_CHARS = 1500 // PROVISIONAL — not ratified
 const CORP_PRESS = [
   { signal: 'release line', re: /\bfor (?:immediate )?release\b/i, weight: 3 },
   { signal: 'republished release', re: /\bstory source:|\bmaterials provided by\b/i, weight: 3 },
   { signal: 'announcement', re: /\b(?:today announced|announced today)\b/i, weight: 2 },
   { signal: 'press-release label', re: /\b(?:press|news) release\b/i, weight: 2 },
   { signal: 'media contact', re: /\bmedia (?:contacts?|inquiries)\b/i, weight: 2 },
-  { signal: 'dateline', re: /(?:^|\n)\s*[A-Z][A-Za-z.]+(?:[ ,]+[A-Z][A-Za-z.]+){0,3}\s+[—–-]\s+(?:The\s+)?[A-Z]/, weight: 2 },
+  { signal: 'dateline', re: /(?:^|\n)\s*[A-Z][A-Za-z.]+(?:[ ,]+[A-Z][A-Za-z.]+){0,3}\s+[—–-]\s+(?:The\s+)?[A-Z]/, weight: 2, head: DATELINE_HEAD_CHARS },
 ]
 const CORP_THOUGHT = [
   { signal: 'first-person-plural opinion', re: /\b(we believe|in our view|we think|our view is|we see a)\b/i, weight: 2 },

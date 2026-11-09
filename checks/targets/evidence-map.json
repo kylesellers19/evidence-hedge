@@ -1,0 +1,390 @@
+{
+  "recorded": "2026-11-09",
+  "engine_commit": "55645db",
+  "rows": {
+    "allen-ehp-2016": [
+      {
+        "kind": "reference",
+        "grade": "linked",
+        "rung": "primary",
+        "claims": 3,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "reference",
+        "grade": "linked",
+        "rung": "primary",
+        "claims": 3,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "reference",
+        "grade": "linked",
+        "rung": "primary",
+        "claims": 2,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "reference",
+        "grade": "linked",
+        "rung": "primary",
+        "claims": 7,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "link",
+        "grade": "linked",
+        "rung": "peer-reviewed",
+        "claims": 1,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 27,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 5,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "anecdotal",
+        "claims": 1,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 3,
+        "reaches": "hedged",
+        "pastIt": 2,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 2,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 1,
+        "reaches": "hedged",
+        "pastIt": 1,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 1,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 2,
+        "reaches": "hedged",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 1,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 1,
+        "reaches": "hedged",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 1,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "anecdotal",
+        "claims": 1,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 1,
+        "reaches": "hedged",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "unresolved",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 14,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "peer-reviewed",
+        "claims": 1,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "anecdotal",
+        "claims": 3,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "keyword",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 4,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "unnamed",
+        "grade": "presumed",
+        "rung": "unsourced",
+        "claims": 1,
+        "reaches": "hedged",
+        "pastIt": 1,
+        "overreach": 0
+      },
+      {
+        "kind": "none",
+        "grade": "none",
+        "rung": "unsourced",
+        "claims": 142,
+        "reaches": "hedged",
+        "pastIt": 36,
+        "overreach": 0
+      }
+    ],
+    "fixture-a-cadre": [
+      {
+        "kind": "reference",
+        "grade": "linked",
+        "rung": "third-party",
+        "claims": 2,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "reference",
+        "grade": "linked",
+        "rung": "third-party",
+        "claims": 2,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "reference",
+        "grade": "linked",
+        "rung": "third-party",
+        "claims": 29,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 3
+      },
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "self-reported",
+        "claims": 1,
+        "reaches": "measured",
+        "pastIt": 1,
+        "overreach": 0
+      },
+      {
+        "kind": "unresolved",
+        "grade": "loose",
+        "rung": "third-party",
+        "claims": 22,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 2
+      },
+      {
+        "kind": "unresolved",
+        "grade": "loose",
+        "rung": "unsourced",
+        "claims": 4,
+        "reaches": "hedged",
+        "pastIt": 4,
+        "overreach": 0
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "third-party",
+        "claims": 18,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 1
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "self-reported",
+        "claims": 1,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 1
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "internal",
+        "claims": 6,
+        "reaches": "measured",
+        "pastIt": 2,
+        "overreach": 0
+      },
+      {
+        "kind": "keyword",
+        "grade": "loose",
+        "rung": "third-party",
+        "claims": 4,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "unnamed",
+        "grade": "presumed",
+        "rung": "unsourced",
+        "claims": 2,
+        "reaches": "hedged",
+        "pastIt": 2,
+        "overreach": 0
+      },
+      {
+        "kind": "none",
+        "grade": "none",
+        "rung": "unsourced",
+        "claims": 151,
+        "reaches": "hedged",
+        "pastIt": 142,
+        "overreach": 0
+      }
+    ],
+    "fixture-b-pew-html": [
+      {
+        "kind": "own-implied",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 29,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 1
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "primary",
+        "claims": 1,
+        "reaches": "absolute",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "proximity",
+        "grade": "loose",
+        "rung": "anecdotal",
+        "claims": 1,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "keyword",
+        "grade": "loose",
+        "rung": "secondary",
+        "claims": 1,
+        "reaches": "assertive",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "keyword",
+        "grade": "loose",
+        "rung": "anecdotal",
+        "claims": 1,
+        "reaches": "measured",
+        "pastIt": 0,
+        "overreach": 0
+      },
+      {
+        "kind": "none",
+        "grade": "none",
+        "rung": "unsourced",
+        "claims": 7,
+        "reaches": "hedged",
+        "pastIt": 5,
+        "overreach": 0
+      }
+    ]
+  }
+}

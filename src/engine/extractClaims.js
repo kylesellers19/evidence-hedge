@@ -9,7 +9,7 @@
 // contributor blocks are dropped (measure/segment.js); `onDrop` receives each.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { isDropped, demotionPenalty } from './nonClaimFilter.js'
+import { isDropped, demotionPenalty, FINITE_VERB as PROBE_VERB } from './nonClaimFilter.js'
 import { nonClaimRule, sectionOpenedBy } from './measure/segment.js'
 
 /** @typedef {import('./types.js').ExtractionConfig} ExtractionConfig */
@@ -83,6 +83,16 @@ function detectCitations(sentence) {
 // question, heading, or fragment. Score is 0–1 and compared to sensitivity.
 const FINITE_VERB = /\b(?:is|are|was|were|will|would|can|cannot|can't|does|do|did|has|have|had|shows?|proves?|demonstrates?|means?|results?|leads?|causes?|remains?|represents?|makes?|drives?|delivers?|ensures?|confirms?|suggests?|indicates?|reflects?)\b/i
 
+// A label: no closing punctuation and no finite verb on either list. Once
+// headings stop running into the sentence below them they stand alone, and so
+// do chart labels, table rows and titles; none of them asserts anything.
+// Journalism keeps its headlines, as it does for title-case headings.
+// PROVISIONAL — not ratified.
+export function isLabel(sentence) {
+  const t = sentence.trim()
+  return !/[.!?]["'”’)]?$/.test(t) && !FINITE_VERB.test(t) && !PROBE_VERB.test(t)
+}
+
 function claimLikelihood(sentence) {
   let score = 0.35
   const words = sentence.split(/\s+/).length
@@ -117,6 +127,7 @@ export function extractClaims(text, extraction, options = {}) {
     if (isDropped(sentence)) continue
     const rule = nonClaimRule(sentence)
     if (rule) { if (onDrop) onDrop(sentence, rule); continue }
+    if (rubricId !== 'journalism' && isLabel(sentence)) continue
     const likelihood = claimLikelihood(sentence) - demotionPenalty(sentence, rubricId)
     if (likelihood < extraction.sensitivity) continue
     claims.push({ id: id++, text: sentence, citations: detectCitations(sentence), section })

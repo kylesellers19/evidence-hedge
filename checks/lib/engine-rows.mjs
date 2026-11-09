@@ -18,6 +18,7 @@ import { execFileSync } from 'node:child_process'
 import { ROOT } from './corpus.mjs'
 import { isDropped, classifyNonClaim } from '../../src/engine/nonClaimFilter.js'
 import { nonClaimRule } from '../../src/engine/measure/segment.js'
+import { isLabel } from '../../src/engine/extractClaims.js'
 import { causalRegister } from '../../src/engine/measure/causalRegister.js'
 import { measureCertainty } from '../../src/engine/measure/certainty.js'
 import { REGISTER_STRENGTH } from './mapping.mjs'
@@ -40,6 +41,7 @@ export function dropReason(s, extraction, rubricId) {
   if (isDropped(s)) return { rule: classifyNonClaim(s, rubricId).rule }
   const rule = nonClaimRule(s)
   if (rule) return { rule }
+  if (rubricId !== 'journalism' && isLabel(s)) return { rule: 'label' }
   const demote = classifyNonClaim(s, rubricId)
   return { rule: 'below-sensitivity', ...(demote.action === 'demote' ? { demotedBy: demote.rule } : {}) }
 }

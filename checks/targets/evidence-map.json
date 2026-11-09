@@ -1,6 +1,6 @@
 {
   "recorded": "2026-11-09",
-  "engine_commit": "070850f-dirty",
+  "engine_commit": "852e7b8-dirty",
   "rows": {
     "allen-ehp-2016": [
       {
@@ -261,9 +261,9 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 18,
+        "claims": 17,
         "reaches": "hedged",
-        "pastIt": 17,
+        "pastIt": 16,
         "overreach": 0
       }
     ],
@@ -283,15 +283,6 @@
         "rung": "internal",
         "claims": 1,
         "reaches": "measured",
-        "pastIt": 0,
-        "overreach": 0
-      },
-      {
-        "kind": "link",
-        "grade": "linked",
-        "rung": "audited",
-        "claims": 1,
-        "reaches": "absolute",
         "pastIt": 0,
         "overreach": 0
       },
@@ -655,7 +646,7 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 108,
+        "claims": 107,
         "reaches": "measured",
         "pastIt": 4,
         "overreach": 1
@@ -866,9 +857,9 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 159,
+        "claims": 154,
         "reaches": "hedged",
-        "pastIt": 149,
+        "pastIt": 144,
         "overreach": 0
       }
     ],
@@ -922,9 +913,9 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 7,
+        "claims": 6,
         "reaches": "hedged",
-        "pastIt": 5,
+        "pastIt": 4,
         "overreach": 0
       }
     ],
@@ -942,7 +933,7 @@
         "kind": "own-implied",
         "grade": "loose",
         "rung": "primary",
-        "claims": 93,
+        "claims": 90,
         "reaches": "absolute",
         "pastIt": 0,
         "overreach": 2
@@ -1014,9 +1005,9 @@
         "kind": "none",
         "grade": "none",
         "rung": "unsourced",
-        "claims": 89,
+        "claims": 86,
         "reaches": "hedged",
-        "pastIt": 7,
+        "pastIt": 6,
         "overreach": 0
       }
     ]

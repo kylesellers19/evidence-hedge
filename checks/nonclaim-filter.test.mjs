@@ -4,6 +4,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { isDropped, demotionPenalty, classifyNonClaim } from '../src/engine/nonClaimFilter.js'
+import { isLabel, extractClaims, splitSentences } from '../src/engine/extractClaims.js'
 
 let ok = true
 const log = (label, pass, extra = '') => { if (!pass) ok = false; console.log(`${pass ? 'PASS ✅' : 'FAIL ❌'}  ${label}${extra ? ' — ' + extra : ''}`) }
@@ -16,6 +17,18 @@ log('drop dateline', isDropped('March 3, 2024'))
 log('drop reading-time meta', isDropped('5 min read'))
 log('drop nav CTA', isDropped('Contact us'))
 log('drop nav item', isDropped('Learn more'))
+log('drop contents line (dot leaders)', isDropped('Market overview .................................. 12'))
+
+// ── Headings stand apart; labels are not claims ──────────────────────────────
+log('a short open paragraph ends at its break',
+  JSON.stringify(splitSentences('Key Findings\n\nCosts rose 4% in the quarter.')) === JSON.stringify(['Key Findings', 'Costs rose 4% in the quarter.']))
+log('a lower-case next paragraph still continues it',
+  splitSentences('Costs for steel and\n\nconcrete rose 4% in the quarter.').length === 1)
+log('label: no closing punctuation, no finite verb', isLabel('Safety Management in the Construction Industry 2023'))
+log('GUARD: an open headline with a verb is not a label', !isLabel('Market outlook remains positive as demand grows'))
+log('GUARD: a closed sentence is never a label', !isLabel('Costs per square foot up 4% in the quarter.'))
+log('GUARD: journalism keeps a verbless headline',
+  extractClaims('Record Quarter For Apple Services Revenue In 2026', { minClaimLength: 10, sensitivity: 0.3 }, { rubricId: 'journalism' }).length === 1)
 
 // ── Positive: correctly DEMOTED (penalty > 0) ────────────────────────────────
 log('demote title-case heading (corporate)', demotionPenalty('Building The Future Of Enterprise Software', 'corporate') > 0)

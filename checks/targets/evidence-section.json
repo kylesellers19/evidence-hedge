@@ -1,6 +1,6 @@
 {
   "recorded": "2026-11-09",
-  "engine_commit": "070850f-dirty",
+  "engine_commit": "852e7b8-dirty",
   "documents": {
     "allen-ehp-2016": {
       "counts": {
@@ -81,7 +81,7 @@
       "counts": {
         "backed": 2,
         "overstates": 0,
-        "fact": 18,
+        "fact": 17,
         "cautious": 3,
         "method": 2
       },
@@ -118,22 +118,22 @@
           "Nothing",
           0,
           0,
-          17,
+          16,
           1
         ]
       ],
       "checkFirst": [
-        11,
+        10,
         0,
-        13,
-        9,
         12,
-        24
+        8,
+        11,
+        23
       ]
     },
     "sciencedaily-2015": {
       "counts": {
-        "backed": 9,
+        "backed": 8,
         "overstates": 0,
         "fact": 28,
         "cautious": 6,
@@ -142,7 +142,7 @@
       "rows": [
         [
           "Links and notes",
-          3,
+          2,
           0,
           0,
           0
@@ -185,10 +185,10 @@
       ],
       "checkFirst": [
         12,
-        21,
         20,
+        19,
         10,
-        40,
+        39,
         13
       ]
     },
@@ -471,7 +471,7 @@
         "backed": 1,
         "overstates": 2,
         "fact": 4,
-        "cautious": 104,
+        "cautious": 103,
         "method": 1
       },
       "rows": [
@@ -501,15 +501,15 @@
           0,
           1,
           4,
-          103
+          102
         ]
       ],
       "checkFirst": [
-        2,
-        45,
-        7,
+        1,
+        44,
         6,
-        5
+        5,
+        4
       ]
     },
     "jcu-timber-pilot": {
@@ -577,7 +577,7 @@
       "counts": {
         "backed": 71,
         "overstates": 9,
-        "fact": 155,
+        "fact": 150,
         "cautious": 10,
         "method": 0
       },
@@ -628,24 +628,24 @@
           "Nothing",
           0,
           0,
-          149,
+          144,
           10
         ]
       ],
       "checkFirst": [
-        95,
-        135,
-        89,
-        88,
-        127,
-        175
+        90,
+        130,
+        83,
+        122,
+        170,
+        115
       ]
     },
     "fixture-b-pew-html": {
       "counts": {
         "backed": 32,
         "overstates": 1,
-        "fact": 5,
+        "fact": 4,
         "cautious": 2,
         "method": 0
       },
@@ -675,7 +675,7 @@
           "Nothing",
           0,
           0,
-          5,
+          4,
           2
         ]
       ],
@@ -685,11 +685,11 @@
     },
     "fixture-b-pew-report": {
       "counts": {
-        "backed": 123,
+        "backed": 122,
         "overstates": 3,
-        "fact": 8,
+        "fact": 7,
         "cautious": 5,
-        "method": 104
+        "method": 100
       },
       "rows": [
         [
@@ -722,7 +722,7 @@
         ],
         [
           "Its own data or figures",
-          84,
+          83,
           2,
           0,
           0
@@ -738,17 +738,17 @@
           "Nothing",
           0,
           0,
-          7,
+          6,
           5
         ]
       ],
       "checkFirst": [
-        21,
+        20,
+        220,
+        198,
+        200,
         226,
-        203,
-        205,
-        232,
-        13
+        12
       ]
     }
   }

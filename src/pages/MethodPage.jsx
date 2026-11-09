@@ -291,7 +291,9 @@ export default function MethodPage() {
           <p>
             The text is split into sentences, with care for abbreviations such as “et al.” and “Fig.” A short
             paragraph with no closing punctuation, such as a heading, a label or a line of a cover, ends where
-            the paragraph does, so it is not read as the start of the sentence below it. A
+            the paragraph does, so it is not read as the start of the sentence below it. Standing alone, a line
+            with no verb and no closing punctuation is a label, such as a heading, a chart label or a table row,
+            and is not weighed; a news story keeps its headlines. A
             reference list is set aside first, once a heading such as References appears in the last{' '}
             {pct(1 - REFERENCE_MIN_POSITION)} of the text and the lines under it read as reference entries;
             claims come only from the body.

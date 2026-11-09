@@ -6,8 +6,9 @@
 //   text · tier (certainty) · function · causal register · recommendation
 //   strength — and the same analysis.references.
 // Listed exception: the journalism rubric keeps title-case headings it would
-// otherwise demote (headlines are claims in journalism); journalism may hold
-// extra claims, each of which must be such a heading.
+// otherwise demote, and labels it would otherwise drop (headlines are claims
+// in journalism); journalism may hold extra claims, each of which must be such
+// a heading or label.
 // Missing corpus files print SKIP <id>.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -15,6 +16,7 @@ import { loadCorpus, loadDocText } from './lib/corpus.mjs'
 import { analyze } from '../src/engine/analyze.js'
 import { getRubric, RUBRIC_ORDER } from '../src/rubrics/index.js'
 import { classifyNonClaim } from '../src/engine/nonClaimFilter.js'
+import { isLabel } from '../src/engine/extractClaims.js'
 import { validateText } from '../src/ingest/validateText.js'
 
 // The regression-baseline fixture (checks/regression-baseline.mjs).
@@ -35,7 +37,7 @@ function compare(id, text) {
   for (const r of RUBRIC_ORDER) {
     let got = runs[r].claims
     if (r === 'journalism') {
-      const extra = got.filter((c) => classifyNonClaim(c.text, 'research').rule === 'title-heading' && !runs.research.claims.some((x) => x.text === c.text))
+      const extra = got.filter((c) => (classifyNonClaim(c.text, 'research').rule === 'title-heading' || isLabel(c.text)) && !runs.research.claims.some((x) => x.text === c.text))
       got = got.filter((c) => !extra.includes(c))
     }
     const keys = got.map(key)

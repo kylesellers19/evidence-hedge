@@ -12,6 +12,7 @@ Three independent apps share this repo. Each keeps its own dependencies; nothing
 
 Evidence Hedge (repo root):
 - `npm run check` (26 check scripts) · `npm run build`
+- `node scripts/weigh-folder.mjs <dir>`: weighs a folder of PDFs (manifest-*.json plus reports/) linked and uploaded, as the AEC corpus in the gitignored `checks/data/aec/`; it caches extracted text in `<dir>/text-cache`. When another session is editing the engine, run it from a `git archive` of the commit with `ENGINE_SHA=<sha>`.
 
 DELIB, `decision-precision/backend/`:
 - `uv sync --all-extras` (plain `uv sync` removes the `api`/`llm` extras the tests need)

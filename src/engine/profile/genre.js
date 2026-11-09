@@ -170,7 +170,9 @@ export function profileGenre(body, { sourceUrl = '', provenance, design }) {
   }
   const form = readForm(text, { sourceUrl, speaker: speakerGenre })
   if (form) roles.form = { genre: FORM_GENRE[form.kind], ...form }
-  const stake = readStake(text, { speaker: speakerGenre, kind: provenance?.kind, sourceUrl })
+  // With no link, the web address the document gives as its own stands in (profile/provenance.js).
+  const ownUrl = provenance?.publisherHost ? `https://${provenance.publisherHost}/` : ''
+  const stake = readStake(text, { speaker: speakerGenre, kind: provenance?.kind, sourceUrl: sourceUrl || ownUrl })
   if (stake) roles.stake = { genre: 'corporate', ...stake }
   if (design && design.design !== 'none-reported') {
     roles.evidence = { genre: 'research', kind: design.inherited ? 'inherited' : 'own', design: design.design, evidence: design.evidence.slice(0, 2) }

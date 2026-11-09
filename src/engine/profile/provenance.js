@@ -11,7 +11,8 @@
 //
 // Order of evidence: (1) the document's OWN venue block — DOI, journal line,
 // received/accepted dates in the body, never DOIs inside the reference list;
-// (2) the link's host; (3) text cues. Rubric-invariant. AACODS grounds the
+// (2) the link's host, or with no link the web address the document gives as
+// its own (ownHost); (3) text cues. Rubric-invariant. AACODS grounds the
 // criterion (rubric provenance footer).
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -34,6 +35,52 @@ function hostKind(host) {
   }
   for (const [re, kind] of HOST_SUFFIX_KINDS) if (re.test(host)) return kind
   return null
+}
+
+// With no link, the document's own web address stands in for the link's host,
+// so an uploaded file is read like its link: a domain or email domain on its
+// first or last OWN_EDGE_CHARS characters (cover, back cover, contacts) whose
+// name is the copyright holder's, else the email domain most used there.
+// Social, webmail and link-shortener hosts never count. PROVISIONAL — not ratified.
+export const OWN_EDGE_CHARS = 3000
+const OWN_TLD = '(?:com|org|net|edu|gov|io|co|ai|us|uk|ca|au|nz|ie|de|fr|nl|se|dk|no|fi|es|it|ch|at|be|sg|hk|cn|jp|in|ae|sa|qa|za|br|mx|eu|info|biz|global|design|studio|group|build|engineering|construction|consulting|archi|world)'
+const OWN_DOMAIN = new RegExp(`(?<![@\\w.-])(?:https?:\\/\\/)?(?:www\\.)?((?:[a-z0-9][a-z0-9-]*\\.)+${OWN_TLD})\\b(?![.\\w-]*@)`, 'gi')
+const OWN_EMAIL = new RegExp(`[\\w.+-]+@((?:[a-z0-9][a-z0-9-]*\\.)+${OWN_TLD})\\b`, 'gi')
+const NOT_OWN = /^(?:(?:dx\.)?doi\.org|linkedin\.com|twitter\.com|x\.com|facebook\.com|instagram\.com|youtube\.com|youtu\.be|vimeo\.com|tiktok\.com|flickr\.com|pinterest\.com|medium\.com|issuu\.com|bit\.ly|ow\.ly|tinyurl\.com|gmail\.com|outlook\.com|hotmail\.com|yahoo\.com|creativecommons\.org|wikipedia\.org)$/
+
+// The registrable name of a host: "gensler" for www.gensler.com, "arup" for arup.co.uk.
+function hostLabel(host) {
+  const p = host.split('.')
+  return (p.length >= 3 && /^(?:co|com|org|ac|gov|net)$/.test(p[p.length - 2]) ? p[p.length - 3] : p[p.length - 2]) || p[0]
+}
+
+// "© 2024 Turner Construction Company" → turner, turnerconstruction, …
+function copyrightNames(body) {
+  const names = new Set()
+  for (const m of body.matchAll(/(?:©|\(c\)|copyright)\s*(?:©\s*)?(?:(?:19|20)\d{2}\s*[,–-]?\s*)?([^\n]{0,80})/gi)) {
+    const words = m[1].toLowerCase().replace(/&/g, ' and ').split(/[^a-z0-9]+/).filter((w) => w && !/^(?:19|20)\d{2}$/.test(w))
+    if (words[0] === 'the') words.shift()
+    for (const ws of [words, words.filter((w) => w !== 'and')]) for (let k = 1; k <= Math.min(4, ws.length); k++) names.add(ws.slice(0, k).join(''))
+  }
+  return names
+}
+
+export function ownHost(body) {
+  const text = body || ''
+  const edges = text.length > 2 * OWN_EDGE_CHARS ? [text.slice(0, OWN_EDGE_CHARS), text.slice(-OWN_EDGE_CHARS)] : [text]
+  const all = new Map()
+  const emails = new Map()
+  const tally = (map, d) => { d = d.toLowerCase().replace(/^www\./, ''); if (!NOT_OWN.test(d)) map.set(d, (map.get(d) || 0) + 1) }
+  for (const part of edges) {
+    for (const m of part.matchAll(OWN_DOMAIN)) tally(all, m[1])
+    for (const m of part.matchAll(OWN_EMAIL)) { tally(all, m[1]); tally(emails, m[1]) }
+  }
+  const names = copyrightNames(text)
+  const ranked = (map) => [...map].sort((a, b) => b[1] - a[1]).map(([d]) => d)
+  const holder = ranked(all).find((d) => hostLabel(d).length >= 3 && names.has(hostLabel(d).replace(/-/g, '')))
+  if (holder) return { host: holder, via: 'copyright line' }
+  const email = ranked(emails)[0]
+  return email ? { host: email, via: 'contact email' } : null
 }
 
 // The document's own journal block (front of the body, or its dates anywhere in the body).
@@ -127,7 +174,8 @@ export function selfCitationShare(org, references, claimUrls) {
  * @param {{ sourceUrl?: string, references?: {text:string}[], claimUrls?: string[] }} [options]
  */
 export function profileProvenance(body, { sourceUrl = '', references = [], claimUrls = [] } = {}) {
-  const host = hostOf(sourceUrl)
+  const own = sourceUrl ? null : ownHost(body)
+  const host = hostOf(sourceUrl) || own?.host || ''
   const venue = venueEvidence(body)
   const { scores, evidence: textEvidence } = textScores(body)
   const fromHost = hostKind(host)
@@ -144,7 +192,7 @@ export function profileProvenance(body, { sourceUrl = '', references = [], claim
     const hostIsSpecific = !!host && Object.keys(PUBLISHER_HOSTS).some((h) => host === h || host.endsWith('.' + h))
     if (fromHost && (hostIsSpecific || !(topPts >= TEXT_MIN))) {
       kind = fromHost
-      evidence.push({ signal: 'publisher host', span: host })
+      evidence.push(own ? { signal: 'own web address', span: `${host} (${own.via})` } : { signal: 'publisher host', span: host })
     } else if (topPts >= TEXT_MIN) {
       kind = topKind
       evidence.push(...(textEvidence[topKind] || []))

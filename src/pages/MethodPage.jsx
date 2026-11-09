@@ -666,7 +666,7 @@ export default function MethodPage() {
 }
 
 const ROLE_WORDS = {
-  speaker: 'Read from the link’s domain and from cues in the text, such as a journal’s volume line, a press office’s “for immediate release” or a newsroom’s byline.',
+  speaker: 'Read from the link’s domain, or for an upload from the web address the document gives as its own (its copyright holder’s site or its contact email), and from cues in the text, such as a journal’s volume line, a press office’s “for immediate release” or a newsroom’s byline.',
   form: 'A press release, a research paper, a report, a news story, a column, a marketing page, sponsored content or a blog post.',
   stake: 'A news story built mostly on one firm’s statements, or a publisher with an advocacy mission or industry membership.',
   evidence: 'The design of the study the document reports or describes, from a randomized trial to none at all.',

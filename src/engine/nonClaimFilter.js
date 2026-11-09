@@ -136,6 +136,19 @@ export function isTitleLine(s) {
   return capitalized / Math.max(1, words.length) >= 0.6 || /[“"‘][^”"’]{6,}[”"’]|\b(?:19|20)\d{2}\b|https?:\/\/|www\.|\bretrieved\b/i.test(t)
 }
 
+// A chart or table row read as a sentence ("Average Max Min -22% -17% -27% …",
+// a run of years, a price table): mostly numbers. A sentence that reports a
+// figure has words around it. PROVISIONAL — not ratified.
+export const DATA_ROW_MIN_NUMBERS = 5
+export const DATA_ROW_SHARE = 0.4
+export function isDataRow(s) {
+  const tokens = s.trim().split(/\s+/).filter(Boolean)
+  const numbers = tokens.filter((w) => /\d/.test(w)).length
+  if (numbers < DATA_ROW_MIN_NUMBERS) return false
+  const share = numbers / tokens.length
+  return share >= 0.6 || (share >= DATA_ROW_SHARE && !FINITE_VERB.test(s) && !MORE_VERBS.test(s))
+}
+
 // ── DEMOTE predicates ────────────────────────────────────────────────────────
 export function isTitleCaseHeading(s) {
   const t = s.trim()
@@ -153,7 +166,7 @@ export function isFigureCaption(s) {
 // ── Combined tier decisions ──────────────────────────────────────────────────
 export function isDropped(s) {
   return isBoilerplate(s) || isBylineOrMeta(s) || isContentsLine(s) || (isNavChrome(s) && !hasAdviceGuard(s)) ||
-    isCaption(s) || isCopyright(s) || isSignpost(s) || (isCallToAction(s) && !hasAdviceGuard(s)) || isTitleLine(s)
+    isCaption(s) || isCopyright(s) || isSignpost(s) || (isCallToAction(s) && !hasAdviceGuard(s)) || isTitleLine(s) || isDataRow(s)
 }
 
 // Penalty subtracted from claimLikelihood; enough to sink a borderline heading
@@ -178,6 +191,7 @@ export function classifyNonClaim(s, rubricId) {
   if (isSignpost(s)) return { action: 'drop', rule: 'signpost' }
   if (isCallToAction(s) && !hasAdviceGuard(s)) return { action: 'drop', rule: 'call-to-action' }
   if (isTitleLine(s)) return { action: 'drop', rule: 'title-line' }
+  if (isDataRow(s)) return { action: 'drop', rule: 'data-row' }
   if (isFigureCaption(s)) return { action: 'demote', rule: 'figure-caption' }
   if (isTitleCaseHeading(s) && rubricId !== 'journalism') return { action: 'demote', rule: 'title-heading' }
   return { action: 'keep', rule: null }

@@ -10,7 +10,7 @@
 // findings go to checks/data/audit/spotcheck-<tag>.jsonl.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { readFileSync, readdirSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { createHash } from 'node:crypto'
 import { ROOT } from '../checks/lib/corpus.mjs'
@@ -43,7 +43,10 @@ if (show) {
     const v = reviews.find((x) => x.id === id)
     const r = rows.get(id)
     if (!v || !r) { console.log(`?? ${id}`); continue }
-    const d = JSON.parse(readFileSync(join(A, `details-${TAG}`, `${r.key}.json`), 'utf8'))
+    // A document the site refused (no text layer, not English) has no details.
+    const dp = join(A, `details-${TAG}`, `${r.key}.json`)
+    if (!existsSync(dp)) { console.log(`\n=== ${id} [${v.chunk}] ${r.url || ''}\nrefused: ${r.status} · VERDICT ${v.verdict}${v.fair ? ` · fair: ${v.fair}` : ''}`); continue }
+    const d = JSON.parse(readFileSync(dp, 'utf8'))
     const byIdx = new Map([...(d.strictPicked || []).map((p) => [p.i, { ...p, s: true }]), ...d.picked.map((p) => [p.i, p])])
     console.log(`\n=== ${id} [${v.chunk}] ${r.url || ''}`)
     console.log(`score ${r.score} · ${r.rubric.judgedAs} · ${r.posture} · prov ${r.provenance} · ${r.claims}c ${r.strong}s · U${r.flags['unsupported-assertion']} O${r.flags.overconfident} C${r.flags['causal-overreach']} · refs ${r.references} · ${r.words}w`)

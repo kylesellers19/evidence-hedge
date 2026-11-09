@@ -129,7 +129,7 @@ export const READ_AS = {
 // PROVISIONAL — not ratified.
 export const GENRE_NOTES = {
   standard: '',
-  marketing: 'Promotional confidence is expected, but the score holds it to the same evidence standard as any document.',
+  marketing: 'Promotional confidence is expected, but the score still asks each claim for its evidence.',
   'thought-leadership': 'Opinion is expected, but the score counts only what its evidence shows.',
   'research-like': 'Its own data count as self-reported until a third party checks them.',
   'press-release': 'It reports a study it did not itself publish, so check the study before repeating its claims.',

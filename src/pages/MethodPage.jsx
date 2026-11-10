@@ -979,9 +979,10 @@ function ScoreScale() {
         document with fewer than {W.MIN_CLAIMS} claims gets no score.
       </p>
       <p className="eh-note">
-        The examples below are documents from our corpus that scored each number and that a reviewer read
-        alongside their text and found the output sound. They were scored by engine build {SCALE.engine} on{' '}
-        {apDate(SCALE.generated)}, each as its PDF uploaded, and they change when the scoring changes. Pasting
+        The examples below are documents from our corpus that scored each number and whose output a
+        reviewer read alongside their text, at an earlier build, and found sound. They were scored again by
+        engine build {SCALE.engine} on {apDate(SCALE.generated)}, each as its PDF uploaded, and they change
+        when the scoring changes. Pasting
         the link instead can give a different reading, because the web address names the publisher. We name
         and link them; we do not quote them.
       </p>

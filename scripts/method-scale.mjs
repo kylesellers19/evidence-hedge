@@ -77,6 +77,8 @@ const GOLD_TITLES = {
 function cleanTitle(t = '') {
   let s = t.replace(/\s*\([^)]*[_-][^)]*\)\s*$/, '')
   if (!/\s/.test(s)) s = s.replace(/[-_]+/g, ' ')
+  // Underscores are a file name's spaces; a trailing page count is not the title.
+  s = s.replace(/_+/g, ' ').replace(/\s+\d+\s+pages?$/i, '').replace(/\s+/g, ' ').trim()
   return s.charAt(0).toUpperCase() + s.slice(1)
 }
 

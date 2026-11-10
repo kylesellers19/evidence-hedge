@@ -12,6 +12,11 @@
 //     engine build and the text's SHA-256, and never the document's text
 //   · the add form's rules, AP dates, and the table definition's vocabularies
 //     match src/list/fields.js (docs/the-list.sql)
+//   · finding reports (src/list/filter.js): the search needs every word in the
+//     firm or report name and drops "and"; nothing typed reaches the table's
+//     query but letters and digits; the score bands are the brief's; the
+//     static List and the table's query apply the same filters; the address
+//     holds every choice, ignores what The List lacks and keeps the rest
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { readFileSync } from 'node:fs'
@@ -19,6 +24,8 @@ import { createHash } from 'node:crypto'
 import { LIST_FIELDS, INDUSTRIES, REPORT_TYPES, MAX_SORTS } from '../src/list/fields.js'
 import { sortEntries, clickHeading, setLevel } from '../src/list/sort.js'
 import { draftEntry, validateEntry, buildEntry, docHash, apDate, apDatePartial, guessReportName } from '../src/list/entry.js'
+import { NO_FILTERS, SCORE_BANDS, searchWords, matches, restFilter, readParams, writeParams, isFiltered, median } from '../src/list/filter.js'
+import { bandFor } from '../src/engine/scoreDocument.js'
 
 let ok = true
 const log = (label, pass, extra = '') => { if (!pass) ok = false; console.log(`${pass ? 'PASS ✅' : 'FAIL ❌'}  ${label}${extra ? ' — ' + extra : ''}`) }
@@ -66,6 +73,56 @@ log('none at the second level clears it and the third', same(setLevel(three, 1, 
 log('a column already at the third level moves to the second',
   same(setLevel(three, 1, 'industry', 'desc'), [{ key: 'score', dir: 'desc' }, { key: 'industry', dir: 'desc' }]))
 log('a direction change keeps the column', same(setLevel(three, 0, 'score', 'asc')[0], { key: 'score', dir: 'asc' }))
+
+// ── finding reports ──────────────────────────────────────────────────────────
+log('the search splits into words and drops "and"',
+  same(searchWords('Perkins and Will'), ['perkins', 'will']) && same(searchWords('Perkins&Will'), ['perkins', 'will']) && same(searchWords('  '), []))
+log('a search word is only letters and digits', same(searchWords('a,b(c)"d*e%f\\g.h'), ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']))
+log('letters outside English stay letters', same(searchWords('Société Générale'), ['société', 'générale']))
+
+const found = [
+  { id: 1, company: 'Perkins&Will', industry: 'Professional services and consulting', reportType: 'Research report', reportName: 'Healthy Materials', score: 2.5, origin: 'audit' },
+  { id: 2, company: 'Arup', industry: 'Professional services and consulting', reportType: 'White paper', reportName: 'Cities Alive', score: 4.49, origin: 'audit' },
+  { id: 3, company: 'Turner & Townsend', industry: 'Industrials', reportType: 'Industry or market report', reportName: 'Will costs fall?', score: 4.5 },
+  { id: 4, company: 'Arup', industry: 'Professional services and consulting', reportType: 'Research report', reportName: 'Perkins study', score: 8.5, origin: 'reader' },
+  { id: 5, company: 'Gensler', industry: 'Professional services and consulting', reportType: 'Survey report', reportName: 'Workplace Survey', score: 1 },
+]
+const keep = (f) => ids(found.filter((r) => matches(r, { ...NO_FILTERS, ...f })))
+log('no filters keep every report', keep({}) === '1,2,3,4,5' && !isFiltered(NO_FILTERS))
+log('every word has to appear, in the firm or the report name', keep({ q: 'perkins and will' }) === '1' && keep({ q: 'arup perkins' }) === '4' && keep({ q: 'will' }) === '1,3')
+log('the search ignores case', keep({ q: 'GENSLER' }) === '5')
+log('a firm is its exact name', keep({ firm: 'Arup' }) === '2,4' && keep({ firm: 'arup' }) === '')
+log('industry, report type and who added it narrow the list',
+  keep({ industry: 'Industrials' }) === '3' && keep({ type: 'Research report' }) === '1,4' && keep({ show: 'reader' }) === '3,4,5' && keep({ show: 'audit' }) === '1,2')
+log('a score band runs from its threshold up to the next',
+  keep({ score: 'weak' }) === '1,2' && keep({ score: 'mixed' }) === '3' && keep({ score: 'strong' }) === '4' && keep({ score: 'failing' }) === '5')
+log('the score bands are the brief’s, each whole number in one',
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].every((n) => SCORE_BANDS.filter((b) => n >= b.min && (b.max === null || n < b.max)).map((b) => b.key).join() === bandFor(n)))
+log('the score bands are worded as whole numbers', same(SCORE_BANDS.map((b) => b.label), ['Strong (9 to 10)', 'Carried (7 to 8)', 'Mixed (5 to 6)', 'Weak (3 to 4)', 'Failing (1 to 2)']))
+
+const rest = decodeURIComponent(restFilter({ q: 'Perkins & Will', firm: 'Turner & Townsend', industry: 'Industrials', type: 'White paper', score: 'weak', show: 'audit' }))
+log('the table is asked the same: every word in either name',
+  rest.includes('&and=(or(company.ilike.*perkins*,report_name.ilike.*perkins*),or(company.ilike.*will*,report_name.ilike.*will*))'), rest)
+log('the table is asked the same: exact firm, industry, type, band and origin',
+  ['company=eq.Turner & Townsend', 'industry=eq.Industrials', 'report_type=eq.White paper', 'score=gte.2.5', 'score=lt.4.5', 'origin=eq.audit'].every((p) => rest.includes(`&${p}`)), rest)
+log('a firm name with an ampersand cannot split the query', restFilter({ firm: 'Turner & Townsend' }) === '&company=eq.Turner%20%26%20Townsend')
+log('the top band has no ceiling', restFilter({ score: 'strong' }) === '&score=gte.8.5')
+log('a table without origins is not asked for one', !restFilter({ show: 'reader' }, { origin: false }).includes('origin'))
+const typed = restFilter({ q: 'a,b(c)"d*' })
+log('nothing typed reaches the query but a word', decodeURIComponent(typed) ===
+  `&and=(${['a', 'b', 'c', 'd'].map((w) => `or(company.ilike.*${w}*,report_name.ilike.*${w}*)`).join(',')})`, typed)
+
+const address = new URLSearchParams('v=ae74748c&q=arup&firm=Turner+%26+Townsend&industry=industrials&type=white-paper&score=weak&show=audit&sort=score.desc,company.asc')
+const back = readParams(address)
+log('an address gives back the filters and sort',
+  same(back.filters, { q: 'arup', firm: 'Turner & Townsend', industry: 'Industrials', type: 'White paper', score: 'weak', show: 'audit' }) &&
+  same(back.sorts, [{ key: 'score', dir: 'desc' }, { key: 'company', dir: 'asc' }]))
+log('writing them back gives the same address', writeParams(address, back).toString() === address.toString(), writeParams(address, back).toString())
+const odd = readParams(new URLSearchParams('industry=mining&type=memo&score=great&show=everyone&sort=score.up,colour.asc,score.asc,company.desc,score.desc,industry.asc,reportName.asc'))
+log('an address naming what The List lacks is ignored, and a column sorts once, three at most', same(odd.filters, NO_FILTERS) &&
+  same(odd.sorts, [{ key: 'score', dir: 'asc' }, { key: 'company', dir: 'desc' }, { key: 'industry', dir: 'asc' }]), JSON.stringify(odd))
+log('choices cleared leave only the rest of the address', writeParams(address, { filters: NO_FILTERS, sorts: [] }).toString() === 'v=ae74748c')
+log('a median', median([3, 1, 2]) === 2 && median([4, 1, 3, 2]) === 2.5 && median([]) === null)
 
 // ── the entry sent to The List ───────────────────────────────────────────────
 const text = 'Acme 2026 Outlook\n\nOur platform cuts costs by 40%, a confidential figure nobody should see.'

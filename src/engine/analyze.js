@@ -28,7 +28,7 @@ import { detectMismatch } from './detectMismatch.js'
 import { PATTERN_META, FLAG_ORDER } from './patterns.js'
 import { runSignals } from './signals/index.js'
 import { isDisclosedAbsence } from './disclosure.js'
-import { scoreDocument } from './scoreDocument.js'
+import { scoreDocument, SCORE_WEIGHTS } from './scoreDocument.js'
 
 /** @typedef {import('./types.js').RubricConfig} RubricConfig */
 /** @typedef {import('./types.js').AnalysisResult} AnalysisResult */
@@ -37,6 +37,7 @@ import { scoreDocument } from './scoreDocument.js'
 const STRONG_WEIGHT = 3 // tier weight at/above which a claim reads as "strong"
 const RULE_CITE = /\b\d+\s+(?:CFR|C\.F\.R\.|U\.S\.C\.)\b|§\s*\d|\bFinal\s+Rule\b|\b(?:Subpart|Part)\s+\d+[A-Z]?\b|\bSection\s+\d+(?:\.\d+)*\s+of\s+the\b/g
 const REGULATORY_MIN = 3 // PROVISIONAL — not ratified
+const DISCOUNTED_PROVENANCE = SCORE_WEIGHTS.DISCOUNTED_PROVENANCE
 // Claim functions checked against the design ceiling (a method statement or a
 // background claim about others' work is not this document's causal claim).
 const CEILING_FUNCTIONS = new Set(['own-result', 'interpretation', 'recommendation'])
@@ -119,6 +120,14 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
     references: references.map((r) => r.text), design: profile.design, publisher,
   })
 
+  // One reading for the whole brief: every claim is judged at the standard's
+  // strictest setting, the one the score uses, so the flags a reader sees are
+  // the ones the score counts. The posture (what the document reads as) sets
+  // the wording, never the judgment. Engine cleanup, Nov. 2026.
+  const judgePosture = rubric.strictestPosture || rubric.defaultPosture
+  const discount = DISCOUNTED_PROVENANCE.includes(profile.provenance.kind)
+  const ladderDesc = [...rubric.ladder].sort((a, b) => b.rank - a.rank)
+
   // A document that summarizes a rule cites its sections again and again
   // ("40 CFR 112", "§ 1910.1001", "Final Rule", "Subpart F"). Its sentences in
   // the rule's language report the rule, and link to it. PROVISIONAL — not ratified.
@@ -142,11 +151,18 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
     const ruled = regulatory && m.function === 'background' && REQUIREMENT.test(c.text) ? [{ type: 'phrase', raw: 'the rule this document summarizes' }] : []
     const linked = { text: c.text, citations: [...linkedCitations, ...spoken, ...ruled] }
     const cited = gradeEvidence(linked, rubric.ladder)
-    const rung = gradeEvidence(linked, rubric.ladder, { inDocumentRung: m.function === 'own-result' || ownStudy ? rubric.ownResultRung : null })
+    const reached = gradeEvidence(linked, rubric.ladder, { inDocumentRung: m.function === 'own-result' || ownStudy ? rubric.ownResultRung : null })
     // Did the rung come from the document's own evidence rather than a citation?
-    const inDocument = rung.key !== cited.key
+    const inDocument = reached.key !== cited.key
+    // A firm's or a press office's own evidence counts one rung lower: it is
+    // self-reported until someone else checks it.
+    let rung = reached
+    if (discount && inDocument) {
+      const lower = ladderDesc.find((r) => r.rank < reached.rank)
+      rung = lower && lower.rank >= cited.rank ? lower : cited
+    }
     // A method statement reports what was done, not a claim — never flagged.
-    const mismatch = m.function === 'method' ? null : detectMismatch({ tier, rung }, rubric.tolerance, posture)
+    const mismatch = m.function === 'method' ? null : detectMismatch({ tier, rung }, rubric.tolerance, judgePosture)
     let flag = mismatch ? mismatch.flag : null
     let explanation = mismatch ? { ...mismatch.explanation, attribution: attr, evidence: ev } : null
 
@@ -157,13 +173,13 @@ export function analyze(document, rubric, posture = rubric.defaultPosture, optio
     const disclosed = isDisclosedAbsence(c.text, rubric)
     if (flag === 'unsupported-assertion' && disclosed) {
       const tierIndex = rubric.tiers.findIndex(t => t.key === tier.key)
-      const sev = rubric.tolerance.nullSeverity(tierIndex, posture, true)
+      const sev = rubric.tolerance.nullSeverity(tierIndex, judgePosture, true)
       if (sev === 'none' || sev === 'note') { flag = null; explanation = null }
     }
 
     const overreach = overreachOf(m, profile.design, posture, c.text)
     return {
-      ...c, tier, rung, citedRung: cited, inDocument, flag, explanation, disclosed,
+      ...c, tier, rung, citedRung: cited, inDocument, discounted: rung !== reached, flag, explanation, disclosed,
       certainty: m.certainty, function: m.function, register: m.register, recommendation: m.recommendation,
       attribution: attr, evidence: ev,
       overreach: overreach ? { ...overreach, explanation: { ...overreach.explanation, attribution: attr, evidence: ev } } : null,

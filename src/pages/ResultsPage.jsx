@@ -12,7 +12,7 @@ import RubricProvenance from '../components/results/RubricProvenance.jsx'
 import VerdictMark from '../components/results/VerdictMark.jsx'
 import AddToList from '../components/results/AddToList.jsx'
 import EvidenceSection from '../components/results/EvidenceSection.jsx'
-import { briefTop, statsLabels, METHOD, ANCHORS, standardAnchor } from '../components/results/briefTop.js'
+import { briefTop, statsLabels, scoreParts, METHOD, ANCHORS, standardAnchor } from '../components/results/briefTop.js'
 
 // The one-page evidence brief — a standalone editorial report, three layers
 // top to bottom, serving three readers at once (with how it was judged — the
@@ -34,6 +34,7 @@ export default function ResultsPage() {
   // Every string at the top of the brief, from the confirmed rubric (briefTop.js).
   const top = briefTop(result, rubric)
   const st = top.stats
+  const parts = scoreParts(result)
   const L = statsLabels(st)
   const toMethod = (anchor) => `${METHOD}#${anchor}`
 
@@ -100,11 +101,12 @@ export default function ResultsPage() {
             {st.twoFlags > 0 && <> ({st.twoFlags} {st.twoFlags === 1 ? 'claim has' : 'claims have'} two flags)</>}.
           </p>
         )}
-        {top.strict && (
+        {parts && (
           <p className="eh-stats-note">
-            For the score, every claim is held to the{' '}
-            <Link to={toMethod(ANCHORS.strictest)}>strictest setting</Link>, where {st.strictFlagged} of {st.claims} cite
-            nothing or too little.
+            {parts.holding} of {parts.claims} claims <Link to={toMethod(ANCHORS.scale)}>hold</Link>, which gives{' '}
+            {Number.isInteger(parts.base) ? `${parts.base}.0` : parts.base} of 10
+            {parts.less ? `, less ${parts.less} for ${parts.less === 1 ? 'a problem' : 'problems'} with the document as a whole` : ''}
+            {parts.floored ? '; the scale stops at 1' : ''}.
           </p>
         )}
       </div>

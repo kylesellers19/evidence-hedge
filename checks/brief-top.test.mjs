@@ -57,14 +57,28 @@ for (const f of FIXTURES.filter((x) => !x.corpusId)) {
   if (loaded.status !== 'ok') { console.log(`SKIP ${f.id} — ${loaded.reason}`); continue }
   runs.push({ id: f.id, text: loaded.text, sourceUrl: loaded.sourceUrl || '' })
 }
+// The score follows from the headline's own counts: ten times the share of
+// claims that hold (claims − flagged), less the whole-document problems, at least 1.
+function scoreFollows(result, top) {
+  const s = result.documentScore
+  if (s.score == null || s.breakdown.gate) return true
+  const st = top.stats
+  const expected = Math.max(1, Math.round((100 * (st.claims - st.flagged)) / st.claims) / 10 - (s.breakdown.problemPenalty || 0))
+  return Math.abs(expected - s.score) < 0.051
+}
+
 let bad = []
+let unfollowed = []
 for (const r of runs) {
   const route = routeDocument(r.text, { sourceUrl: r.sourceUrl })
   const { rubric } = judgmentFor(route.profile.genre.roles, route.judgment.genres)
-  const top = briefTop(analyze(r.text, rubric, route.posture, { sourceUrl: r.sourceUrl }), rubric)
+  const result = analyze(r.text, rubric, route.posture, { sourceUrl: r.sourceUrl })
+  const top = briefTop(result, rubric)
   if (!reconciles(top).all) bad.push(`${r.id}: ${top.headline} | ${JSON.stringify(top.stats)}`)
+  if (!scoreFollows(result, top)) unfollowed.push(`${r.id}: ${result.documentScore.score} from ${top.stats.flagged} of ${top.stats.claims}`)
 }
 log(`headline counts reconcile with the stats row on ${runs.length} corpus and fixture documents`, bad.length === 0, bad.slice(0, 3).join(' · '))
+log(`the score follows from the headline's counts on ${runs.length} corpus and fixture documents`, unfollowed.length === 0, unfollowed.slice(0, 3).join(' · '))
 
 // The latest corpus-audit ledger that records the new top (gitignored).
 const AUDIT = join(ROOT, 'checks', 'data', 'audit')

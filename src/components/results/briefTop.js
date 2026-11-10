@@ -28,6 +28,7 @@ export const ANCHORS = {
   strong: 'read-as-strong',
   flagged: 'flagged',
   strictest: 'strictest-setting',
+  scale: 'scale',
   flag: (key) => `flag-${key}`,
   signal: (id) => `signal-${id}`,
 }
@@ -48,17 +49,13 @@ export function readingOf(rubric, posture) {
 /**
  * The stats row. `flagged` counts claims with any flag once; a claim can be
  * both unsupported (or overconfident) and an overreach, so
- * unsupported + overconfident + overreach − twoFlags = flagged.
- * `strictFlagged` is set when the score, which reads every claim at the
- * standard's strictest setting, counted a different number than the brief
- * shows at the document's own setting.
+ * unsupported + overconfident + overreach − twoFlags = flagged. Every claim is
+ * judged once, at the standard's strictest setting, so these are the counts
+ * the score is made from.
  */
 export function statsOf(result) {
   const s = result.summary
   const fc = s.flagCounts
-  const b = result.documentScore?.breakdown
-  const shown = fc['unsupported-assertion'] + fc.overconfident
-  const strict = b && !b.gate && !b.unscored && b.flaggedAtStandard != null && b.flaggedAtStandard !== shown ? b.flaggedAtStandard : null
   return {
     claims: s.totalClaims,
     strong: s.strongClaims,
@@ -67,7 +64,6 @@ export function statsOf(result) {
     overconfident: fc.overconfident,
     overreach: fc['causal-overreach'] || 0,
     twoFlags: (result.claims || []).filter((c) => c.flag && c.overreach).length,
-    strictFlagged: strict,
   }
 }
 
@@ -97,10 +93,24 @@ export function breakdownText(st) {
   return `Of the ${st.flagged} flagged, ${list}${two}.`
 }
 
-/** When the score counted at a stricter setting than the brief shows. */
-export function strictText(st) {
-  if (st.strictFlagged == null) return null
-  return `For the score, every claim is held to the strictest setting, where ${st.strictFlagged} of ${st.claims} cite nothing or too little.`
+/**
+ * How the score follows from the counts: the claims that hold, as a share of
+ * ten, less a point for each problem with the document as a whole (at most
+ * two). PROVISIONAL — not ratified (template).
+ */
+export function scoreParts(result) {
+  const s = result.documentScore
+  const b = s?.breakdown
+  if (!s || s.score == null || !b || b.gate || b.unscored || b.holding == null) return null
+  const base = Math.round((100 * b.holding) / b.claimCount) / 10
+  return { holding: b.holding, claims: b.claimCount, base, less: b.problemPenalty || 0, floored: base - (b.problemPenalty || 0) < 1 }
+}
+const one = (x) => (Number.isInteger(x) ? `${x}.0` : String(x))
+export function scoreText(result) {
+  const p = scoreParts(result)
+  if (!p) return null
+  const less = p.less ? `, less ${p.less} for ${p.less === 1 ? 'a problem' : 'problems'} with the document as a whole` : ''
+  return `${p.holding} of ${p.claims} claims hold, which gives ${one(p.base)} of 10${less}${p.floored ? '; the scale stops at 1' : ''}.`
 }
 
 /** Every string at the top of the brief, as the page shows it. */
@@ -117,6 +127,6 @@ export function briefTop(result, rubric) {
     verdictBox: { score: s && s.score != null ? `${s.display} / 10` : 'No score', summary: s?.summary || null, href: s && s.score != null ? `${METHOD}#${scoreAnchor(s.display)}` : null },
     stats: st,
     breakdown: breakdownText(st),
-    strict: strictText(st),
+    scoreLine: scoreText(result),
   }
 }

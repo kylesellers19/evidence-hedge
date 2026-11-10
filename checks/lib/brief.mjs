@@ -68,8 +68,8 @@ export function briefOf(run) {
       verdictBox: top.verdictBox.summary,
     },
     verdict: summary.verdict,
-    counts: { claimsWeighed: top.stats.claims, readAsStrong: top.stats.strong, flagged: top.stats.flagged, unsupported: top.stats.unsupported, overconfident: top.stats.overconfident, overreach: top.stats.overreach, twoFlags: top.stats.twoFlags, strictFlagged: top.stats.strictFlagged },
-    countsNotes: { breakdown: top.breakdown, strict: top.strict },
+    counts: { claimsWeighed: top.stats.claims, readAsStrong: top.stats.strong, flagged: top.stats.flagged, unsupported: top.stats.unsupported, overconfident: top.stats.overconfident, overreach: top.stats.overreach, twoFlags: top.stats.twoFlags },
+    countsNotes: { breakdown: top.breakdown, scoreLine: top.scoreLine },
     evidenceSection: evidenceSectionOf(result, rubric, run.loaded?.pages || null),
     howJudged: profile.genre ? {
       reading: 'detected automatically',

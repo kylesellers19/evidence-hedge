@@ -30,7 +30,6 @@
 // below, each PROVISIONAL — listed in the completion report for ratification.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { detectMismatch } from './detectMismatch.js'
 
 /**
  * @typedef {Object} DocumentScore
@@ -136,24 +135,6 @@ function verdictFor(band, posture, noun, promotional = false) {
   return SUMMARY[band](noun)
 }
 
-// Re-judge one claim at the rubric's evidence standard, independent of posture.
-function referenceFlag(c, rubric, refPosture, discountInDocument) {
-  if (c.function === 'method') return null
-  let rung = c.rung
-  if (discountInDocument && c.inDocument) {
-    const lower = [...rubric.ladder].sort((a, b) => b.rank - a.rank).find((r) => r.rank < rung.rank)
-    rung = lower && lower.rank >= (c.citedRung?.rank ?? 0) ? lower : c.citedRung || rung
-  }
-  const m = detectMismatch({ tier: c.tier, rung }, rubric.tolerance, refPosture)
-  if (!m) return null
-  if (m.flag === 'unsupported-assertion' && c.disclosed) {
-    const tierIndex = rubric.tiers.findIndex((t) => t.key === c.tier.key)
-    const sev = rubric.tolerance.nullSeverity(tierIndex, refPosture, true)
-    if (sev === 'none' || sev === 'note') return null
-  }
-  return m
-}
-
 /**
  * @param {Object} analysis  { claims, signals, posture, rubric, profile? }
  * @returns {DocumentScore}
@@ -198,17 +179,16 @@ export function scoreDocument(analysis) {
     }
   }
 
-  // Which claims hold, at the evidence standard (genre-invariant).
+  // Which claims hold. analyze() has judged every claim at the standard's
+  // strictest setting (genre-invariant), so the score counts the brief's own flags.
   const refPosture = rubric?.strictestPosture || rubric?.defaultPosture
-  const discount = !!profile && W.DISCOUNTED_PROVENANCE.includes(profile.provenance.kind)
   let flagged = 0
   let notHolding = 0
   let discounted = 0
   for (const c of claims) {
-    const m = rubric ? referenceFlag(c, rubric, refPosture, discount) : (c.flag ? { flag: c.flag, explanation: c.explanation } : null)
-    if (discount && c.inDocument) discounted++
-    if (m) flagged++
-    if (m || c.overreach) notHolding++
+    if (c.discounted) discounted++
+    if (c.flag) flagged++
+    if (c.flag || c.overreach) notHolding++
   }
   const holding = claims.length - notHolding
   const share = holding / claims.length

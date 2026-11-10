@@ -4,7 +4,7 @@
 //
 //   node scripts/list-load.mjs --tag run9
 //
-// One entry per AEC report the site scored as an upload: the firm, its segment
+// One entry per AEC report the site scores as an upload: the firm, its segment
 // as an industry, a report type read from the title, the title, the date as the
 // firm published it (a month or a year when that is all it gives), the score,
 // the engine build, the report's link, its claim counts, and a SHA-256 of the
@@ -116,12 +116,17 @@ for (const r of ledger) {
 }
 
 const COLS = ['company', 'industry', 'report_type', 'report_name', 'published_on', 'published_precision', 'score', 'engine', 'doc_hash', 'source_url', 'origin', 'claims', 'flagged']
+// An entry already listed by the audit takes the new score and counts; a
+// reader's own entry for the same report is left as it is.
+const UPDATED = ['industry', 'report_type', 'report_name', 'published_on', 'published_precision', 'score', 'engine', 'source_url', 'claims', 'flagged']
 const statement = (chunk) => `insert into public.list_entries (${COLS.join(', ')}) values\n` +
   chunk.map((x) => `  (${COLS.map((c) => (typeof x[c] === 'number' ? String(x[c]) : sq(x[c]))).join(', ')})`).join(',\n') +
-  '\non conflict (doc_hash) do nothing;\n'
+  `\non conflict (doc_hash) do update set ${UPDATED.map((c) => `${c} = excluded.${c}`).join(', ')}\n  where list_entries.origin = 'audit';\n`
+// Audit entries for reports that no longer get a score leave The List.
+const prune = `delete from public.list_entries where origin = 'audit' and doc_hash not in (\n${rows.map((x) => `  ${sq(x.doc_hash)}`).join(',\n')}\n);\n`
 mkdirSync(OUT, { recursive: true })
-const head = `-- The corpus audit's entries for The List: ${rows.length} reports, engine ${rows[0]?.engine}.\n-- Run after docs/the-list.sql (version 2). Safe to run again: a report already listed is skipped.\n\n`
-writeFileSync(join(OUT, 'list-load-all.sql'), head + Array.from({ length: Math.ceil(rows.length / 250) }, (_, i) => statement(rows.slice(i * 250, (i + 1) * 250))).join('\n'))
+const head = `-- The corpus audit's entries for The List: ${rows.length} reports, engine ${rows[0]?.engine}.\n-- Run after docs/the-list.sql (version 2). Safe to run again: the audit's entries take these\n-- scores, readers' own entries are untouched, and audit entries no longer scored are removed.\n\n`
+writeFileSync(join(OUT, 'list-load-all.sql'), head + prune + '\n' + Array.from({ length: Math.ceil(rows.length / 250) }, (_, i) => statement(rows.slice(i * 250, (i + 1) * 250))).join('\n'))
 const tally = (k) => Object.entries(rows.reduce((m, x) => ({ ...m, [x[k]]: (m[x[k]] || 0) + 1 }), {})).sort((a, b) => b[1] - a[1])
 console.log(`${rows.length} entries → checks/data/list/list-load-all.sql`, JSON.stringify(skipped))
 console.log('industry', JSON.stringify(tally('industry')))

@@ -1,6 +1,6 @@
 # The engine cleanup and the 1-to-10 scale
 
-Nov. 9, 2026. Branch `engine-cleanup`, engine `8a2154f`. This follows the [corpus audit](corpus-audit-5160fcd.md), which read every one of 1,603 documents and found where the engine went wrong. Documents appear here by id and link only. Every judgment call is in the [decision log](corpus-audit-decisions.md), rows 37 on.
+Nov. 9, 2026. Branch `engine-cleanup`, engine `5b40af6`. This follows the [corpus audit](corpus-audit-5160fcd.md), which read every one of 1,603 documents and found where the engine went wrong. Documents appear here by id and link only. Every judgment call is in the [decision log](corpus-audit-decisions.md), rows 37 on.
 
 ## 1. What changed, and why
 
@@ -33,14 +33,16 @@ Each rule answers a problem the audit's reviewers found, and each was checked ag
 
 ### Measured on the whole corpus
 
-The 1,580 documents the site's gates pass, before (`run4`, baseline) and after (`run9`):
+The 1,580 documents the site's gates pass, before (`run4`, baseline) and after (`run10`):
 
 | | Before | After |
 |---|---:|---:|
 | Claims | 436,546 | 428,231 |
-| Unsupported or overconfident, at the strictest setting | 304,809 | 291,172 |
+| Unsupported or overconfident, at the strictest setting | 304,809 | 304,484 |
 | Read as strong | 14,462 | 10,988 |
 | Reference entries set aside | 10,626 | 17,791 |
+
+The flag count barely moves, for two reasons that pull against each other. Junk the engine no longer weighs takes flags away. Sentences that a runaway method section had kept from being judged (section 3) are now judged, and add flags. Both are corrections.
 | Read as reporting no study of their own | 1,151 | 917 |
 | Held to the corporate standard | 986 | 1,068 |
 | Held to the general web standard | 212 | 188 |
@@ -76,27 +78,28 @@ Bands sit at half points, so each whole number a brief shows has one verdict; be
 | Rule | Typical miss | Bias | Within 1 point |
 |---|---:|---:|---:|
 | The old formula (10 minus weighted losses) | 1.19 | −1.03 | 57% |
-| **Share that holds (adopted), final engine** | **1.11** | **−0.49** | **58%** |
+| **Share that holds (adopted), final engine** | **1.10** | **−0.65** | **58%** |
 | Share that holds, a plain uncited statement counted as ¾ | 1.36 | +0.92 | 47% |
 | Share that holds, counted as ½ | 2.59 | +2.53 | 15% |
 | Share that holds, not counted | 5.72 | +5.72 | 1% |
 
 All rows but the adopted rule's were measured on the cleaned engine before the attribution fix in section 3; the adopted rule's row is the final engine. The reviewers' fair scores were given against the old scale, which pulls the targets toward it; even so, the adopted rule lands nearer them.
 
-Counting a plain statement that cites nothing as only part of a problem looks more balanced, but scores most documents above what the reviewers judged fair. The adopted rule fits best and is also the plainest. The documents the reviewers called too low rose 0.73 points on average (333 up, 72 down). Those they called too high fell 0.52; 7 of the 16 now have too few claims to score.
+Counting a plain statement that cites nothing as only part of a problem looks more balanced, but scores most documents above what the reviewers judged fair. The adopted rule fits best and is also the plainest. The documents the reviewers called too low rose 0.61 points on average (319 up, 80 down). Those they called too high fell 2.16 points on average, and all 7 still scored moved down; the other 9 now have too few claims to score.
 
 **Where the corpus lands** (1,580 documents):
 
 | | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | No score |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Documents | 405 | 503 | 319 | 171 | 61 | 33 | 16 | 14 | 7 | 1 | 38 |
+| Documents | 414 | 533 | 321 | 174 | 53 | 29 | 4 | 2 | 0 | 0 | 38 |
 
-Most of this corpus scores low because most of what these firm reports state is stated plainly with nothing cited: 70% of their claims carry a flag. That is a finding about the corpus, not a quirk of the scale.
+Most of this corpus scores low because most of what these firm reports state is stated plainly with nothing cited: 74% of their claims carry a flag. No report in it scores 9 or 10. That is a finding about the corpus, not a quirk of the scale.
 
 ## 3. Found and fixed along the way
 
 - **Attribution lost its place.** Attribution matched each claim to its body sentence by exact text. A claim that lost a fused heading no longer matched, and every later claim in that document went "undetermined". Claims now carry their source sentence (`8a2154f`). This was found by the check that a linked claim keeps its evidence row under every standard.
 - **The evidence map's limits.** It read each claim's limit at the document's own setting while the flags used the strictest. It now reads the strictest too.
+- **Method sections that ran to the end.** Found on the live List after the first publish, where the top-scoring reports were ones the reviewers had called overscored. A report that opens with a "Methodology", "About this report" or "Acknowledgements" heading put every later sentence in a method section. In a report of its own study, those sentences defaulted to method statements, which are never judged, so 85% to 93% of such reports' claims went unjudged and scored as holding. Only a research paper's section headings had ended a section. Now a method section ends at any heading that names no method work, while "Sample design" or "Weighting" keeps it (`extractClaims.js`, `5b40af6`). The scale's figures in this report are from the corrected engine (`run10`).
 
 ## 4. Still open
 
@@ -106,7 +109,7 @@ Most of this corpus scores low because most of what these firm reports state is 
 
 ## 5. The List
 
-1,523 reports from the corpus, every AEC report the site scores as an upload (three duplicate texts listed once), go on The List as "Corpus audit" entries. Each entry carries:
+1,523 reports from the corpus, every AEC report the site scores as an upload (three duplicate texts listed once), are on The List as "Corpus audit" entries. Each entry carries:
 - the firm, an industry, a report type, the title and the date as the firm published it (a month or a year when that is all it gives);
 - the score and the engine build;
 - a link to the report;
@@ -137,3 +140,4 @@ Every row is PROVISIONAL — not ratified.
 | C14 | Readings | firm cues; government from the front only; "report" as the firm-research noun; "A mix of … writing" | `provenance.js`, `hybrids.js` |
 | C15 | The List, version 2 | link, origin, date precision, claim counts; readers add only their own entries | `docs/the-list.sql` |
 | C16 | Audit entries' industry and report type | the firm's segment; title cues, else the engine's reading | `scripts/list-load.mjs` |
+| C17 | Where a method section ends | at the next research-paper heading, or at any heading that names no method work | `extractClaims.js: METHOD_SUBHEADING` |

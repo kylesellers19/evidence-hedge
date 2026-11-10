@@ -1,5 +1,5 @@
 {
- "engine": "8a2154f",
+ "engine": "5b40af6",
  "generated": "2026-11-10",
  "corpus": {
   "documents": 1603,
@@ -8,7 +8,7 @@
  },
  "byScore": {
   "1": {
-   "documents": 406,
+   "documents": 415,
    "reviewedOk": 3,
    "anchor": {
     "id": "aec:top100/nv5-global/nv5-regulatory-summary-updates-to-south-coast-aqmd-rule-2305-warehouse",
@@ -22,7 +22,7 @@
    }
   },
   "2": {
-   "documents": 504,
+   "documents": 534,
    "reviewedOk": 5,
    "anchor": {
     "id": "aec:top100/arcadis-north-america/the-rapid-emergence-of-pfass",
@@ -36,7 +36,7 @@
    }
   },
   "3": {
-   "documents": 324,
+   "documents": 326,
    "reviewedOk": 1,
    "anchor": {
     "id": "aec:top100/swinerton/lead-times-highlight-q4-2023",
@@ -50,12 +50,12 @@
    }
   },
   "4": {
-   "documents": 173,
+   "documents": 176,
    "reviewedOk": 0,
    "anchor": null
   },
   "5": {
-   "documents": 61,
+   "documents": 53,
    "reviewedOk": 1,
    "anchor": {
     "id": "aec:top100/arup/unlocking-advanced-modular-reactors-in-the-uk",
@@ -69,12 +69,12 @@
    }
   },
   "6": {
-   "documents": 34,
+   "documents": 30,
    "reviewedOk": 0,
    "anchor": null
   },
   "7": {
-   "documents": 16,
+   "documents": 4,
    "reviewedOk": 1,
    "anchor": {
     "id": "aec:top100/perkins-eastman/latrobe-educational-adequacy-1",
@@ -88,17 +88,17 @@
    }
   },
   "8": {
-   "documents": 15,
+   "documents": 3,
    "reviewedOk": 0,
    "anchor": null
   },
   "9": {
-   "documents": 8,
+   "documents": 1,
    "reviewedOk": 0,
    "anchor": null
   },
   "10": {
-   "documents": 1,
+   "documents": 0,
    "reviewedOk": 0,
    "anchor": null
   }
@@ -107,22 +107,22 @@
   "research": {
    "documents": 1542,
    "median": 2.4,
-   "shownAsOne": 243
+   "shownAsOne": 245
   },
   "corporate": {
    "documents": 1542,
-   "median": 2,
-   "shownAsOne": 453
+   "median": 1.9,
+   "shownAsOne": 468
   },
   "journalism": {
    "documents": 1542,
    "median": 1.5,
-   "shownAsOne": 739
+   "shownAsOne": 762
   },
   "general": {
    "documents": 1542,
-   "median": 2.9,
-   "shownAsOne": 145
+   "median": 2.8,
+   "shownAsOne": 146
   }
  },
  "moreClaimsUnderJournalism": 1321

@@ -62,3 +62,13 @@ for (const [k, v] of Object.entries(byStd)) {
   const s = v.filter((x) => x != null).sort((a, b) => a - b)
   console.log(`  ${k.padEnd(11)} ${String(v.length).padStart(5)} docs, median ${s[Math.floor(s.length / 2)]}, no score ${v.filter((x) => x == null).length}`)
 }
+
+// --examples: two documents at each proposed score, with what decided it.
+if (process.argv.includes('--examples')) {
+  for (let n = 1; n <= 10; n++) {
+    const at = out.filter((x) => x.p.score === n)
+    for (const x of at.filter((_, i) => i % Math.max(1, Math.floor(at.length / 2)) === 0).slice(0, 2)) {
+      console.log(`${n} (was ${Math.round(x.r.score)})  ${x.r.id}  ${x.r.claims} claims, ${x.p.flagged} flagged, holds ${(x.p.hold * 100).toFixed(0)}%, doc problems ${x.p.docFlags}  ${x.r.rubric.judgedAs}`)
+    }
+  }
+}

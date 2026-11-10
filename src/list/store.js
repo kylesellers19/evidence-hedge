@@ -11,6 +11,8 @@
 // and the add form on the evidence brief is not shown.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { NO_FILTERS, matches, restFilter, median } from './filter.js'
+
 const URL_BASE = (import.meta.env.VITE_SUPABASE_URL || '').replace(/\/+$/, '')
 const KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
 const TABLE = `${URL_BASE}/rest/v1/list_entries`
@@ -57,27 +59,39 @@ export async function loadList() {
 
 // One page of entries, sorted and filtered by the table itself, so a visit
 // downloads a page, not The List. sorts: [{ key, dir }] (src/list/sort.js);
-// origin: 'reader', 'audit' or null for both. Resolves { rows, total }.
-export async function loadPage({ sorts = [], origin = null, offset = 0, limit = PAGE_SIZE } = {}) {
+// filters: the search and filters (src/list/filter.js). Resolves { rows, total }.
+export async function loadPage({ sorts = [], filters = NO_FILTERS, offset = 0, limit = PAGE_SIZE } = {}) {
   if (!LIST_IS_LIVE) {
-    const all = (await loadList()).filter((r) => !origin || (r.origin || 'reader') === origin)
+    const all = (await loadList()).filter((r) => matches(r, filters))
     const { sortEntries } = await import('./sort.js')
     const sorted = sortEntries(all, sorts)
     return { rows: sorted.slice(offset, offset + limit), total: sorted.length }
   }
   const order = [...sorts.filter((s) => COLUMN_OF[s.key]).map((s) => `${COLUMN_OF[s.key]}.${s.dir}.nullslast`), 'created_at.desc', 'id.desc'].join(',')
-  const filter = origin ? `&origin=eq.${origin}` : ''
   const ask = (cols, f) => fetch(`${TABLE}?select=${cols}&order=${order}${f}`, {
     headers: { ...headers(), Prefer: 'count=exact', 'Range-Unit': 'items', Range: `${offset}-${offset + limit - 1}` },
   })
-  let res = await ask(COLUMNS, filter)
+  let res = await ask(COLUMNS, restFilter(filters))
   // Until the version 2 columns exist, every entry is a reader's.
-  if (res.status === 400) res = origin === 'audit' ? null : await ask(COLUMNS_V1, '')
+  if (res.status === 400) res = filters.show === 'audit' ? null : await ask(COLUMNS_V1, restFilter(filters, { origin: false }))
   if (!res) return { rows: [], total: 0 }
   if (!res.ok && res.status !== 206) throw new Error(`list_entries: ${res.status}`)
   const total = Number((res.headers.get('content-range') || '').split('/')[1])
   const rows = (await res.json()).map(fromRow)
   return { rows, total: Number.isFinite(total) ? total : offset + rows.length }
+}
+
+// Every report from one firm, as a count and the median score, whatever the
+// filters. Resolves { count, median }.
+export async function loadFirm(company) {
+  if (!LIST_IS_LIVE) {
+    const scores = (await loadList()).filter((r) => r.company === company).map((r) => Number(r.score))
+    return { count: scores.length, median: median(scores) }
+  }
+  const res = await fetch(`${TABLE}?select=score&company=eq.${encodeURIComponent(company)}&limit=5000`, { headers: headers() })
+  if (!res.ok) throw new Error(`list_entries: ${res.status}`)
+  const scores = (await res.json()).map((r) => Number(r.score))
+  return { count: scores.length, median: median(scores) }
 }
 
 // Add one entry (src/list/entry.js buildEntry). Resolves { ok: true, entry }

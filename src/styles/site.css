@@ -466,23 +466,84 @@
   text-transform: uppercase;
   color: var(--eh-ink-soft);
 }
-.eh-originfilter {
-  display: inline-flex;
-  flex-direction: column;
-  margin: 12px 0 0;
+
+/* Finding reports: the search on its own line, the filters under it. */
+.eh-listfind {
+  border-top: 1px solid var(--eh-hairline);
+  margin: 8px 0 0;
+  padding: 14px 0 16px;
+  display: grid;
+  gap: 12px;
   font-family: var(--eh-sans);
 }
-.eh-originfilter > span {
+.eh-listsearch,
+.eh-listfilter {
+  display: flex;
+  flex-direction: column;
+}
+.eh-listsearch > span,
+.eh-listfilter > span {
   font: 600 13px/1.4 var(--eh-sans);
   color: var(--eh-ink-soft);
   margin: 0 0 4px;
 }
-.eh-originfilter .eh-select {
+.eh-listsearch .eh-input {
+  max-width: 560px;
+  font-size: 16px; /* 16px keeps phones from zooming in on focus */
+}
+.eh-listfilters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 20px;
+}
+.eh-listfilter .eh-select {
   width: auto;
-  min-width: 190px;
+  min-width: 170px;
+  max-width: 260px;
   font-size: 14px;
   min-height: 38px;
   padding: 6px 28px 6px 8px;
+}
+.eh-listclear {
+  min-height: 38px;
+  padding: 7px 14px;
+}
+
+/* A firm's view: its name, its count and median, and the way back. */
+.eh-list-firm {
+  margin: 18px 0 0 !important;
+  font: 16px/1.5 var(--eh-sans);
+}
+.eh-inlinebutton {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--eh-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.eh-inlinebutton:focus-visible {
+  outline: 2px solid var(--eh-accent);
+  outline-offset: 2px;
+}
+.eh-list-company a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--eh-hairline);
+  text-underline-offset: 3px;
+}
+.eh-list-company a:hover {
+  text-decoration-color: currentColor;
+}
+
+/* While new rows load, the old ones stay, dimmed. */
+.eh-table-scroll.is-loading {
+  opacity: 0.55;
+  transition: opacity 0.12s ease 0.15s;
 }
 .eh-list-date {
   white-space: nowrap;
@@ -518,6 +579,14 @@
 }
 
 @media (max-width: 639px) {
+  .eh-listfilters {
+    gap: 10px;
+  }
+  .eh-listfilter,
+  .eh-listfilter .eh-select {
+    width: 100%;
+    max-width: none;
+  }
   .eh-sortbar {
     gap: 10px;
   }

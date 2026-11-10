@@ -448,6 +448,42 @@
 .eh-list-name {
   min-width: 220px;
 }
+.eh-list-name a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--eh-hairline);
+  text-underline-offset: 3px;
+}
+.eh-list-name a:hover {
+  text-decoration-color: currentColor;
+}
+/* Who added the entry: the corpus audit, beside readers' own entries. */
+.eh-list-origin {
+  display: block;
+  margin-top: 2px;
+  font: 600 11px/1.4 var(--eh-sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--eh-ink-soft);
+}
+.eh-originfilter {
+  display: inline-flex;
+  flex-direction: column;
+  margin: 12px 0 0;
+  font-family: var(--eh-sans);
+}
+.eh-originfilter > span {
+  font: 600 13px/1.4 var(--eh-sans);
+  color: var(--eh-ink-soft);
+  margin: 0 0 4px;
+}
+.eh-originfilter .eh-select {
+  width: auto;
+  min-width: 190px;
+  font-size: 14px;
+  min-height: 38px;
+  padding: 6px 28px 6px 8px;
+}
 .eh-list-date {
   white-space: nowrap;
 }

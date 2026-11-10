@@ -84,3 +84,13 @@ export function apDate(iso) {
   const [y, m, d] = iso.split('-').map(Number)
   return `${AP_MONTHS[m - 1]} ${d}, ${y}`
 }
+
+// A date known only to its month or year (most reports print no day): "Nov.
+// 2023", "2019". Unknown when the report gives none.
+export function apDatePartial(iso, precision = 'day') {
+  if (precision === 'unknown' || !ISO_DATE.test(iso || '')) return precision === 'unknown' ? 'Unknown' : ''
+  const [y, m] = iso.split('-').map(Number)
+  if (precision === 'year') return String(y)
+  if (precision === 'month') return `${AP_MONTHS[m - 1]} ${y}`
+  return apDate(iso)
+}

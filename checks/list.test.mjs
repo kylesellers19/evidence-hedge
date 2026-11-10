@@ -18,7 +18,7 @@ import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { LIST_FIELDS, INDUSTRIES, REPORT_TYPES, MAX_SORTS } from '../src/list/fields.js'
 import { sortEntries, clickHeading, setLevel } from '../src/list/sort.js'
-import { draftEntry, validateEntry, buildEntry, docHash, apDate, guessReportName } from '../src/list/entry.js'
+import { draftEntry, validateEntry, buildEntry, docHash, apDate, apDatePartial, guessReportName } from '../src/list/entry.js'
 
 let ok = true
 const log = (label, pass, extra = '') => { if (!pass) ok = false; console.log(`${pass ? 'PASS ✅' : 'FAIL ❌'}  ${label}${extra ? ' — ' + extra : ''}`) }
@@ -96,6 +96,16 @@ log('AP dates', apDate('2026-10-29') === 'Oct. 29, 2026' && apDate('2026-03-05')
 const sql = readFileSync(new URL('../docs/the-list.sql', import.meta.url), 'utf8')
 const missing = [...INDUSTRIES, ...REPORT_TYPES].filter((v) => !sql.includes(`'${v}'`))
 log('docs/the-list.sql allows every industry and report type the form offers', missing.length === 0, missing.join(', '))
+// Version 2: the corpus audit's entries sit beside readers' own.
+log('docs/the-list.sql adds a link, an origin, a date precision and claim counts',
+  ['source_url', 'origin', 'published_precision', 'claims', 'flagged'].every((c) => new RegExp(`add column if not exists ${c}\\b`).test(sql)))
+log("the public key adds only readers' entries, with a full date",
+  /for insert[\s\S]{0,80}with check \(origin = 'reader' and published_precision = 'day' and published_on is not null\)/.test(sql.split('Version 2')[1] || ''))
+log('a date known to its month or year shows as one',
+  apDatePartial('2023-11-01', 'month') === 'Nov. 2023' && apDatePartial('2019-01-01', 'year') === '2019' && apDatePartial(null, 'unknown') === 'Unknown' && apDatePartial('2026-10-29') === 'Oct. 29, 2026')
+const store = readFileSync(new URL('../src/list/store.js', import.meta.url), 'utf8')
+const columns = (store.match(/const COLUMNS = '([^']+)'/) || [])[1] || ''
+log('a page of The List asks for no document text', columns && !/text|body|content|doc_hash/.test(columns), columns)
 log('The List has the six columns asked for',
   same(LIST_FIELDS.map((f) => f.label), ['Company', 'Industry', 'Report type', 'Report name', 'Publication date', 'Score']))
 

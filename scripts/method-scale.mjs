@@ -27,7 +27,7 @@ const AUDIT = join(ROOT, 'checks', 'data', 'audit')
 const OUT = join(ROOT, 'src', 'pages', 'method-scale.json')
 
 const rows = readFileSync(join(AUDIT, `ledger-${TAG}.jsonl`), 'utf8').trim().split('\n').map((l) => JSON.parse(l))
-const reviewDir = join(AUDIT, `reviews-${TAG}`)
+const reviewDir = join(AUDIT, `reviews-${arg('reviews', TAG)}`)
 const verdicts = new Map()
 if (existsSync(reviewDir)) {
   // Sorted, so a re-review (r001…) replaces the first verdict (c001…).

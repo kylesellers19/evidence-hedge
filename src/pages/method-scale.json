@@ -1,108 +1,99 @@
 {
- "engine": "5160fcd",
- "generated": "2026-11-09",
+ "engine": "8a2154f",
+ "generated": "2026-11-10",
  "corpus": {
   "documents": 1603,
-  "scored": 1568,
+  "scored": 1542,
   "reviewed": 1603
  },
  "byScore": {
   "1": {
-   "documents": 807,
-   "reviewedOk": 2,
+   "documents": 406,
+   "reviewedOk": 3,
    "anchor": {
-    "id": "aec:top100/wsp/transitioning-to-zero-emission-technology-white-paper-final",
-    "title": "Transitioning to Zero Emission Technology",
-    "publisher": "WSP",
-    "url": "https://www.wsp.com/-/media/hubs/us/fact-sheets/transitioning-to-zero-emission-technology_white-paper_final.pdf",
-    "score": 1.1,
-    "readAs": "Thought leadership",
+    "id": "aec:top100/nv5-global/nv5-regulatory-summary-updates-to-south-coast-aqmd-rule-2305-warehouse",
+    "title": "NV5 Regulatory Summary_Updates to South Coast AQMD Rule 2305 Warehouse Indirect Source Rule_2 Pages",
+    "publisher": "NV5 Global",
+    "url": "https://www.nv5.com/wp-content/uploads/2024/10/NV5-Regulatory-Summary_Updates-to-South-Coast-AQMD-Rule-2305-Warehouse-Indirect-Source-Rule_2-Pages.pdf",
+    "score": 1,
+    "readAs": "Marketing copy",
     "standard": "corporate",
-    "published": null
+    "published": "2024-10"
    }
   },
   "2": {
-   "documents": 304,
-   "reviewedOk": 1,
-   "anchor": {
-    "id": "aec:top100/nv5-global/nv5-which-radiation-detection-instrument-do-i-choose",
-    "title": "What Radiation Detection Instrument Do I Choose to Meet My Needs?",
-    "publisher": "NV5 Global",
-    "url": "https://www.nv5.com/wp-content/uploads/2019/01/NV5-Which-Radiation-Detection-Instrument-Do-I-Choose.pdf",
-    "score": 2,
-    "readAs": "Advice on a consequential topic",
-    "standard": "general",
-    "published": "2019-01"
-   }
-  },
-  "3": {
-   "documents": 202,
+   "documents": 504,
    "reviewedOk": 5,
-   "anchor": {
-    "id": "aec:top100/suffolk/whitepaper-yahoo-building-sustainability",
-    "title": "Building Sustainability (Yahoo) white paper",
-    "publisher": "Suffolk",
-    "url": "https://suffolk.com/wp-content/uploads/2025/08/Yahoo_WhitePaper-1.pdf",
-    "score": 2.8,
-    "readAs": "Marketing copy",
-    "standard": "corporate",
-    "published": "2023-05"
-   }
-  },
-  "4": {
-   "documents": 133,
-   "reviewedOk": 1,
    "anchor": {
     "id": "aec:top100/arcadis-north-america/the-rapid-emergence-of-pfass",
     "title": "The Rapid Emergence of PFASs to Prominent Contaminants of Concern",
     "publisher": "Arcadis North America",
     "url": "https://media.arcadis.com/-/media/project/arcadiscom/com/perspectives/global/2018/the-emerging-issue-pfas/the-rapid-emergence-of-pfass.pdf",
-    "score": 3.6,
+    "score": 2,
     "readAs": "Marketing copy",
     "standard": "corporate",
     "published": "2018"
    }
   },
-  "5": {
-   "documents": 87,
+  "3": {
+   "documents": 324,
    "reviewedOk": 1,
    "anchor": {
     "id": "aec:top100/swinerton/lead-times-highlight-q4-2023",
     "title": "Lead Times Highlight (Q4 2023)",
     "publisher": "Swinerton",
     "url": "https://swinerton.com/wp-content/uploads/2023/11/Lead-Times_Highlight_Q4.pdf",
-    "score": 4.8,
+    "score": 2.9,
     "readAs": "Advice on a consequential topic",
     "standard": "general",
     "published": "2023-11"
    }
   },
+  "4": {
+   "documents": 173,
+   "reviewedOk": 0,
+   "anchor": null
+  },
+  "5": {
+   "documents": 61,
+   "reviewedOk": 1,
+   "anchor": {
+    "id": "aec:top100/arup/unlocking-advanced-modular-reactors-in-the-uk",
+    "title": "Unlocking Advanced Modular Reactors in the UK",
+    "publisher": "Arup US",
+    "url": "https://www.arup.com/globalassets/downloads/insights/u/unlocking-advanced-modular-reactors-in-the-uk/unlocking-advanced-modular-reactors-in-the-uk.pdf",
+    "score": 4.7,
+    "readAs": "A research-style report from a firm or coalition",
+    "standard": "corporate",
+    "published": "2025-09"
+   }
+  },
   "6": {
-   "documents": 20,
+   "documents": 34,
    "reviewedOk": 0,
    "anchor": null
   },
   "7": {
-   "documents": 10,
-   "reviewedOk": 0,
-   "anchor": null
-  },
-  "8": {
-   "documents": 4,
+   "documents": 16,
    "reviewedOk": 1,
    "anchor": {
     "id": "aec:top100/perkins-eastman/latrobe-educational-adequacy-1",
     "title": "Latrobe Prize Study: Educational Adequacy",
     "publisher": "Perkins Eastman",
     "url": "https://www.perkinseastman.com/wp-content/uploads/2023/11/Latrobe-Educational-Adequacy-1.pdf",
-    "score": 7.9,
+    "score": 6.7,
     "readAs": "Advice on a consequential topic",
     "standard": "general",
     "published": "2023-11"
    }
   },
+  "8": {
+   "documents": 15,
+   "reviewedOk": 0,
+   "anchor": null
+  },
   "9": {
-   "documents": 0,
+   "documents": 8,
    "reviewedOk": 0,
    "anchor": null
   },
@@ -114,25 +105,25 @@
  },
  "byStandard": {
   "research": {
-   "documents": 1568,
-   "median": 1.5,
-   "shownAsOne": 748
+   "documents": 1542,
+   "median": 2.4,
+   "shownAsOne": 243
   },
   "corporate": {
-   "documents": 1568,
-   "median": 1.4,
-   "shownAsOne": 791
+   "documents": 1542,
+   "median": 2,
+   "shownAsOne": 453
   },
   "journalism": {
-   "documents": 1568,
-   "median": 1,
-   "shownAsOne": 1274
+   "documents": 1542,
+   "median": 1.5,
+   "shownAsOne": 739
   },
   "general": {
-   "documents": 1568,
-   "median": 2.2,
-   "shownAsOne": 419
+   "documents": 1542,
+   "median": 2.9,
+   "shownAsOne": 145
   }
  },
- "moreClaimsUnderJournalism": 1320
+ "moreClaimsUnderJournalism": 1321
 }

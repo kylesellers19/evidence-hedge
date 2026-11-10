@@ -49,3 +49,33 @@ create policy "Anyone can add to The List"
 -- Only reading and adding are granted; no update or delete for the public key.
 revoke all on public.list_entries from anon, authenticated;
 grant select, insert on public.list_entries to anon, authenticated;
+
+-- ── Version 2 (Nov. 2026): entries from the corpus audit ─────────────────────
+-- Safe to run again. Adds a link to each report, whether a reader or the
+-- corpus audit added it, how much of its publication date is known (most
+-- firm reports print a month or a year), and its claim counts. The public key
+-- may add only readers' entries; the audit's are loaded from the dashboard.
+
+alter table public.list_entries add column if not exists source_url text
+  check (source_url is null or (source_url ~ '^https?://' and char_length(source_url) <= 2000));
+alter table public.list_entries add column if not exists origin text not null default 'reader'
+  check (origin in ('reader', 'audit'));
+alter table public.list_entries add column if not exists published_precision text not null default 'day'
+  check (published_precision in ('day', 'month', 'year', 'unknown'));
+alter table public.list_entries add column if not exists claims integer check (claims is null or claims >= 0);
+alter table public.list_entries add column if not exists flagged integer check (flagged is null or flagged >= 0);
+
+alter table public.list_entries alter column published_on drop not null;
+alter table public.list_entries drop constraint if exists list_entries_published_known;
+alter table public.list_entries add constraint list_entries_published_known
+  check (published_precision = 'unknown' or published_on is not null);
+
+drop policy if exists "Anyone can add to The List" on public.list_entries;
+create policy "Anyone can add to The List"
+  on public.list_entries for insert
+  to anon, authenticated
+  with check (origin = 'reader' and published_precision = 'day' and published_on is not null);
+
+create index if not exists list_entries_origin on public.list_entries (origin);
+create index if not exists list_entries_score on public.list_entries (score);
+

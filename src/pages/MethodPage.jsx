@@ -82,18 +82,22 @@ const DISCOUNTED = W.DISCOUNTED_PROVENANCE.map((k) => PROVENANCE_LABELS[k].toLow
 const REPO = 'https://github.com/kylesellers19/evidence-hedge'
 
 // What each document check looks for, and what it costs (from SCORE_WEIGHTS).
+// A check that comes back as a flag takes a point off the score; a note is
+// shown on the brief and costs nothing.
+const pointsOff = `${W.DOC_PROBLEM} point off (at most ${W.DOC_PROBLEM_CAP} for all such problems together)`
 const COST = {
-  flag: () => `${W.signal.flag} points`,
-  note: () => `${W.signal.note} points`,
-  platitude: () => `${W.PLATITUDE_PER} points for each platitude`,
-  gaps: () => `${W.COMPLETENESS_PER_GAP} points for each missing item, at most ${W.COMPLETENESS_CAP}`,
-  pattern: () => `${W.REPORTING_PATTERN} points`,
+  flag: () => cap1(pointsOff),
+  note: () => 'Nothing; the brief shows it',
+  platitude: () => 'Nothing; the brief counts them',
+  gaps: () => 'Nothing; the brief lists what is missing',
+  pattern: () => 'Nothing; the brief shows it',
   none: () => 'Nothing; it is recorded only',
   credit: () => 'Nothing; the brief credits it',
-  'credit-note': () => `Nothing when present; ${W.signal.note} points when missing`,
-  'credit-flag': () => `Nothing when labeled at the top; ${W.signal.flag} points when the label comes later`,
+  'credit-note': () => 'Nothing; the brief notes it when it is missing',
+  'credit-flag': () => `Nothing when labeled at the top; ${pointsOff} when the label comes later`,
   gate: () => `Sets the score to ${W.GATE_SCORE}`,
 }
+function cap1(t) { return t.charAt(0).toUpperCase() + t.slice(1) }
 const SIGNAL_COPY = {
   'limitations-absent': ['The document never states a limitation, a caveat or a need for further research.', 'note'],
   'abstract-body-confidence-delta': ['Claims at the front (the abstract or summary) are stated more confidently than the claims in the body.', 'note'],
@@ -129,7 +133,7 @@ const STEPS = [
   ['Find and grade the evidence', 'Link each claim to what backs it and place that evidence on the standard’s ladder.', 'evidence linkage and grading', 'evidence'],
   ['Measure how strongly each claim is stated', 'Read its certainty, how much cause it claims and how firmly it advises.', 'certainty, causal register and recommendation strength', 'strength'],
   ['Flag claims that outrun their evidence', 'Compare each claim’s strength with what its evidence and the study design can carry.', 'mismatch detection', 'flags'],
-  ['Check the document as a whole, then score it', 'Look for what a sentence-by-sentence reading misses, and subtract each problem from a fixed budget.', 'document signals and scoring', 'score'],
+  ['Check the document as a whole, then score it', 'Look for what a sentence-by-sentence reading misses, then score the share of claims that hold, less a point for each problem with the whole document.', 'document signals and scoring', 'score'],
 ]
 
 // The paragraph worked through below. The engine reads it as this page renders.
@@ -287,9 +291,10 @@ export default function MethodPage() {
             drop a genre and change the posture.
           </p>
           <p>
-            The posture changes which claims are flagged on the brief and how the verdict is worded. It never
-            changes the score, which always judges claims at the genre’s strictest posture. Changing the
-            genres does change the standard, and so it can change the score.
+            The posture changes how the brief is worded: what the document is read as, the note under the
+            headline and the verdict sentence. It never changes which claims are flagged or the score: every
+            claim is judged at its genre’s strictest posture. Changing the genres does change the standard,
+            and so it can change the flags and the score.
           </p>
 
           {/* ── 3 ─────────────────────────────────────────────────────────── */}
@@ -463,8 +468,9 @@ export default function MethodPage() {
             </dd>
           </dl>
           <p>
-            The ceilings differ by posture, which is how a marketing page may sound surer than a research
-            report without a flag on every line. The score always uses the strictest posture, marked here.
+            The ceilings differ by posture. Every claim, on the brief and in the score, is judged at the
+            strictest posture, marked here, so a marketing page is held to the same limits as a firm’s
+            research report; the other rows show how far each posture’s own reading would go.
           </p>
           {rubrics.map((r) => {
             const postures = r.postures?.length ? r.postures : ['default']
@@ -500,7 +506,7 @@ export default function MethodPage() {
             available”), or that is hedged, may lose an unsupported-assertion flag, depending on how firmly it
             is stated. Nothing softens causal overreach: a
             limitations paragraph does not excuse an overreaching claim, and a check holds that removing a
-            document’s limitations and causal disclaimers changes neither its overreach flags nor its penalty.
+            document’s limitations and causal disclaimers changes none of its overreach flags.
           </p>
 
           {/* ── 8 ─────────────────────────────────────────────────────────── */}
@@ -555,39 +561,35 @@ export default function MethodPage() {
           {/* ── 10 ────────────────────────────────────────────────────────── */}
           <h2 id="score">From flags to a score</h2>
           <p>
-            Every document starts with {W.START_BUDGET} points and loses them in four ways. The score cannot fall
-            below {W.MIN} or rise above {W.MAX}, and it is kept to one decimal place: The List shows that decimal,
-            and a brief shows it rounded to the nearest whole number (see <a href="#scale">What makes a 1 through
-            a 10</a>). A document in which we find no claims gets no score at all, not a perfect one: there is
-            nothing for its evidence to support.
+            The score is the share of a document’s claims that hold, on a scale of {W.MAX}. A claim{' '}
+            <strong>holds</strong> when it carries no flag: it is stated no more firmly than its evidence
+            allows, and it claims no more cause, or firmer advice, than the design of the study behind it
+            supports. A claim with two flags counts once.
           </p>
           <ol className="eh-steps">
             <li>
-              <strong>Flagged claims, as a rate.</strong> Each unsupported assertion counts{' '}
-              {W.flag['unsupported-assertion']} and each overconfident claim {W.flag.overconfident}, times the
-              number of certainty steps the claim sits above its ceiling. The total is divided by the number of
-              claims and multiplied by {W.FLAG_RATE_SCALE}. Because it is a rate, a long report is not marked
-              down for being long, and a short one is not excused for being short.
+              <strong>The share that holds.</strong> Ten times the claims that hold, divided by all the claims
+              weighed. If 82 of 200 claims hold, that is 4.1.
             </li>
             <li>
-              <strong>Causal overreach.</strong> {W.OVERREACH_PER} points for each step a claim reaches past its
-              design’s ceiling, up to {W.OVERREACH_CAP} in all. This sum is not divided by the number of claims,
-              so padding a report with cautious sentences cannot dilute it.
+              <strong>Problems with the document as a whole.</strong> Each check on the whole document that comes
+              back as a flag takes {W.DOC_PROBLEM} point off, at most {W.DOC_PROBLEM_CAP} in all (the checks and
+              what each costs are listed above). A check that comes back as a note is shown on the brief and costs
+              nothing.
             </li>
             <li>
-              <strong>Checks on the whole document,</strong> at the costs listed above.
-            </li>
-            <li>
-              <strong>Self-citation.</strong> Up to {W.SELF_CITATION} points, in proportion to the share of
-              references and links that point back to the publisher, once there are at least{' '}
-              {W.SELF_CITATION_MIN_POOL} of them.
+              <strong>The ends of the scale.</strong> The score stops at {W.MIN} and {W.MAX}. A document with fewer
+              than {W.MIN_CLAIMS} claims gets no score, since one claim would move it by more than a point; the
+              brief still gives its counts.
             </li>
           </ol>
           <p>
-            For the score, every claim is judged again at the standard’s strictest posture (a brief calls it the
-            strictest setting), which is why the posture you choose can change the flags on the brief but not the
-            number. The score never reads the
-            date or anything random, so the same text and the same standard always produce the same score.
+            Every claim is judged once, at its standard’s strictest setting, so the counts at the top of a brief
+            are the counts the score is made from, and the brief shows the sum (“82 of 200 claims hold, which
+            gives 4.1 of 10”). What a document is read as changes the wording of its brief, never the flags or
+            the score. On a firm’s document or a press release, the document’s own data count one step lower on
+            the evidence ladder, as self-reported, until someone else checks them. The score never reads the date
+            or anything random, so the same text and the same standard always produce the same score.
           </p>
           <div className="eh-table-scroll">
             <table className="eh-data">
@@ -744,7 +746,9 @@ function Example({ route, result }) {
     if (c.overreach) names.push('Causal overreach')
     return names.join('; ') || 'None'
   }
-  const minus = (x) => (x > 0 ? `−${round1(x)}` : '0')
+  // The example is scored like any document; under the minimum it still has a share.
+  const held = result.claims.filter((c) => !c.flag && !c.overreach).length
+  const share = Math.round((100 * held) / Math.max(1, result.claims.length)) / 10
   return (
     <>
       <p>
@@ -781,14 +785,21 @@ function Example({ route, result }) {
       <p>The score, step by step:</p>
       <table className="eh-data eh-arith">
         <tbody>
-          <tr><td>Starting points</td><td className="n">{b.start}</td></tr>
-          <tr><td>Flagged claims, as a rate</td><td className="n">{minus(b.flagContribution)}</td></tr>
-          <tr><td>Causal overreach</td><td className="n">{minus(b.overreachPenalty)}</td></tr>
-          <tr><td>Checks on the whole document</td><td className="n">{minus(b.signalPenalty + b.completenessPenalty + b.platitudePenalty)}</td></tr>
-          <tr><td>Self-citation</td><td className="n">{minus(b.selfCitationPenalty)}</td></tr>
-          <tr className="eh-arith-total"><td>Score</td><td className="n"><a href={`#${scoreAnchor(result.documentScore.display)}`}>{result.documentScore.score.toFixed(1)}</a></td></tr>
+          <tr><td>Claims weighed</td><td className="n">{b.claimCount}</td></tr>
+          <tr><td>Claims that hold</td><td className="n">{held}</td></tr>
+          <tr><td>Ten times the share that holds</td><td className="n">{share.toFixed(1)}</td></tr>
+          <tr><td>Problems with the document as a whole</td><td className="n">{b.problemPenalty ? `−${b.problemPenalty}` : '0'}</td></tr>
+          <tr className="eh-arith-total"><td>Score</td><td className="n">{result.documentScore.score != null
+            ? <a href={`#${scoreAnchor(result.documentScore.display)}`}>{result.documentScore.score.toFixed(1)}</a>
+            : 'None'}</td></tr>
         </tbody>
       </table>
+      {result.documentScore.score == null && (
+        <p>
+          A paragraph this short has fewer than {W.MIN_CLAIMS} claims, so it gets no score; a document whose
+          claims held in the same share would score {Math.max(W.MIN, share - (b.problemPenalty || 0)).toFixed(1)}.
+        </p>
+      )}
       <p>
         Its verdict: “{result.documentScore.summary}” The survey result stands, because the survey backs
         it. What costs the paragraph is everything stated past the survey: a trend asserted with no source,
@@ -909,24 +920,24 @@ function BriefNumbers({ rubrics }) {
         <dt id={ANCHORS.strong}>Read as strong</dt>
         <dd>
           Claims stated with a booster or an absolute and no hedge, such as “clearly,” “shows that,” “always”
-          or “proves” (the {list(strongTiers)} levels of certainty). A plain statement is not strong, yet under
-          a strict standard it is still flagged when it cites nothing, so most flagged claims on a brief are
-          plain statements.
+          or “proves” (the {list(strongTiers)} levels of certainty). A plain statement is not strong, yet it
+          is still flagged when it cites nothing, since every claim is judged at its standard’s strictest
+          setting; so most flagged claims on a brief are plain statements.
         </dd>
         <dt id={ANCHORS.flagged}>Flagged</dt>
         <dd>
           Claims with at least one flag: an unsupported assertion, an overconfident claim or a causal
           overreach, each counted once. One claim can be both unsupported and an overreach, so the three counts
           under the row can add up to more than the flagged total; the brief says how many claims have two. The
-          headline counts the same claims, as “so many of so many claims say more than their evidence shows.”
+          headline counts the same claims, as “so many of so many claims say more than their evidence shows,”
+          and the score is made from them: the claims that are not flagged are the claims that hold.
         </dd>
         <dt id={ANCHORS.strictest}>The strictest setting</dt>
         <dd>
-          A brief flags claims at the setting the document was read with, so a marketing page may sound surer
-          than a research report without a flag on every line. The score does not: it judges every claim again
-          at the strictest setting of its standard ({list(strictest)}), and counts a firm’s or a press
-          office’s own data one step lower on the ladder. When the two differ, the brief says how many claims
-          the score counted.
+          Every claim on a brief is judged at the strictest setting of its standard ({list(strictest)}),
+          whatever the document was read as, and a firm’s or a press office’s own data count one step lower
+          on the ladder. So a marketing page is held to the same limits as a firm’s research report, and the
+          counts at the top of a brief are the ones the score is made from.
         </dd>
       </dl>
     </>
@@ -934,48 +945,38 @@ function BriefNumbers({ rubrics }) {
 }
 
 // ── What makes a 1 through a 10 ─────────────────────────────────────────────
-// Derived from scoreDocument.js: the shown number is Math.round of a score
-// that is 10 minus the losses, held to 1–10 and kept to one decimal, so a
-// shown N means the document lost more than 9.5 − N and at most 10.5 − N
-// points. The counts and anchors come from scripts/method-scale.mjs (the
-// corpus audit), never typed in. PROVISIONAL — not ratified (meanings).
+// Derived from scoreDocument.js: the score is ten times the share of claims
+// that hold, less a point for each problem with the document as a whole (at
+// most two), held to 1–10 and kept to one decimal; a brief shows Math.round.
+// With no such problem, a shown N means 10N − 5% to 10N + 5% of claims hold.
+// Bands sit at half points, so each whole number has one verdict. The counts
+// and examples come from scripts/method-scale.mjs (the corpus audit), never
+// typed in. PROVISIONAL — not ratified (meanings).
 const BAND_MEANING = {
-  strong: 'Almost every claim is stated no more firmly than its evidence shows.',
-  carried: 'The evidence supports most of what it claims; some claims go further.',
-  mixed: 'Some claims go beyond what their evidence supports, though most do not.',
-  weak: 'Much of what it claims goes beyond its evidence.',
-  failing: 'The evidence does not support what it claims.',
+  strong: 'Nearly all of its claims stay within their evidence.',
+  carried: 'Most of its claims stay within their evidence; some go further.',
+  mixed: 'About half of its claims stay within their evidence.',
+  weak: 'Most of its claims go beyond their evidence.',
+  failing: 'Few of its claims stay within their evidence.',
 }
 const SCALE_NOTE = {
-  10: 'A 10 and a 9 give the same verdict; a 10 lost almost nothing.',
-  9: 'A 10 and a 9 give the same verdict; a 9 lost a little more.',
-  8: `A 7 and an 8 give the same verdict; they differ only in points lost. Writing from personal experience, which is not weighed, gets ${W.GATE_SCORE} and shows as ${Math.round(W.GATE_SCORE)}.`,
-  7: 'A 7 and an 8 give the same verdict; they differ only in points lost.',
-  5: 'A 5 straddles two verdicts: a score of 5.0 or more is “mixed” and anything lower is “weak,” so two documents showing 5 can read differently.',
-  3: 'A 3 straddles two verdicts: a score of 3.0 or more is “weak” and anything lower is “failing,” so two documents showing 3 can read differently.',
-  2: 'A 2 and a 1 give the same verdict; a 2 lost less.',
-  1: `A 1 is the floor: it also takes in every document that would score lower, so a 1 does not say how far below the floor a document fell.`,
+  10: 'A 10 and a 9 give the same verdict.',
+  8: `A 7 and an 8 give the same verdict. Writing from personal experience, which is not weighed, gets ${W.GATE_SCORE} and shows as ${Math.round(W.GATE_SCORE)}.`,
+  1: 'A 1 is the floor: it also takes in every document whose share would put it lower, or that problems with the whole document push below 1.',
 }
 
 function ScoreScale() {
-  const plainCost = W.flag['unsupported-assertion'] * W.FLAG_RATE_SCALE
   const scores = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
   const stdRows = RUBRIC_ORDER.map((id) => ({ id, label: getRubric(id).label, ...SCALE.byStandard[id] }))
   return (
     <>
       <h2 id="scale">What makes a 1 through a 10</h2>
       <p>
-        A brief shows the score rounded to the nearest whole number. The score is {W.START_BUDGET} minus what
-        the document loses. It loses points for its flagged claims, counted as a rate, and up to{' '}
-        {W.OVERREACH_CAP} for causal overreach; it also pays for the checks on the whole document, missing
-        reporting items, platitudes and self-citation (see <a href="#score">From flags to a score</a>). It is held between {W.MIN} and {W.MAX}{' '}
-        and kept to one decimal. So a whole number on a brief stands for any score within half a point of it,
-        and each entry below gives the losses that produce it.
-      </p>
-      <p>
-        One way to picture the losses: under a strict standard, a plain statement that cites nothing costs a
-        document {round1(plainCost / 10)} points for every tenth of its claims that are like it. A claim stated
-        absolutely with nothing cited costs up to three times as much.
+        A brief shows the score rounded to the nearest whole number. The score is ten times the share of a
+        document’s claims that hold, less {W.DOC_PROBLEM} point for each problem with the document as a whole,
+        at most {W.DOC_PROBLEM_CAP} (see <a href="#score">From flags to a score</a>). So each number stands for
+        a share of claims that hold, and a problem with the whole document moves it down one number. A
+        document with fewer than {W.MIN_CLAIMS} claims gets no score.
       </p>
       <p className="eh-note">
         The examples below are documents from our corpus that scored each number and that a reviewer read
@@ -985,7 +986,7 @@ function ScoreScale() {
         and link them; we do not quote them.
       </p>
       <ol className="eh-scale">
-        {scores.map((n) => <ScaleEntry key={n} n={n} plainCost={plainCost} />)}
+        {scores.map((n) => <ScaleEntry key={n} n={n} />)}
       </ol>
 
       <h3>Whether a 4 means the same under every standard</h3>
@@ -1008,9 +1009,9 @@ function ScoreScale() {
         </table>
       </div>
       <p>
-        So a 4 under the journalism standard and a 4 under the general web standard both mean the document
-        lost about six points, but they lost them against different limits. Compare scores across documents
-        held to the same standard.
+        So a 4 under the journalism standard and a 4 under the general web standard both mean that about four
+        in ten claims held, but against different limits. Compare scores across documents held to the same
+        standard.
       </p>
     </>
   )
@@ -1021,27 +1022,19 @@ const MONTHS = ['Jan.', 'Feb.', 'March', 'April', 'May', 'June', 'July', 'Aug.',
 // A manifest's publication date ("2024" or "2024-04") in AP style.
 const published = (p) => { const m = /^(\d{4})(?:-(\d{2}))?/.exec(p || ''); return m ? (m[2] ? `${MONTHS[Number(m[2]) - 1]} ${m[1]}` : m[1]) : null }
 
-function ScaleEntry({ n, plainCost }) {
-  const lost = { lo: Math.max(0, 9.5 - n), hi: 10.5 - n }
-  const bands = [...new Set([bandFor(Math.min(W.MAX, n + 0.4)), bandFor(Math.max(W.MIN, n - 0.5))])]
-  const meaning = bands.length > 1 ? `${BAND_MEANING[bands[0]]} Or, at the low end: ${BAND_MEANING[bands[1]].charAt(0).toLowerCase()}${BAND_MEANING[bands[1]].slice(1)}` : BAND_MEANING[bands[0]]
+function ScaleEntry({ n }) {
+  const band = bandFor(n)
   const at = SCALE.byScore[n]
-  const lostText = n === 10
-    ? `It lost no more than ${lost.hi.toFixed(1)} points.`
+  const holds = n === 10
+    ? 'At least 95% of its claims hold, and nothing about the document as a whole counts against it.'
     : n === 1
-      ? `It lost more than ${lost.lo.toFixed(1)} points.`
-      : `It lost more than ${lost.lo.toFixed(1)} and at most ${lost.hi.toFixed(1)} points.`
-  const share = (x) => Math.round((x / plainCost) * 100)
-  const plainText = lost.lo >= plainCost
-    ? 'Plain statements that cite nothing cannot do this alone: a document whose every claim was one would still score 2. It also takes overreach, problems with the whole document or claims stated absolutely.'
-    : n === 10
-      ? `If plain statements that cite nothing were its only loss, at most ${share(lost.hi)}% of its claims could be like that.`
-      : `If plain statements that cite nothing were its only loss, ${share(lost.lo)}% to ${Math.min(100, share(lost.hi))}% of its claims would be like that.`
+      ? 'Fewer than 15% of its claims hold.'
+      : `${n * 10 - 5}% to ${n * 10 + 5}% of its claims hold, with no problem in the document as a whole; with one, ${n * 10 + 5}% to ${Math.min(100, n * 10 + 15)}%.`
   return (
     <li id={scoreAnchor(n)} className="eh-scale-entry">
-      <h3><span className="eh-scale-n">{n}</span> {cap(bands.join(' or '))}</h3>
-      <p><strong>{meaning}</strong> {SCALE_NOTE[n] || ''}</p>
-      <p>{lostText} {plainText}</p>
+      <h3><span className="eh-scale-n">{n}</span> {cap(band)}</h3>
+      <p><strong>{BAND_MEANING[band]}</strong> {SCALE_NOTE[n] || ''}</p>
+      <p>{holds}</p>
       <p className="eh-scale-example">
         {at.documents === 0
           ? `No document in our corpus scored ${aN(n)}, so there is no example; the arithmetic allows it.`

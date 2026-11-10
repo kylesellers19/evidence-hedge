@@ -1,12 +1,12 @@
 {
- "_about": "Recorded engine output for Fixture A (fixtures/cadre-neuroarchitecture-normalized.txt) at engine 9bc2011, read through the four plain verdicts. These are the numbers evidence-section.html shows. Recorded output, not predictions; re-derive them from the engine and report any difference before building. Re-derived at 852e7b8-dirty (headings no longer run into the sentence below them, and labels with no verb are not claims; was 242 claims at 9bc2011). paragraph, checkFirst and examples are the mockup's, recorded at 9bc2011: their claim indexes follow that engine's claims.",
+ "_about": "Recorded engine output for Fixture A (fixtures/cadre-neuroarchitecture-normalized.txt) at engine 9bc2011, read through the four plain verdicts. These are the numbers evidence-section.html shows. Recorded output, not predictions; re-derive them from the engine and report any difference before building. Re-derived at 852e7b8-dirty (headings no longer run into the sentence below them, and labels with no verb are not claims; was 242 claims at 9bc2011). paragraph, checkFirst and examples are the mockup's, recorded at 9bc2011: their claim indexes follow that engine's claims. Re-derived at 8a2154f (engine cleanup, Nov. 2026: captions, signposting, titles and other non-claims are not weighed, and every claim is judged once at the standard's strictest setting; was 240 claims at 852e7b8).",
  "fixture": "fixture-a-cadre",
- "engine": "852e7b8-dirty",
+ "engine": "8a2154f",
  "claims": 240,
  "verdicts": {
   "backed": {
    "label": "Backed by a source",
-   "count": 71,
+   "count": 70,
    "rule": "no flag, no causal overreach, rung rank > 0, not a method statement"
   },
   "overstates": {
@@ -16,7 +16,7 @@
   },
   "fact": {
    "label": "Stated as fact, nothing cited",
-   "count": 150,
+   "count": 142,
    "rule": "flag unsupported-assertion"
   },
   "cautious": {
@@ -31,7 +31,7 @@
   }
  },
  "needsChecking": 159,
- "dek": "150 of 240 claims are stated as fact with nothing cited. Another 9 say more than the source they cite.",
+ "dek": "142 of 231 claims are stated as fact with nothing cited. Another 9 say more than the source they cite.",
  "sources": [
   {
    "label": "Its reference list",
@@ -50,7 +50,7 @@
    "kinds": [
     "unresolved"
    ],
-   "backed": 20,
+   "backed": 19,
    "overstates": 2,
    "fact": 4,
    "cautious": 0
@@ -107,13 +107,13 @@
    ],
    "backed": 0,
    "overstates": 0,
-   "fact": 144,
+   "fact": 136,
    "cautious": 10
   }
  ],
  "sequence": {
   "_about": "one letter per claim in document order: b backed, o overstates, f fact, h cautious, m method",
-  "value": "ffffffffffffffffffffffffffffffoffffffffffbbffffbffobfbfbffffbfffbffbffbbfofbbfbbbhbfobfhfbfhbbfbbhffbbfffbfoffbbhbhffbbbfffbfbfbbbffffffbfffbffbffbhfffbffbfbfffbbfbfhfffbfbfffofbfobfbffbbbfboffbobfbfbfffbfbffffffbfbbfbbfbbbhfhffffffbfffffff"
+  "value": "fffffffffffffffffffffffoffffffffffbbffffbffobfbfbffffbfffbffbffbbfofbbfbbbhbfobfhfbfhbbfbbhffbbfffbfoffbbhbhffbbbfffbfbfbbfffffffbfffbfffbffbhffbffbfbfffbbbfhfffbfbfffofbfobfbffbbbfboffbobfbfbfffbfbffffffbfbbfbbfbbbhfhffffffbffffff"
  },
  "paragraph": {
   "_about": "paragraph index of each claim, same order; the mockup groups paragraphs 0–165 into 12 parts of 14 because pasted text has no pages",

@@ -1,12 +1,12 @@
 {
-  "recorded": "2026-11-09",
-  "engine_commit": "d6714e6",
+  "recorded": "2026-11-10",
+  "engine_commit": "8a2154f",
   "documents": {
     "allen-ehp-2016": {
       "counts": {
-        "backed": 67,
+        "backed": 68,
         "overstates": 0,
-        "fact": 41,
+        "fact": 40,
         "cautious": 6,
         "method": 115
       },
@@ -40,7 +40,7 @@
           0
         ],
         [
-          "A kind of source, named",
+          "People it quotes",
           1,
           0,
           0,
@@ -54,8 +54,8 @@
           0
         ],
         [
-          "“Research shows”",
-          0,
+          "Other sources",
+          1,
           0,
           1,
           0
@@ -64,7 +64,7 @@
           "Nothing",
           0,
           0,
-          37,
+          36,
           6
         ]
       ],
@@ -74,20 +74,27 @@
         23,
         4,
         186,
-        3
+        193
       ]
     },
     "hsph-press-2015": {
       "counts": {
-        "backed": 2,
+        "backed": 3,
         "overstates": 0,
-        "fact": 17,
+        "fact": 16,
         "cautious": 3,
         "method": 2
       },
       "rows": [
         [
           "A citation nearby",
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          "People it quotes",
           1,
           0,
           0,
@@ -118,7 +125,7 @@
           "Nothing",
           0,
           0,
-          16,
+          15,
           1
         ]
       ],
@@ -133,23 +140,30 @@
     },
     "sciencedaily-2015": {
       "counts": {
-        "backed": 8,
+        "backed": 5,
         "overstates": 0,
-        "fact": 28,
+        "fact": 27,
         "cautious": 6,
         "method": 1
       },
       "rows": [
         [
           "Links and notes",
-          2,
+          1,
           0,
           0,
           0
         ],
         [
           "A citation nearby",
-          5,
+          3,
+          0,
+          0,
+          0
+        ],
+        [
+          "People it quotes",
+          1,
           0,
           0,
           0
@@ -160,13 +174,6 @@
           0,
           1,
           1
-        ],
-        [
-          "Its own figures",
-          1,
-          0,
-          0,
-          0
         ],
         [
           "“Research shows”",
@@ -179,34 +186,41 @@
           "Nothing",
           0,
           0,
-          27,
+          26,
           3
         ]
       ],
       "checkFirst": [
-        12,
-        20,
-        19,
-        10,
-        39,
-        13
+        9,
+        16,
+        15,
+        7,
+        35,
+        10
       ]
     },
     "gba-news-2015": {
       "counts": {
-        "backed": 5,
+        "backed": 9,
         "overstates": 0,
-        "fact": 37,
-        "cautious": 5,
+        "fact": 34,
+        "cautious": 3,
         "method": 7
       },
       "rows": [
         [
-          "People it quotes",
-          3,
+          "A citation nearby",
+          1,
           0,
-          2,
-          1
+          0,
+          0
+        ],
+        [
+          "People it quotes",
+          7,
+          0,
+          0,
+          0
         ],
         [
           "The study it reports",
@@ -217,7 +231,7 @@
         ],
         [
           "A kind of source, named",
-          2,
+          1,
           0,
           0,
           0
@@ -226,17 +240,17 @@
           "Nothing",
           0,
           0,
-          33,
-          3
+          32,
+          2
         ]
       ],
       "checkFirst": [
-        52,
-        16,
-        17,
-        50,
+        51,
+        49,
         28,
-        10
+        10,
+        26,
+        45
       ]
     },
     "bdc-blog-allen": {
@@ -290,7 +304,7 @@
       "counts": {
         "backed": 2,
         "overstates": 0,
-        "fact": 7,
+        "fact": 6,
         "cautious": 1,
         "method": 1
       },
@@ -313,63 +327,70 @@
           "Nothing",
           0,
           0,
-          7,
+          6,
           0
         ]
       ],
       "checkFirst": [
-        4,
-        7,
         3,
-        10,
-        9
+        6,
+        2,
+        9,
+        8
       ]
     },
     "gensler-gws-2024": {
       "counts": {
-        "backed": 1,
-        "overstates": 1,
-        "fact": 25,
+        "backed": 3,
+        "overstates": 0,
+        "fact": 21,
         "cautious": 1,
         "method": 2
       },
       "rows": [
         [
-          "Its own data or figures",
+          "A citation nearby",
           1,
-          1,
+          0,
           0,
           0
         ],
         [
-          "Its own earlier work",
-          0,
-          0,
+          "People it quotes",
           1,
+          0,
+          0,
+          0
+        ],
+        [
+          "Its own data or figures",
+          1,
+          0,
+          0,
           0
         ],
         [
           "Nothing",
           0,
           0,
-          24,
+          21,
           1
         ]
       ],
       "checkFirst": [
-        27,
-        5,
-        9,
-        4,
+        3,
+        7,
         25,
-        28
+        26,
+        8,
+        2
       ]
     },
     "gensler-press-2024": {
       "counts": {
-        "backed": 7,
+        "backed": 9,
         "overstates": 2,
-        "fact": 20,
+        "fact": 18,
         "cautious": 2,
         "method": 2
       },
@@ -382,6 +403,13 @@
           0
         ],
         [
+          "People it quotes",
+          2,
+          0,
+          0,
+          0
+        ],
+        [
           "A kind of source, named",
           3,
           0,
@@ -399,7 +427,7 @@
           "Nothing",
           0,
           0,
-          20,
+          18,
           2
         ]
       ],
@@ -407,37 +435,37 @@
         5,
         2,
         10,
-        30,
+        20,
         1,
         13
       ]
     },
     "bdc-gensler-news-2024": {
       "counts": {
-        "backed": 2,
+        "backed": 10,
         "overstates": 0,
-        "fact": 30,
-        "cautious": 6,
+        "fact": 22,
+        "cautious": 5,
         "method": 1
       },
       "rows": [
         [
-          "People it quotes",
+          "A citation nearby",
+          5,
           0,
           0,
-          3,
-          1
+          0
         ],
         [
-          "The study it reports",
+          "People it quotes",
+          4,
           0,
           0,
-          1,
           0
         ],
         [
           "Its own figures",
-          2,
+          1,
           0,
           0,
           0
@@ -453,25 +481,25 @@
           "Nothing",
           0,
           0,
-          25,
+          21,
           5
         ]
       ],
       "checkFirst": [
-        31,
-        25,
         0,
-        1,
+        24,
         7,
-        12
+        1,
+        20,
+        11
       ]
     },
     "co2meter-plants": {
       "counts": {
         "backed": 1,
-        "overstates": 2,
-        "fact": 4,
-        "cautious": 103,
+        "overstates": 1,
+        "fact": 100,
+        "cautious": 6,
         "method": 1
       },
       "rows": [
@@ -499,38 +527,39 @@
         [
           "Nothing",
           0,
-          1,
-          4,
-          102
+          0,
+          100,
+          5
         ]
       ],
       "checkFirst": [
         1,
-        44,
-        6,
+        64,
         5,
-        4
+        43,
+        6,
+        20
       ]
     },
     "jcu-timber-pilot": {
       "counts": {
-        "backed": 124,
+        "backed": 118,
         "overstates": 25,
-        "fact": 92,
+        "fact": 87,
         "cautious": 21,
-        "method": 49
+        "method": 46
       },
       "rows": [
         [
           "Links and notes",
-          10,
+          9,
           1,
           0,
           0
         ],
         [
           "A citation nearby",
-          6,
+          7,
           0,
           0,
           0
@@ -544,7 +573,7 @@
         ],
         [
           "Its own data or figures",
-          101,
+          95,
           12,
           0,
           1
@@ -560,24 +589,24 @@
           "Nothing",
           0,
           12,
-          90,
+          85,
           19
         ]
       ],
       "checkFirst": [
         39,
         20,
-        251,
+        239,
         21,
-        36,
-        4
+        4,
+        196
       ]
     },
     "fixture-a-cadre": {
       "counts": {
         "backed": 93,
         "overstates": 10,
-        "fact": 214,
+        "fact": 202,
         "cautious": 13,
         "method": 0
       },
@@ -628,17 +657,17 @@
           "Nothing",
           0,
           2,
-          209,
+          197,
           13
         ]
       ],
       "checkFirst": [
-        85,
-        212,
-        21,
-        31,
-        184,
-        78
+        77,
+        201,
+        15,
+        25,
+        176,
+        71
       ]
     },
     "fixture-b-pew-html": {
@@ -685,11 +714,11 @@
     },
     "fixture-b-pew-report": {
       "counts": {
-        "backed": 120,
-        "overstates": 3,
-        "fact": 7,
-        "cautious": 5,
-        "method": 100
+        "backed": 131,
+        "overstates": 2,
+        "fact": 9,
+        "cautious": 6,
+        "method": 111
       },
       "rows": [
         [
@@ -701,7 +730,14 @@
         ],
         [
           "A citation nearby",
-          2,
+          3,
+          0,
+          0,
+          0
+        ],
+        [
+          "People it quotes",
+          3,
           0,
           0,
           0
@@ -715,15 +751,15 @@
         ],
         [
           "Its own study",
-          31,
+          21,
           0,
           0,
           0
         ],
         [
           "Its own data or figures",
-          84,
-          2,
+          101,
+          1,
           0,
           0
         ],
@@ -738,16 +774,16 @@
           "Nothing",
           0,
           0,
-          6,
-          5
+          8,
+          6
         ]
       ],
       "checkFirst": [
-        20,
-        218,
-        196,
-        198,
-        224,
+        2,
+        220,
+        242,
+        222,
+        248,
         12
       ]
     }

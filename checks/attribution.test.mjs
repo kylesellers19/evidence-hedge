@@ -45,7 +45,7 @@ const check = (name, ok, detail = '') => {
 // and Fixture A's to its unspliced sentence when the checks began reading its
 // PDF as an upload.
 const EXPECTED = [
-  ['fixture-c-gensler-fandom-2026:p5:10:d7349569e625', 'own-current', '"we surveyed 2,752 people"'],
+  ['fixture-c-gensler-fandom-2026:p5:12:912d524cf43e', 'own-current', '"we surveyed 2,752 people"'],
   ['fixture-c-gensler-fandom-2026:p6:2:dadabb4d65ad', 'own-current', '"our post-World Cup survey found"'],
   ['fixture-c-gensler-fandom-2026:p11:5:88b25065f798', 'own-current', '"Our pre-World Cup survey data shows"'],
   ['fixture-c-gensler-fandom-2026:p44:3:196cc4cfb4c6', 'own-current', '"Our analysis found"'],
@@ -101,7 +101,14 @@ for (const [unitId, want, note] of EXPECTED) {
   const fixture = unitId.split(':')[0]
   const r = runs[fixture]
   if (!r) { console.log(`SKIP ${unitId} — fixture absent`); continue }
-  const i = r.units.findIndex((u) => u.id === unitId)
+  // A unit id is <fixture>:<page>:<position>:<text hash>. When paragraphing
+  // moves a sentence's position, the same sentence is the unit on the same
+  // page with the same text hash.
+  let i = r.units.findIndex((u) => u.id === unitId)
+  if (i < 0) {
+    const [, page, , hash] = unitId.split(':')
+    i = r.units.findIndex((u) => u.id.startsWith(`${fixture}:${page}:`) && u.id.endsWith(`:${hash}`))
+  }
   if (i < 0) { check(`${note} is a unit`, false, `${unitId} not found (unit ids moved?)`); continue }
   const got = unitAttribution(r)[i]
   check(`${note} → ${want}`, got.label === want, `${got.label}/${got.confidence} ${got.cues.map((c) => c.cue).join('+')}`)

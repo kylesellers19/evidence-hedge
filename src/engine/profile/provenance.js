@@ -42,7 +42,8 @@ function hostKind(host) {
 // With no link, the document's own web address stands in for the link's host,
 // so an uploaded file is read like its link: a domain or email domain on its
 // first or last OWN_EDGE_CHARS characters (cover, back cover, contacts) whose
-// name is the copyright holder's, else the email domain most used there.
+// name is the copyright holder's, else the email domain most used there, else
+// the site a closing note about the publisher sends readers to (closingSite).
 // Social, webmail and link-shortener hosts never count. PROVISIONAL — not ratified.
 export const OWN_EDGE_CHARS = 3000
 const OWN_TLD = '(?:com|org|net|edu|gov|io|co|ai|us|uk|ca|au|nz|ie|de|fr|nl|se|dk|no|fi|es|it|ch|at|be|sg|hk|cn|jp|in|ae|sa|qa|za|br|mx|eu|info|biz|global|design|studio|group|build|engineering|construction|consulting|archi|world)'
@@ -82,7 +83,30 @@ export function ownHost(body) {
   const holder = ranked(all).find((d) => hostLabel(d).length >= 3 && names.has(hostLabel(d).replace(/-/g, '')))
   if (holder) return { host: holder, via: 'copyright line' }
   const email = ranked(emails)[0]
-  return email ? { host: email, via: 'contact email' } : null
+  if (email) return { host: email, via: 'contact email' }
+  const site = closingSite(text)
+  return site ? { host: site, via: 'closing line' } : null
+}
+
+// A firm's closing note sends readers to its own site: "ABOUT BURNS & McDONNELL
+// … Founded in 1898, Burns & McDonnell is a 100% employee-owned company … For
+// more information, visit burnsmcd.com." Read on the text's last OWN_EDGE_CHARS
+// characters only, and only when the line's paragraph, or the one before it,
+// describes the publisher: elsewhere such lines point to partners and agencies
+// (usgs.gov, corenetglobal.org). Fix H, Nov. 2026. PROVISIONAL — not ratified.
+const CLOSING_SITE = new RegExp(`\\b(?:for\\s+(?:more|additional|further)\\s+information|to\\s+(?:learn|find\\s+out)\\s+more|learn\\s+more|find\\s+out\\s+more|more\\s+information)[^.\\n]{0,60}?\\b(?:visit|see|go\\s+to|at)\\s+(?:us\\s+(?:at\\s+|online\\s+(?:at\\s+)?)?|our\\s+website\\s+(?:at\\s+)?)?(?:https?:\\/\\/)?(?:www\\.)?((?:[a-z0-9][a-z0-9-]*\\.)+${OWN_TLD})\\b`, 'gi')
+const ABOUT_PUBLISHER = /^about\s+\S|\b(?:is|are)\s+(?:a|an|the)\b[^.\n]{0,160}?\b(?:firm|company|companies|consultancy|consulting|practice|provider|leader|organi[sz]ation|network|contractor|builder|partner|enterprise|studio|agency)\b|\bfounded\s+in\b|\bemployee[- ]owned\b|\bheadquartered\b|\bwith\s+(?:more\s+than\s+|over\s+)?[\d,]+\s+(?:employees|professionals|people|offices)\b/im
+
+function closingSite(text) {
+  const tail = text.length > 2 * OWN_EDGE_CHARS ? text.slice(-OWN_EDGE_CHARS) : text
+  for (const m of [...tail.matchAll(CLOSING_SITE)].reverse()) {
+    const site = m[1].toLowerCase().replace(/^www\./, '')
+    if (NOT_OWN.test(site)) continue
+    const para = tail.lastIndexOf('\n\n', m.index)
+    const before = para > 0 ? tail.lastIndexOf('\n\n', para - 1) : -1
+    if (ABOUT_PUBLISHER.test(tail.slice(before + 1, m.index))) return site
+  }
+  return null
 }
 
 // The document's own journal block (front of the body, or its dates anywhere in the body).

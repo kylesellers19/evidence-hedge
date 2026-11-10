@@ -1,6 +1,6 @@
 {
   "recorded": "2026-11-10",
-  "engine_commit": "8a2154f",
+  "engine_commit": "92a6c99-dirty",
   "documents": {
     "allen-ehp-2016": {
       "counts": {
@@ -714,11 +714,11 @@
     },
     "fixture-b-pew-report": {
       "counts": {
-        "backed": 131,
+        "backed": 152,
         "overstates": 2,
-        "fact": 9,
-        "cautious": 6,
-        "method": 111
+        "fact": 62,
+        "cautious": 10,
+        "method": 33
       },
       "rows": [
         [
@@ -730,35 +730,35 @@
         ],
         [
           "A citation nearby",
-          3,
+          6,
           0,
           0,
           0
         ],
         [
           "People it quotes",
-          3,
+          7,
           0,
           0,
           0
         ],
         [
           "A kind of source, named",
-          2,
+          7,
           1,
           0,
           0
         ],
         [
           "Its own study",
-          21,
+          25,
           0,
           0,
           0
         ],
         [
           "Its own data or figures",
-          101,
+          106,
           1,
           0,
           0
@@ -774,17 +774,17 @@
           "Nothing",
           0,
           0,
-          8,
-          6
+          61,
+          10
         ]
       ],
       "checkFirst": [
-        2,
+        228,
         220,
-        242,
-        222,
-        248,
-        12
+        254,
+        112,
+        212,
+        227
       ]
     }
   }

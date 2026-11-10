@@ -9,7 +9,7 @@
 // contributor blocks are dropped (measure/segment.js); `onDrop` receives each.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { isDropped, demotionPenalty, FINITE_VERB as PROBE_VERB } from './nonClaimFilter.js'
+import { isDropped, demotionPenalty, isTitleCaseHeading, FINITE_VERB as PROBE_VERB } from './nonClaimFilter.js'
 import { nonClaimRule, sectionOpenedBy } from './measure/segment.js'
 import { escapeRe } from './signals/util.js'
 
@@ -132,6 +132,8 @@ export function isSelfDescription(s, publisher = []) {
   })
 }
 
+const METHOD_SUBHEADING = /\b(?:methods?|methodology|samples?|sampling|surveys?|panel|weights?|weighting|design|data|measures?|measurement|procedures?|analys[ie]s|questionnaires?|participants|respondents|fieldwork|interviews?|instruments?|recruitment|response\s+rates?|limitations|statistical|variables|coding|protocols?|materials|setting|dispositions|margin\s+of\s+error|appendix|topline|exposures?|simulations?|monitoring|apparatus|stimuli|calibration|instrumentation|chambers?|laborator(?:y|ies))\b/i
+
 function claimLikelihood(sentence) {
   let score = 0.35
   const words = sentence.split(/\s+/).length
@@ -160,9 +162,17 @@ export function extractClaims(text, extraction, options = {}) {
   let id = 0
   let section = null
   for (const whole of sentences) {
-    // Track the IMRaD section a claim sits in (headings are often too short to be claims).
-    section = sectionOpenedBy(whole) || section
+    // Track the IMRaD section a claim sits in (headings are often too short to
+    // be claims). A method section ends at any heading that does not name
+    // method work: a firm report's "Methodology" or "Acknowledgements" up front
+    // must not make the whole report a method section, whose sentences are
+    // never judged, while a paper's "Sample design" or "Weighting" stays in it.
+    // A heading stands alone (a label, a title-case line) or is fused to its
+    // sentence's front. Engine cleanup, Nov. 2026. PROVISIONAL — not ratified.
     const sentence = stripHeadingPrefix(whole)
+    const opened = sectionOpenedBy(whole)
+    if (opened) section = opened
+    else if (section === 'method' && (sentence !== whole || isLabel(whole) || isTitleCaseHeading(whole)) && !METHOD_SUBHEADING.test(whole.slice(0, whole.length - sentence.length) || whole)) section = null
     if (sentence.length < extraction.minClaimLength) continue
     if (isSelfDescription(sentence, publisher)) continue
     // Non-claim filter — DROP hard exclusions, then DEMOTE via the likelihood.

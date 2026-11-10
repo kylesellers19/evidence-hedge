@@ -189,7 +189,9 @@ function ceilingFor(rubric, posture, rank) {
  */
 export function buildEvidenceMap(result, rubric) {
   const claims0 = result.claims || []
-  const posture = result.posture
+  // Claims are judged at the standard's strictest setting (analyze.js), so their
+  // ceilings are read there too, not at the posture the document was read as.
+  const posture = rubric.strictestPosture || rubric.defaultPosture || result.posture
   const gated = (result.signals || []).some((s) => s.gate)
   const design = result.profile?.design || { design: 'none-reported', inherited: false }
   const publisher = result.profile?.provenance?.publisher || []

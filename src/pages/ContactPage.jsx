@@ -42,7 +42,7 @@ export default function ContactPage() {
         <p className="eh-kicker">Contact</p>
         <h1 className="eh-hed">Ask about a score, a review or the method</h1>
         <p className="eh-dek">
-          Inquiries, consulting and corrections to The List all go to one address, and Kyle answers them.
+          Send inquiries, consulting requests and corrections to The List to this address.
         </p>
         <p className="eh-contact-line">
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>

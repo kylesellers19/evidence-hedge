@@ -172,7 +172,9 @@ export function extractClaims(text, extraction, options = {}) {
     if (rubricId !== 'journalism' && isLabel(sentence)) continue
     const likelihood = claimLikelihood(sentence) - demotionPenalty(sentence, rubricId)
     if (likelihood < extraction.sensitivity) continue
-    claims.push({ id: id++, text: sentence, citations: detectCitations(sentence), section })
+    // `sentence` keeps the body sentence a claim came from (its text may have
+    // lost a fused heading), so attribution can find it in the body.
+    claims.push({ id: id++, text: sentence, sentence: whole, citations: detectCitations(sentence), section })
   }
   return claims
 }

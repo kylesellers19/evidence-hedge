@@ -385,7 +385,7 @@ export function attributeClaims(body, claims, sentences, ctx) {
   const all = attributeSentences(body, sentences, ctx, where)
   let k = 0
   const located = claims.map((c) => {
-    while (k < sentences.length && sentences[k] !== c.text) k++
+    while (k < sentences.length && sentences[k] !== (c.sentence || c.text)) k++
     if (k >= sentences.length) return { attribution: { label: 'undetermined', confidence: 'low', cues: [], reason: 'claim not found among the body sentences', section: null, paragraph: null }, where: { paragraph: null, section: null, offset: null } }
     const out = { attribution: all[k], where: where[k] }
     k++

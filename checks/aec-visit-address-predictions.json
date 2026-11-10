@@ -1,0 +1,70 @@
+{
+  "_comment": "Engine fix H, from weighing the 267 reports added Nov. 10, 2026 (checks/data/aec/manifest-gated.json and manifest-hks-hlw.json, gitignored): uploaded, 150 of 159 Burns & McDonnell white papers lose their publisher (provenance unknown, judged General web or Research) while their links read firm-vendor (Corporate). Step 0 findings and predictions, committed before any fix code entered src/. Corpora weighed with scripts/weigh-folder.mjs from checks/data/aec-base (the 1,584 original reports) and checks/data/aec-new (the 267 new ones), both reading checks/data/aec/reports and its text cache. Every value PROVISIONAL — not ratified.",
+  "baseline": {
+    "app": "3359293 (engine identical to 5b40af6)",
+    "original": {
+      "results": "checks/data/aec-base/results-3359293",
+      "weighed": 1552,
+      "deterministic": 1552,
+      "provenanceUploadUnknown": 412,
+      "provenanceDiffers": 477,
+      "judgmentDiffers": 465,
+      "scoreDiffers": 328,
+      "medianUpload": 2.1,
+      "medianLink": 1.9,
+      "scoredLink": 1526,
+      "claimsLinkTotal": 426294,
+      "topUpload": 8,
+      "topLink": 8
+    },
+    "new": {
+      "results": "checks/data/aec-new/results (engine 3359293)",
+      "weighed": 262,
+      "provenanceUploadUnknown": 170,
+      "provenanceDiffers": 169,
+      "judgmentDiffers": 169,
+      "scoreDiffers": 131,
+      "medianUpload": 2.2,
+      "medianLink": 1.8,
+      "topUpload": 5.3,
+      "burns": { "n": 159, "uploadUnknown": 150, "medianUpload": 2.2, "medianLink": 1.8, "scoreDiffers": 119, "meanUploadMinusLink": 0.41 }
+    },
+    "_definitions": "As in checks/aec-provenance-predictions.json. scoreDiffers: reports whose upload score differs from their link score (an unscored reading counts as its own value). meanUploadMinusLink: mean of upload score minus link score."
+  },
+  "step0": {
+    "trace": "ownHost reads a web address on the text's first and last 3,000 characters and keeps it only when its name matches the copyright holder, else the contact email's domain. Burns & McDonnell white papers carry neither: no copyright line (152 of 159), no email (159 of 159). Their last paragraph, under an 'ABOUT BURNS & McDONNELL' or 'About 1898 & Co.' heading, ends 'For more information, visit burnsmcd.com.' (144 of 159). Uploaded, no address is found and no text cue reaches TEXT_MIN, so the publisher is unknown and the report is judged General web or Research under a looser standard: Burns upload scores average 0.41 above the same papers linked.",
+    "closers": "On all 1,851 reports' cached texts, a 'for more information / learn more … visit <domain>' line in the last 3,000 characters appears in 186; its domain's name matches the link host's in 163. Of the 23 that do not, 10 are the firm's own family (1898andco.com and ref-chem.com for Burns & McDonnell, trimble.com and walterpmoore.com behind CDN hosts, construction.com for Dodge) and about 11 send readers to a partner or an agency (usgs.gov twice in Perkins Eastman reports, corenetglobal.org, gihub.org, tennessee.gov, bluefieldresearch.com, healthcareclimatechallenge.org …).",
+    "guard": "Keeping the line only when its paragraph, or the one before, describes the publisher (an 'About <name>' heading, '… is a … firm / company / organization …', 'founded in', 'employee-owned', 'headquartered', 'with N employees'): 155 lines kept, 154 of them the publisher's own family; one miss, corenetglobal.org in a Ware Malcomb paper. Lines dropped by the guard: 31, of which 17 named the firm's own site (Jacobs 4, Autodesk 4, Weitz 3, NV5 2, AECOM, Dodge, Gensler, Sasaki) and 14 did not.",
+    "routing": "With the rule, routed as uploads (routing only, no claims scored): of the original reports, 5 change provenance (Procore 2, Burns & McDonnell 2, Levelset 1; unknown to firm-vendor) and 5 change judgment, each to its link's reading. Of the new reports, 143 change, all Burns & McDonnell: 137 unknown to firm-vendor, 2 nonprofit-research to firm-vendor, 4 keep their kind with the address now found (one stays government on its front-page agency cue, as linked). Upload provenance unknown 170 to 33; upload judgment differing from link 169 to 30."
+  },
+  "seenBeforeWriting": "Scratch scripts, not committed: the closer scan and the guard measured in Python on cached texts against manifest URLs; the candidate rule written in a scratch copy of src/ (git archive of 3359293) and run through routeDocument only, as upload and as link, on all reports with cached text. No candidate was run through analyze(), the checks or the corpus runner.",
+  "plan": {
+    "H": "ownHost gains a third source after the copyright holder and the contact email: a closing line on the text's last OWN_EDGE_CHARS characters that sends readers to a site ('For more information, visit burnsmcd.com'), kept only when its paragraph or the one before describes the publisher. The host it names reads via 'closing line'. Nothing else changes; with a link, ownHost is not read."
+  },
+  "predictions": {
+    "H": {
+      "original": {
+        "provenanceUploadUnknown": 407,
+        "provenanceDiffers": [472, 474],
+        "judgmentDiffers": [460, 462],
+        "uploadScoresChanged": [3, 5],
+        "linkReadings": "unchanged: claimsLinkTotal 426,294, scoredLink 1,526, medianLink 1.9, topLink 8",
+        "medianUpload": 2.1,
+        "deterministic": 1552
+      },
+      "new": {
+        "provenanceUploadUnknown": 33,
+        "provenanceDiffers": [29, 31],
+        "judgmentDiffers": [29, 31],
+        "scoreDiffers": [22, 45],
+        "medianUpload": [1.8, 2.1],
+        "linkReadings": "unchanged",
+        "burns": { "uploadUnknown": 13, "medianUpload": [1.7, 1.95], "scoreDiffers": [10, 35], "meanUploadMinusLink": [-0.05, 0.12] },
+        "topUpload": [4.6, 5.3]
+      },
+      "fixtures": "A, B, C unchanged (check:targets and check:evidencesection pass without re-recording)",
+      "goldCorpus": "unchanged",
+      "checks": "npm run check and npm run build pass"
+    }
+  }
+}

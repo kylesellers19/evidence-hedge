@@ -16,9 +16,9 @@ function engineVersion() {
 }
 
 // GitHub Pages serves files, not routes. Each page gets a copy of the app
-// shell at <page>/index.html, so /list, /method and /contact load directly
+// shell at <page>/index.html, so /list, /method, /contact and /legal load directly
 // (with a 200), and 404.html boots the app for any other path.
-const PAGES = ['list', 'method', 'contact']
+const PAGES = ['list', 'method', 'contact', 'legal']
 function pageShells() {
   return {
     name: 'page-shells',

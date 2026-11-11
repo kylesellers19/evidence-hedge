@@ -145,6 +145,24 @@
 .eh-foot p {
   margin: 0;
 }
+/* The fine print: one measure wide, a step smaller and fainter than the line
+   above it. */
+.eh-foot .eh-fine {
+  max-width: var(--eh-prose);
+  margin-top: 14px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--eh-ink-faint);
+}
+.eh-fine a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+.eh-fine a:hover {
+  color: var(--eh-ink);
+}
 
 .eh-code {
   font: 0.92em/1.4 var(--eh-mono);
@@ -346,11 +364,26 @@
   border-color: var(--eh-ink);
 }
 
+/* On paper the frame goes, but the fine print stays: a printed brief or list
+   carries what a score is and is not. */
 @media print {
   .eh-masthead,
-  .eh-foot,
+  .eh-foot-nav,
+  .eh-foot-contact,
   .eh-skip {
     display: none !important;
+  }
+  .eh-foot {
+    margin-top: 24px;
+    padding: 10px 0 0;
+  }
+  .eh-foot .eh-fine {
+    max-width: none;
+    margin-top: 0;
+    color: var(--eh-ink-soft);
+  }
+  .eh-fine a {
+    text-decoration: none;
   }
 }
 

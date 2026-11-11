@@ -102,6 +102,8 @@ export default function AddToList({ text, meta, result }) {
       <p className="eh-addlist-note">
         We send only these details, the score, the engine build and a fingerprint of the text (a one-way
         hash that keeps the same report from being listed twice). The text itself stays in your browser.
+        The entry is public, and adding it means you accept the{' '}
+        <Link to="/legal#adding">terms for The List</Link>.
       </p>
     </section>
   )

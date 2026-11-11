@@ -16,6 +16,11 @@ export const NAV = [
   { to: '/contact', label: 'Contact' },
 ]
 
+// The legal page is reached from the footer alone, not the masthead.
+export const LEGAL = { to: '/legal', label: 'Terms and privacy' }
+// The copyright line, in the footer's fine print and on the legal page.
+export const COPYRIGHT = `© ${new Date().getFullYear()} Evidence Hedge`
+
 export default function SiteLayout() {
   const { pathname, hash } = useLocation()
   const home = pathname === '/'
@@ -61,11 +66,24 @@ export default function SiteLayout() {
           <nav className="eh-foot-nav" aria-label="Site, footer">
             <Link className="eh-brand" to="/">Evidence Hedge</Link>
             {NAV.map((item) => <Link key={item.to} to={item.to}>{item.label}</Link>)}
+            <Link to={LEGAL.to}>{LEGAL.label}</Link>
           </nav>
-          <p>
+          <p className="eh-foot-contact">
             <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
             <span aria-hidden="true"> · </span>
             Engine <span className="eh-code">{ENGINE_VERSION}</span>
+          </p>
+          {/* The fine print, on every page and on a printed one. The full
+              text is the legal page (src/pages/LegalPage.jsx); keep the two
+              saying the same thing. */}
+          <p className="eh-fine">
+            {COPYRIGHT}. A score is an automated measure of how well a document’s claims are supported
+            by the evidence it shows, reached by the rules on the <Link to="/method">Method</Link> page.
+            It is not a finding that any claim is true or false, and it is not medical, financial or
+            legal advice. Company names, report titles and trademarks belong to their owners, and
+            listing a report implies no affiliation or endorsement. The site is offered as it is,
+            without warranty.
+            See <Link to={LEGAL.to}>{LEGAL.label.toLowerCase()}</Link>.
           </p>
         </div>
       </footer>

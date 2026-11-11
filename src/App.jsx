@@ -12,6 +12,7 @@ import ResultsPage from './pages/ResultsPage.jsx'
 import ListPage from './pages/ListPage.jsx'
 import MethodPage from './pages/MethodPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
+import LegalPage from './pages/LegalPage.jsx'
 
 // ── Screen 1: Landing ────────────────────────────────────────────────────────
 // The only thing on the index route. Captures the document, then routes to the
@@ -81,7 +82,8 @@ function ResultsRoute() {
 }
 
 // Every screen sits inside the site frame: the masthead (The List, Method,
-// Contact at top right) and the footer.
+// Contact at top right) and the footer, which carries the fine print and the
+// link to the legal page.
 export default function App() {
   return (
     <Routes>
@@ -92,6 +94,7 @@ export default function App() {
         <Route path="/list" element={<ListPage />} />
         <Route path="/method" element={<MethodPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/legal" element={<LegalPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

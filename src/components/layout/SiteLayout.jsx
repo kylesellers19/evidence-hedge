@@ -10,6 +10,15 @@ import '../../styles/site.css'
 // page it sits in the flow above a hairline.
 export const CONTACT_EMAIL = 'kyle@evidencehedge.org'
 
+// The company that operates Evidence Hedge, and its mailing address. Evidence
+// Hedge is a product of TKSC, LLC; the footer, the legal page and the contact
+// page read these.
+export const COMPANY_LEGAL_NAME = 'TKSC, LLC'
+export const COMPANY_ADDRESS_LINE = '950 Fulton St #381081, Brooklyn, NY 11238'
+export const COMPANY_ADDRESS_LINES = ['TKSC, LLC', '950 Fulton St #381081', 'Brooklyn, NY 11238']
+// The company line at the head of the footer's fine print.
+export const FOOTER_LINE = `© ${new Date().getFullYear()} ${COMPANY_LEGAL_NAME} · ${COMPANY_ADDRESS_LINE}`
+
 export const NAV = [
   { to: '/list', label: 'The List' },
   { to: '/method', label: 'Method' },
@@ -77,7 +86,7 @@ export default function SiteLayout() {
               text is the legal page (src/pages/LegalPage.jsx); keep the two
               saying the same thing. */}
           <p className="eh-fine">
-            {COPYRIGHT}. A score is an automated measure of how well a document’s claims are supported
+            {FOOTER_LINE}. Evidence Hedge is a product of {COMPANY_LEGAL_NAME}. A score is an automated measure of how well a document’s claims are supported
             by the evidence it shows, reached by the rules on the <Link to="/method">Method</Link> page.
             It is not a finding that any claim is true or false, and it is not medical, financial or
             legal advice. Company names, report titles and trademarks belong to their owners, and

@@ -1,6 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { usePageTitle, CONTACT_EMAIL, COPYRIGHT } from '../components/layout/SiteLayout.jsx'
+import {
+  usePageTitle,
+  CONTACT_EMAIL,
+  COPYRIGHT,
+  COMPANY_LEGAL_NAME,
+  COMPANY_ADDRESS_LINE,
+} from '../components/layout/SiteLayout.jsx'
 
 /**
  * Terms and privacy — the full text behind the fine print in the footer
@@ -15,7 +21,7 @@ import { usePageTitle, CONTACT_EMAIL, COPYRIGHT } from '../components/layout/Sit
  */
 
 // Associated Press style, as every date on the site.
-const UPDATED = 'Nov. 11, 2026'
+const UPDATED = 'Nov. 14, 2026'
 
 const POLICIES = {
   github: 'https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement',
@@ -34,6 +40,10 @@ export default function LegalPage() {
         <p className="eh-dek">
           What a score is and is not, where your document goes and what you agree to when you use Evidence
           Hedge or add a report to The List.
+        </p>
+        <p>
+          Evidence Hedge is operated by {COMPANY_LEGAL_NAME}, a New York limited liability company
+          ("TKSC," "we," "us," or "our").
         </p>
         <p className="eh-small">Last updated {UPDATED}.</p>
 
@@ -77,6 +87,7 @@ export default function LegalPage() {
         </p>
 
         <h2 id="privacy">Your document and your details</h2>
+        <p>{COMPANY_LEGAL_NAME} is the controller of the details described in this section.</p>
         <ul>
           <li>
             <strong>Text and files.</strong> Text you paste and files you upload are read in your browser.
@@ -137,7 +148,8 @@ export default function LegalPage() {
         <h2 id="changes">Changes and contact</h2>
         <p>
           We may change these terms, and the date at the top shows when we last did. Using the site after
-          a change means you accept it. Send questions, corrections and legal notices to {mail}.
+          a change means you accept it. Send questions, corrections and legal notices to {mail}, or by post
+          to {COMPANY_LEGAL_NAME}, {COMPANY_ADDRESS_LINE}.
         </p>
       </article>
     </main>

@@ -1,6 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { usePageTitle, CONTACT_EMAIL } from '../components/layout/SiteLayout.jsx'
+import {
+  usePageTitle,
+  CONTACT_EMAIL,
+  COMPANY_LEGAL_NAME,
+  COMPANY_ADDRESS_LINES,
+} from '../components/layout/SiteLayout.jsx'
 
 /**
  * Contact — inquiries, consulting and corrections to The List, after Delgam's
@@ -46,6 +51,16 @@ export default function ContactPage() {
         </p>
         <p className="eh-contact-line">
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+        </p>
+        <p className="eh-note">Evidence Hedge is a product of {COMPANY_LEGAL_NAME}.</p>
+        <p className="eh-note">
+          By mail:
+          {COMPANY_ADDRESS_LINES.map((line) => (
+            <React.Fragment key={line}>
+              <br />
+              {line}
+            </React.Fragment>
+          ))}
         </p>
 
         {REASONS.map((r) => (

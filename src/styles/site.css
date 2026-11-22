@@ -66,6 +66,7 @@
 
 .eh-nav {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 4px 18px;
   font: 600 14px/1.6 var(--eh-sans);

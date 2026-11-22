@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import ParticleMark from "../components/ParticleMark.jsx";
 import { extractFileDocument, ACCEPT_ATTR } from "../ingest/extractFile.js";
 import { ExtractionError } from "../ingest/errors.js";
@@ -179,6 +180,10 @@ export default function LandingPage({ onAnalyze }) {
             </div>
           )}
         </div>
+
+        <p className="eh-disclosure" style={{ marginTop: 20 }}>
+          <Link to="/conferences" style={{ color: "var(--eh-accent)", textDecoration: "underline" }}>Explore conference reviews</Link> — selected claims, linked evidence and the limits of each finding.
+        </p>
 
         <input
           ref={fileRef}

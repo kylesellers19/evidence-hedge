@@ -29,6 +29,8 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Check conference release
+        run: npm run check:conferences
       - name: Build
         run: npm run build
         env:

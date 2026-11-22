@@ -12,6 +12,7 @@ export const CONTACT_EMAIL = 'kyle@evidencehedge.org'
 
 export const NAV = [
   { to: '/list', label: 'The List' },
+  { to: '/conferences', label: 'Conferences' },
   { to: '/method', label: 'Method' },
   { to: '/contact', label: 'Contact' },
 ]
@@ -31,7 +32,8 @@ export default function SiteLayout() {
   // the browser's own jump, so wait for the element.
   useEffect(() => {
     if (!hash) { window.scrollTo(0, 0); return }
-    const id = decodeURIComponent(hash.slice(1))
+    let id
+    try { id = decodeURIComponent(hash.slice(1)) } catch { return }
     let frame = 0
     let tries = 0
     const go = () => {
@@ -80,7 +82,9 @@ export default function SiteLayout() {
             {COPYRIGHT}. A score is an automated measure of how well a document’s claims are supported
             by the evidence it shows, reached by the rules on the <Link to="/method">Method</Link> page.
             It is not a finding that any claim is true or false, and it is not medical, financial or
-            legal advice. Company names, report titles and trademarks belong to their owners, and
+            legal advice. <Link to="/conferences">Conference reviews</Link> are separate, provisional
+            AI-assisted assessments of selected claims, with their own sources and limitations.
+            They are not ratings of speakers or institutions. Company names, report titles and trademarks belong to their owners, and
             listing a report implies no affiliation or endorsement. The site is offered as it is,
             without warranty.
             See <Link to={LEGAL.to}>{LEGAL.label.toLowerCase()}</Link>.

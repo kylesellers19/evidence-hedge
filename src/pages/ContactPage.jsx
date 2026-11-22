@@ -24,6 +24,12 @@ const REASONS = [
     send: 'What the work is, who it is for and when it needs to be done. A draft or a past example helps.',
   },
   {
+    id: 'conference-corrections',
+    name: 'Corrections to conference reviews',
+    about: 'A source, transcription, attribution or interpretation that could change a conference claim assessment. The reviews are provisional and keep their original coding and subsequent corrections visible.',
+    send: 'The session or claim ID, the disputed wording or finding, and a source or timestamp supporting your correction.',
+  },
+  {
     id: 'corrections',
     name: 'Corrections to The List',
     about:
@@ -42,7 +48,7 @@ export default function ContactPage() {
         <p className="eh-kicker">Contact</p>
         <h1 className="eh-hed">Ask about a score, a review or the method</h1>
         <p className="eh-dek">
-          Send inquiries, consulting requests and corrections to The List to this address.
+          Send inquiries, consulting requests and corrections to The List or conference reviews to this address.
         </p>
         <p className="eh-contact-line">
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>

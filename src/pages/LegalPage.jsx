@@ -15,7 +15,7 @@ import { usePageTitle, CONTACT_EMAIL, COPYRIGHT } from '../components/layout/Sit
  */
 
 // Associated Press style, as every date on the site.
-const UPDATED = 'Nov. 11, 2026'
+const UPDATED = 'Nov. 22, 2026'
 
 const POLICIES = {
   github: 'https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement',
@@ -55,6 +55,23 @@ export default function LegalPage() {
         <p>
           A score judges the evidence a report shows, not its subject. When a report is about health,
           money or law, the score is not medical, financial or legal advice.
+          The same applies to conference reviews and their discussion of research.
+        </p>
+
+        <h2 id="conferences">Conference reviews</h2>
+        <p>
+          <Link to="/conferences">Conference reviews</Link> are a public research collection with a
+          <Link to="/conferences/method"> separate review method</Link>. They assess selected assertions
+          against linked external evidence and preserve the scope, qualifications and uncertainty of each
+          provisional judgment. They were prepared with AI assistance, including separate AI coding and
+          adjudication. They have not received human review or full audiovisual verification.
+        </p>
+        <p>
+          A claim-level verdict is not a rating of a speaker, institution or entire session, a finding of
+          deceptive intent, or an estimate of how often conference claims are wrong. Short source excerpts,
+          analytical summaries, source links and research metadata are public; full third-party transcripts,
+          papers and recordings are not republished. Inclusion does not imply affiliation or endorsement.
+          Send proposed corrections and supporting evidence to {mail}.
         </p>
 
         <h2 id="list">The List</h2>
@@ -94,6 +111,12 @@ export default function LegalPage() {
             is never sent, and an entry records nothing about the person who added it.
           </li>
           <li>
+            <strong>Conference research.</strong> The public research files are served with the site by
+            GitHub Pages. Search and filtering run in your browser; filter choices appear in the page’s
+            address so you can bookmark or share them. Opening an external source takes you to that
+            source’s website.
+          </li>
+          <li>
             <strong>No tracking.</strong> The site has no accounts, sets no cookies and runs no analytics or
             advertising.
           </li>
@@ -124,6 +147,7 @@ export default function LegalPage() {
           accurate, complete, always available or fit for a particular purpose. To the extent the law
           allows, we are not liable for loss or damage that comes from using the site, from relying on a
           score or an evidence brief, or from an entry on The List.
+          This also applies to conference reviews and their research data.
         </p>
 
         <h2 id="copyright">Copyright</h2>

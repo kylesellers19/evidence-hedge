@@ -175,6 +175,12 @@ export default function MethodPage() {
             on strong evidence can score well too. What scores badly is confidence the evidence does not carry.
             Everything runs in your browser, by fixed rules, so the same text always gets the same score.
           </p>
+          <p className="eh-note">
+            The <Link to="/conferences">conference reviews</Link> are a separate research collection.
+            They trace selected claims to external evidence and compare two AI reviews, using
+            a <Link to="/conferences/method">separate method and six provisional verdicts</Link>.
+            They do not change or become the document analyzer’s score.
+          </p>
 
           <nav className="eh-toc" aria-label="On this page">
             <p className="eh-toc-h">On this page</p>

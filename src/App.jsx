@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { lazy, Suspense, useMemo } from 'react'
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { useApp } from './context/AppContext.jsx'
 import { judgmentFor } from './rubrics/index.js'
@@ -13,6 +13,9 @@ import ListPage from './pages/ListPage.jsx'
 import MethodPage from './pages/MethodPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
 import LegalPage from './pages/LegalPage.jsx'
+
+// Research data and its reader load only when a conference page is opened.
+const ConferenceRoutes = lazy(() => import('./conferences/ConferenceRoutes.jsx'))
 
 // ── Screen 1: Landing ────────────────────────────────────────────────────────
 // The only thing on the index route. Captures the document, then routes to the
@@ -92,6 +95,7 @@ export default function App() {
         <Route path="/branch" element={<BranchRoute />} />
         <Route path="/results" element={<ResultsRoute />} />
         <Route path="/list" element={<ListPage />} />
+        <Route path="/conferences/*" element={<Suspense fallback={<main className="eh-page"><p className="eh-col" role="status">Loading conference research…</p></main>}><ConferenceRoutes /></Suspense>} />
         <Route path="/method" element={<MethodPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/legal" element={<LegalPage />} />

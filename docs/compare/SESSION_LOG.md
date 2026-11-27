@@ -72,6 +72,11 @@ first, then `INVENTORY.md`.
   The List shows no compare links: the gate holds until the SQL runs.
 - 17:13 Kyle: count city editions once. `EDITIONS_COUNT_ONCE` is now RATIFIED (`RATIFIED` in
   `constants.js`, held by `check:compare`); the tool's behaviour is unchanged.
+- 18:25 Kyle couldn't reach the tool from The List: the gate hid it until the SQL, and the one link
+  planned was a quiet button beside the search. Fixed at his request: The List's two views ("Reports",
+  "Compare firms") at the top of both pages, a "Compare {firm} with other firms" button on a firm's
+  view, and the audit's flag counts shipped as `public/list-flag-counts.json` so the tool works before
+  the SQL (`docs/compare.md`, "The way in" and "The flag counts before the SQL").
 
 ## Completion report
 

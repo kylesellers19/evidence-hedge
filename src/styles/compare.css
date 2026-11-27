@@ -10,6 +10,11 @@
   --cmp-context: var(--eh-dot);
 }
 .eh-compare .eh-hed { margin-bottom: 20px; }
+.eh-compare .cmp-dek { max-width: var(--eh-prose); }
+/* The views' rule above stands in for the scope line's own. */
+.eh-compare .eh-listviews { margin-bottom: 0; }
+.eh-compare .eh-listviews ~ * .cmp-scope,
+.eh-compare .eh-listviews ~ .cmp-scope { border-top: 0; }
 
 /* Scope line and the readers' checkbox. */
 .eh-compare .cmp-scope {

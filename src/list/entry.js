@@ -106,6 +106,30 @@ export function countsHold(e) {
     e.unsupported + e.overconfident + e.overreach >= e.flagged && e.claims >= e.flagged
 }
 
+// The audit's flag counts as the site ships them (public/list-flag-counts.json,
+// written by scripts/list-counts-file.mjs), by entry id.
+export function countsFileMap(file) {
+  const map = new Map()
+  for (const [id, engine, score, claims, flagged, unsupported, overconfident, overreach] of file?.rows || []) {
+    map.set(id, { engine, score, claims, flagged, unsupported, overconfident, overreach })
+  }
+  return map
+}
+
+// Entries that have no flag counts take them from the file, but only when the
+// entry's build, score, claims and flagged are still the file's, so an entry
+// rescored since never borrows another run's counts, and only counts that meet
+// the table's checks. Entries with counts keep their own.
+export function withFileCounts(entries, map) {
+  return entries.map((e) => {
+    if (e.unsupported != null && e.overconfident != null && e.overreach != null) return e
+    const c = map.get(e.id)
+    if (!c || c.engine !== e.engine || Math.round(c.score * 10) !== Math.round(e.score * 10) || c.claims !== e.claims || c.flagged !== e.flagged) return e
+    const next = { ...e, unsupported: c.unsupported, overconfident: c.overconfident, overreach: c.overreach }
+    return countsHold(next) ? next : e
+  })
+}
+
 // The row an entry becomes: its details, score, build and fingerprint, and,
 // for a table that has the columns, its claim and flag counts.
 export function rowOf(entry, { counts = false } = {}) {

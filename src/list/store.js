@@ -12,7 +12,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { NO_FILTERS, matches, restFilter, median } from './filter.js'
-import { rowOf, fromRow } from './entry.js'
+import { rowOf, fromRow, countsFileMap, withFileCounts } from './entry.js'
 
 // The three flag counts (docs/the-list.sql version 3): how many of an entry's
 // claims state something as fact and cite nothing, cite a source but say more
@@ -34,8 +34,8 @@ export const LIST_IS_LIVE = Boolean(URL_BASE && KEY)
 const headers = () => ({ apikey: KEY, Authorization: `Bearer ${KEY}` })
 
 // Whether the table has the version 3 columns, asked once a visit. The add
-// form sends the flag counts only when it does, and the compare tool shows
-// only then; until the SQL runs, both behave as before.
+// form sends the flag counts only when it does; until the SQL runs, it behaves
+// as before. The compare tool doesn't wait for it (loadCompareRows).
 let hasCounts = null
 export function hasFlagCounts() {
   if (hasCounts) return hasCounts
@@ -110,23 +110,43 @@ export async function loadFirm(company) {
 // table's own count. Resolves { rows } or { unavailable: true } when the table
 // has no flag counts yet.
 export const COMPARE_COLUMNS = `id,company,report_type,report_name,published_on,published_precision,score,engine,origin,claims,flagged,${FLAG_COLUMNS},source_url`
+// The same, for a table without the version 3 columns.
+const COMPARE_COLUMNS_V2 = COMPARE_COLUMNS.replace(`,${FLAG_COLUMNS}`, '')
 const COMPARE_PAGE = 1000
+
+// The audit's flag counts as a file the site ships (public/list-flag-counts.json,
+// from the ledgers behind each score; scripts/list-counts-file.mjs), so the
+// compare tool works before the table has the counts. Entries without counts
+// take them from it when their build, score, claims and flagged still match.
+let countsFile = null
+function loadCountsFile() {
+  if (!countsFile) {
+    countsFile = fetch(`${import.meta.env.BASE_URL}list-flag-counts.json`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then(countsFileMap, () => new Map())
+  }
+  return countsFile
+}
+
+// Every entry the compare tool reads, with its flag counts: the table's own
+// once it has them, else the file's. Resolves { rows } or, when neither has
+// counts, { unavailable: true }.
 export async function loadCompareRows() {
-  if (!(await hasFlagCounts())) return { unavailable: true }
-  if (!LIST_IS_LIVE) return { rows: await loadList() }
+  const [table, file] = await Promise.all([hasFlagCounts().catch(() => false), loadCountsFile()])
+  if (!table && file.size === 0) return { unavailable: true }
+  if (!LIST_IS_LIVE) return { rows: withFileCounts(await loadList(), file) }
   const rows = []
   for (let offset = 0; ; offset += COMPARE_PAGE) {
-    const res = await fetch(`${TABLE}?select=${COMPARE_COLUMNS}&order=id.asc`, {
+    const res = await fetch(`${TABLE}?select=${table ? COMPARE_COLUMNS : COMPARE_COLUMNS_V2}&order=id.asc`, {
       headers: { ...headers(), Prefer: 'count=exact', 'Range-Unit': 'items', Range: `${offset}-${offset + COMPARE_PAGE - 1}` },
     })
-    if (res.status === 400) return { unavailable: true }
     if (!res.ok && res.status !== 206) throw new Error(`list_entries: ${res.status}`)
     const total = Number((res.headers.get('content-range') || '').split('/')[1])
     const page = await res.json()
     rows.push(...page.map(fromRow))
     if (page.length < COMPARE_PAGE || rows.length >= total) {
       if (Number.isFinite(total) && rows.length !== total) throw new Error(`list_entries: ${rows.length} of ${total} rows`)
-      return { rows }
+      return { rows: withFileCounts(rows, file) }
     }
   }
 }

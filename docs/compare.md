@@ -141,9 +141,20 @@ Taken while building, Nov. 27, 2026. Everything here is PROVISIONAL except where
   give (Suffolk's 7 reports: the 97.5% point is 0.225 or 0.05 depending on the draws). A miss that
   was looked into is recorded in `checks/targets/compare/reference-misses.json` and reported, not
   failed; any other fails.
-- **Entry points** on The List ("Compare firms" beside the search, "Compare {firm} with others" on the
-  firm line) and the tool itself show only when the table answers with the version 3 counts; until
-  then `/list/compare` says comparison isn't available yet.
+- **The way in (changed Nov. 27, 18:25, at Kyle's request).** As first shipped, the tool and its links
+  showed only once the table had the version 3 counts, so on the live site there was no way to reach it
+  from The List, and the one link planned was a quiet button beside the search. Now The List has two
+  views at the top of both pages, "Reports" and "Compare firms", each with a line on what it is for
+  (`src/list/ListViews.jsx`); on a phone they sit side by side above the search. A firm's view on The
+  List has a "Compare {firm} with other firms" button that opens the tool with the firm chosen.
+- **The flag counts before the SQL.** The tool reads the table's counts once it has the version 3
+  columns. Until then it asks the table only for columns it has and takes each audit entry's counts from
+  `public/list-flag-counts.json` (`scripts/list-counts-file.mjs`, from the snapshot, whose counts come
+  from the ledger row behind each score), only where the entry's build, score, claims and flagged still
+  match. The file holds numbers and build tags only. `check:list` holds it to the snapshot and holds the
+  match rule; `compare-browser` runs the ways in with the table answering as it does today and checks the
+  file gives the same comparison as the table's counts. Readers' entries get counts only from the table,
+  so they come into a comparison once the SQL runs. When the counts are in the table, the file can go.
 
 ## Checks
 
@@ -154,8 +165,10 @@ Taken while building, Nov. 27, 2026. Everything here is PROVISIONAL except where
   `docs/compare/predictions.md` is recorded in `checks/targets/compare/<slug>.json`; re-record a
   deliberate change with `node checks/compare.test.mjs --write` in the same commit.
 - `node checks/compare-browser.mjs <base> <out>`: four widths, layout and axe, the keyboard path,
-  the shared address and Back. Add `--live` once the table has the counts.
+  the shared address and Back, and the ways in from The List (the views on its first screen, a firm's
+  button) with the table as it is before the SQL. Add `--live` once the table has the counts.
 - The data: `checks/targets/compare/list-rows.json` (`node scripts/compare-snapshot.mjs`), the
-  List's public rows with flag counts; `reference-inputs.json` (`node scripts/compare-inputs.mjs`);
+  List's public rows with flag counts, and from it `public/list-flag-counts.json`
+  (`node scripts/list-counts-file.mjs`); `reference-inputs.json` (`node scripts/compare-inputs.mjs`);
   `checks/targets/compare-stats.json` (`uv run --with scipy --with statsmodels --with numpy python
   scripts/compare-reference.py`).

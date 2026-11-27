@@ -25,7 +25,7 @@ import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { LIST_FIELDS, INDUSTRIES, REPORT_TYPES, MAX_SORTS } from '../src/list/fields.js'
 import { sortEntries, clickHeading, setLevel } from '../src/list/sort.js'
-import { draftEntry, validateEntry, buildEntry, docHash, apDate, apDatePartial, guessReportName, rowOf, countsHold } from '../src/list/entry.js'
+import { draftEntry, validateEntry, buildEntry, docHash, apDate, apDatePartial, guessReportName, rowOf, countsHold, fromRow, countsFileMap, withFileCounts } from '../src/list/entry.js'
 import { NO_FILTERS, SCORE_BANDS, searchWords, matches, restFilter, readParams, writeParams, isFiltered, median } from '../src/list/filter.js'
 import { bandFor } from '../src/engine/scoreDocument.js'
 
@@ -190,6 +190,41 @@ log('the compare tool asks for no document text or fingerprint, and for the thre
   compareColumns && !/text|body|content|doc_hash/.test(compareColumns) && ['unsupported', 'overconfident', 'overreach', 'claims', 'flagged', 'engine', 'origin'].every((c) => compareColumns.split(',').includes(c)), compareColumns)
 log('The List has the six columns asked for',
   same(LIST_FIELDS.map((f) => f.label), ['Company', 'Industry', 'Report type', 'Report name', 'Publication date', 'Score']))
+
+// The audit's flag counts as the site ships them, for the compare tool before
+// the table has the version 3 columns (public/list-flag-counts.json).
+const countsFile = JSON.parse(readFileSync(new URL('../public/list-flag-counts.json', import.meta.url), 'utf8'))
+const snapshot = JSON.parse(readFileSync(new URL('./targets/compare/list-rows.json', import.meta.url), 'utf8'))
+const fileMap = countsFileMap(countsFile)
+const auditRows = snapshot.filter((r) => r.origin === 'audit')
+log('the counts file holds every audit entry in the snapshot, with its build, score, claims, flagged and three counts',
+  countsFile.rows.length === auditRows.length && auditRows.every((r) => {
+    const c = fileMap.get(r.id)
+    return c && c.engine === r.engine && c.score === Number(r.score) && c.claims === r.claims && c.flagged === r.flagged &&
+      c.unsupported === r.unsupported && c.overconfident === r.overconfident && c.overreach === r.overreach
+  }))
+log('the counts file holds numbers and build tags only: no names, links or text',
+  same(countsFile.columns, ['id', 'engine', 'score', 'claims', 'flagged', 'unsupported', 'overconfident', 'overreach']) &&
+  countsFile.rows.every((r) => r.length === 8 && r.every((v, i) => (i === 1 ? /^[0-9a-f]{7}$/.test(v) : Number.isFinite(v)))))
+log('every count in the file meets the table’s checks', [...fileMap.values()].every((c) => countsHold(c)))
+{
+  const r = auditRows[0]
+  const bare = fromRow({ ...r, unsupported: undefined, overconfident: undefined, overreach: undefined })
+  const [took] = withFileCounts([bare], fileMap)
+  const [rescored] = withFileCounts([{ ...bare, score: bare.score + 0.1 }], fileMap)
+  const [rebuilt] = withFileCounts([{ ...bare, engine: '0000000' }], fileMap)
+  const [recounted] = withFileCounts([{ ...bare, flagged: bare.flagged + 1 }], fileMap)
+  const own = { ...fromRow(r), unsupported: 0, overconfident: 0, overreach: r.flagged }
+  const [kept] = withFileCounts([own], fileMap)
+  log('an entry without counts takes the file’s when its build, score, claims and flagged match',
+    took.unsupported === r.unsupported && took.overconfident === r.overconfident && took.overreach === r.overreach)
+  log('a rescored, rebuilt or recounted entry takes none', [rescored, rebuilt, recounted].every((e) => e.unsupported === null && e.overreach === null))
+  log('an entry with its own counts keeps them', kept.unsupported === 0 && kept.overreach === r.flagged)
+}
+const compareLoader = store.slice(store.indexOf('export async function loadCompareRows'))
+log('the compare tool asks a table without the counts only for columns it has, and fills them from the file',
+  /COMPARE_COLUMNS_V2 = COMPARE_COLUMNS\.replace\(`,\$\{FLAG_COLUMNS\}`, ''\)/.test(store) &&
+  /table \? COMPARE_COLUMNS : COMPARE_COLUMNS_V2/.test(compareLoader) && /withFileCounts\(rows, file\)/.test(compareLoader))
 
 if (!ok) { console.error('\nList checks failed.'); process.exit(1) }
 console.log('\nList checks passed.')

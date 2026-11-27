@@ -14,8 +14,13 @@
 // keyboard alone (the combobox, a chip removed by keyboard, visible focus),
 // presses Compare and checks focus lands on the results heading, opens the
 // shared address in a fresh page and gets the same results, and checks Back
-// brings the panels back. Writes <out-dir>/checks.json; exits non-zero on any
-// failure.
+// brings the panels back. Then the ways in from The List, at 1440 and 390, with
+// the table answering as it does before the version 3 SQL (unless --live): the
+// views at the top of The List show "Compare firms" on the first screen and
+// lead to the tool; a firm's view leads to the tool with the firm chosen; and
+// a comparison read with the counts from public/list-flag-counts.json says
+// what it says with the table's own counts. Writes <out-dir>/checks.json;
+// exits non-zero on any failure.
 import { chromium } from 'playwright'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -90,7 +95,7 @@ function layoutProbe() {
   return out
 }
 
-async function newPage(browser, width) {
+async function newPage(browser, width, { counts = true } = {}) {
   const ctx = await browser.newContext({ viewport: { width, height: 900 }, deviceScaleFactor: 1 })
   const page = await ctx.newPage()
   const errors = [], failed = []
@@ -98,7 +103,7 @@ async function newPage(browser, width) {
   page.on('pageerror', (e) => errors.push(String(e)))
   page.on('requestfailed', (r) => failed.push(`${r.url()} ${r.failure()?.errorText}`))
   page.on('response', (r) => { if (r.status() >= 400) failed.push(`${r.status()} ${r.url()}`) })
-  if (!LIVE) await routeList(page)
+  if (!LIVE) await routeList(page, { counts })
   return { ctx, page, errors, failed }
 }
 const waitResults = (page) => page.waitForSelector('.cmp-results h2#cmp-lead', { timeout: 60000 })
@@ -229,6 +234,48 @@ try {
     if (errors.length) step('no console errors along the way', false, errors.join(' | '))
     for (const s of steps) if (!s.ok) fail(`${width} keyboard`, `${s.step}${s.note ? ` (${s.note})` : ''}`)
     report.interactions.push({ width, steps })
+    await ctx.close()
+  }
+
+  // The ways in from The List, with the table as it is before the version 3 SQL.
+  const resultsText = (p) => p.$eval('.cmp-results', (el) => [el.querySelector('#cmp-lead').textContent, ...[...el.querySelectorAll('.cmp-text p')].map((x) => x.textContent)].join('\n'))
+  for (const width of [1440, 390]) {
+    const { ctx, page, errors, failed } = await newPage(browser, width, { counts: false })
+    const steps = []
+    const step = (name, ok, note = '') => steps.push({ step: name, ok: Boolean(ok), note })
+    await page.goto(`${base}/list`, { waitUntil: 'networkidle' })
+    await page.waitForSelector('.eh-listviews')
+    await page.screenshot({ path: join(outDir, `list-${width}-views.png`) })
+    const link = page.getByRole('link', { name: /Compare firms/ })
+    const box = await link.boundingBox()
+    step('The List shows Compare firms on its first screen', box && box.y + box.height <= 900, box ? `bottom at ${Math.round(box.y + box.height)} px` : 'not found')
+    step('Reports is the current view on The List', (await page.getAttribute('.eh-listview.active', 'href')) === '/list' &&
+      (await page.getAttribute('.eh-listview.active', 'aria-current')) === 'page')
+    await link.click()
+    await page.waitForURL(/\/list\/compare$/)
+    await waitPanels(page)
+    step('Compare firms leads to the tool, its view now current', (await page.getAttribute('.eh-listview.active', 'href')) === '/list/compare')
+    await page.screenshot({ path: join(outDir, `compare-${width}-views.png`) })
+    await page.goto(`${base}/list?firm=Mortenson`, { waitUntil: 'networkidle' })
+    const firmLink = page.getByRole('link', { name: 'Compare Mortenson with other firms' })
+    await firmLink.waitFor({ timeout: 15000 })
+    await firmLink.click()
+    await page.waitForSelector('.cmp-picked')
+    step('a firm’s view leads to the tool with the firm chosen', page.url().includes('firm=Mortenson') && /Mortenson/.test(await page.textContent('.cmp-picked')))
+    await page.goto(`${base}${RESULTS}`, { waitUntil: 'networkidle' })
+    await waitResults(page)
+    const fromFile = await resultsText(page)
+    if (!LIVE) {
+      const withTable = await newPage(browser, width)
+      await withTable.page.goto(`${base}${RESULTS}`, { waitUntil: 'networkidle' })
+      await waitResults(withTable.page)
+      step('counts from the file give the same comparison as the table’s', fromFile === (await resultsText(withTable.page)))
+      await withTable.ctx.close()
+    }
+    if (errors.length) step('no console errors along the way', false, errors.join(' | '))
+    if (failed.length) step('no failed requests along the way', false, failed.join(' | '))
+    for (const s of steps) if (!s.ok) fail(`${width} ways in`, `${s.step}${s.note ? ` (${s.note})` : ''}`)
+    report.interactions.push({ width, view: 'ways in', steps })
     await ctx.close()
   }
 } finally {

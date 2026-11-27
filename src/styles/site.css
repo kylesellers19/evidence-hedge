@@ -531,14 +531,68 @@
   flex: 1 1 320px;
   max-width: 560px;
 }
-.eh-page a.eh-listcompare {
-  display: inline-flex;
-  align-items: center;
-  color: var(--eh-ink);
+/* The List's two views (src/list/ListViews.jsx), on /list and /list/compare. */
+.eh-listviews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 40px;
+  border-bottom: 1px solid var(--eh-hairline);
+  margin: 0;
+  font-family: var(--eh-sans);
+}
+.eh-page a.eh-listview {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  padding: 10px 0 12px;
+  margin-bottom: -1px;
+  border-bottom: 3px solid transparent;
+  color: var(--eh-ink-soft);
   text-decoration: none;
 }
+.eh-listview-name {
+  font: 600 18px/1.3 var(--eh-sans);
+}
+.eh-listview-note {
+  font: 400 14px/1.4 var(--eh-sans);
+  color: var(--eh-ink-faint);
+}
+.eh-page a.eh-listview:hover {
+  color: var(--eh-ink);
+  border-bottom-color: var(--eh-hairline);
+}
+.eh-page a.eh-listview.active {
+  color: var(--eh-ink);
+  border-bottom-color: var(--eh-ink);
+}
+.eh-listviews + .eh-listfind {
+  border-top: 0;
+}
+@media (max-width: 520px) {
+  .eh-listviews {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 20px;
+  }
+  .eh-listview-name {
+    font-size: 16px;
+  }
+  .eh-listview-note {
+    font-size: 13px;
+  }
+}
+@media print {
+  .eh-listviews {
+    display: none;
+  }
+}
 .eh-list-comparefirm {
-  margin-left: 1.25em;
+  margin: 12px 0 0 !important;
+}
+.eh-page .eh-list-comparefirm a.eh-button {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
 }
 .eh-listsearch .eh-input {
   max-width: 560px;

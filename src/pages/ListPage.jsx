@@ -5,7 +5,8 @@ import { LIST_FIELDS, MAX_SORTS, DIR_WORDS, INDUSTRIES, REPORT_TYPES, fieldByKey
 import { clickHeading, setLevel, defaultDir } from '../list/sort.js'
 import { apDatePartial } from '../list/entry.js'
 import { NO_FILTERS, ORIGINS, SCORE_BANDS, isFiltered, readParams, writeParams, searchWords } from '../list/filter.js'
-import { loadPage, loadFirm, hasFlagCounts, LIST_IS_LIVE, PAGE_SIZE } from '../list/store.js'
+import { loadPage, loadFirm, LIST_IS_LIVE, PAGE_SIZE } from '../list/store.js'
+import ListViews from '../list/ListViews.jsx'
 import { METHOD, scoreAnchor } from '../components/results/briefTop.js'
 
 /**
@@ -37,14 +38,7 @@ export default function ListPage() {
   const [more, setMore] = useState(false)
   const [firm, setFirm] = useState(null) // { company, count, median } for a firm's view
   const [text, setText] = useState(filters.q)
-  const [canCompare, setCanCompare] = useState(false) // once the table has the flag counts
   const findRef = useRef(null)
-
-  useEffect(() => {
-    let live = true
-    hasFlagCounts().then((yes) => { if (live) setCanCompare(yes) }, () => {})
-    return () => { live = false }
-  }, [])
 
   // Every change is a new address; typing replaces it rather than adding one
   // to the history for each pause.
@@ -116,6 +110,7 @@ export default function ListPage() {
       </header>
 
       <section className="eh-wide" aria-label="The List">
+        <ListViews />
         <div className="eh-listfind" role="search" ref={findRef}>
           <div className="eh-listsearchrow">
           <label className="eh-listsearch">
@@ -132,7 +127,6 @@ export default function ListPage() {
               spellCheck={false}
             />
           </label>
-          {canCompare && <Link className="eh-button is-quiet eh-listcompare" to="/list/compare">Compare firms</Link>}
           </div>
           <div className="eh-listfilters">
             <Filter label="Industry" value={filters.industry} onChange={(v) => setFilter('industry', v)}
@@ -159,7 +153,13 @@ export default function ListPage() {
                 {firm.median !== null && `, with a median score of ${firm.median.toFixed(1)}`}.</>
             )}{' '}
             <button type="button" className="eh-inlinebutton" onClick={() => setFilter('firm', '')}>Show every firm</button>
-            {canCompare && <Link className="eh-list-comparefirm" to={`/list/compare?${new URLSearchParams({ firm: filters.firm })}`}>Compare {filters.firm} with others</Link>}
+          </p>
+        )}
+        {filters.firm && (
+          <p className="eh-list-comparefirm">
+            <Link className="eh-button is-quiet" to={`/list/compare?${new URLSearchParams({ firm: filters.firm })}`}>
+              Compare {filters.firm} with other firms
+            </Link>
           </p>
         )}
 

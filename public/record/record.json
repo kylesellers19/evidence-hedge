@@ -1295,7 +1295,9 @@
      "The question was found by grouping documents automatically. Its edges are soft, and a document on two questions sits in only one map.",
      "Most claims are judged new because the matcher needs a near-paraphrase to call a claim old. That favors precision over recall: an idea restated in new words counts as new.",
      "Coverage comes from CC-NEWS, which holds little of the trade press these organizations appear in, so every coverage figure is a floor.",
-     "A pooled estimate for an organization with one or two documents says more about the field than about the organization."
+     "A pooled estimate for an organization with one or two documents says more about the field than about the organization.",
+     "Moving the matcher’s two thresholds half a point looser or stricter makes 69% or 98% of findings new instead of 92%, but the organizations’ order barely moves (rank correlation 0.99 or more) and no share moves more than 4.7 points.",
+     "Organizations write on different sub-questions. Standardized to one mix of sub-questions, their rates of new findings reorder: 9 of 45 pairs swap. Compare shares, not rates."
     ],
     "models": [
      {
@@ -1347,7 +1349,7 @@
      }
     ],
     "objection": {
-     "answer": "Both are fair. New findings measure contribution to the record, not truth: the engine’s flags sit beside them in the Claims view, and only result-stating claims count. The matcher is strict, so restated ideas count as new; Kyle’s labels will measure how often. Coverage is labeled a floor everywhere it appears, and no organization is named until every input passes its check.",
+     "answer": "Both are fair. New findings measure contribution to this written record, not truth or originality of ideas: only result-stating claims count, and the engine’s flags sit beside them in the Claims view. Moving the matcher’s thresholds half a point either way changes how many findings count as new but barely changes the order of organizations. The field is limited to what organizations in this industry post on their own websites, coverage is labeled a floor, and no organization is named until every input passes its check. Widening the corpus to other publishers is the change that would most improve every number.",
      "text": "“Your ‘new findings’ count sentences no earlier report happens to paraphrase. A firm that writes long reports on a topic nobody else covers wins, whether or not anything in them is true or useful, and your coverage numbers come from a news crawl that misses the trade press our clients read.”"
     }
    },

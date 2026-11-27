@@ -126,6 +126,7 @@ export function MethodView({ q, file }) {
   const me = q.method
   return (
     <>
+      <p className="rec-note">How the Record measures. The Method page in the site’s menu covers the evidence brief.</p>
       <dl className="rec-dl">
         {q.measures.map((m) => (
           <React.Fragment key={m.key}>

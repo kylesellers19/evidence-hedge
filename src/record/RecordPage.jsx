@@ -93,7 +93,7 @@ function Question({ q, params, setParams, file }) {
           <span className="rec-selectwrap">
             <select id={selectId} className="rec-select" value={org.id} onChange={(e) => set({ org: e.target.value })}>
               {ordered.map((o) => (
-                <option key={o.id} value={o.id}>{o.label}</option>
+                <option key={o.id} value={o.id}>{`${o.label} · ${o.window_documents ?? o.documents} ${(o.window_documents ?? o.documents) === 1 ? 'document' : 'documents'}`}</option>
               ))}
             </select>
           </span>

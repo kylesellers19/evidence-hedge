@@ -15,6 +15,7 @@ export function fmt(v, unit, { signed = false } = {}) {
   if (v === null || v === undefined || Number.isNaN(v)) return '—'
   if (unit === 'share' || unit === 'rate') {
     const p = v * 100
+    if (p > 0 && p < 0.05) return `${signed ? '+' : ''}<0.1%`
     const s = Math.abs(p) >= 10 || p === 0 ? p.toFixed(0) : Math.abs(p) >= 1 ? p.toFixed(1) : p.toFixed(1)
     return `${signed && p > 0 ? '+' : ''}${s.replace('-', '−')}%`
   }

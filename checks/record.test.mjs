@@ -100,6 +100,8 @@ test('the reader formats and words the page from the data', () => {
   assert.equal(fmt(-2.44, 'points'), '−2.4')
   assert.equal(fmt(3.2, 'points'), '+3.2')
   assert.equal(fmt(null, 'share'), '—')
+  assert.equal(fmt(0.0002, 'share'), '<0.1%')
+  assert.equal(fmt(0, 'share'), '0%')
   assert.equal(fmtInterval({ lo: 0.01, hi: 0.2 }, 'share'), '1.0% to 20%')
   const q = data.questions[0]
   const o = defaultOrg(q)

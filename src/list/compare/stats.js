@@ -146,11 +146,11 @@ const atLeast = (stat, obs) => stat >= obs - 1e-9 * Math.max(1, Math.abs(obs))
 // counted; otherwise this call samples `draws` of them (one slice of the
 // test). Returns { observed, hits, n, exact, arrangements }; combineTest
 // turns the slices into a p.
-export function labelTest(strata, agg, stat, { draws = K.PERMUTATION_DRAWS, rand }) {
+export function labelTest(strata, agg, stat, { draws = K.PERMUTATION_DRAWS, rand, exactLimit = K.PERMUTATION_DRAWS }) {
   const observed = stat(strata.map((s, si) => agg(si, s.items, s.items.map((_, i) => i), s.nA)))
   let total = 1
   for (const s of strata) total *= choose(s.items.length, s.nA)
-  if (total <= K.PERMUTATION_DRAWS) {
+  if (total <= exactLimit) {
     // Each stratum's possible aggregates, then every combination of them.
     const lists = strata.map((s, si) => {
       const out = []
@@ -251,7 +251,7 @@ function midranks(values) {
 
 // van Elteren's statistic: Σ (R − n₁(N+1)/2) / (N+1) over strata, R the chosen
 // firm's rank sum. With one stratum it is the Mann–Whitney U, centered and scaled.
-export function rankTest(strata, { rand, draws }) {
+export function rankTest(strata, { rand, draws, exactLimit }) {
   const prepared = strata.filter((s) => s.a.length && s.b.length).map((s) => {
     const values = [...s.a, ...s.b]
     return { items: Array.from(midranks(values)), nA: s.a.length }
@@ -264,7 +264,7 @@ export function rankTest(strata, { rand, draws }) {
     return (r - (nA * (N + 1)) / 2) / (N + 1)
   }
   const stat = (aggs) => Math.abs(aggs.reduce((x, y) => x + y, 0))
-  return labelTest(prepared, agg, stat, { rand, draws })
+  return labelTest(prepared, agg, stat, { rand, draws, exactLimit })
 }
 
 // Percentile bootstrap of the (stratified) shift, resampling reports within
@@ -320,7 +320,7 @@ const sumOf = (rs, ix, from, to) => {
 
 // cells: [{ a: reports, b: reports }] (one cell for the unstratified ratio).
 // zero: compare differences per 100 claims, for a flag one firm never has.
-export function flagTest(cells, { zero, rand, draws }) {
+export function flagTest(cells, { zero, rand, draws, exactLimit }) {
   const prepared = cells.filter((s) => s.a.length && s.b.length).map((s) => ({ items: [...s.a, ...s.b], nA: s.a.length }))
   if (!prepared.length) return null
   const totals = prepared.map((s) => sumOf(s.items, s.items.map((_, i) => i), 0, s.items.length))
@@ -335,7 +335,7 @@ export function flagTest(cells, { zero, rand, draws }) {
     if (Number.isNaN(mh.ratio)) return 0 // neither firm has the flag: no difference
     return Math.abs(Math.log(mh.ratio))
   }
-  return labelTest(prepared, agg, stat, { rand, draws })
+  return labelTest(prepared, agg, stat, { rand, draws, exactLimit })
 }
 
 // Cluster bootstrap of the ratio (or, with zero, the difference), resampling
@@ -463,7 +463,7 @@ export function kendallS(x, y) {
 
 // Shuffles the years among a firm's reports; statistic |S|. S is counted in
 // one pass over the reports in order of y, with a Fenwick tree over years.
-export function trendTest(x, y, { rand, draws = K.PERMUTATION_DRAWS }) {
+export function trendTest(x, y, { rand, draws = K.PERMUTATION_DRAWS, exactLimit = K.PERMUTATION_DRAWS }) {
   const n = x.length
   const observed = Math.abs(kendallS(x, y))
   const { index, years } = yearIndexOf(x)
@@ -487,7 +487,7 @@ export function trendTest(x, y, { rand, draws = K.PERMUTATION_DRAWS }) {
     return s
   }
   const yr = Int32Array.from(index)
-  if (factorial(n) <= K.PERMUTATION_DRAWS) {
+  if (factorial(n) <= exactLimit) {
     // Every ordering of the years (Heap's algorithm).
     let hits = 0, total = 0
     const c = new Int32Array(n)
@@ -683,12 +683,12 @@ export function assemble(input, tasks, results) {
   const partOf = (id, part) => (byId[id]?.[part] || []).sort((a, b) => a[0] - b[0]).map(([, r]) => r)
   const test = (id) => { const parts = partOf(id, 'perm'); return parts.length ? combineTest(parts) : null }
   const draws = (id) => { const parts = partOf(id, 'boot'); return parts.length ? Float64Array.from(parts.flatMap((p) => Array.from(p))) : null }
-  const withTest = (row, transform = (v) => v) => {
+  const withTest = (row) => {
     const t = test(row.id)
     const d = draws(row.id)
     if (t && d) {
       const [lo, hi] = percentileInterval(Array.from(d))
-      Object.assign(row, { p: t.p, exact: t.exact, arrangements: t.arrangements, draws: t.draws, lo: transform(lo), hi: transform(hi) })
+      Object.assign(row, { p: t.p, exact: t.exact, arrangements: t.arrangements, draws: t.draws, lo, hi, mcse: mcse(d, t) })
     }
     return row
   }
@@ -701,7 +701,7 @@ export function assemble(input, tasks, results) {
     const strata = scoreStrata(a, b, shared)
     rows.push(withTest({ ...base, id: `scoretype-${j + 1}`, family: 'score-type', kind: 'pair-type', types: shared,
       n: [strata.reduce((s, x) => s + x.a.length, 0), strata.reduce((s, x) => s + x.b.length, 0)],
-      estimate: strata.length ? hlStratified(strata) : null, mix: typeMix(a, b) }))
+      estimate: strata.length ? hlStratified(strata) : null, mix: typeMix(a, b, input.context || []) }))
   })
   for (const m of measures) {
     others.forEach((other, j) => {
@@ -728,8 +728,9 @@ export function assemble(input, tasks, results) {
       const t = test(row.id)
       const dA = draws(rA.id), dB = draws(rB.id)
       if (t && dA && dB) {
-        const [lo, hi] = percentileInterval(Array.from(dA, (v, d) => v - dB[d]))
-        Object.assign(row, { p: t.p, exact: t.exact, arrangements: t.arrangements, draws: t.draws, lo, hi })
+        const gaps = Float64Array.from(dA, (v, d) => v - dB[d])
+        const [lo, hi] = percentileInterval(Array.from(gaps))
+        Object.assign(row, { p: t.p, exact: t.exact, arrangements: t.arrangements, draws: t.draws, lo, hi, mcse: mcse(gaps, t) })
       }
       rows.push(row)
     })
@@ -744,6 +745,23 @@ export function assemble(input, tasks, results) {
   }
   for (const r of rows) r.verdict = verdictOf(r)
   return { rows, context }
+}
+
+// Monte Carlo error, for the checks. A sampled p's binomial standard error;
+// and for each interval end, the band of the draws' own quantiles at the end's
+// probability ± 3√2 standard errors (√(p(1−p)/B) on the probability scale, √2
+// for two independent runs): another implementation's value for that end
+// should fall inside it. Order-statistic bands hold for the lumpy bootstrap
+// distributions small firms give, where batch means understate the error.
+function mcse(draws, t) {
+  const v = Float64Array.from(Array.from(draws).filter((d) => !Number.isNaN(d))).sort()
+  const B = v.length
+  const tail = (1 - K.CONFIDENCE) / 2
+  const band = (p) => {
+    const w = 3 * Math.SQRT2 * Math.sqrt((p * (1 - p)) / B)
+    return [quantile(v, Math.max(0, p - w)), quantile(v, Math.min(1, p + w))]
+  }
+  return { lo: band(tail), hi: band(1 - tail), p: t.exact ? 0 : Math.sqrt((t.p * (1 - t.p)) / t.draws) }
 }
 
 export function compareFirms(input) {
@@ -786,7 +804,10 @@ function flagRow(row, cells, withTest) {
 
 // The report type with the widest gap in share between the two firms, for
 // "Gensler publishes more market reports" in the text.
-function typeMix(a, b) {
+// With the type's median score across The List (the context: every firm at
+// the build in the chosen types) and the median of all of it.
+function typeMix(a, b, context) {
+  if (!a.length || !b.length) return null
   const types = [...new Set([...a, ...b].map((r) => r.type))]
   const share = (rs, t) => rs.filter((r) => r.type === t).length / rs.length
   let best = null
@@ -794,5 +815,7 @@ function typeMix(a, b) {
     const gap = share(b, t) - share(a, t)
     if (!best || Math.abs(gap) > Math.abs(best.gap)) best = { type: t, gap, shareA: share(a, t), shareB: share(b, t) }
   }
+  best.listMedian = median(context.filter((r) => r.type === best.type).map((r) => r.score))
+  best.listAll = median(context.map((r) => r.score))
   return best
 }

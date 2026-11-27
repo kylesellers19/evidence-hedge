@@ -521,6 +521,25 @@
   color: var(--eh-ink-soft);
   margin: 0 0 4px;
 }
+.eh-listsearchrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+.eh-listsearchrow .eh-listsearch {
+  flex: 1 1 320px;
+  max-width: 560px;
+}
+.eh-page a.eh-listcompare {
+  display: inline-flex;
+  align-items: center;
+  color: var(--eh-ink);
+  text-decoration: none;
+}
+.eh-list-comparefirm {
+  margin-left: 1.25em;
+}
 .eh-listsearch .eh-input {
   max-width: 560px;
   font-size: 16px; /* 16px keeps phones from zooming in on focus */

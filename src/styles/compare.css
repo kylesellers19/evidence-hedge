@@ -1,0 +1,343 @@
+/* ── Compare firms (/list/compare) ──────────────────────────────────────────
+   Scoped under .eh-compare. Delgam's frame: square corners, hairline rules, no
+   fills behind text, only the tokens in src/index.css :root. The chosen firm
+   draws in ink; the other firms in --eh-ink-faint (3:1 and more for marks);
+   the context column in --eh-dot, its values printed. Blue keeps its meaning
+   on links and focus, and is never a firm's color. */
+
+.eh-compare {
+  --cmp-other: var(--eh-ink-faint);
+  --cmp-context: var(--eh-dot);
+}
+.eh-compare .eh-hed { margin-bottom: 20px; }
+
+/* Scope line and the readers' checkbox. */
+.eh-compare .cmp-scope {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 20px;
+  font: 15px/1.5 var(--eh-sans);
+  color: var(--eh-ink-soft);
+  border-top: 1px solid var(--eh-hairline);
+  border-bottom: 1px solid var(--eh-hairline);
+  padding: 10px 0;
+  margin: 0 0 24px;
+}
+.eh-compare .cmp-scopeline { margin: 0; flex: 1 1 28em; }
+.eh-compare .cmp-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font: 15px/1.4 var(--eh-sans);
+  color: var(--eh-ink);
+}
+.eh-compare .cmp-check input { width: 16px; height: 16px; margin: 0; accent-color: var(--eh-ink); }
+
+/* The three panels, left to right, stacking below 768 px. */
+.eh-compare .cmp-panels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  align-items: start;
+}
+@media (max-width: 767px) {
+  .eh-compare .cmp-panels { grid-template-columns: 1fr; gap: 20px; }
+}
+.eh-compare .cmp-panel {
+  border: 0;
+  border-top: 1px solid var(--eh-ink);
+  margin: 0;
+  padding: 10px 0 0;
+  min-width: 0;
+}
+.eh-compare .cmp-panel legend { padding: 0; float: left; width: 100%; }
+.eh-compare .cmp-panel legend + * { clear: both; }
+.eh-compare .cmp-panel-h {
+  font: 600 17px/1.3 var(--eh-sans) !important;
+  margin: 0 0 12px !important;
+  letter-spacing: 0;
+}
+.eh-compare .cmp-panel.is-inactive,
+.eh-compare .cmp-panel.is-inactive .cmp-panel-h,
+.eh-compare .cmp-panel.is-inactive .cmp-option-name,
+.eh-compare .cmp-panel.is-inactive .cmp-label {
+  color: var(--eh-ink-faint);
+}
+.eh-compare .cmp-panel.is-inactive { border-top-color: var(--eh-hairline); }
+.eh-compare .cmp-label {
+  display: block;
+  font: 600 13px/1.4 var(--eh-sans);
+  color: var(--eh-ink-soft);
+  margin: 0 0 4px;
+}
+
+/* The firm list: always open, scrolls inside its panel. */
+.eh-compare .cmp-options {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  max-height: 264px;
+  overflow-y: auto;
+  border-top: 1px solid var(--eh-hairline);
+  border-bottom: 1px solid var(--eh-hairline);
+  font: 15px/1.35 var(--eh-sans);
+}
+.eh-compare .cmp-option {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 6px 6px;
+  border: 1px solid transparent;
+  border-bottom-color: var(--eh-hairline);
+  cursor: pointer;
+}
+.eh-compare .cmp-option:last-child { border-bottom-color: transparent; }
+.eh-compare .cmp-option.is-active { border-color: var(--eh-ink); }
+.eh-compare .cmp-combo input:not(:focus) ~ .cmp-options .cmp-option.is-active { border-color: transparent; border-bottom-color: var(--eh-hairline); }
+.eh-compare .cmp-option.is-off { cursor: default; color: var(--eh-ink-faint); }
+.eh-compare .cmp-option.is-none { cursor: default; color: var(--eh-ink-soft); }
+.eh-compare .cmp-option-n,
+.eh-compare .cmp-types td,
+.eh-compare .cmp-num,
+.eh-compare .cmp-n {
+  font-variant-numeric: tabular-nums lining-nums;
+  white-space: nowrap;
+}
+.eh-compare .cmp-option-n { color: var(--eh-ink-soft); }
+.eh-compare .cmp-notlisted {
+  font: 14px/1.5 var(--eh-sans) !important;
+  color: var(--eh-ink-soft);
+  margin: 8px 0 0 !important;
+}
+.eh-compare .cmp-picked { font: 17px/1.4 var(--eh-sans) !important; margin: 0 0 8px !important; }
+
+/* Chips and suggestions. */
+.eh-compare .cmp-chips,
+.eh-compare .cmp-suggest ul {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.eh-compare .cmp-chips li,
+.eh-compare .cmp-suggest li { margin: 0; }
+.eh-compare .cmp-chip,
+.eh-compare .cmp-suggestion {
+  appearance: none;
+  font: 14px/1.2 var(--eh-sans);
+  color: var(--eh-ink);
+  background: transparent;
+  border: 1px solid var(--eh-ink-soft);
+  border-radius: 0;
+  padding: 6px 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.eh-compare .cmp-suggestion { border-style: dashed; }
+.eh-compare .cmp-chip:hover,
+.eh-compare .cmp-suggestion:hover { border-color: var(--eh-ink); }
+.eh-compare .cmp-chip-x { font-size: 15px; line-height: 1; color: var(--eh-ink-soft); }
+.eh-compare .cmp-suggest { margin: 0 0 12px; }
+
+/* Report types: a checkbox and each firm's count. */
+.eh-compare .cmp-types {
+  width: 100%;
+  border-collapse: collapse;
+  font: 14px/1.35 var(--eh-sans);
+}
+.eh-compare .cmp-types th,
+.eh-compare .cmp-types td {
+  border-bottom: 1px solid var(--eh-hairline);
+  padding: 5px 0 5px 8px;
+  text-align: left;
+  vertical-align: middle;
+}
+.eh-compare .cmp-types th[scope='row'] { padding-left: 0; font-weight: 400; }
+.eh-compare .cmp-types thead th {
+  font: 600 12px/1.3 var(--eh-sans);
+  color: var(--eh-ink-soft);
+  border-bottom-color: var(--eh-ink);
+  max-width: 7em;
+  overflow-wrap: anywhere;
+}
+.eh-compare .cmp-types .n { text-align: right; }
+.eh-compare .cmp-types thead th.is-chosen { color: var(--eh-ink); }
+.eh-compare .cmp-zero-n { color: var(--eh-ink-faint); }
+.eh-compare .cmp-allnone { margin: 10px 0 0 !important; }
+.eh-compare .eh-button.cmp-small { min-height: 32px; padding: 5px 12px; font-size: 13px; }
+
+/* The Compare button and why it waits. */
+.eh-compare .cmp-go {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 24px 0 0 !important;
+}
+.eh-compare .cmp-reason { font: 15px/1.4 var(--eh-sans); color: var(--eh-ink-soft); }
+.eh-compare .cmp-summary { font: 17px/1.5 var(--eh-sans) !important; margin: 0 0 8px !important; }
+.eh-compare .cmp-working { font: 16px/1.5 var(--eh-sans); color: var(--eh-ink-soft); margin: 24px 0; }
+
+/* ── Results ─────────────────────────────────────────────────────────── */
+
+.eh-compare .cmp-results { margin-top: 24px; }
+.eh-compare .cmp-lead {
+  font: 600 29px/1.25 var(--eh-serif) !important;
+  margin: 16px 0 4px !important;
+  max-width: 36em;
+  text-wrap: balance;
+}
+.eh-compare .cmp-lead:focus { outline: none; }
+.eh-compare .cmp-lead:focus-visible { outline: 2px solid var(--eh-accent); outline-offset: 4px; }
+.eh-compare .cmp-leadlink { font: 14px/1.4 var(--eh-sans) !important; margin: 0 0 8px !important; }
+.eh-compare .cmp-h {
+  font: 600 16px/1.35 var(--eh-sans) !important;
+  margin: 36px 0 6px !important;
+}
+.eh-compare .cmp-key,
+.eh-compare .cmp-more {
+  font: 13px/1.5 var(--eh-sans) !important;
+  color: var(--eh-ink-soft);
+  margin: 6px 0 0 !important;
+}
+
+/* The grid: firms as columns, the same all the way down. */
+.eh-compare .cmp-grid {
+  display: grid;
+  column-gap: 16px;
+  font: 14px/1.35 var(--eh-sans);
+}
+.eh-compare .cmp-row { display: contents; }
+.eh-compare .cmp-row > * {
+  border-top: 1px solid var(--eh-hairline);
+  padding: 8px 0 10px;
+  min-width: 0;
+}
+.eh-compare .cmp-head > * {
+  border-top: 0;
+  border-bottom: 1px solid var(--eh-ink);
+  padding: 4px 0 6px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.eh-compare .cmp-head + .cmp-row > * { border-top: 0; }
+.eh-compare .cmp-firm { color: var(--eh-ink-soft); font-weight: 600; }
+.eh-compare .cmp-firm.is-chosen { color: var(--eh-ink); font-weight: 700; }
+.eh-compare .cmp-firm.is-context,
+.eh-compare .cmp-cell.is-context .cmp-value { font-style: italic; color: var(--eh-ink-soft); font-weight: 400; }
+.eh-compare .cmp-label { font: 600 14px/1.35 var(--eh-sans); color: var(--eh-ink); margin: 0; }
+.eh-compare .cmp-row > .cmp-label { display: block; }
+.eh-compare .cmp-labelnote { display: block; font: 400 12px/1.4 var(--eh-sans); color: var(--eh-ink-soft); margin-top: 2px; }
+.eh-compare .cmp-cell { display: flex; flex-direction: column; gap: 3px; }
+.eh-compare .cmp-cellname { display: none; }
+.eh-compare .cmp-value { font: 13px/1.3 var(--eh-sans); color: var(--eh-ink-soft); }
+.eh-compare .cmp-cell.is-chosen .cmp-num { color: var(--eh-ink); font-weight: 700; }
+.eh-compare .cmp-num { color: var(--eh-ink); font-weight: 600; font-size: 14px; }
+.eh-compare .cmp-n { color: var(--eh-ink-faint); }
+.eh-compare a.cmp-n { color: var(--eh-accent); }
+.eh-compare .cmp-none { color: var(--eh-ink-faint); font: 13px/1.3 var(--eh-sans); }
+
+/* Marks. */
+.eh-compare .cmp-bar { display: block; width: 100%; height: 24px; overflow: visible; }
+.eh-compare .cmp-axis { stroke: var(--eh-hairline); stroke-width: 1; }
+.eh-compare .cmp-barfill { fill: var(--cmp-other); }
+.eh-compare .cmp-bar.is-chosen .cmp-barfill { fill: var(--eh-ink); }
+.eh-compare .cmp-bar.is-context .cmp-barfill { fill: var(--cmp-context); }
+.eh-compare .cmp-tick { stroke: var(--cmp-other); stroke-width: 1; stroke-opacity: 0.45; }
+.eh-compare .cmp-bar.is-chosen .cmp-tick { stroke: var(--eh-ink); }
+.eh-compare .cmp-mark { stroke: var(--eh-ink); stroke-width: 2; }
+.eh-compare .cmp-time { width: 100%; }
+.eh-compare .cmp-timechart { display: block; }
+.eh-compare .cmp-dot { fill: var(--cmp-other); fill-opacity: 0.4; }
+.eh-compare .cmp-timechart.is-chosen .cmp-dot { fill: var(--eh-ink); fill-opacity: 0.35; }
+.eh-compare .cmp-timechart.is-context .cmp-dot { fill: var(--cmp-context); fill-opacity: 0.35; }
+.eh-compare .cmp-trend { stroke: var(--cmp-other); stroke-width: 2; }
+.eh-compare .cmp-timechart.is-chosen .cmp-trend { stroke: var(--eh-ink); }
+.eh-compare .cmp-timechart.is-context .cmp-trend { stroke: var(--eh-ink-faint); stroke-dasharray: 3 2; }
+
+/* The text. */
+.eh-compare .cmp-text { max-width: var(--eh-prose); }
+.eh-compare .cmp-text p { font: 19px/1.6 var(--eh-serif); margin: 0 0 14px; }
+.eh-compare .cmp-cite { font: 13px/1 var(--eh-sans); white-space: nowrap; }
+
+/* The forest table. */
+.eh-compare .cmp-forest th[scope='row'] { font-weight: 400; white-space: normal; min-width: 8em; }
+.eh-compare .cmp-forest .cmp-group th {
+  font: 600 13px/1.4 var(--eh-sans);
+  color: var(--eh-ink);
+  padding-top: 16px;
+  border-bottom: 1px solid var(--eh-ink);
+}
+.eh-compare .cmp-forest tbody:first-of-type .cmp-group th { padding-top: 8px; }
+.eh-compare .cmp-plotcol { width: 26%; min-width: 120px; }
+.eh-compare .cmp-interval { display: block; width: 100%; height: 14px; }
+.eh-compare .cmp-zero { stroke: var(--eh-ink-faint); stroke-width: 1; stroke-dasharray: 2 2; }
+.eh-compare .cmp-ci { stroke: var(--cmp-other); stroke-width: 2; }
+.eh-compare .cmp-est { fill: var(--cmp-other); }
+.eh-compare .cmp-forest tr.is-differs .cmp-ci { stroke: var(--eh-ink); }
+.eh-compare .cmp-forest tr.is-differs .cmp-est { fill: var(--eh-ink); }
+.eh-compare .cmp-forest tr.is-differs td:last-child { font-weight: 600; }
+.eh-compare .cmp-forest tr:target th,
+.eh-compare .cmp-forest tr:target td { border-bottom-color: var(--eh-ink); }
+.eh-compare .cmp-forest tr:target th[scope='row'] { font-weight: 700; }
+.eh-compare .cmp-wordscol { color: var(--eh-ink-soft); }
+.eh-compare .cmp-close {
+  font: 15px/1.5 var(--eh-sans) !important;
+  color: var(--eh-ink-soft);
+  border-top: 1px solid var(--eh-hairline);
+  padding-top: 12px;
+  margin-top: 28px !important;
+}
+
+/* Phones: each grid row becomes a block with one line per firm. */
+@media (max-width: 600px) {
+  .eh-compare .cmp-grid { display: block !important; }
+  .eh-compare .cmp-head { display: none; }
+  .eh-compare .cmp-row { display: block; border-top: 1px solid var(--eh-hairline); padding: 8px 0 6px; }
+  .eh-compare .cmp-row > * { border-top: 0 !important; padding: 2px 0; }
+  .eh-compare .cmp-row > .cmp-label { padding-bottom: 6px; }
+  .eh-compare .cmp-cell {
+    display: grid;
+    grid-template-columns: minmax(5.5em, 7.5em) minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 10px;
+  }
+  .eh-compare .cmp-cell .cmp-value { text-align: right; }
+  .eh-compare .cmp-cellname { display: block; font: 600 13px/1.3 var(--eh-sans); color: var(--eh-ink-soft); overflow-wrap: anywhere; }
+  .eh-compare .cmp-cellname.is-chosen { color: var(--eh-ink); }
+  .eh-compare .cmp-cellname.is-context { font-style: italic; font-weight: 400; }
+  .eh-compare .cmp-wordscol { display: none; }
+  .eh-compare .cmp-plotcol { width: 30%; min-width: 72px; }
+  .eh-compare .cmp-lead { font-size: 23px !important; }
+  .eh-compare .cmp-text p { font-size: 18px; }
+}
+
+/* On paper: the results, not the panels. */
+@media print {
+  .eh-compare .cmp-panels,
+  .eh-compare .cmp-go,
+  .eh-compare .cmp-change,
+  .eh-compare .cmp-readers,
+  .eh-compare .cmp-cite,
+  .eh-compare .cmp-leadlink,
+  .eh-compare .cmp-more {
+    display: none !important;
+  }
+  .eh-compare .cmp-row > * { break-inside: avoid; }
+}
+.eh-compare .eh-button.is-quiet:disabled {
+  color: var(--eh-ink-faint);
+  border-color: var(--eh-hairline);
+  background: transparent;
+}
+.eh-compare .cmp-forest td:last-child,
+.eh-compare .cmp-forest th:last-child { padding-left: 18px; white-space: nowrap; }
+.eh-compare .cmp-forest .cmp-plotcol { padding-left: 14px; padding-right: 14px; }
+.eh-compare .cmp-forest .cmp-group th { white-space: normal; }

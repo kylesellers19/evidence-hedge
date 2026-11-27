@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { usePageTitle } from '../../components/layout/SiteLayout.jsx'
-import { hasFlagCounts } from '../store.js'
+import { loadCompareRows } from '../store.js'
+import CompareTool from './CompareTool.jsx'
+import '../../styles/compare.css'
 
 /**
  * Compare firms (/list/compare). Shown only when The List's table has the
@@ -11,23 +13,28 @@ import { hasFlagCounts } from '../store.js'
  */
 export default function ComparePage() {
   usePageTitle('Compare firms')
-  const [available, setAvailable] = useState(null) // null while asking the table
+  const [state, setState] = useState({ status: 'loading', rows: null })
 
   useEffect(() => {
     let live = true
-    hasFlagCounts().then((yes) => { if (live) setAvailable(yes) }, () => { if (live) setAvailable(false) })
+    loadCompareRows()
+      .then((r) => { if (live) setState(r.unavailable ? { status: 'unavailable', rows: null } : { status: 'ready', rows: r.rows }) })
+      .catch(() => { if (live) setState({ status: 'failed', rows: null }) })
     return () => { live = false }
   }, [])
 
   return (
     <main className="eh-page eh-compare">
-      <header className="eh-col">
+      <header className="eh-wide">
         <p className="eh-kicker">The List</p>
         <h1 className="eh-hed">Compare firms</h1>
-        {available === null
-          ? <p className="eh-dek" role="status">Loading The List…</p>
-          : <p className="eh-dek">Comparing firms isn’t available yet, but every report and its score are on <Link to="/list">The List</Link>.</p>}
       </header>
+      <div className="eh-wide">
+        {state.status === 'loading' && <p className="cmp-working" role="status">Loading The List…</p>}
+        {state.status === 'unavailable' && <p className="eh-dek">Comparing firms isn’t available yet, but every report and its score are on <Link to="/list">The List</Link>.</p>}
+        {state.status === 'failed' && <p className="eh-dek" role="alert">The List could not be loaded just now. Reload the page to try again, or go back to <Link to="/list">The List</Link>.</p>}
+        {state.status === 'ready' && <CompareTool rows={state.rows} />}
+      </div>
     </main>
   )
 }

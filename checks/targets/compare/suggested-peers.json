@@ -1,0 +1,34 @@
+{
+ "selection": {
+  "slug": "suggested-peers",
+  "firm": "Arcadis North America",
+  "vs": [
+   "NV5 Global",
+   "SSOE",
+   "HOK"
+  ],
+  "types": [
+   "Research report",
+   "Survey report",
+   "White paper",
+   "Industry or market report",
+   "News article",
+   "Opinion or commentary",
+   "Marketing material",
+   "Other"
+  ],
+  "readers": false
+ },
+ "build": "5b40af6",
+ "sentences": [
+  {
+   "text": "With 75 reports from Arcadis North America and 57, 18 and 31 from NV5 Global, SSOE and HOK, no difference in score, flags or trends can be told apart from chance.",
+   "cites": [
+    "score-1",
+    "score-2",
+    "score-3"
+   ],
+   "kind": "none"
+  }
+ ]
+}

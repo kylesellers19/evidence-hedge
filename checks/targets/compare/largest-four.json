@@ -1,0 +1,84 @@
+{
+ "selection": {
+  "slug": "largest-four",
+  "firm": "Arup US",
+  "vs": [
+   "Mortenson",
+   "WSP",
+   "JE Dunn Construction"
+  ],
+  "types": [
+   "Research report",
+   "Survey report",
+   "White paper",
+   "Industry or market report",
+   "Press release",
+   "News article",
+   "Opinion or commentary",
+   "Marketing material",
+   "Other"
+  ],
+  "readers": false
+ },
+ "build": "5b40af6",
+ "sentences": [
+  {
+   "text": "Arup US’s reports score lower than Mortenson’s and JE Dunn Construction’s and can’t be told apart from WSP’s.",
+   "cites": [
+    "score-1",
+    "score-3",
+    "score-2"
+   ],
+   "kind": "lead"
+  },
+  {
+   "text": "Across all their report types, Arup US’s reports score a typical 1.7 points lower than Mortenson’s (95% interval 1.4 to 1.9; 351 and 135 reports).",
+   "cites": [
+    "score-1"
+   ],
+   "kind": "differs"
+  },
+  {
+   "text": "Comparing like with like, the gap narrows to 0.1 points (−0.3 to 0.7) and can’t be told apart from chance.",
+   "cites": [
+    "scoretype-1"
+   ],
+   "kind": "apart"
+  },
+  {
+   "text": "For every 100 claims, Arup US’s reports have 7.9 that claim more cause than the study shows and Mortenson’s have 5.5 (Arup US’s 1.4 times as many; 1.2 to 1.8).",
+   "cites": [
+    "flag-overreach-1"
+   ],
+   "kind": "differs"
+  },
+  {
+   "text": "Against WSP, the gap can’t be told apart from chance with this many reports.",
+   "cites": [
+    "score-2"
+   ],
+   "kind": "apart"
+  },
+  {
+   "text": "Arup US’s reports score a typical 0.9 points lower than JE Dunn Construction’s (0.6 to 1.1; 351 and 111 reports).",
+   "cites": [
+    "score-3"
+   ],
+   "kind": "differs"
+  },
+  {
+   "text": "Since 2016, Mortenson’s scores have fallen by about 0.5 points a year (0.2 to 0.6).",
+   "cites": [
+    "trend-score-1"
+   ],
+   "kind": "differs"
+  },
+  {
+   "text": "Arup US’s and Mortenson’s trends in scores differ by about 0.5 points a year (0.3 to 0.7).",
+   "cites": [
+    "trendgap-score-1"
+   ],
+   "kind": "differs"
+  }
+ ]
+}

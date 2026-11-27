@@ -1,0 +1,30 @@
+{
+ "selection": {
+  "slug": "small-against-largest",
+  "firm": "Suffolk",
+  "vs": [
+   "Arup US"
+  ],
+  "types": [
+   "Research report",
+   "White paper",
+   "Industry or market report",
+   "Press release",
+   "News article",
+   "Opinion or commentary",
+   "Marketing material",
+   "Other"
+  ],
+  "readers": false
+ },
+ "build": "5b40af6",
+ "sentences": [
+  {
+   "text": "With 7 reports from Suffolk and 351 from Arup US, no difference in score, flags or trends can be told apart from chance.",
+   "cites": [
+    "score-1"
+   ],
+   "kind": "none"
+  }
+ ]
+}

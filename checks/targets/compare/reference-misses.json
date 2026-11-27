@@ -1,0 +1,13 @@
+{
+  "note": "Interval ends where the reference implementation's value falls outside our run's order-statistic band (three Monte Carlo standard errors). Each was looked into; none moved a constant. See docs/compare/SESSION_LOG.md.",
+  "misses": [
+    {
+      "selection": "small-against-largest",
+      "row": "trendgap-unsupported-1",
+      "end": "hi",
+      "ours": 9.4167,
+      "reference": 9.3300,
+      "finding": "Monte Carlo noise at the edge of the band. Five more seeds of ours give 9.36 to 9.40, and 100,000 draws give 9.367; the reference's 9.330 is about 2.5 seed-to-seed standard deviations below that, and its own batch-means error is 0.013. The estimate, p and the other end agree."
+    }
+  ]
+}

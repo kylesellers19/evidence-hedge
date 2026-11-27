@@ -33,6 +33,8 @@ jobs:
         run: npm run check:conferences
       - name: Check the Record's public file
         run: npm run check:record
+      - name: Check the compare tool's statistics and text
+        run: npm run check:compare
       - name: Build
         run: npm run build
         env:

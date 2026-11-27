@@ -1,0 +1,24 @@
+{
+ "selection": {
+  "slug": "small-exact",
+  "firm": "Autodesk",
+  "vs": [
+   "Trimble"
+  ],
+  "types": [
+   "Research report",
+   "White paper"
+  ],
+  "readers": false
+ },
+ "build": "5b40af6",
+ "sentences": [
+  {
+   "text": "With 5 reports from Autodesk and 5 from Trimble, no difference in score, flags or trends can be told apart from chance.",
+   "cites": [
+    "score-1"
+   ],
+   "kind": "none"
+  }
+ ]
+}

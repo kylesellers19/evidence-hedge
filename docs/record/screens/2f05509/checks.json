@@ -1,0 +1,224 @@
+{
+ "base": "http://localhost:4174",
+ "runs": [
+  {
+   "width": 1440,
+   "scheme": "light",
+   "screenshot": "docs/record/screens/2f05509/record-1440-light.png",
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  },
+  {
+   "width": 1440,
+   "scheme": "dark",
+   "screenshot": "docs/record/screens/2f05509/record-1440-dark.png",
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  },
+  {
+   "width": 1024,
+   "scheme": "light",
+   "screenshot": "docs/record/screens/2f05509/record-1024-light.png",
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  },
+  {
+   "width": 1024,
+   "scheme": "dark",
+   "screenshot": "docs/record/screens/2f05509/record-1024-dark.png",
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  },
+  {
+   "width": 768,
+   "scheme": "light",
+   "screenshot": "docs/record/screens/2f05509/record-768-light.png",
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  },
+  {
+   "width": 768,
+   "scheme": "dark",
+   "screenshot": "docs/record/screens/2f05509/record-768-dark.png",
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  },
+  {
+   "width": 390,
+   "scheme": "light",
+   "screenshot": "docs/record/screens/2f05509/record-390-light.png",
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  },
+  {
+   "width": 390,
+   "scheme": "dark",
+   "screenshot": "docs/record/screens/2f05509/record-390-dark.png",
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  }
+ ],
+ "interactions": [
+  {
+   "width": 1440,
+   "steps": [
+    {
+     "step": "select organization",
+     "ok": true
+    },
+    {
+     "step": "click a point",
+     "ok": true,
+     "note": "no points: the figure shows its empty state"
+    },
+    {
+     "step": "open Open ground",
+     "ok": true
+    },
+    {
+     "step": "open “First” claims",
+     "ok": true
+    },
+    {
+     "step": "open Claims",
+     "ok": true
+    },
+    {
+     "step": "open Method",
+     "ok": true
+    },
+    {
+     "step": "close a view",
+     "ok": true
+    },
+    {
+     "step": "tab reaches select",
+     "ok": true
+    },
+    {
+     "step": "tab reaches the four view buttons",
+     "ok": true
+    },
+    {
+     "step": "every focused control shows focus",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "tab reaches every measure name",
+     "ok": true
+    }
+   ],
+   "tabbed": 22
+  },
+  {
+   "width": 390,
+   "steps": [
+    {
+     "step": "select organization",
+     "ok": true
+    },
+    {
+     "step": "click a point",
+     "ok": true,
+     "note": "no points: the figure shows its empty state"
+    },
+    {
+     "step": "open Open ground",
+     "ok": true
+    },
+    {
+     "step": "open “First” claims",
+     "ok": true
+    },
+    {
+     "step": "open Claims",
+     "ok": true
+    },
+    {
+     "step": "open Method",
+     "ok": true
+    },
+    {
+     "step": "close a view",
+     "ok": true
+    },
+    {
+     "step": "tab reaches select",
+     "ok": true
+    },
+    {
+     "step": "tab reaches the four view buttons",
+     "ok": true
+    },
+    {
+     "step": "every focused control shows focus",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "tab reaches every measure name",
+     "ok": true
+    }
+   ],
+   "tabbed": 22
+  }
+ ],
+ "failures": []
+}

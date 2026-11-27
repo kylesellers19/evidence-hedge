@@ -7,46 +7,41 @@ import { STATES, fmt, fmtInterval } from './model.js'
 export function OpenGroundView({ q }) {
   const rows = q.open_ground?.rows || []
   if (!rows.length) return <p className="rec-state">Open ground is not estimated yet.</p>
-  const shown = rows.filter((r) => r.residual && r.residual.value !== null && r.residual.value !== undefined)
-  const vals = shown.flatMap((r) => [r.residual.lo, r.residual.hi, r.residual.value]).filter((v) => v !== null && v !== undefined)
+  const has = (r) => r.residual && r.residual.value !== null && r.residual.value !== undefined
+  const vals = rows.filter(has).flatMap((r) => [r.residual.lo ?? r.residual.value, r.residual.hi ?? r.residual.value, r.residual.value])
   const domain = vals.length ? [Math.min(0, ...vals) - 0.2, Math.max(0, ...vals) + 0.2] : [-1, 1]
   return (
     <>
       <p>{q.open_ground.summary}</p>
-      <div className="rec-scroll" tabIndex={0} role="region" aria-label="Open ground table">
-        <table className="rec-table">
-          <caption className="rec-sr">Sub-questions by how far news demand runs ahead of the documents that answer them.</caption>
-          <thead>
-            <tr>
-              <th scope="col">Sub-question</th>
-              <th scope="col" className="n">Documents</th>
-              <th scope="col" className="n" title="Standardized residual of news demand given the documents published; above 0 means more demand than supply predicts">Demand gap</th>
-              <th scope="col"><span className="rec-sr">Mark</span></th>
-              <th scope="col" className="n">Years of past</th>
+      <table className="rec-table stack og">
+        <caption className="rec-sr">Sub-questions by how far news demand runs ahead of the documents that answer them, with 95% intervals.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Sub-question</th>
+            <th scope="col" className="n">Demand gap</th>
+            <th scope="col" className="n">95% interval</th>
+            <th scope="col" className="n">Years of past</th>
+            <th scope="col"><span className="rec-sr">Mark: dot is the gap, line the interval, tick zero</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.subq}>
+              <th scope="row" className="c-name" style={{ fontWeight: 500 }}>
+                {r.label}
+                <span className="rec-basis">{r.basis}{r.saturated ? `; demand stopped rising in ${r.saturated}` : ''}</span>
+              </th>
+              <td className="n v">
+                {has(r) ? fmt(r.residual.value, 'score', { signed: true })
+                  : <span className="rec-state" title={r.residual?.reason || ''}>{STATES[r.residual?.gate] || 'Pending'}</span>}
+              </td>
+              <td className="n ci">{has(r) ? fmtInterval(r.residual, 'score') : ''}</td>
+              <td className="n med yrs">{r.depth_years === null || r.depth_years === undefined ? '—' : r.depth_years.toFixed(1)}</td>
+              <td className="mark">{has(r) ? <Mark cell={r.residual} median={0} domain={domain} signed /> : null}</td>
             </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.subq}>
-                <th scope="row" style={{ fontWeight: 500 }}>
-                  {r.label}
-                  <span className="rec-basis">{r.basis}</span>
-                </th>
-                <td className="n rec-num">{r.documents}</td>
-                <td className="n rec-num">
-                  {r.residual?.value !== null && r.residual?.value !== undefined
-                    ? <>{fmt(r.residual.value, 'score', { signed: true })}<span className="rec-basis">{fmtInterval(r.residual, 'score')}</span></>
-                    : <span className="rec-state" title={r.residual?.reason || ''}>{STATES[r.residual?.gate] || 'Pending'}</span>}
-                </td>
-                <td style={{ minWidth: 120, verticalAlign: 'middle' }}>
-                  {r.residual?.value !== null && r.residual?.value !== undefined ? <Mark cell={r.residual} median={0} domain={domain} signed /> : null}
-                </td>
-                <td className="n rec-num">{r.depth_years === null || r.depth_years === undefined ? '—' : r.depth_years.toFixed(1)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </>
   )
 }
@@ -163,6 +158,23 @@ export function MethodView({ q, file }) {
           ))}
         </tbody>
       </table>
+      {(me.findings || []).length > 0 && (
+        <div className="rec-scroll" tabIndex={0} role="region" aria-label="Research analyses" style={{ marginTop: 24 }}>
+          <table className="rec-table">
+            <caption className="rec-sr">Research analyses at this map's scale. None is a measure of one organization.</caption>
+            <thead><tr><th scope="col">Analysis</th><th scope="col">Status</th><th scope="col">At this scale</th></tr></thead>
+            <tbody>
+              {me.findings.map((f) => (
+                <tr key={f.name}>
+                  <th scope="row" style={{ fontWeight: 500 }}>{f.name}</th>
+                  <td style={{ whiteSpace: 'nowrap' }}>{STATES[f.gate] || f.gate}</td>
+                  <td style={{ fontSize: 13, color: 'var(--rec-ink-2)' }}>{f.result}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       {me.objection && (
         <dl className="rec-dl">
           <dt>The strongest objection</dt>

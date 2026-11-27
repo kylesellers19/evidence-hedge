@@ -1216,6 +1216,43 @@
    ],
    "method": {
     "constants_provisional": 29,
+    "findings": [
+     {
+      "gate": "provisional",
+      "name": "Who cites whom",
+      "result": "12 citations among 86 documents; 0 cross from one organization to another. Organizations here cite news, government data and research outside the map, and their own earlier editions."
+     },
+     {
+      "gate": "too_few",
+      "name": "Earlier literature the map is missing",
+      "result": "54 earlier documents in the map and 485 earlier works cited by its documents, with no work on both lists. Under independence that implies about 26,729 earlier works (interval 7,979 to 92,734), but most cited works are not on this question, so the figure is not used: originality verdicts rest on the depth of the map instead."
+     },
+     {
+      "gate": "too_few",
+      "name": "Expected but uncited, and whether it leans contrary",
+      "result": "Needs 30 cross-organization citations before and after the window to train and validate a ranker; the map has 2 and 10. The stance test runs on the ranker’s output, so it waits too."
+     },
+     {
+      "gate": "too_few",
+      "name": "Authority without evidence",
+      "result": "12 citation paths, all within one organization’s series; 6 end in a document with its own data. With no citation between organizations there is no network to judge."
+     },
+     {
+      "gate": "provisional",
+      "name": "How long a finding goes on being restated",
+      "result": "155 findings were restated by later documents. Half stopped being restated within 1.1 years (Kaplan-Meier). Flagged findings: hazard ratio 0.79 (95% interval 0.57 to 1.10), no clear difference from unflagged ones (Cox)."
+     },
+     {
+      "gate": "pending",
+      "name": "Pickup that begets pickup",
+      "result": "A Hawkes process needs 20 independent articles for one report; news links are not in yet."
+     },
+     {
+      "gate": "too_few",
+      "name": "Is overreach rewarded",
+      "result": "The plan needs 60 repeated claims in 20 reports; the map has 0. Nothing is estimated."
+     }
+    ],
     "gates": [
      {
       "detail": "Chosen and grouped automatically; labeling sheets wait for Kyle.",

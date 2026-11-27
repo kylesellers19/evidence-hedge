@@ -31,6 +31,8 @@ jobs:
         run: npm ci
       - name: Check conference release
         run: npm run check:conferences
+      - name: Check the Record's public file
+        run: npm run check:record
       - name: Build
         run: npm run build
         env:

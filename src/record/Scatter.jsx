@@ -57,7 +57,11 @@ export default function Scatter({ q, selectedId, onSelect, xKey, yKey }) {
   if (pts.length < 3) {
     return (
       <p className="rec-state" role="status">
-        {pts.length === 0 ? 'No organization has both measures yet, so there is nothing to plot.' : 'Too few organizations have both measures to plot.'}
+        {pts.length === 0
+          ? (q.organizations.every((o) => o.values[xKey]?.gate === 'pending')
+            ? `${xm.label} is not measured yet, so this figure of ${xm.label.toLowerCase()} against ${ym.label.toLowerCase()} waits for it.`
+            : 'No organization has both measures yet, so there is nothing to plot.')
+          : 'Too few organizations have both measures to plot.'}
       </p>
     )
   }

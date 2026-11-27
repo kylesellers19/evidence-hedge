@@ -80,7 +80,7 @@ export default function LegalPage() {
           reports that readers added, each with its publisher’s name, the report’s name, type and date, and
           its score. A score there describes one document as one build of the engine read it. It is not a
           rating of the firm that published the report, of the people who wrote it or of the firm’s other
-          work.
+          work. A comparison of firms describes their reports on The List in the same way, not the firms.
         </p>
         <p>
           Company names, report titles and trademarks belong to their owners, and we use them only to say
@@ -109,7 +109,7 @@ export default function LegalPage() {
             Adding a report sends the details you confirm, the score, the engine build, how many claims
             were weighed and how many each flag marks, and a one-way fingerprint of the text, which keeps
             the same report from being listed twice. The text itself is never sent, and an entry records
-            nothing about the person who added it.
+            nothing about the person who added it. Comparing firms reads the same entries and sends nothing.
           </li>
           <li>
             <strong>Conference research.</strong> The public research files are served with the site by

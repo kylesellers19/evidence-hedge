@@ -14,6 +14,7 @@ import { PRONOUN_REACH } from '../engine/attribution.js'
 import { SCORE_WEIGHTS as W, BAND_THRESHOLDS, SUMMARY, bandFor, READ_AS } from '../engine/scoreDocument.js'
 import { DESIGNS, DESIGN_CEILINGS, CITATION_DENSE_MIN } from '../engine/profile/design.js'
 import { SHARED_PROVENANCE } from '../engine/profile/standards.js'
+import { COMPARE_CONSTANTS as CMP } from '../list/compare/constants.js'
 import { SIGNAL_TITLES } from '../engine/signals/titles.js'
 import { COMPLETENESS_CHECKS } from '../engine/signals/completeness.js'
 import { GATE_MIN_WORDS } from '../engine/signals/general.js'
@@ -201,6 +202,7 @@ export default function MethodPage() {
               <li><a href="#example">One paragraph, worked through</a></li>
               <li><a href="#limits">What the score does not show</a></li>
               <li><a href="#testing">How we test it</a></li>
+              <li><a href="#compare">How the comparison works</a></li>
               <li><a href="#privacy">Your document</a></li>
               <li><a href="#sources">Sources</a></li>
             </ol>
@@ -671,6 +673,44 @@ export default function MethodPage() {
             or how many flags the engine misses. Until we have, read a flag as a place to look, not a verdict.
           </p>
 
+          {/* ── 13b ───────────────────────────────────────────────────────── */}
+          <h2 id="compare">How the comparison works</h2>
+          <p>
+            <Link to="/list/compare">Compare firms</Link> sets one firm’s reports on The List beside up to{' '}
+            {CMP.MAX_OTHERS} other firms’. The report is the unit: every interval comes from resampling a firm’s
+            reports and every test from reshuffling which firm published which report, so a long report counts
+            once, not once for each of its claims. A comparison uses the reports one engine build scored, the
+            build behind most of the chosen firm’s reports, so every score and flag was read by the same rules.
+            Only our corpus audit’s reports count at first, since we collected every freely available report
+            from each firm while readers choose which reports to add; theirs come in when you ask for them, and
+            only if the same build scored them.
+          </p>
+          <ul>
+            <li><strong>Score.</strong> The typical gap is the Hodges–Lehmann shift, the median of every difference between one firm’s report and another’s, with a 95% interval from {CMP.BOOTSTRAP_DRAWS.toLocaleString('en-US')} resamples and a p from {CMP.PERMUTATION_DRAWS.toLocaleString('en-US')} reshuffles of the Mann–Whitney statistic.</li>
+            <li><strong>Score, report type accounted for.</strong> The gap within each type both firms publish, averaged with more weight where both have more reports; reports are resampled and reshuffled within their type, as in van Elteren’s test.</li>
+            <li><strong>Each flag.</strong> A firm’s rate is its flagged claims per 100 claims weighed, pooled over its reports, and two firms are compared by the ratio of their rates. A gap is described only when the average of the reports’ own rates leans the same way, since pooling gives long reports more weight.</li>
+            <li><strong>Each flag, report type accounted for.</strong> The Mantel–Haenszel ratio across report types, with claims weighed as the denominator.</li>
+            <li><strong>Trends.</strong> The Theil–Sen slope of score, or of each report’s flag rate, on publication year, tested by shuffling the years among a firm’s reports.</li>
+            <li><strong>Gaps between trends.</strong> The chosen firm’s slope less the other’s, tested by shuffling which firm published which dated report. One firm’s trend passing while another’s does not is never read as a difference between them.</li>
+          </ul>
+          <p>
+            Holm’s method adjusts the p values within each family of tests. A gap is called a difference only
+            when its adjusted p is under {CMP.ALPHA}, its interval leaves out no difference, each firm has at
+            least {CMP.MIN_REPORTS} reports in the data the test uses and the gap is one worth stating: {CMP.MIN_SCORE_SHIFT}{' '}
+            points of score; a ratio outside {CMP.RATE_RATIO_LOW} to {CMP.RATE_RATIO_HIGH} with rates at least{' '}
+            {CMP.MIN_RATE_GAP} claims in 100 apart; or a trend of {CMP.MIN_SCORE_SLOPE} points or{' '}
+            {CMP.MIN_RATE_SLOPE} claim in 100 a year. A trend needs {CMP.TREND_MIN_REPORTS} dated reports across{' '}
+            {CMP.TREND_MIN_YEARS} years. Everything else reads “Can’t be told apart” or “Too few reports.”
+          </p>
+          <p>
+            Left out are reports another build scored, readers’ reports unless you ask for them, undated reports
+            (from trends only) and the claims’ text, which the tool never sees. The report types of our audit’s
+            entries come from their titles, by rule, not from reading each report. Every threshold, minimum and
+            number of draws is provisional, and the statistics are checked against a separate implementation
+            built on SciPy and statsmodels; the{' '}
+            <a href="https://github.com/kylesellers19/evidence-hedge/blob/main/docs/compare.md">specification</a> lists each one.
+          </p>
+
           {/* ── 14 ────────────────────────────────────────────────────────── */}
           <h2 id="privacy">Your document</h2>
           <p>
@@ -683,7 +723,8 @@ export default function MethodPage() {
             A report reaches <Link to="/list">The List</Link> only if you add it from the bottom of its evidence
             brief. Then we send the details you confirm, the score, the engine build, how many claims were
             weighed and how many each flag marks, and a one-way fingerprint of the text that keeps the same
-            report from being listed twice. The text itself is never sent.
+            report from being listed twice. The text itself is never sent. Comparing firms reads The List and
+            sends nothing.
           </p>
 
           {/* ── 15 ────────────────────────────────────────────────────────── */}

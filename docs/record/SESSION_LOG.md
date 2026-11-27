@@ -1,12 +1,12 @@
 # The Record: session log and summary
 
-Session of 2026-11-27, 01:09 to 06:50 EST, unattended. Spec: "Evidence Hedge: build The
+Session of 2026-11-27, 01:09 to 09:55 EST, unattended. Spec: "Evidence Hedge: build The
 Record, unattended" (pasted by Kyle). If context is compacted, reread this file first.
 
 ## Summary
 
-**Shipped and live** at https://evidencehedge.org/record (main = c08b176, Pages run
-45992856510; first deploy fc48893). The page maps one question, digital tools and data
+**Shipped and live** at https://evidencehedge.org/record (main = 80bfd17, Pages run
+46018504505; earlier deploys fc48893, c08b176, f4cc21c). The page maps one question, digital tools and data
 in how places are designed, built and run, from 86 corpus documents by 25
 organizations, and measures the 18 with documents in the reporting window
 (2023-01-01 to 2026-11-26). Every organization is unnamed (Organization 1 to 18) and
@@ -18,8 +18,8 @@ every figure is provisional.
 | Map (research `record/`) | Built, map 19ad617a8af2: 20,148 engine claims, 19 sub-questions, dates with sources, designs, stated sample sizes |
 | New findings (anchors + SPICED) | 3,738 findings judged, 3,529 new; ranks robust to the thresholds, levels not |
 | References (GROBID) | 731 entries parsed, none resolve to a map document; 12 text citations, all self-citations |
-| News coverage (propagation Gate 1) | **Running** for the map's 30 window reports (`record-c11`, started 02:25, in GDELT at 06:42); Pending on the page |
-| Parts F and G | Built; run on the propagation pilot's 5 L1 links: 4 pickups, 3 intact, 1 causal upgrade |
+| News coverage (propagation Gate 1) | `record-c11` done: 30 reports, 2,074 queries, 754 candidates, 7 L1 links (all the firms' own releases, copies or pages), **0 independent articles**; predictions R1 to R6: 2 hit, 4 miss |
+| Parts F and G | Built; run on the propagation pilot's 5 L1 links: 4 pickups, 3 intact, 1 causal upgrade; nothing to match for the map |
 | Measures and models | All nine measure rows; pooled rates; shares; staying power; open ground; "first" claims |
 | Research analyses | Half-life (Kaplan-Meier, Cox) run; citation-network methods too few; overreach plan written first, too few |
 | AI assistant comparison | Harness and 50 questions built; **not run**: no assistant key configured |
@@ -50,8 +50,8 @@ Every figure: no input has a gold label yet.
 | Designs and sample sizes | Provisional | sheet |
 | New or made earlier | Provisional | `gates/novelty.md` |
 | Citations | Provisional for the two rates (0 everywhere); too few for every network method | `gates/citations.md` |
-| News links | Pending (Gate 1 running) | `gates/coverage.md` |
-| Claims repeated in articles | Pending for the map; ran on the pilot | `gates/coverage.md` |
+| News links | Too few: 0 independent articles for 16 organizations; pending for 2 not in the run | `gates/coverage.md` |
+| Claims repeated in articles | Too few for the map; ran on the pilot | `gates/coverage.md` |
 | Is overreach rewarded | Too few (needs 60 repeated claims in 20 reports; has 0) | `analysis_plan.md` |
 | Assistant comparison | Not run (no keys) | `method.md` §11 |
 | Naming organizations | Not passed: Kyle decides | — |
@@ -105,15 +105,19 @@ Research repo, gitignored `data/record/labeling/` (they hold claim text):
 8. **Pooled shares' intervals** treat findings as independent; a document-level bootstrap
    would widen them.
 
-## When `record-c11` finishes
+## Coverage for the map (done 09:35 to 09:55)
 
-1. Tell the propagation session ("Evidence Hedge claim propagation engine"); its
-   coverage-matrix probes wait for this run.
-2. In the research worktree: `envs/record/.venv/bin/python -m record.export --app
-   "<app worktree>" --coverage-tag record-c11` (coverage, pickups by Parts F and G,
-   Hawkes, overreach counts), then `-m record.analyses`, and check the predictions R1 to
-   R6 in `reports/propagation/predictions.md` against the tables.
-3. In the app worktree: `npm run check:record`, build, browser check, fast-forward main.
+- `record-c11` crashed on its last line (the manifest's index-version list); the
+  propagation session's fix 4144ae6 was cherry-picked and the run replayed offline to
+  write the manifest. Linking rules E2 (the first pilot's); the widened pilot used E3.
+- All 7 L1 links were the firms speaking: press releases, wire copies of them, a firm's
+  own page. Independent coverage counts none of these (`record/coverage.py`), so coverage
+  is too few to estimate and the figure says it has nothing to plot.
+- To refresh coverage later: `PYTHONPATH=. envs/record/.venv/bin/python -m record.export
+  --app "<app worktree>" --coverage-tag <tag>` in the research worktree, then
+  `npm run check:record`, build, browser check, fast-forward main.
+- Widening coverage needs sources that hold the trade press: Media Cloud (the propagation
+  session now has a client running), or a web search API.
 
 ## Session record
 
@@ -139,7 +143,9 @@ Times are EST.
 - 02:35 Ratification table; offline replay byte-identical; cold embeddings identical.
 - 02:40 Parts F and G on the pilot.
 - 06:45 Open-ground demand recounted for the current labels during Gate 1's GDELT stage;
-  second deploy (c08b176), verified live.
+  second deploy (c08b176), verified live; session summary f4cc21c.
+- 09:35 `record-c11` finished; manifest by offline replay; coverage folded in (0
+  independent articles); fourth deploy (80bfd17), verified live.
 
 ## Failed, and what was done
 

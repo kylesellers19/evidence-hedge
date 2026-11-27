@@ -1152,21 +1152,21 @@
     {
      "cite": "Hierarchical beta-binomial with partial pooling.",
      "definition": "Of the later documents on a sub-question it shares, the share that cite it.",
-     "how": "Citations from reference lists (GROBID 0.9.1) matched to the map’s titles, and from the text when a later document names the firm and the title.",
+     "how": "Citations from reference lists, read by GROBID 0.9.1 (an open-source parser of reference lists) and matched to the map’s titles, and from the text when a later document names the firm and the title.",
      "key": "cited_by_later",
      "label": "Cited by later work",
      "unit": "rate"
     },
     {
-     "cite": "SPICED: Wright, Pei, Jurgens and Augenstein, EMNLP 2022.",
+     "cite": "SPICED: Wright, Pei, Jurgens and Augenstein, Conference on Empirical Methods in Natural Language Processing, 2022.",
      "definition": "Its share of the map’s new findings: results no earlier document in the map states.",
-     "how": "A finding is new unless an earlier document holds a sentence the matcher judges to state the same information: a shared figure and a SPICED score of 3.5 or more, or a score of 4 or more without one.",
+     "how": "A finding is new unless an earlier document holds a sentence the matcher judges to state the same information: a shared figure and a score of 3.5 or more from SPICED (a model trained to tell whether two sentences state the same scientific finding), or a score of 4 or more without one.",
      "key": "new_share",
      "label": "New findings",
      "unit": "share"
     },
     {
-     "cite": "Barron, Huang, Spang and DeDeo, PNAS 2018.",
+     "cite": "Barron, Huang, Spang and DeDeo, Proceedings of the National Academy of Sciences, 2018.",
      "definition": "How much later documents keep to what it said, minus how far it broke from what came before. Above zero, later work kept to it.",
      "how": "Resonance over each document’s mix of sub-questions, five documents either side in time order. Later scholars renamed resonance to avoid implying cause.",
      "key": "staying_power",
@@ -1322,7 +1322,7 @@
      },
      {
       "assumes": "Sub-question mixes describe what a document is about, and time order is known.",
-      "cite": "Barron, Huang, Spang and DeDeo, PNAS 2018.",
+      "cite": "Barron, Huang, Spang and DeDeo, Proceedings of the National Academy of Sciences, 2018.",
       "fails": "The newest documents have no five successors and get no value; undated documents are left out; a poor sub-question grouping moves every value.",
       "name": "Staying power",
       "what": "Novelty is how far a document’s mix of sub-questions departs from the five documents before it; transience, how far from the five after it. Resonance, shown as staying power, is novelty minus transience. Organizations’ means are pooled toward the field."
@@ -1332,7 +1332,7 @@
       "cite": "Cameron and Trivedi, Regression Analysis of Count Data, 2nd ed.",
       "fails": "Common words count unrelated news; CC-NEWS under-holds trade press; three to nine years per sub-question is a short series.",
       "name": "Open ground",
-      "what": "News demand for each sub-question (its label’s words counted in CC-NEWS, scaled by the size of each month’s crawl) is modeled with a negative binomial regression on the documents published that year. A sub-question’s demand gap is its mean standardized residual over the window: above zero, more demand than the documents predict."
+      "what": "News demand for each sub-question (its label’s words counted in CC-NEWS, Common Crawl’s archive of news pages, scaled by the size of each month’s crawl) is modeled with a negative binomial regression on the documents published that year. A sub-question’s demand gap is its mean standardized residual over the window: above zero, more demand than the documents predict."
      },
      {
       "assumes": "Demand is steady between change points.",

@@ -11,58 +11,67 @@ Worktrees: app `Evidence Hedge/.claude/worktrees/record` (branch `record`), rese
 Preview server for checks: `record-preview` in the main checkout's `.claude/launch.json`
 (vite preview of the worktree's `dist/`, port 4174). Browser check:
 `node checks/record-browser.mjs http://localhost:4174 docs/record/screens/<short>`.
-Rebuild the data: in the research worktree, `envs/record/.venv/bin/python -m record.map`,
-then `-m record.analyses`, `PYTHONPATH=. envs/propagation/.venv/bin/python -m record.open_ground`,
-then `-m record.export --app <app worktree> [--coverage-tag record-c11]`.
+Rebuild the data, in the research worktree:
+`envs/record/.venv/bin/python -m record.map`, `-m record.analyses`,
+`-m record.sensitivity`, `PYTHONPATH=. envs/propagation/.venv/bin/python -m record.open_ground`,
+then `envs/record/.venv/bin/python -m record.export --app <app worktree> [--coverage-tag record-c11]`.
+
+**Shared services.** The propagation session ("Evidence Hedge claim propagation engine")
+runs Gate 1 from the main research checkout. Infini-News allows one request in flight
+per client and archive.org about 15 a minute: never run two Infini-News jobs at once;
+message that session before and after each run.
 
 ## Done
 
-- Inventory (`INVENTORY.md`), baseline tags, worktrees.
-- `envs/record` pinned; models pinned by revision: all-MiniLM-L6-v2 1110a24,
+- 01:10 Inventory (`INVENTORY.md`), baseline tags, worktrees.
+- 01:20 `envs/record` pinned; models pinned by revision: all-MiniLM-L6-v2 1110a24,
   nli-roberta-base 1be0567 (safetensors only), SPICED c32c33a (already cached).
-- Analysis plan for "is overreach rewarded" committed before any outcome (e11aff5).
-- Cluster choice. The first rule picked a leftover bin (cluster 4, mean silhouette
+- 01:30 Analysis plan for "is overreach rewarded" committed before any outcome (e11aff5).
+- 01:35 Cluster choice. The first rule picked a leftover bin (cluster 4, mean silhouette
   −0.0003); added `CLUSTER_MIN_SILHOUETTE` > 0 before any measure; map = cluster 11
   (digital tools and data, 86 documents, 25 organizations). `gates/map.md`.
-- Map built (30639005c5e2): 20,148 claims, 19 sub-questions, 3,738 findings judged,
-  3,529 new. Two pre-measure fixes logged in `gates/novelty.md` (reference-list lines
-  dropped; a finding is a result-stating claim).
-- Citations: GROBID parsed 731 reference-list entries, none resolving to a map document;
-  the text channel (firm and title named) found 12, all self-citations of earlier
-  editions. No organization cites another's report.
-- Rates: hierarchical beta-binomial with hyperparameters integrated over a grid (the
-  plug-in empirical Bayes fit collapsed to 0 to 0 when every count was zero).
-- Page `/record` (450dfd7): statement table, figure, switch, four views, light and dark;
-  `checks/record.test.mjs` and `checks/record-browser.mjs` pass; screens in
-  `screens/450dfd7/`.
-- Research analyses (`reports/record/analyses-<map>.json`): half-life of restated
-  findings (Kaplan-Meier median about 1.1 years; Cox flagged vs not HR 0.79,
-  0.57 to 1.10); every citation-network analysis too few; missing literature unbounded.
-- AI assistant harness built (`record/assistants.py`, 50 questions); not run: no keys.
-
+- 01:50 Map built; two pre-measure fixes (reference-list lines dropped; a finding is a
+  result-stating claim), `gates/novelty.md`.
+- 01:55 Citations: GROBID parsed 731 reference-list entries, none resolving to a map
+  document; the text channel found 12, all self-citations. `gates/citations.md`.
+- 02:00 Rates: hierarchical beta-binomial with hyperparameters integrated over a grid (the
+  plug-in empirical Bayes fit collapsed when every count was zero).
+- 02:05 Page `/record` (450dfd7); `checks/record.test.mjs`, `checks/record-browser.mjs`.
 - 02:12 First deploy: main fast-forwarded to fc48893 (no force); Pages run 45956792897
-  passed; live `/record` passes `checks/record-browser.mjs` (screens `screens/live-fc48893/`);
-  `/`, `/list`, `/method`, `/contact`, `/legal`, `/conferences` load with no errors
-  (`checks/site-smoke.mjs`). The main checkout's local `main` was left at aabc47f.
-- Took the propagation session's GDELT fixes (60 s spacing, 10 attempts) onto research
-  `record`; coordinating Infini-News use with that session by message (one request in
-  flight per client).
+  passed; live `/record` passes the browser check (`screens/live-fc48893/`); the other
+  pages load with no errors (`checks/site-smoke.mjs`). The main checkout's local `main`
+  was left at aabc47f (another session uses that checkout).
+- 02:20 Three reviews (`reviews/`) and their fixes: sub-question membership needs a tenth
+  of a document's claims (map 19ad617a8af2), label words of three letters or more,
+  citation bases in possible citations, `<0.1%`, selector shows documents, robustness
+  notes (threshold sensitivity: ranks stable, Spearman ≥ 0.99; sub-question
+  standardization: 9 of 45 pairs swap).
+- 02:30 `gates/ratification.md` generated from the code: 42 constants, all PROVISIONAL.
+- 02:35 Offline replay (`RECORD_OFFLINE=1` map, analyses, export) byte-identical on map
+  19ad617a8af2: 8 files. Not tested: a cold rerun that recomputes embeddings.
+- Research analyses (`reports/record/analyses-<map>.json`): half-life of restated findings
+  (Kaplan-Meier median 1.1 years; Cox flagged vs not HR 0.79, 0.57 to 1.10); every
+  citation-network method too few; missing earlier literature unbounded.
+- AI assistant harness built (`record/assistants.py`, 50 questions); not run: no keys.
 
 ## Next
 
-- Open-ground demand counts (running), then rerun Gate 1 for the map (`record-c11`)
-  alone against Infini-News.
-- Coverage into record.json when Gate 1 finishes; Parts F and G for its links.
-- Method write-up, three reviews, merge and deploy.
+- Gate 1 for the map (`record-c11`, started 02:25): when it exits, message the
+  propagation session; export with `--coverage-tag record-c11` (coverage, pickups by
+  Parts F and G, Hawkes, overreach dry run); then recount open-ground demand for map
+  19ad617a8af2's labels (Infini-News, alone); export; browser check; final merge.
 
 ## Failed
 
-- The widened Gate 1 pilot (`pilot-w`, started by an earlier session) stopped on a GDELT
-  429 ("one request every 5 seconds"). Not restarted: not this session's run. The
-  spacing fix is on research branch `record` (d6dddcf).
-- Gate 1 for the map (`record-c11`) stopped once on an Infini-News 429 ("at most 1 in
-  flight per client"), because this session ran the open-ground counts at the same
-  time. To rerun alone; responses so far are cached.
+- The widened Gate 1 pilot (`pilot-w`, the propagation session's run) stopped on a GDELT
+  429; that session fixed the spacing and restarted it at 02:05. Its fixes are on
+  research `record` too (cherry-picked).
+- `record-c11` stopped once (01:53) on an Infini-News 429 ("at most 1 in flight per
+  client") because this session ran the open-ground counts at the same time. Rerun alone
+  from 02:25.
+- Open-ground counts, first try: Infini-News matches bytes, so "ai" matched inside "said"
+  (6.3 billion hits). Fixed: space-padded whole words (`OPEN_FORMS`).
+- A wait loop matched its own command line in `pgrep` and never ended; stopped.
 
 ## For Kyle
 

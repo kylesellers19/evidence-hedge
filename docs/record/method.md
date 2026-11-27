@@ -3,7 +3,7 @@
 Each method below goes past a descriptive count only because a count failed in a way
 the earlier simulation exposed. For each: the weakness it fixes, what it does, the
 citation, what it assumes, how it fails, and its state on the first map (digital tools
-and data, map build 30639005c5e2, engine 90fa8b3, window 2023-01-01 to 2026-11-26).
+and data, map build 19ad617a8af2, engine 90fa8b3, window 2023-01-01 to 2026-11-26).
 Code: research repo `record/`. Every constant is in `record/config.py`, PROVISIONAL.
 
 ## 1. Small counts: hierarchical beta-binomial with partial pooling
@@ -68,7 +68,17 @@ Code: research repo `record/`. Every constant is in `record/config.py`, PROVISIO
 - **Assumes.** Sub-question mixes describe content; dates are right.
 - **Fails when.** The newest 5 documents have no successors (no value); a poor grouping
   moves every value; same-day documents are ordered by ID.
-- **First map.** τ² = 0.0023: organizations barely differ once pooled.
+- **First map.** Organizations barely differ once pooled (τ² near 0.002).
+
+## 4b. Robustness of new findings
+
+- **Threshold sensitivity** (`record/sensitivity.py`): with the matcher's two thresholds
+  half a point looser (3.0/3.5) 69% of window findings are new; as used (3.5/4.0) 92%;
+  half a point stricter (4.0/4.5) 98%. Organizations' shares keep their order (Spearman
+  0.99 and 1.00) and move at most 4.7 points.
+- **Sub-question mix** (Simpson's paradox): standardizing each organization's rate of new
+  findings to the map's sub-question mix reorders them (rank correlation 0.63; 9 of 45
+  pairs swap). The page compares shares of the record's new findings, not rates.
 
 ## 5. Disruption: the CD index
 

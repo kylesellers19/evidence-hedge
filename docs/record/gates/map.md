@@ -65,6 +65,18 @@ Logged as a deviation, not a ratified rule. Both choices are in
 | 8 | 56 | 1 | 56 | 1.00 | 0.7767 | 56 | journal issue, ri, wong, emas, figs, steelwork |
 | 23 | 14 | 1 | 14 | 1.00 | 0.5402 | 14 | costs brief, graeve amy, amy burk, graeve, larry graeve, prepared american |
 
+## Sub-questions
+
+19 groups of the map's 20,148 body claims (k chosen by silhouette on a seeded sample of
+6,000 claims). A document is on a sub-question when at least 3 of its claims, and at
+least a tenth of all its body claims, fall in it (`SUBQ_MIN_SHARE`, added at review: with
+the count alone, 69 of 86 documents were on one group). Each group has 2 to 26
+documents. Labels are the group's top three c-TF-IDF terms used by three or more
+organizations, with no organization-name word and no word under three letters.
+
+Map build hash after the review fixes: **19ad617a8af2** (earlier builds 27f0ad30451d and
+30639005c5e2 are superseded; their sheets sit in `labeling/superseded/`).
+
 ## What this choice cannot see
 
 - **Firm series pull documents together.** A quarterly series shares its boilerplate, so
@@ -89,3 +101,4 @@ depends on the wording.
 - `designs-<map>.csv`: each document's design, sample size and whether it belongs on the question.
 - `subq-<map>.csv`: 12 claims from each sub-question, to confirm the groups and their labels.
 - `newness-<map>.csv`: 150 "new" or "made earlier" decisions with both claims side by side.
+- `first-<map>.csv`: every window claim with "first" in it, and whether the check took it.

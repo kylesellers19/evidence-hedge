@@ -40,6 +40,14 @@ then `-m record.export --app <app worktree> [--coverage-tag record-c11]`.
   0.57 to 1.10); every citation-network analysis too few; missing literature unbounded.
 - AI assistant harness built (`record/assistants.py`, 50 questions); not run: no keys.
 
+- 02:12 First deploy: main fast-forwarded to fc48893 (no force); Pages run 45956792897
+  passed; live `/record` passes `checks/record-browser.mjs` (screens `screens/live-fc48893/`);
+  `/`, `/list`, `/method`, `/contact`, `/legal`, `/conferences` load with no errors
+  (`checks/site-smoke.mjs`). The main checkout's local `main` was left at aabc47f.
+- Took the propagation session's GDELT fixes (60 s spacing, 10 attempts) onto research
+  `record`; coordinating Infini-News use with that session by message (one request in
+  flight per client).
+
 ## Next
 
 - Open-ground demand counts (running), then rerun Gate 1 for the map (`record-c11`)

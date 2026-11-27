@@ -3,9 +3,10 @@
 //
 // The entry carries the details the person confirms (company, industry, report
 // type, report name, publication date), the score and the engine build that
-// produced it, and a SHA-256 fingerprint of the text so the same report is not
-// listed twice. The document's text never leaves the browser; a check holds
-// that (checks/list.test.mjs).
+// produced it, how many claims were weighed and flagged and how many each flag
+// marks (the brief's own counts, statsOf), and a SHA-256 fingerprint of the
+// text so the same report is not listed twice. The document's text never
+// leaves the browser; a check holds that (checks/list.test.mjs).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { INDUSTRIES, REPORT_TYPES, REPORT_TYPE_FOR_FORM } from './fields.js'
@@ -54,8 +55,10 @@ export function validateEntry(draft, { today = new Date().toISOString().slice(0,
   return errors
 }
 
-// The record sent to The List. Only these fields; never the text.
-export function buildEntry(draft, { score, engine, docHash }) {
+// The record sent to The List. Only these fields; never the text. stats is
+// the brief's stats row (src/components/results/briefTop.js statsOf).
+export function buildEntry(draft, { score, engine, docHash, stats = null }) {
+  const count = (v) => (Number.isInteger(v) && v >= 0 ? v : null)
   return {
     company: clean(draft.company),
     industry: draft.industry,
@@ -65,7 +68,46 @@ export function buildEntry(draft, { score, engine, docHash }) {
     score: Math.round(Number(score) * 10) / 10,
     engine: String(engine),
     docHash,
+    claims: count(stats?.claims),
+    flagged: count(stats?.flagged),
+    unsupported: count(stats?.unsupported),
+    overconfident: count(stats?.overconfident),
+    overreach: count(stats?.overreach),
   }
+}
+
+// Whether an entry's counts meet the table's checks (docs/the-list.sql version
+// 3). Counts that don't are left off, so the entry is still added.
+export function countsHold(e) {
+  const n = [e.claims, e.flagged, e.unsupported, e.overconfident, e.overreach]
+  if (!n.every((v) => Number.isInteger(v) && v >= 0)) return false
+  return e.unsupported + e.overconfident <= e.flagged && e.overreach <= e.flagged &&
+    e.unsupported + e.overconfident + e.overreach >= e.flagged && e.claims >= e.flagged
+}
+
+// The row an entry becomes: its details, score, build and fingerprint, and,
+// for a table that has the columns, its claim and flag counts.
+export function rowOf(entry, { counts = false } = {}) {
+  const row = {
+    company: entry.company,
+    industry: entry.industry,
+    report_type: entry.reportType,
+    report_name: entry.reportName,
+    published_on: entry.publishedOn,
+    score: entry.score,
+    engine: entry.engine,
+    doc_hash: entry.docHash,
+  }
+  if (counts && countsHold(entry)) {
+    Object.assign(row, {
+      claims: entry.claims,
+      flagged: entry.flagged,
+      unsupported: entry.unsupported,
+      overconfident: entry.overconfident,
+      overreach: entry.overreach,
+    })
+  }
+  return row
 }
 
 // SHA-256 of the text as the engine read it, in hex. One-way: the text cannot

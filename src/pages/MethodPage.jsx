@@ -681,8 +681,9 @@ export default function MethodPage() {
           </p>
           <p>
             A report reaches <Link to="/list">The List</Link> only if you add it from the bottom of its evidence
-            brief. Then we send the details you confirm, the score, the engine build and a one-way fingerprint
-            of the text that keeps the same report from being listed twice. The text itself is never sent.
+            brief. Then we send the details you confirm, the score, the engine build, how many claims were
+            weighed and how many each flag marks, and a one-way fingerprint of the text that keeps the same
+            report from being listed twice. The text itself is never sent.
           </p>
 
           {/* ── 15 ────────────────────────────────────────────────────────── */}

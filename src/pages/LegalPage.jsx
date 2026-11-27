@@ -15,7 +15,7 @@ import { usePageTitle, CONTACT_EMAIL, COPYRIGHT } from '../components/layout/Sit
  */
 
 // Associated Press style, as every date on the site.
-const UPDATED = 'Nov. 22, 2026'
+const UPDATED = 'Nov. 27, 2026'
 
 const POLICIES = {
   github: 'https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement',
@@ -106,9 +106,10 @@ export default function LegalPage() {
           </li>
           <li>
             <strong>The List.</strong> Opening The List asks a database hosted by Supabase for its entries.
-            Adding a report sends the details you confirm, the score, the engine build and a one-way
-            fingerprint of the text, which keeps the same report from being listed twice. The text itself
-            is never sent, and an entry records nothing about the person who added it.
+            Adding a report sends the details you confirm, the score, the engine build, how many claims
+            were weighed and how many each flag marks, and a one-way fingerprint of the text, which keeps
+            the same report from being listed twice. The text itself is never sent, and an entry records
+            nothing about the person who added it.
           </li>
           <li>
             <strong>Conference research.</strong> The public research files are served with the site by

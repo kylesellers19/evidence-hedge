@@ -4,7 +4,7 @@ import { chromium } from 'playwright'
 const base = process.argv[2]
 const b = await chromium.launch()
 let bad = 0
-for (const p of ['/', '/list', '/method', '/contact', '/legal', '/conferences']) {
+for (const p of ['/', '/list', '/list/compare', '/method', '/contact', '/legal', '/conferences']) {
   const page = await b.newPage()
   const errs = []
   page.on('pageerror', (e) => errs.push(String(e)))

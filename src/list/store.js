@@ -12,6 +12,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { NO_FILTERS, matches, restFilter, median } from './filter.js'
+import { rowOf } from './entry.js'
 
 const URL_BASE = (import.meta.env.VITE_SUPABASE_URL || '').replace(/\/+$/, '')
 const KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
@@ -26,6 +27,11 @@ const COLUMN_OF = { company: 'company', industry: 'industry', reportType: 'repor
 export const LIST_IS_LIVE = Boolean(URL_BASE && KEY)
 
 const headers = () => ({ apikey: KEY, Authorization: `Bearer ${KEY}` })
+
+// The three flag counts (docs/the-list.sql version 3): how many of an entry's
+// claims state something as fact and cite nothing, cite a source but say more
+// than it shows, and claim more cause than the study shows.
+const FLAG_COLUMNS = 'unsupported,overconfident,overreach'
 
 const fromRow = (r) => ({
   id: r.id,
@@ -42,7 +48,32 @@ const fromRow = (r) => ({
   origin: r.origin || 'reader',
   claims: r.claims ?? null,
   flagged: r.flagged ?? null,
+  unsupported: r.unsupported ?? null,
+  overconfident: r.overconfident ?? null,
+  overreach: r.overreach ?? null,
 })
+
+// Whether the table has the version 3 columns, asked once a visit. The add
+// form sends the flag counts only when it does, and the compare tool shows
+// only then; until the SQL runs, both behave as before.
+let hasCounts = null
+export function hasFlagCounts() {
+  if (hasCounts) return hasCounts
+  if (!LIST_IS_LIVE) {
+    hasCounts = loadList().then((rows) => rows.length > 0 && rows.every((r) => r.unsupported != null), () => false)
+  } else {
+    // One row, every column: asking for columns the table lacks would answer
+    // 400, which the browser reports as an error on every visit until then.
+    hasCounts = fetch(`${TABLE}?select=*&limit=1`, { headers: headers() })
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`list_entries: ${res.status}`)
+        const [row] = await res.json()
+        return Boolean(row) && FLAG_COLUMNS.split(',').every((c) => c in row)
+      })
+      .catch((e) => { hasCounts = null; throw e })
+  }
+  return hasCounts
+}
 
 // Every entry, newest addition first.
 export async function loadList() {
@@ -94,25 +125,44 @@ export async function loadFirm(company) {
   return { count: scores.length, median: median(scores) }
 }
 
+// Every entry the compare tool can weigh, with the columns it needs, paged as
+// the table pages (at most 1,000 rows an answer) and checked against the
+// table's own count. Resolves { rows } or { unavailable: true } when the table
+// has no flag counts yet.
+export const COMPARE_COLUMNS = `id,company,report_type,report_name,published_on,published_precision,score,engine,origin,claims,flagged,${FLAG_COLUMNS},source_url`
+const COMPARE_PAGE = 1000
+export async function loadCompareRows() {
+  if (!(await hasFlagCounts())) return { unavailable: true }
+  if (!LIST_IS_LIVE) return { rows: await loadList() }
+  const rows = []
+  for (let offset = 0; ; offset += COMPARE_PAGE) {
+    const res = await fetch(`${TABLE}?select=${COMPARE_COLUMNS}&order=id.asc`, {
+      headers: { ...headers(), Prefer: 'count=exact', 'Range-Unit': 'items', Range: `${offset}-${offset + COMPARE_PAGE - 1}` },
+    })
+    if (res.status === 400) return { unavailable: true }
+    if (!res.ok && res.status !== 206) throw new Error(`list_entries: ${res.status}`)
+    const total = Number((res.headers.get('content-range') || '').split('/')[1])
+    const page = await res.json()
+    rows.push(...page.map(fromRow))
+    if (page.length < COMPARE_PAGE || rows.length >= total) {
+      if (Number.isFinite(total) && rows.length !== total) throw new Error(`list_entries: ${rows.length} of ${total} rows`)
+      return { rows }
+    }
+  }
+}
+
 // Add one entry (src/list/entry.js buildEntry). Resolves { ok: true, entry }
-// or { ok: false, reason: 'duplicate' | 'rejected' | 'network' }.
+// or { ok: false, reason: 'duplicate' | 'rejected' | 'network' }. The claim and
+// flag counts go only to a table with the version 3 columns.
 export async function addToList(entry) {
   if (!LIST_IS_LIVE) return { ok: false, reason: 'rejected' }
   let res
   try {
+    const counts = await hasFlagCounts().catch(() => false)
     res = await fetch(TABLE, {
       method: 'POST',
       headers: { ...headers(), 'Content-Type': 'application/json', Prefer: 'return=representation' },
-      body: JSON.stringify({
-        company: entry.company,
-        industry: entry.industry,
-        report_type: entry.reportType,
-        report_name: entry.reportName,
-        published_on: entry.publishedOn,
-        score: entry.score,
-        engine: entry.engine,
-        doc_hash: entry.docHash,
-      }),
+      body: JSON.stringify(rowOf(entry, { counts })),
     })
   } catch {
     return { ok: false, reason: 'network' }

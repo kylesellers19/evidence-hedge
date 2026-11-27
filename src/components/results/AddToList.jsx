@@ -4,7 +4,7 @@ import { INDUSTRIES, REPORT_TYPES } from '../../list/fields.js'
 import { draftEntry, validateEntry, buildEntry, docHash, LIMITS } from '../../list/entry.js'
 import { addToList, LIST_IS_LIVE } from '../../list/store.js'
 import { ENGINE_VERSION } from '../../engine/version.js'
-import { METHOD, scoreAnchor } from './briefTop.js'
+import { METHOD, scoreAnchor, statsOf } from './briefTop.js'
 
 // The last part of the evidence brief: add this report to The List. The engine
 // cannot tell who published a report or when, so the person fills those in;
@@ -32,7 +32,7 @@ export default function AddToList({ text, meta, result }) {
     setErrors(found)
     if (Object.keys(found).length) return
     setStatus('sending')
-    const entry = buildEntry(draft, { score, engine: ENGINE_VERSION, docHash: await docHash(text) })
+    const entry = buildEntry(draft, { score, engine: ENGINE_VERSION, docHash: await docHash(text), stats: statsOf(result) })
     const res = await addToList(entry)
     setStatus(res.ok ? 'added' : res.reason === 'duplicate' ? 'duplicate' : 'failed')
   }
@@ -100,8 +100,9 @@ export default function AddToList({ text, meta, result }) {
       </form>
 
       <p className="eh-addlist-note">
-        We send only these details, the score, the engine build and a fingerprint of the text (a one-way
-        hash that keeps the same report from being listed twice). The text itself stays in your browser.
+        We send only these details, the score, the engine build, how many claims were weighed and how
+        many each flag marks, and a fingerprint of the text (a one-way hash that keeps the same report
+        from being listed twice). The text itself stays in your browser.
         The entry is public, and adding it means you accept the{' '}
         <Link to="/legal#adding">terms for The List</Link>.
       </p>

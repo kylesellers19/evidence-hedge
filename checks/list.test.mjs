@@ -9,7 +9,9 @@
 //   · the sort controls: none clears a level and those below; a column chosen
 //     at a second level moves there
 //   · the entry sent to The List carries the confirmed details, the score, the
-//     engine build and the text's SHA-256, and never the document's text
+//     engine build, the claim and flag counts (only to a table with the
+//     version 3 columns, and only when they meet its checks) and the text's
+//     SHA-256, and never the document's text
 //   · the add form's rules, AP dates, and the table definition's vocabularies
 //     match src/list/fields.js (docs/the-list.sql)
 //   · finding reports (src/list/filter.js): the search needs every word in the
@@ -23,7 +25,7 @@ import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { LIST_FIELDS, INDUSTRIES, REPORT_TYPES, MAX_SORTS } from '../src/list/fields.js'
 import { sortEntries, clickHeading, setLevel } from '../src/list/sort.js'
-import { draftEntry, validateEntry, buildEntry, docHash, apDate, apDatePartial, guessReportName } from '../src/list/entry.js'
+import { draftEntry, validateEntry, buildEntry, docHash, apDate, apDatePartial, guessReportName, rowOf, countsHold } from '../src/list/entry.js'
 import { NO_FILTERS, SCORE_BANDS, searchWords, matches, restFilter, readParams, writeParams, isFiltered, median } from '../src/list/filter.js'
 import { bandFor } from '../src/engine/scoreDocument.js'
 
@@ -128,10 +130,21 @@ log('a median', median([3, 1, 2]) === 2 && median([4, 1, 3, 2]) === 2.5 && media
 const text = 'Acme 2026 Outlook\n\nOur platform cuts costs by 40%, a confidential figure nobody should see.'
 const draft = { company: '  Acme   Corp ', industry: 'Energy', reportType: 'White paper', reportName: 'Acme 2026 Outlook', publishedOn: '2026-02-03' }
 const hash = await docHash(text)
-const entry = buildEntry(draft, { score: 4.26, engine: 'af3c2e7', docHash: hash })
+const stats = { claims: 50, strong: 2, flagged: 20, unsupported: 15, overconfident: 3, overreach: 4, twoFlags: 2 }
+const entry = buildEntry(draft, { score: 4.26, engine: 'af3c2e7', docHash: hash, stats })
 log('the fingerprint is the text’s SHA-256', hash === createHash('sha256').update(text).digest('hex'))
 log('the entry holds only the listed fields',
-  same(Object.keys(entry).sort(), ['company', 'docHash', 'engine', 'industry', 'publishedOn', 'reportName', 'reportType', 'score']))
+  same(Object.keys(entry).sort(), ['claims', 'company', 'docHash', 'engine', 'flagged', 'industry', 'overconfident', 'overreach', 'publishedOn', 'reportName', 'reportType', 'score', 'unsupported']))
+log('the entry’s counts are the brief’s, without the strong or two-flag counts',
+  entry.claims === 50 && entry.flagged === 20 && entry.unsupported === 15 && entry.overconfident === 3 && entry.overreach === 4 && !('strong' in entry) && !('twoFlags' in entry))
+const TODAY_ROW = ['company', 'doc_hash', 'engine', 'industry', 'published_on', 'report_name', 'report_type', 'score']
+log('a table without the version 3 columns gets today’s row', same(Object.keys(rowOf(entry)).sort(), TODAY_ROW))
+log('a table with them also gets the claim and flag counts',
+  same(Object.keys(rowOf(entry, { counts: true })).sort(), [...TODAY_ROW, 'claims', 'flagged', 'overconfident', 'overreach', 'unsupported'].sort()))
+log('counts that break the table’s checks are left off, so the entry is still added',
+  countsHold(entry) && !countsHold({ ...entry, overconfident: 9 }) && !countsHold({ ...entry, claims: 10 }) && !countsHold({ ...entry, unsupported: 5 }) && !countsHold({ ...entry, overreach: null }) &&
+  same(Object.keys(rowOf({ ...entry, overconfident: 9 }, { counts: true })).sort(), TODAY_ROW))
+log('an entry built without a stats row sends no counts', same(Object.keys(rowOf(buildEntry(draft, { score: 4, engine: 'x', docHash: hash }), { counts: true })).sort(), TODAY_ROW))
 const sent = JSON.stringify(entry)
 log('the document’s text is never in the entry', !sent.includes('confidential') && !sent.includes('40%'))
 log('details are tidied and the score kept to one decimal', entry.company === 'Acme Corp' && entry.score === 4.3)
@@ -160,9 +173,21 @@ log("the public key adds only readers' entries, with a full date",
   /for insert[\s\S]{0,80}with check \(origin = 'reader' and published_precision = 'day' and published_on is not null\)/.test(sql.split('Version 2')[1] || ''))
 log('a date known to its month or year shows as one',
   apDatePartial('2023-11-01', 'month') === 'Nov. 2023' && apDatePartial('2019-01-01', 'year') === '2019' && apDatePartial(null, 'unknown') === 'Unknown' && apDatePartial('2026-10-29') === 'Oct. 29, 2026')
+// Version 3: which flags.
+const v3 = sql.split('Version 3')[1] || ''
+log('docs/the-list.sql adds the three flag counts, each at least 0',
+  ['unsupported', 'overconfident', 'overreach'].every((c) => new RegExp(`add column if not exists ${c} integer\\s+check \\(${c} is null or ${c} >= 0\\)`).test(v3)))
+log('the flag counts are checked against flagged and claims once all three are present',
+  ['unsupported + overconfident <= flagged', 'overreach <= flagged', 'unsupported + overconfident + overreach >= flagged', 'claims >= flagged'].every((c) => v3.includes(c)) &&
+  /unsupported is null or overconfident is null or overreach is null or \(/.test(v3))
+log("readers still add only their own entries, with a full date, and send all three counts or none",
+  /for insert[\s\S]{0,80}with check \(origin = 'reader' and published_precision = 'day' and published_on is not null\s+and \(\(unsupported is null and overconfident is null and overreach is null\)\s+or \(unsupported is not null and overconfident is not null and overreach is not null\)\)\)/.test(v3))
 const store = readFileSync(new URL('../src/list/store.js', import.meta.url), 'utf8')
 const columns = (store.match(/const COLUMNS = '([^']+)'/) || [])[1] || ''
 log('a page of The List asks for no document text', columns && !/text|body|content|doc_hash/.test(columns), columns)
+const compareColumns = ((store.match(/COMPARE_COLUMNS = `([^`]+)`/) || [])[1] || '').replace('${FLAG_COLUMNS}', 'unsupported,overconfident,overreach')
+log('the compare tool asks for no document text or fingerprint, and for the three counts',
+  compareColumns && !/text|body|content|doc_hash/.test(compareColumns) && ['unsupported', 'overconfident', 'overreach', 'claims', 'flagged', 'engine', 'origin'].every((c) => compareColumns.split(',').includes(c)), compareColumns)
 log('The List has the six columns asked for',
   same(LIST_FIELDS.map((f) => f.label), ['Company', 'Industry', 'Report type', 'Report name', 'Publication date', 'Score']))
 

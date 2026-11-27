@@ -76,6 +76,27 @@ export function buildEntry(draft, { score, engine, docHash, stats = null }) {
   }
 }
 
+// An entry as the table answers it (snake_case), as the site reads it.
+export const fromRow = (r) => ({
+  id: r.id,
+  addedAt: r.created_at,
+  company: r.company,
+  industry: r.industry,
+  reportType: r.report_type,
+  reportName: r.report_name,
+  publishedOn: r.published_on,
+  publishedPrecision: r.published_precision || 'day',
+  score: Number(r.score),
+  engine: r.engine,
+  sourceUrl: r.source_url || null,
+  origin: r.origin || 'reader',
+  claims: r.claims ?? null,
+  flagged: r.flagged ?? null,
+  unsupported: r.unsupported ?? null,
+  overconfident: r.overconfident ?? null,
+  overreach: r.overreach ?? null,
+})
+
 // Whether an entry's counts meet the table's checks (docs/the-list.sql version
 // 3). Counts that don't are left off, so the entry is still added.
 export function countsHold(e) {

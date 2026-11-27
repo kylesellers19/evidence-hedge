@@ -12,7 +12,12 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { NO_FILTERS, matches, restFilter, median } from './filter.js'
-import { rowOf } from './entry.js'
+import { rowOf, fromRow } from './entry.js'
+
+// The three flag counts (docs/the-list.sql version 3): how many of an entry's
+// claims state something as fact and cite nothing, cite a source but say more
+// than it shows, and claim more cause than the study shows.
+const FLAG_COLUMNS = 'unsupported,overconfident,overreach'
 
 const URL_BASE = (import.meta.env.VITE_SUPABASE_URL || '').replace(/\/+$/, '')
 const KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
@@ -27,31 +32,6 @@ const COLUMN_OF = { company: 'company', industry: 'industry', reportType: 'repor
 export const LIST_IS_LIVE = Boolean(URL_BASE && KEY)
 
 const headers = () => ({ apikey: KEY, Authorization: `Bearer ${KEY}` })
-
-// The three flag counts (docs/the-list.sql version 3): how many of an entry's
-// claims state something as fact and cite nothing, cite a source but say more
-// than it shows, and claim more cause than the study shows.
-const FLAG_COLUMNS = 'unsupported,overconfident,overreach'
-
-const fromRow = (r) => ({
-  id: r.id,
-  addedAt: r.created_at,
-  company: r.company,
-  industry: r.industry,
-  reportType: r.report_type,
-  reportName: r.report_name,
-  publishedOn: r.published_on,
-  publishedPrecision: r.published_precision || 'day',
-  score: Number(r.score),
-  engine: r.engine,
-  sourceUrl: r.source_url || null,
-  origin: r.origin || 'reader',
-  claims: r.claims ?? null,
-  flagged: r.flagged ?? null,
-  unsupported: r.unsupported ?? null,
-  overconfident: r.overconfident ?? null,
-  overreach: r.overreach ?? null,
-})
 
 // Whether the table has the version 3 columns, asked once a visit. The add
 // form sends the flag counts only when it does, and the compare tool shows

@@ -23,8 +23,8 @@
 //                 firm's dated reports; years shuffled among its reports,
 //                 statistic Mann–Kendall's |S|
 //   trend gap     chosen firm's slope minus the other's; the two firms'
-//                 bootstraps paired draw by draw; firm names shuffled among
-//                 their dated reports, years kept, statistic |slope gap|
+//                 bootstraps paired draw by draw, for the interval and the p
+//                 (twice the smaller tail)
 //
 // Holm's adjustment runs within each family (score, score by type, flags,
 // flags by type, trends, trend gaps). A result "differs" only when its
@@ -430,30 +430,6 @@ export function slopeBootstrap(x, y, { rand, draws = K.BOOTSTRAP_DRAWS }) {
   return out
 }
 
-// Both firms' Theil–Sen slopes under one labeling (label 1: the chosen firm),
-// from one walk along the pooled pair slopes.
-function labeledSlopes({ slope, pk, m }, L, totalA, totalB) {
-  if (totalA <= 0 || totalB <= 0) return [NaN, NaN]
-  const loA = Math.floor((totalA - 1) / 2), hiA = Math.floor(totalA / 2)
-  const loB = Math.floor((totalB - 1) / 2), hiB = Math.floor(totalB / 2)
-  let cA = 0, cB = 0, a1 = NaN, a2 = NaN, b1 = NaN, b2 = NaN
-  for (let k = 0; k < m; k++) {
-    const p = pk[k]
-    const u = L[p >>> 16]
-    if (u !== L[p & 0xffff]) continue
-    if (u === 1) {
-      if (cA === loA) a1 = slope[k]
-      if (cA === hiA) { a2 = slope[k]; if (b2 === b2) break }
-      cA++
-    } else {
-      if (cB === loB) b1 = slope[k]
-      if (cB === hiB) { b2 = slope[k]; if (a2 === a2) break }
-      cB++
-    }
-  }
-  return [(a1 + a2) / 2, (b1 + b2) / 2]
-}
-
 // Mann–Kendall's S: Σ over pairs of sign(x gap) × sign(y gap).
 export function kendallS(x, y) {
   let s = 0
@@ -509,45 +485,6 @@ export function trendTest(x, y, { rand, draws = K.PERMUTATION_DRAWS, exactLimit 
     if (atLeast(Math.abs(S(yr)), observed)) hits++
   }
   return { observed, hits, n: draws, exact: false, arrangements: factorial(n) }
-}
-
-// Shuffles firm names among the two firms' dated reports, keeping each
-// report's year and value; statistic |slope gap|. Both slopes come from one
-// walk along the pooled reports' pair slopes.
-export function trendGapTest(a, b, { rand, draws = K.PERMUTATION_DRAWS }) {
-  const x = [...a.x, ...b.x], y = [...a.y, ...b.y]
-  const nA = a.x.length, N = x.length
-  const pairs = sortedPairs(x, y)
-  const { index, years } = yearIndexOf(x)
-  const L = new Uint8Array(N)
-  const perA = new Int32Array(years), perB = new Int32Array(years)
-  const gap = () => {
-    perA.fill(0); perB.fill(0)
-    for (let i = 0; i < N; i++) (L[i] ? perA : perB)[index[i]]++
-    let sA = 0, sB = 0
-    for (let t = 0; t < years; t++) { sA += perA[t] * perA[t]; sB += perB[t] * perB[t] }
-    const [tA, tB] = labeledSlopes(pairs, L, (nA * nA - sA) / 2, ((N - nA) * (N - nA) - sB) / 2)
-    return Math.abs(tA - tB)
-  }
-  const label = (ix) => { L.fill(0); for (let i = 0; i < nA; i++) L[ix[i]] = 1 }
-  const all = Array.from({ length: N }, (_, i) => i)
-  label(all)
-  const observed = gap()
-  const total = choose(N, nA)
-  const extreme = (g) => g === g && atLeast(g, observed)
-  if (total <= K.PERMUTATION_DRAWS) {
-    let hits = 0
-    forEachCombination(N, nA, (c) => { label(c); if (extreme(gap())) hits++ })
-    return { observed, hits, n: total, exact: true, arrangements: total }
-  }
-  let hits = 0
-  const ix = all.slice()
-  for (let d = 0; d < draws; d++) {
-    for (let i = 0; i < nA; i++) { const j = i + pick(rand, N - i); const t = ix[i]; ix[i] = ix[j]; ix[j] = t }
-    label(ix)
-    if (extreme(gap())) hits++
-  }
-  return { observed, hits, n: draws, exact: false, arrangements: total }
 }
 
 // ── one comparison ───────────────────────────────────────────────────────────
@@ -629,11 +566,8 @@ export function planTasks(input) {
       add(`trend-${m}-${i}`, 'perm', 'trend', s, factorial(s.x.length) <= K.PERMUTATION_DRAWS)
       add(`trend-${m}-${i}`, 'boot', 'slopeboot', s)
     })
-    others.forEach((other, j) => {
-      const sa = seriesOf(chosen.reports, m), sb = seriesOf(other.reports, m)
-      if (!trendReady(sa.x) || !trendReady(sb.x)) return
-      add(`trendgap-${m}-${j + 1}`, 'perm', 'gap', { a: sa, b: sb }, choose(sa.x.length + sb.x.length, sa.x.length) <= K.PERMUTATION_DRAWS)
-    })
+    // Trend gaps need no tasks of their own: their interval and p come from
+    // the two firms' bootstrap draws, paired.
     // The context column's line: every firm on The List, no test.
     const c = seriesOf(input.context || [], m)
     if (new Set(c.x).size >= 2) tasks.push({ id: `context-${m}`, part: 'line', kind: 'line', args: c, slice: 0, draws: 0 })
@@ -653,7 +587,6 @@ export function runTask(seedKey, task) {
     case 'flagboot': return flagBootstrap(args.cells, { zero: args.zero, rand, draws })
     case 'trend': return trendTest(args.x, args.y, { rand, draws })
     case 'slopeboot': return slopeBootstrap(args.x, args.y, { rand, draws })
-    case 'gap': return trendGapTest(args.a, args.b, { rand, draws })
     case 'line': return theilSen(args.x, args.y)
     default: throw new Error(`unknown task ${task.kind}`)
   }
@@ -667,11 +600,14 @@ function clears(row) {
   const ratio = Math.exp(row.estimate)
   return (ratio < K.RATE_RATIO_LOW || ratio > K.RATE_RATIO_HIGH) && Math.abs(row.diff) >= K.MIN_RATE_GAP
 }
-// "differs" only when every condition holds; a test not run is "few".
+// "differs" only when every condition holds; a test not run is "few". A
+// result that can't be told apart keeps the first condition it failed (why),
+// so the table can say why a small p is not a difference.
 function verdictOf(row) {
   if (row.p == null || row.lo == null || row.estimate == null) return 'few'
   const excludes = row.lo > 0 || row.hi < 0
-  return row.pAdj < K.ALPHA && excludes && clears(row) && row.agree !== false ? 'differs' : 'apart'
+  row.why = row.pAdj >= K.ALPHA ? 'p' : !excludes ? 'interval' : !clears(row) ? 'size' : row.agree === false ? 'lean' : null
+  return row.why ? 'apart' : 'differs'
 }
 
 // The results of every task, as rows.
@@ -725,12 +661,12 @@ export function assemble(input, tasks, results) {
       const rA = rows.find((r) => r.id === `trend-${m}-0`), rB = rows.find((r) => r.id === `trend-${m}-${j + 1}`)
       const row = { id: `trendgap-${m}-${j + 1}`, family: 'trend-gap', kind: 'trend-gap', measure: m, firm: chosen.name, other: other.name, otherIndex: j + 1,
         n: [rA.n[0], rB.n[0]], estimate: rA.estimate != null && rB.estimate != null ? rA.estimate - rB.estimate : null }
-      const t = test(row.id)
       const dA = draws(rA.id), dB = draws(rB.id)
-      if (t && dA && dB) {
+      if (rA.eligible && rB.eligible && dA && dB) {
         const gaps = Float64Array.from(dA, (v, d) => v - dB[d])
+        const t = bootstrapP(gaps)
         const [lo, hi] = percentileInterval(Array.from(gaps))
-        Object.assign(row, { p: t.p, exact: t.exact, arrangements: t.arrangements, draws: t.draws, lo, hi, mcse: mcse(gaps, t) })
+        Object.assign(row, { p: t.p, exact: false, draws: t.draws, lo, hi, mcse: mcse(gaps, t) })
       }
       rows.push(row)
     })
@@ -747,6 +683,20 @@ export function assemble(input, tasks, results) {
   return { rows, context }
 }
 
+// A trend gap's p, from the paired bootstrap draws of the gap: twice the
+// smaller share of draws on either side of no difference, each counted with
+// one added. Shuffling firm names, as first built, assumed the two firms'
+// dated reports were interchangeable; firms that differ in level and in the
+// years they cover break that, and the shuffle found gaps that weren't there
+// (review 3: p under 0.05 in up to 55% of simulations with no trend).
+export function bootstrapP(gaps) {
+  const v = Array.from(gaps).filter((g) => !Number.isNaN(g))
+  const B = v.length
+  if (!B) return { p: null, draws: 0 }
+  const below = v.filter((g) => g <= 0).length, above = v.filter((g) => g >= 0).length
+  return { p: Math.min(1, (2 * (Math.min(below, above) + 1)) / (B + 1)), draws: B, doubled: true }
+}
+
 // Monte Carlo error, for the checks. A sampled p's binomial standard error;
 // and for each interval end, the band of the draws' own quantiles at the end's
 // probability ± 3√2 standard errors (√(p(1−p)/B) on the probability scale, √2
@@ -761,7 +711,9 @@ function mcse(draws, t) {
     const w = 3 * Math.SQRT2 * Math.sqrt((p * (1 - p)) / B)
     return [quantile(v, Math.max(0, p - w)), quantile(v, Math.min(1, p + w))]
   }
-  return { lo: band(tail), hi: band(1 - tail), p: t.exact ? 0 : Math.sqrt((t.p * (1 - t.p)) / t.draws) }
+  // A doubled tail share 2q has error 2√(q(1−q)/B) = √(p(2−p)/B).
+  const se = t.exact ? 0 : t.doubled ? Math.sqrt((Math.min(t.p, 1) * (2 - Math.min(t.p, 1))) / t.draws) : Math.sqrt((t.p * (1 - t.p)) / t.draws)
+  return { lo: band(tail), hi: band(1 - tail), p: se }
 }
 
 export function compareFirms(input) {
@@ -804,8 +756,8 @@ function flagRow(row, cells, withTest) {
 
 // The report type with the widest gap in share between the two firms, for
 // "Gensler publishes more market reports" in the text.
-// With the type's median score across The List (the context: every firm at
-// the build in the chosen types) and the median of all of it.
+// With the type's median score across the rest of The List (every other firm
+// at the build in the chosen types) and the median of all of it.
 function typeMix(a, b, context) {
   if (!a.length || !b.length) return null
   const types = [...new Set([...a, ...b].map((r) => r.type))]
@@ -815,7 +767,10 @@ function typeMix(a, b, context) {
     const gap = share(b, t) - share(a, t)
     if (!best || Math.abs(gap) > Math.abs(best.gap)) best = { type: t, gap, shareA: share(a, t), shareB: share(b, t) }
   }
-  best.listMedian = median(context.filter((r) => r.type === best.type).map((r) => r.score))
-  best.listAll = median(context.map((r) => r.score))
+  // The rest of The List: the two compared firms are left out of it.
+  const firmsHere = new Set([...a, ...b].map((r) => r.firm))
+  const rest = context.filter((r) => !firmsHere.has(r.firm))
+  best.listMedian = median(rest.filter((r) => r.type === best.type).map((r) => r.score))
+  best.listAll = median(rest.map((r) => r.score))
   return best
 }

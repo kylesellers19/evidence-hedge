@@ -565,50 +565,19 @@ def trendgap_row(slug, rid, xa, ya, xb, yb, C, boot_a, boot_b):
     if not (trend_ok(xa, C) and trend_ok(xb, C)):
         return row
 
-    obs = abs(sa - sb)
-    row["stat"] = obs
-    x = np.concatenate([xa, xb])
-    y = np.concatenate([ya, yb])
-    s, e1, e2 = ts_pairs(x, y)
-    N, na = len(x), len(xa)
-
-    def gap_stats(L):
-        La, Lb = L[:, e1], L[:, e2]
-        mA = weighted_median(s, La & Lb)
-        mB = weighted_median(s, ~La & ~Lb)
-        return np.abs(mA - mB)  # NaN when either group sits in one year
-
-    actual = np.zeros((1, N), dtype=bool)
-    actual[0, :na] = True
-    assert abs(gap_stats(actual)[0] - obs) <= 1e-12 * max(1.0, obs), (rid,)
-
-    total = math.comb(N, na)
-    step = chunk_rows(len(s))
-    if total <= EXACT_LIMIT:
-        subsets = all_subsets(N, na)
-        bcount = 0
-        for start in range(0, total, step):
-            sub = subsets[start : start + step]
-            L = np.zeros((len(sub), N), dtype=bool)
-            L[np.arange(len(sub))[:, None], sub] = True
-            st = gap_stats(L)
-            bcount += int((~np.isnan(st) & at_least(np.nan_to_num(st, nan=-1.0), obs)).sum())
-        row["p"] = bcount / total
-        row["exact"], row["draws"], row["se_p"] = True, int(total), 0.0
-    else:
-        m = C["PERMUTATION_DRAWS"]
-        rng = rng_for(slug, rid, PURPOSE_PERMUTATION)
-        bcount = 0
-        for start in range(0, m, step):
-            k = min(step, m - start)
-            sub = sample_subsets(rng, k, N, na)
-            L = np.zeros((k, N), dtype=bool)
-            L[np.arange(k)[:, None], sub] = True
-            st = gap_stats(L)
-            bcount += int((~np.isnan(st) & at_least(np.nan_to_num(st, nan=-1.0), obs)).sum())
-        p = (bcount + 1) / (m + 1)
-        row["p"], row["exact"], row["draws"] = p, False, m
-        row["se_p"] = math.sqrt(p * (1 - p) / m)
+    # Changed after review 3 (docs/compare/reviews/3-adversarial-statistician.md,
+    # finding 2), by the session that built the tool, not by this script's
+    # author: the p comes from the paired bootstrap draws of the gap, twice
+    # the smaller share on either side of 0, each with one added. Shuffling
+    # firm names assumed the two firms' dated reports were interchangeable.
+    gaps = boot_a - boot_b
+    gaps = gaps[~np.isnan(gaps)]
+    B = int(len(gaps))
+    if B:
+        below, above = int((gaps <= 0).sum()), int((gaps >= 0).sum())
+        p = min(1.0, 2 * (min(below, above) + 1) / (B + 1))
+        row["p"], row["exact"], row["draws"] = p, False, B
+        row["se_p"] = math.sqrt(p * (2 - p) / B)  # a doubled tail share
 
     draws = boot_a - boot_b  # paired by draw index; NaN where either is undefined
     lo, hi, se_lo, se_hi, used = interval(draws, C["CONFIDENCE"])

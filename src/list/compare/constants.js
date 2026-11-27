@@ -26,6 +26,9 @@ export const COMPARE_CONSTANTS = Object.freeze({
   // A trend needs this many dated reports across this many distinct years.
   TREND_MIN_REPORTS: 6,
   TREND_MIN_YEARS: 3,
+  // A quarterly report issued for several cities (the same title and quarter,
+  // a different city) counts once, as its median-scoring copy.
+  EDITIONS_COUNT_ONCE: true,
   // The interface.
   MAX_OTHERS: 3,
   SUGGESTIONS: 4,
@@ -51,6 +54,7 @@ const WHY = {
   MIN_RATE_SLOPE: '1 claim in 100 a year is the rate gap above in two years.',
   TREND_MIN_REPORTS: 'Six dated reports give 15 pairs for a Theil–Sen slope at most.',
   TREND_MIN_YEARS: 'Three distinct years, so a slope is not one jump between two.',
+  EDITIONS_COUNT_ONCE: 'Added after review 3: city editions of one report are near copies (Mortenson’s Cost Index, JE Dunn’s Look Ahead), so counting each as a report treated copies as independent. Kyle decides what counts as a report.',
   MAX_OTHERS: 'Four firms side by side fit a phone and a printed page.',
   SUGGESTIONS: 'Four suggestions fit one line on a wide screen.',
   SUGGEST_MIN_REPORTS: 'A suggestion should be comparable: the same minimum as a test.',

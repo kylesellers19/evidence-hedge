@@ -26,6 +26,37 @@ export const usable = (r) => Number.isFinite(r.score) && Boolean(r.engine) && Nu
 // The publication year, when the report gives one (a month or a day has a year too).
 export const yearOf = (r) => (r.publishedPrecision !== 'unknown' && /^\d{4}-/.test(r.publishedOn || '') ? Number(r.publishedOn.slice(0, 4)) : null)
 
+// City editions. A quarterly report issued for several cities ("Construction
+// Cost Index: Chicago Q1 2021", "The Look Ahead Q1 2022: Atlanta") is one
+// report in many near copies; counting each as a report would treat copies as
+// independent draws. An edition is one firm's reports with the same series
+// (the title before its first colon, without the quarter) and the same
+// quarter; it counts once, as its median-scoring copy (ties to the lower id),
+// a real entry, not an average. EDITIONS_COUNT_ONCE switches it off.
+const QUARTER = /\b(?:Q([1-4])\s*(\d{4})|([1-4])(?:st|nd|rd|th)\s+Quarter\s+(\d{4}))\b/i
+export function editionKey(r) {
+  const m = QUARTER.exec(r.reportName || '')
+  if (!m) return null
+  const stem = r.reportName.split(':')[0].replace(QUARTER, '').replace(/\s+/g, ' ').trim().toLowerCase()
+  return `${r.company}|${stem}|Q${m[1] || m[3]} ${m[2] || m[4]}`
+}
+export function countEditionsOnce(rows) {
+  if (!K.EDITIONS_COUNT_ONCE) return rows.map((r) => ({ ...r, copies: 1 }))
+  const groups = new Map()
+  const out = []
+  for (const r of rows) {
+    const k = editionKey(r)
+    if (!k) { out.push({ ...r, copies: 1 }); continue }
+    if (!groups.has(k)) { groups.set(k, []); out.push(k) }
+    groups.get(k).push(r)
+  }
+  return out.map((x) => {
+    if (typeof x !== 'string') return x
+    const copies = groups.get(x).slice().sort((a, b) => a.score - b.score || a.id - b.id)
+    return { ...copies[Math.floor((copies.length - 1) / 2)], copies: copies.length }
+  })
+}
+
 // The entries a reader's choice lets in.
 export const poolOf = (rows, { readers = false } = {}) =>
   rows.filter((r) => usable(r) && (r.origin === 'audit' || (readers && r.origin === 'reader')))
@@ -133,7 +164,7 @@ export function selectionData(rows, sel) {
   const firms = [sel.firm, ...sel.vs]
   const types = sel.types || []
   const inTypes = (r) => types.includes(r.reportType)
-  const report = (r) => ({ id: r.id, type: r.reportType, score: r.score, year: yearOf(r), claims: r.claims, flagged: r.flagged,
+  const report = (r) => ({ id: r.id, firm: r.company, type: r.reportType, score: r.score, year: yearOf(r), claims: r.claims, flagged: r.flagged,
     unsupported: r.unsupported, overconfident: r.overconfident, overreach: r.overreach })
   const chosenRows = rows.filter((r) => firms.includes(r.company) && inTypes(r))
   const left = {
@@ -142,7 +173,13 @@ export function selectionData(rows, sel) {
     readersNoCounts: sel.readers ? chosenRows.filter((r) => r.origin === 'reader' && !usable(r)).length : 0,
     readersAll: chosenRows.filter((r) => r.origin === 'reader').length,
   }
-  const at = pool.filter((r) => r.engine === build && inTypes(r))
+  const at = countEditionsOnce(pool.filter((r) => r.engine === build && inTypes(r)))
+  // Firms whose city editions count once: their entries, and what they count as.
+  const editions = firms.map((f) => {
+    const mine = at.filter((r) => r.company === f)
+    const entries = mine.reduce((s, r) => s + r.copies, 0)
+    return { firm: f, entries, counted: mine.length }
+  }).filter((e) => e.entries > e.counted)
   const fingerprint = `${rows.length}|${rows.reduce((m, r) => Math.max(m, Number(r.id) || 0), 0)}|${build}`
   const seedKey = `${sel.firm}|${sel.vs.join('|')}|${types.map(slug).sort().join(',')}|${sel.readers ? 1 : 0}|${fingerprint}`
   return {
@@ -150,6 +187,7 @@ export function selectionData(rows, sel) {
     types,
     firms: firms.map((f) => ({ name: f, reports: at.filter((r) => r.company === f).map(report) })),
     context: at.map(report),
+    editions,
     left,
     readerCount: at.filter((r) => r.origin === 'reader').length,
     fingerprint,

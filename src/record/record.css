@@ -1,0 +1,489 @@
+/* The Record — one page, one column, inside the site frame.
+   Tokens live here, scoped to the page: true white, cool near-black, cool grey
+   hairlines, one deep navy accent. Newsreader sets the question and nothing else;
+   IBM Plex Sans the words; IBM Plex Mono every number. No radius, no gradients, no
+   tinted backgrounds; the tooltip alone takes a whisper of shadow.
+
+   The page also re-tokens the site frame (--eh-*) while it is open, so the masthead
+   and footer follow the page into dark mode. Every other page stays as it was. */
+
+html[data-page='record'] {
+  --rec-paper: #ffffff;
+  --rec-ink: #14171c;      /* 17.6:1 on white */
+  --rec-ink-2: #444b55;    /* 9.0:1 */
+  --rec-ink-3: #5c636d;    /* 6.1:1 */
+  --rec-rule: #dde1e6;
+  --rec-rule-strong: #14171c;
+  --rec-other: #9aa1ab;    /* other organizations' marks (non-text, 2.6:1 is decoration-grade; every mark has a table) */
+  --rec-other-ink: #5c636d;
+  --rec-navy: #1d3461;     /* 11.9:1 */
+  --rec-focus: #1d3461;
+  --rec-shadow: 0 1px 2px rgba(20, 23, 28, 0.06), 0 2px 8px rgba(20, 23, 28, 0.04);
+
+  --rec-q: 'Newsreader Variable', 'Newsreader', Georgia, serif;
+  --rec-sans: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  --rec-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --eh-paper: var(--rec-paper);
+  --eh-ink: var(--rec-ink);
+  --eh-ink-soft: var(--rec-ink-2);
+  --eh-ink-faint: var(--rec-ink-3);
+  --eh-hairline: var(--rec-rule);
+  --eh-accent: var(--rec-navy);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-page='record']:not([data-theme='light']) {
+    --rec-paper: #0e1116;
+    --rec-ink: #e9ecf0;    /* 15.9:1 on #0e1116 */
+    --rec-ink-2: #b9c0c9;  /* 10.2:1 */
+    --rec-ink-3: #9ba3ad;  /* 7.2:1 */
+    --rec-rule: #29303a;
+    --rec-rule-strong: #e9ecf0;
+    --rec-other: #5f6873;
+    --rec-other-ink: #9ba3ad;
+    --rec-navy: #9db8ea;   /* 9.6:1 */
+    --rec-focus: #9db8ea;
+    --rec-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+    color-scheme: dark;
+  }
+}
+html[data-page='record'][data-theme='dark'] {
+  --rec-paper: #0e1116;
+  --rec-ink: #e9ecf0;
+  --rec-ink-2: #b9c0c9;
+  --rec-ink-3: #9ba3ad;
+  --rec-rule: #29303a;
+  --rec-rule-strong: #e9ecf0;
+  --rec-other: #5f6873;
+  --rec-other-ink: #9ba3ad;
+  --rec-navy: #9db8ea;
+  --rec-focus: #9db8ea;
+  --rec-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+  color-scheme: dark;
+}
+
+html[data-page='record'] body {
+  background: var(--rec-paper);
+  color: var(--rec-ink);
+}
+
+/* ── The page ──────────────────────────────────────────────────────────── */
+
+.rec {
+  font: 400 16px/1.55 var(--rec-sans);
+  color: var(--rec-ink);
+  background: var(--rec-paper);
+  padding: 48px 0 0;
+}
+.rec-col {
+  max-width: calc(760px + 32px);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+.rec *:focus-visible {
+  outline: 2px solid var(--rec-focus);
+  outline-offset: 2px;
+}
+.rec a {
+  color: var(--rec-navy);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+.rec .num,
+.rec-num {
+  font-family: var(--rec-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.rec-q {
+  font: 500 40px/1.12 var(--rec-q);
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+  text-wrap: balance;
+}
+.rec-dek {
+  font: 400 17px/1.45 var(--rec-sans);
+  color: var(--rec-ink-2);
+  margin: 0 0 32px;
+}
+.rec-provisional {
+  font: 400 13px/1.5 var(--rec-sans);
+  color: var(--rec-ink-3);
+  margin: 0 0 28px;
+}
+
+.rec-pick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+  margin: 0 0 18px;
+}
+.rec-pick label {
+  font: 500 13px/1.4 var(--rec-sans);
+  color: var(--rec-ink-2);
+}
+.rec-select {
+  appearance: none;
+  -webkit-appearance: none;
+  font: 500 16px/1.3 var(--rec-sans);
+  color: var(--rec-ink);
+  background: var(--rec-paper);
+  border: 0;
+  border-bottom: 1px solid var(--rec-rule-strong);
+  border-radius: 0;
+  padding: 6px 26px 6px 0;
+  min-height: 40px;
+  min-width: 200px;
+  max-width: 100%;
+  cursor: pointer;
+}
+.rec-selectwrap {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+.rec-selectwrap::after {
+  content: '';
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -5px;
+  border-right: 1.5px solid var(--rec-ink);
+  border-bottom: 1.5px solid var(--rec-ink);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+.rec-select option {
+  background: var(--rec-paper);
+  color: var(--rec-ink);
+}
+
+.rec-sentence {
+  font: 400 19px/1.5 var(--rec-sans);
+  margin: 0 0 40px;
+  max-width: 680px;
+}
+
+.rec-h2 {
+  font: 600 15px/1.35 var(--rec-sans);
+  letter-spacing: 0;
+  margin: 48px 0 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rec-rule-strong);
+}
+
+/* ── The statement: one table of measures ─────────────────────────────── */
+
+.rec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font: 400 14px/1.4 var(--rec-sans);
+}
+.rec-table th,
+.rec-table td {
+  text-align: left;
+  vertical-align: baseline;
+  padding: 10px 12px 10px 0;
+  border-bottom: 1px solid var(--rec-rule);
+}
+.rec-table thead th {
+  font: 500 12px/1.3 var(--rec-sans);
+  color: var(--rec-ink-3);
+  padding-top: 0;
+  white-space: nowrap;
+}
+.rec-table td.n,
+.rec-table th.n {
+  text-align: right;
+}
+.rec-table td.mark {
+  width: 32%;
+  min-width: 140px;
+  vertical-align: middle;
+  padding-right: 0;
+}
+.rec-table td.v {
+  font: 500 15px/1.3 var(--rec-mono);
+  white-space: nowrap;
+}
+.rec-table td.ci,
+.rec-table td.med {
+  font: 400 13px/1.3 var(--rec-mono);
+  color: var(--rec-ink-2);
+  white-space: nowrap;
+}
+.rec-basis {
+  display: block;
+  font: 400 12px/1.4 var(--rec-mono);
+  color: var(--rec-ink-3);
+  margin-top: 2px;
+  white-space: normal;
+}
+.rec-state {
+  font: 400 13px/1.4 var(--rec-sans);
+  color: var(--rec-ink-3);
+}
+td .rec-state {
+  white-space: nowrap;
+}
+.rec-scroll {
+  overflow-x: auto;
+}
+.rec-scroll:focus-visible {
+  outline: 2px solid var(--rec-focus);
+  outline-offset: 2px;
+}
+
+/* A measure's name: hover or focus shows its definition. */
+.rec-term {
+  position: relative;
+  display: inline;
+}
+.rec-term button {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: 500 14px/1.4 var(--rec-sans);
+  color: var(--rec-ink);
+  text-align: left;
+  cursor: help;
+  text-decoration: underline dotted var(--rec-ink-3);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.rec-tip {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  top: calc(100% + 6px);
+  width: min(320px, 78vw);
+  padding: 10px 12px;
+  background: var(--rec-paper);
+  color: var(--rec-ink);
+  border: 1px solid var(--rec-rule);
+  box-shadow: var(--rec-shadow);
+  font: 400 13px/1.45 var(--rec-sans);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 80ms linear;
+  pointer-events: none;
+}
+.rec-term:hover .rec-tip,
+.rec-term:focus-within .rec-tip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* The dot-and-interval mark */
+.rec-mark {
+  display: block;
+  width: 100%;
+  height: 22px;
+  overflow: visible;
+}
+.rec-mark .iv { stroke: var(--rec-navy); stroke-width: 2; }
+.rec-mark .dot { fill: var(--rec-navy); }
+.rec-mark .med { stroke: var(--rec-ink-2); stroke-width: 1.5; }
+.rec-mark .axis { stroke: var(--rec-rule); stroke-width: 1; }
+.rec-mark .zero { stroke: var(--rec-ink-3); stroke-width: 1; stroke-dasharray: 2 2; }
+
+/* ── The figure ───────────────────────────────────────────────────────── */
+
+.rec-figure {
+  margin: 0;
+  position: relative;
+}
+.rec-plot {
+  display: block;
+  width: 100%;
+  overflow: visible;
+  touch-action: manipulation;
+}
+.rec-plot .grid { stroke: var(--rec-rule); stroke-width: 1; }
+.rec-plot .equal { stroke: var(--rec-ink-3); stroke-width: 1; stroke-dasharray: 3 3; }
+.rec-plot .tick { font: 400 11px var(--rec-mono); fill: var(--rec-ink-3); }
+.rec-plot .axis-label { font: 500 12px var(--rec-sans); fill: var(--rec-ink-2); }
+.rec-plot .eq-label { font: 400 11px var(--rec-sans); fill: var(--rec-ink-3); }
+.rec-plot .pt { fill: var(--rec-other); stroke: var(--rec-paper); stroke-width: 1; cursor: pointer; }
+.rec-plot .pt.ring { fill: var(--rec-paper); stroke: var(--rec-other-ink); stroke-width: 1.5; }
+.rec-plot .pt.sel { fill: var(--rec-navy); stroke: var(--rec-paper); stroke-width: 1.5; }
+.rec-plot .pt.ring.sel { fill: var(--rec-paper); stroke: var(--rec-navy); stroke-width: 2; }
+.rec-plot .pt.hot { stroke: var(--rec-ink); stroke-width: 1.5; }
+.rec-plot .lbl { font: 500 12px var(--rec-sans); fill: var(--rec-ink-2); }
+.rec-plot .lbl.sel { fill: var(--rec-navy); font-weight: 600; }
+.rec-plot:focus-visible { outline: 2px solid var(--rec-focus); outline-offset: 4px; }
+
+.rec-tooltip {
+  position: absolute;
+  z-index: 30;
+  pointer-events: none;
+  background: var(--rec-paper);
+  border: 1px solid var(--rec-rule);
+  box-shadow: var(--rec-shadow);
+  padding: 8px 10px;
+  font: 400 12px/1.45 var(--rec-sans);
+  color: var(--rec-ink);
+  min-width: 170px;
+  max-width: 240px;
+}
+.rec-tooltip b { font-weight: 600; }
+.rec-tooltip .rec-num { font-size: 12px; }
+
+.rec-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  font: 400 12px/1.4 var(--rec-sans);
+  color: var(--rec-ink-3);
+  margin: 6px 0 0;
+}
+.rec-key i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: 0;
+}
+.rec-key .k-sel { background: var(--rec-navy); }
+.rec-key .k-oth { background: var(--rec-other); }
+.rec-key .k-ring { border: 1.5px solid var(--rec-other-ink); width: 7px; height: 7px; }
+
+.rec-details {
+  margin: 10px 0 0;
+  font: 400 13px/1.45 var(--rec-sans);
+}
+.rec-details summary {
+  cursor: pointer;
+  color: var(--rec-ink-2);
+  width: max-content;
+  max-width: 100%;
+}
+
+/* ── The switch: four quiet text buttons ─────────────────────────────── */
+
+.rec-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 22px;
+  margin: 40px 0 0;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--rec-rule);
+}
+.rec-switch button {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 6px 0;
+  min-height: 32px;
+  font: 500 14px/1.3 var(--rec-sans);
+  color: var(--rec-ink-2);
+  cursor: pointer;
+}
+.rec-switch button[aria-expanded='true'] {
+  color: var(--rec-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+.rec-switch button:hover {
+  color: var(--rec-ink);
+}
+.rec-panel {
+  padding: 18px 0 0;
+}
+.rec-panel p {
+  margin: 0 0 12px;
+  max-width: 680px;
+}
+.rec-panel .rec-note {
+  font-size: 13px;
+  color: var(--rec-ink-3);
+}
+.rec-dl {
+  margin: 0;
+}
+.rec-dl dt {
+  font: 600 14px/1.4 var(--rec-sans);
+  margin: 18px 0 2px;
+}
+.rec-dl dd {
+  margin: 0;
+  font: 400 14px/1.5 var(--rec-sans);
+  color: var(--rec-ink-2);
+  max-width: 680px;
+}
+.rec-dl dd + dd {
+  margin-top: 4px;
+}
+.rec-cite {
+  font-size: 13px;
+  color: var(--rec-ink-3);
+}
+
+.rec-status {
+  font: 400 15px/1.5 var(--rec-sans);
+  color: var(--rec-ink-2);
+  padding: 48px 0;
+}
+.rec-retry {
+  appearance: none;
+  background: none;
+  border: 1px solid var(--rec-rule-strong);
+  border-radius: 0;
+  padding: 8px 14px;
+  font: 500 14px var(--rec-sans);
+  color: var(--rec-ink);
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.rec-sr {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Narrow screens: the table's rows become stacked blocks ──────────── */
+
+@media (max-width: 700px) {
+  .rec { padding-top: 28px; }
+  .rec-q { font-size: 30px; }
+  .rec-sentence { font-size: 17px; }
+  .rec-table.stack thead { display: none; }
+  .rec-table.stack,
+  .rec-table.stack tbody,
+  .rec-table.stack tr,
+  .rec-table.stack td,
+  .rec-table.stack th { display: block; }
+  .rec-table.stack tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--rec-rule);
+  }
+  .rec-table.stack th,
+  .rec-table.stack td { border: 0; padding: 0; }
+  .rec-table.stack .c-name { grid-column: 1; grid-row: 1; }
+  .rec-table.stack .v { grid-column: 2; grid-row: 1; text-align: right; }
+  .rec-table.stack .ci { grid-column: 2; grid-row: 2; text-align: right; font-size: 12px; margin-top: 4px; }
+  .rec-table.stack .med { grid-column: 1; grid-row: 2; font-size: 12px; margin-top: 4px; text-align: left; }
+  .rec-table.stack .med::before { content: 'Field median '; font-family: var(--rec-sans); color: var(--rec-ink-3); }
+  .rec-table.stack .mark { grid-column: 1 / -1; grid-row: 3; width: auto; min-width: 0; margin-top: 8px; }
+  .rec-table.stack .ci:empty, .rec-table.stack .mark:empty { display: none; }
+}

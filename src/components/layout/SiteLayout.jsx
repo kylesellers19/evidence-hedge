@@ -12,6 +12,7 @@ export const CONTACT_EMAIL = 'kyle@evidencehedge.org'
 
 export const NAV = [
   { to: '/list', label: 'The List' },
+  { to: '/record', label: 'The Record' },
   { to: '/conferences', label: 'Conferences' },
   { to: '/method', label: 'Method' },
   { to: '/contact', label: 'Contact' },

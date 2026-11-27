@@ -1,0 +1,5071 @@
+{
+ "naming": "anonymous",
+ "provisional": true,
+ "questions": [
+  {
+   "build": {
+    "engine_content_sha256": "38d7e9a40dd472851a587aab94c38a81f2a8d882f672518d40e80e3af502182d",
+    "engine_version": "90fa8b3",
+    "map_build_hash": "30639005c5e2",
+    "models": [
+     {
+      "name": "sentence-transformers/all-MiniLM-L6-v2",
+      "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+     },
+     {
+      "name": "copenlu/spiced",
+      "revision": "c32c33ade11aea83eab9e69f0683840a885f28d7"
+     },
+     {
+      "name": "cross-encoder/nli-roberta-base",
+      "revision": "1be0567456f0543475805e758725f151f283705a"
+     },
+     {
+      "name": "GROBID",
+      "revision": "0.9.1-crf"
+     }
+    ],
+    "record_version": "0.1.0.dev0",
+    "window": [
+     "2023-01-01",
+     "2026-11-26"
+    ]
+   },
+   "claims": {
+    "o1": {
+     "designs": [
+      {
+       "design": "Cross-sectional survey",
+       "documents": 3,
+       "sample_median": 235
+      },
+      {
+       "design": "Panel survey",
+       "documents": 2,
+       "sample_median": 5594
+      },
+      {
+       "design": "Quasi-experiment",
+       "documents": 1,
+       "sample_median": 1275
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 2122,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 737,
+       "share": 0.3473138548539114
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 684,
+       "share": 0.9280868385345997
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 53,
+       "share": 0.07191316146540028
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 1330,
+       "share": 0.6267672007540056
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o10": {
+     "designs": [
+      {
+       "design": "Commentary",
+       "documents": 1,
+       "sample_median": null
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 11,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 2,
+       "share": 0.18181818181818182
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 2,
+       "share": 1.0
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 0,
+       "share": 0.0
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 8,
+       "share": 0.7272727272727273
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o11": {
+     "designs": [
+      {
+       "design": "Cross-sectional survey",
+       "documents": 1,
+       "sample_median": 74
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 42,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 16,
+       "share": 0.38095238095238093
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 16,
+       "share": 1.0
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 0,
+       "share": 0.0
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 33,
+       "share": 0.7857142857142857
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o12": {
+     "designs": [
+      {
+       "design": "Case study",
+       "documents": 3,
+       "sample_median": null
+      },
+      {
+       "design": "Forecast",
+       "documents": 3,
+       "sample_median": null
+      },
+      {
+       "design": "Telemetry",
+       "documents": 3,
+       "sample_median": null
+      },
+      {
+       "design": "Commentary",
+       "documents": 2,
+       "sample_median": null
+      },
+      {
+       "design": "Cross-sectional survey",
+       "documents": 1,
+       "sample_median": 5000
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 1025,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 50,
+       "share": 0.04878048780487805
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 50,
+       "share": 1.0
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 0,
+       "share": 0.0
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 772,
+       "share": 0.7531707317073171
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o13": {
+     "designs": [
+      {
+       "design": "Cross-sectional survey",
+       "documents": 1,
+       "sample_median": 200
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 689,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 89,
+       "share": 0.12917271407837447
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 88,
+       "share": 0.9887640449438202
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 1,
+       "share": 0.011235955056179775
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 529,
+       "share": 0.7677793904208998
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o14": {
+     "designs": [
+      {
+       "design": "Cross-sectional survey",
+       "documents": 2,
+       "sample_median": 438
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 268,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 87,
+       "share": 0.3246268656716418
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 86,
+       "share": 0.9885057471264368
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 1,
+       "share": 0.011494252873563218
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 173,
+       "share": 0.6455223880597015
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o15": {
+     "designs": [
+      {
+       "design": "Administrative data",
+       "documents": 1,
+       "sample_median": 50
+      },
+      {
+       "design": "Commentary",
+       "documents": 1,
+       "sample_median": null
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 112,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 11,
+       "share": 0.09821428571428571
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 11,
+       "share": 1.0
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 0,
+       "share": 0.0
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 93,
+       "share": 0.8303571428571429
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o16": {
+     "designs": [
+      {
+       "design": "Commentary",
+       "documents": 4,
+       "sample_median": null
+      },
+      {
+       "design": "Cross-sectional survey",
+       "documents": 1,
+       "sample_median": null
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 1079,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 280,
+       "share": 0.2594995366079703
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 278,
+       "share": 0.9928571428571429
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 2,
+       "share": 0.007142857142857143
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 714,
+       "share": 0.6617238183503243
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o17": {
+     "designs": [
+      {
+       "design": "Commentary",
+       "documents": 3,
+       "sample_median": null
+      },
+      {
+       "design": "Case study",
+       "documents": 1,
+       "sample_median": null
+      },
+      {
+       "design": "Cross-sectional survey",
+       "documents": 1,
+       "sample_median": null
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 191,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 8,
+       "share": 0.041884816753926704
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 8,
+       "share": 1.0
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 0,
+       "share": 0.0
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 150,
+       "share": 0.7853403141361257
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o18": {
+     "designs": [
+      {
+       "design": "Commentary",
+       "documents": 7,
+       "sample_median": 50
+      },
+      {
+       "design": "Cross-sectional survey",
+       "documents": 4,
+       "sample_median": 70
+      },
+      {
+       "design": "Administrative data",
+       "documents": 1,
+       "sample_median": 100
+      },
+      {
+       "design": "Case study",
+       "documents": 1,
+       "sample_median": null
+      },
+      {
+       "design": "Forecast",
+       "documents": 1,
+       "sample_median": 73
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 216,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 26,
+       "share": 0.12037037037037036
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 23,
+       "share": 0.8846153846153846
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 3,
+       "share": 0.11538461538461539
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 191,
+       "share": 0.8842592592592593
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o2": {
+     "designs": [
+      {
+       "design": "Forecast",
+       "documents": 1,
+       "sample_median": null
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 148,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 42,
+       "share": 0.28378378378378377
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 42,
+       "share": 1.0
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 0,
+       "share": 0.0
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 111,
+       "share": 0.75
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o3": {
+     "designs": [
+      {
+       "design": "Case study",
+       "documents": 1,
+       "sample_median": null
+      },
+      {
+       "design": "Commentary",
+       "documents": 1,
+       "sample_median": null
+      },
+      {
+       "design": "Cross-sectional survey",
+       "documents": 1,
+       "sample_median": 24
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 291,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 10,
+       "share": 0.03436426116838488
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 10,
+       "share": 1.0
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 0,
+       "share": 0.0
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 248,
+       "share": 0.852233676975945
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o4": {
+     "designs": [
+      {
+       "design": "Cross-sectional survey",
+       "documents": 1,
+       "sample_median": 45
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 59,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 20,
+       "share": 0.3389830508474576
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 20,
+       "share": 1.0
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 0,
+       "share": 0.0
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 25,
+       "share": 0.423728813559322
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o5": {
+     "designs": [
+      {
+       "design": "Commentary",
+       "documents": 8,
+       "sample_median": null
+      },
+      {
+       "design": "Administrative data",
+       "documents": 1,
+       "sample_median": null
+      },
+      {
+       "design": "Cross-sectional survey",
+       "documents": 1,
+       "sample_median": 100
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 53,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 6,
+       "share": 0.11320754716981132
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 6,
+       "share": 1.0
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 0,
+       "share": 0.0
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 40,
+       "share": 0.7547169811320755
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o6": {
+     "designs": [
+      {
+       "design": "Cross-sectional survey",
+       "documents": 1,
+       "sample_median": null
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 416,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 38,
+       "share": 0.09134615384615384
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 38,
+       "share": 1.0
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 0,
+       "share": 0.0
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 307,
+       "share": 0.7379807692307693
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o7": {
+     "designs": [
+      {
+       "design": "Cross-sectional survey",
+       "documents": 4,
+       "sample_median": 600
+      },
+      {
+       "design": "Case study",
+       "documents": 1,
+       "sample_median": null
+      },
+      {
+       "design": "Forecast",
+       "documents": 1,
+       "sample_median": null
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 1643,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 503,
+       "share": 0.3061472915398661
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 401,
+       "share": 0.7972166998011928
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 102,
+       "share": 0.20278330019880716
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 1173,
+       "share": 0.7139379184418746
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o8": {
+     "designs": [
+      {
+       "design": "Commentary",
+       "documents": 2,
+       "sample_median": 40
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 10,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 0,
+       "share": 0.0
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 0,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 0,
+       "share": null
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 7,
+       "share": 0.7
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    },
+    "o9": {
+     "designs": [
+      {
+       "design": "Commentary",
+       "documents": 3,
+       "sample_median": null
+      }
+     ],
+     "rows": [
+      {
+       "key": "claims",
+       "label": "Claims in window documents",
+       "n": 138,
+       "share": null
+      },
+      {
+       "indent": true,
+       "key": "findings",
+       "label": "Findings judged",
+       "n": 15,
+       "share": 0.10869565217391304
+      },
+      {
+       "indent": true,
+       "key": "new",
+       "label": "New",
+       "n": 15,
+       "share": 1.0
+      },
+      {
+       "indent": true,
+       "key": "earlier",
+       "label": "Made earlier",
+       "n": 0,
+       "share": 0.0
+      },
+      {
+       "key": "flagged",
+       "label": "Flagged by the engine",
+       "n": 109,
+       "share": 0.7898550724637681
+      },
+      {
+       "gate": "pending",
+       "key": "picked",
+       "label": "Repeated in articles",
+       "n": null,
+       "share": null
+      }
+     ]
+    }
+   },
+   "claims_summary": "Counts for the selected organization’s documents in the window. A finding is a claim that states a result.",
+   "field": {
+    "cited_by_later": {
+     "median": 0.0,
+     "organizations": 17
+    },
+    "coverage_minus_contribution": {
+     "median": null,
+     "organizations": 0
+    },
+    "coverage_share": {
+     "median": null,
+     "organizations": 0
+    },
+    "earlier_cited": {
+     "median": 0.0,
+     "organizations": 18
+    },
+    "first_contradicted": {
+     "median": null,
+     "organizations": 0
+    },
+    "new_rate": {
+     "median": 0.994555,
+     "organizations": 17
+    },
+    "new_share": {
+     "median": 0.012129,
+     "organizations": 18
+    },
+    "pickups_flagged": {
+     "median": null,
+     "organizations": 0
+    },
+    "pickups_intact": {
+     "median": null,
+     "organizations": 0
+    },
+    "staying_power": {
+     "median": 0.125685,
+     "organizations": 16
+    }
+   },
+   "figure": {
+    "x": "coverage_share",
+    "y": "new_share"
+   },
+   "first_claims": {
+    "rows": [
+     {
+      "basis": "It states no method, population or setting",
+      "id": "c-7ed832cb",
+      "org": "o13",
+      "org_label": "Organization 13",
+      "ref": "Claim 7ed832cb",
+      "stated": "nothing stated",
+      "verdict": "Not checkable"
+     }
+    ],
+    "summary": "1 claims to be first in the window: 0 contradicted, 0 not contradicted, 1 not checkable."
+   },
+   "id": "q1",
+   "map": {
+    "backfill_years_min": 7.55,
+    "date_sources": {
+     "manifest": 60,
+     "pdf_metadata": 13,
+     "stated": 1,
+     "stated+manifest": 12
+    },
+    "dated": 86,
+    "designs": {
+     "administrative data": 3,
+     "case study": 7,
+     "commentary": 39,
+     "cross-sectional survey": 24,
+     "forecast": 7,
+     "panel survey": 2,
+     "quasi-experiment": 1,
+     "telemetry": 3
+    },
+    "documents": 86,
+    "organizations": 25,
+    "organizations_before_window_only": 7,
+    "organizations_measured": 18,
+    "subquestions": 19,
+    "subquestions_meeting_backfill": 19,
+    "window_documents": 32
+   },
+   "measures": [
+    {
+     "cite": "Share: Dirichlet-multinomial posterior. Missing articles: multi-list capture-recapture (Fienberg 1972).",
+     "definition": "Its share of the independent news articles found about the map’s reports. Copies of one wire story count once.",
+     "how": "Articles linked to a report by the propagation engine at its two strictest tiers (a link to the report, or the firm and the title named; or the firm and a distinctive figure). Syndicated copies grouped by near-duplicate text.",
+     "key": "coverage_share",
+     "label": "Share of coverage",
+     "unit": "share"
+    },
+    {
+     "cite": "Hierarchical beta-binomial with partial pooling.",
+     "definition": "Of the later documents on a sub-question it shares, the share that cite it.",
+     "how": "Citations from reference lists (GROBID 0.9.1) matched to the map’s titles, and from the text when a later document names the firm and the title.",
+     "key": "cited_by_later",
+     "label": "Cited by later work",
+     "unit": "rate"
+    },
+    {
+     "cite": "SPICED: Wright, Pei, Jurgens and Augenstein, EMNLP 2022.",
+     "definition": "Its share of the map’s new findings: results no earlier document in the map states.",
+     "how": "A finding is new unless an earlier document holds a sentence the matcher judges to state the same information: a shared figure and a SPICED score of 3.5 or more, or a score of 4 or more without one.",
+     "key": "new_share",
+     "label": "New findings",
+     "unit": "share"
+    },
+    {
+     "cite": "Barron, Huang, Spang and DeDeo, PNAS 2018.",
+     "definition": "How much later documents keep to what it said, minus how far it broke from what came before. Above zero, later work kept to it.",
+     "how": "Resonance over each document’s mix of sub-questions, five documents either side in time order. Later scholars renamed resonance to avoid implying cause.",
+     "key": "staying_power",
+     "label": "Staying power",
+     "unit": "score"
+    },
+    {
+     "cite": "Robinson and Goodman, Annals of Internal Medicine 2011.",
+     "definition": "Of the earlier documents by others on its sub-questions, the share it cites.",
+     "how": "The prior research citation index, applied to the map.",
+     "key": "earlier_cited",
+     "label": "Earlier work cited",
+     "unit": "rate"
+    },
+    {
+     "definition": "Share of coverage minus share of new findings, in percentage points. Above zero, it was heard more than it added.",
+     "how": "The difference of the two posterior shares, drawn together.",
+     "key": "coverage_minus_contribution",
+     "label": "Coverage minus contribution",
+     "unit": "points"
+    },
+    {
+     "definition": "Of its claims repeated in articles, the share repeated with figures, hedges and causal strength unchanged.",
+     "key": "pickups_intact",
+     "label": "Pickups kept intact",
+     "unit": "rate"
+    },
+    {
+     "definition": "Of its claims repeated in articles, the share the Evidence Hedge engine flags. Read it next to the share of its claims flagged, in the line below.",
+     "key": "pickups_flagged",
+     "label": "Pickups of flagged claims",
+     "unit": "rate"
+    },
+    {
+     "definition": "Of its claims to be first that can be checked, the share an earlier document in the map contradicts on every stated method, population and setting.",
+     "key": "first_contradicted",
+     "label": "“First” claims contradicted",
+     "unit": "rate"
+    },
+    {
+     "definition": "Of its findings, the share no earlier document in the map states.",
+     "key": "new_rate",
+     "label": "Findings that were new",
+     "row": false,
+     "unit": "rate"
+    }
+   ],
+   "method": {
+    "constants_provisional": 29,
+    "gates": [
+     {
+      "detail": "Chosen and grouped automatically; labeling sheets wait for Kyle.",
+      "name": "Question and sub-questions",
+      "status": "provisional"
+     },
+     {
+      "detail": "60 from collection records, 13 stated in the document, 13 from the file’s own creation date.",
+      "name": "Dates",
+      "status": "provisional"
+     },
+     {
+      "detail": "Read by phrase rules; sheet waits for Kyle.",
+      "name": "Study designs and sample sizes",
+      "status": "provisional"
+     },
+     {
+      "detail": "3,738 findings judged, 3,529 new; 150 decisions on the sheet wait for Kyle.",
+      "name": "New or made earlier",
+      "status": "provisional"
+     },
+     {
+      "detail": "731 reference-list entries parsed; 12 citations found between the map’s documents, 12 of them an organization citing its own earlier edition. None crosses from one organization to another.",
+      "name": "Citations",
+      "status": "provisional"
+     },
+     {
+      "detail": "Discovery has not run for these reports.",
+      "name": "News links",
+      "status": "pending"
+     },
+     {
+      "detail": "Claim-level matching (propagation Parts F and G) waits for news links.",
+      "name": "Claims repeated in articles",
+      "status": "pending"
+     }
+    ],
+    "limits": [
+     "The map is one cluster of one corpus: the documents organizations in this field put on their own websites, collected in November 2026. What they did not post, or posted behind forms that were not filled, is not here.",
+     "The question was found by grouping documents automatically. Its edges are soft, and a document on two questions sits in only one map.",
+     "Most claims are judged new because the matcher needs a near-paraphrase to call a claim old. That favors precision over recall: an idea restated in new words counts as new.",
+     "Coverage comes from CC-NEWS, which holds little of the trade press these organizations appear in, so every coverage figure is a floor.",
+     "A pooled estimate for an organization with one or two documents says more about the field than about the organization."
+    ],
+    "models": [
+     {
+      "assumes": "Organizations’ true rates come from one shared beta distribution. Its mean and strength are learned from all organizations together and averaged over, not fixed at one best guess, so the intervals keep that uncertainty and the fit holds when every count is zero.",
+      "cite": "Gelman et al., Bayesian Data Analysis, 3rd ed., section 5.3; Efron and Morris 1975.",
+      "fails": "An organization unlike the rest is pulled toward them; with fewer than three organizations no shared distribution is learned and each rate stands alone.",
+      "name": "Small counts",
+      "what": "Every rate is estimated with a hierarchical beta-binomial model: each organization’s rate is pulled toward the field in proportion to how little data it has. Values are posterior medians with 95% intervals."
+     },
+     {
+      "assumes": "Every article could be found by every source, and no article leaves or joins during the search. With two lists, that the lists find articles independently.",
+      "cite": "Fienberg 1972; International Working Group for Disease Monitoring and Forecasting 1995; Chapman 1951.",
+      "fails": "Sources that index the same outlets find the same articles and make the missing count look small. With one list nothing can be said, and the share is over what was found.",
+      "name": "Articles no source found",
+      "what": "The discovery sources are treated as overlapping lists of the same articles. How often they find the same article tells how many articles none of them found, as disease surveillance counts unreported cases."
+     },
+     {
+      "assumes": "As above, and that a cited document is on the question.",
+      "fails": "When the map’s documents cite almost nothing the overlap is near zero and the estimate has no upper bound.",
+      "name": "Earlier literature the map is missing",
+      "what": "The same method on two lists of earlier documents: the documents collected for the map, and those cited by the map’s documents."
+     },
+     {
+      "assumes": "Sub-question mixes describe what a document is about, and time order is known.",
+      "cite": "Barron, Huang, Spang and DeDeo, PNAS 2018.",
+      "fails": "The newest documents have no five successors and get no value; undated documents are left out; a poor sub-question grouping moves every value.",
+      "name": "Staying power",
+      "what": "Novelty is how far a document’s mix of sub-questions departs from the five documents before it; transience, how far from the five after it. Resonance, shown as staying power, is novelty minus transience. Organizations’ means are pooled toward the field."
+     },
+     {
+      "assumes": "A sub-question’s words stand for its demand in news, and the crawl holds a steady mix of outlets.",
+      "cite": "Cameron and Trivedi, Regression Analysis of Count Data, 2nd ed.",
+      "fails": "Common words count unrelated news; CC-NEWS under-holds trade press; three to nine years per sub-question is a short series.",
+      "name": "Open ground",
+      "what": "News demand for each sub-question (its label’s words counted in CC-NEWS, scaled by the size of each month’s crawl) is modeled with a negative binomial regression on the documents published that year. A sub-question’s demand gap is its mean standardized residual over the window: above zero, more demand than the documents predict."
+     },
+     {
+      "assumes": "Demand is steady between change points.",
+      "fails": "Nine yearly points rarely support more than one change.",
+      "name": "When a question saturated",
+      "what": "Change points in each sub-question’s yearly demand, by binary segmentation with a Poisson likelihood and a Bayesian information criterion penalty."
+     },
+     {
+      "assumes": "Everything a report shares is held fixed; claim-level confounders are measured.",
+      "cite": "VanderWeele and Ding 2017; Chernozhukov et al. 2018; Wager and Athey 2018.",
+      "fails": "Below 60 repeated claims in 20 reports nothing is reported. The pilot is far below that.",
+      "name": "Is overreach rewarded",
+      "what": "A conditional logit with report fixed effects asks whether, within one report, overreaching claims are repeated more. Checked with double machine learning, a causal forest by outlet type and E-values. The plan was written before any outcome."
+     }
+    ],
+    "objection": {
+     "answer": "Both are fair. New findings measure contribution to the record, not truth: the engine’s flags sit beside them in the Claims view, and only result-stating claims count. The matcher is strict, so restated ideas count as new; Kyle’s labels will measure how often. Coverage is labeled a floor everywhere it appears, and no organization is named until every input passes its check.",
+     "text": "“Your ‘new findings’ count sentences no earlier report happens to paraphrase. A firm that writes long reports on a topic nobody else covers wins, whether or not anything in them is true or useful, and your coverage numbers come from a news crawl that misses the trade press our clients read.”"
+    }
+   },
+   "open_ground": {
+    "rows": [
+     {
+      "basis": "34 documents",
+      "depth_years": 8.5,
+      "documents": 34,
+      "label": "net · year-over-year · revenue growth",
+      "meets_backfill": true,
+      "organizations": 13,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 0
+     },
+     {
+      "basis": "44 documents",
+      "depth_years": 8.5,
+      "documents": 44,
+      "label": "career · candidates · talent",
+      "meets_backfill": true,
+      "organizations": 15,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 1
+     },
+     {
+      "basis": "64 documents",
+      "depth_years": 8.5,
+      "documents": 64,
+      "label": "new markets · geopolitical · unforeseen",
+      "meets_backfill": true,
+      "organizations": 20,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 2
+     },
+     {
+      "basis": "33 documents",
+      "depth_years": 7.55,
+      "documents": 33,
+      "label": "digital twin · digital twins · immersive",
+      "meets_backfill": true,
+      "organizations": 13,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 3
+     },
+     {
+      "basis": "37 documents",
+      "depth_years": 8.5,
+      "documents": 37,
+      "label": "project managers · project management · project performance",
+      "meets_backfill": true,
+      "organizations": 16,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 4
+     },
+     {
+      "basis": "69 documents",
+      "depth_years": 8.5,
+      "documents": 69,
+      "label": "fi · scheduled maintenance · workflow",
+      "meets_backfill": true,
+      "organizations": 19,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 5
+     },
+     {
+      "basis": "18 documents",
+      "depth_years": 8.5,
+      "documents": 18,
+      "label": "bim · intensity · building information",
+      "meets_backfill": true,
+      "organizations": 10,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 6
+     },
+     {
+      "basis": "50 documents",
+      "depth_years": 8.5,
+      "documents": 50,
+      "label": "digital maturity · digitally mature · digital transformation",
+      "meets_backfill": true,
+      "organizations": 16,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 7
+     },
+     {
+      "basis": "64 documents",
+      "depth_years": 8.5,
+      "documents": 64,
+      "label": "ap · republic · proud",
+      "meets_backfill": true,
+      "organizations": 17,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 8
+     },
+     {
+      "basis": "42 documents",
+      "depth_years": 8.5,
+      "documents": 42,
+      "label": "score · statements · awarded",
+      "meets_backfill": true,
+      "organizations": 18,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 9
+     },
+     {
+      "basis": "57 documents",
+      "depth_years": 8.5,
+      "documents": 57,
+      "label": "data management · data standards · use data",
+      "meets_backfill": true,
+      "organizations": 19,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 10
+     },
+     {
+      "basis": "45 documents",
+      "depth_years": 8.5,
+      "documents": 45,
+      "label": "climate · emissions · carbon",
+      "meets_backfill": true,
+      "organizations": 15,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 11
+     },
+     {
+      "basis": "28 documents",
+      "depth_years": 7.55,
+      "documents": 28,
+      "label": "ai · ai-enabled · artificial intelligence",
+      "meets_backfill": true,
+      "organizations": 12,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 12
+     },
+     {
+      "basis": "55 documents",
+      "depth_years": 8.5,
+      "documents": 55,
+      "label": "building design · design firms · contractor",
+      "meets_backfill": true,
+      "organizations": 21,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 13
+     },
+     {
+      "basis": "56 documents",
+      "depth_years": 8.5,
+      "documents": 56,
+      "label": "scientific · ideas · science",
+      "meets_backfill": true,
+      "organizations": 17,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 14
+     },
+     {
+      "basis": "53 documents",
+      "depth_years": 8.5,
+      "documents": 53,
+      "label": "data centers · data center · iot",
+      "meets_backfill": true,
+      "organizations": 17,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 15
+     },
+     {
+      "basis": "25 documents",
+      "depth_years": 8.5,
+      "documents": 25,
+      "label": "spaces · rooms · amenities",
+      "meets_backfill": true,
+      "organizations": 12,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 16
+     },
+     {
+      "basis": "29 documents",
+      "depth_years": 8.5,
+      "documents": 29,
+      "label": "brands · retailers · stores",
+      "meets_backfill": true,
+      "organizations": 12,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 17
+     },
+     {
+      "basis": "35 documents",
+      "depth_years": 8.5,
+      "documents": 35,
+      "label": "recycled · materials · assembly",
+      "meets_backfill": true,
+      "organizations": 13,
+      "residual": {
+       "gate": "pending",
+       "hi": null,
+       "lo": null,
+       "reason": "News demand has not been counted.",
+       "value": null
+      },
+      "saturated": null,
+      "subq": 18
+     }
+    ],
+    "summary": "Each sub-question with its documents and how far back the map reaches; news demand is not counted yet."
+   },
+   "organizations": [
+    {
+     "documents": 6,
+     "id": "o1",
+     "kind": "firm",
+     "label": "Organization 1",
+     "n": 1,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 92 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.004889,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 92,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 294 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.000394,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 294,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "684 of 737 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.946198,
+       "k": 684,
+       "lo": 0.908055,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 737,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.928433,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "684 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.405698,
+       "k": 684,
+       "lo": 0.360638,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.383001,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "63% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 5 documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.216559,
+       "k": null,
+       "lo": 0.028521,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 5,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.12254,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 5
+    },
+    {
+     "documents": 1,
+     "id": "o2",
+     "kind": "firm",
+     "label": "Organization 2",
+     "n": 2,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 4 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.017031,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 4,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 76 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.000795,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 76,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "42 of 42 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 1.0,
+       "k": 42,
+       "lo": 0.960303,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 42,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.99825,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "42 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.031335,
+       "k": 42,
+       "lo": 0.017239,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.023605,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "75% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 1 document",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.217887,
+       "k": null,
+       "lo": 0.028761,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.123324,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 1
+    },
+    {
+     "documents": 3,
+     "id": "o3",
+     "kind": "firm",
+     "label": "Organization 3",
+     "n": 3,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 13 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.009238,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 13,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 134 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.000835,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 134,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "10 of 10 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 1.0,
+       "k": 10,
+       "lo": 0.887136,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 10,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.995418,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "10 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.00991,
+       "k": 10,
+       "lo": 0.002882,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.005692,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "85% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 2 documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.223616,
+       "k": null,
+       "lo": 0.035233,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 2,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.129425,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 2
+    },
+    {
+     "documents": 1,
+     "id": "o4",
+     "kind": "firm",
+     "label": "Organization 4",
+     "n": 4,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 18 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.009051,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 18,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 60 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.000856,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 60,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "20 of 20 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 1.0,
+       "k": 20,
+       "lo": 0.924247,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 20,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.9967,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "20 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.016903,
+       "k": 20,
+       "lo": 0.007073,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.01129,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "42% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 1 document",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.22222,
+       "k": null,
+       "lo": 0.033094,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.127657,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 1
+    },
+    {
+     "documents": 10,
+     "id": "o5",
+     "kind": "firm",
+     "label": "Organization 5",
+     "n": 5,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 10 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.009751,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 10,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 62 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.000854,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 62,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "6 of 6 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 1.0,
+       "k": 6,
+       "lo": 0.864312,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 6,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.994277,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "6 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.006912,
+       "k": 6,
+       "lo": 0.001403,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.003454,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "75% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 1 document",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.225385,
+       "k": null,
+       "lo": 0.036259,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.130822,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 1
+    },
+    {
+     "documents": 1,
+     "id": "o6",
+     "kind": "firm",
+     "label": "Organization 6",
+     "n": 6,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 26 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.007756,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 26,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 55 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.001098,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 55,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "38 of 38 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 1.0,
+       "k": 38,
+       "lo": 0.955828,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 38,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.998238,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "38 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.028766,
+       "k": 38,
+       "lo": 0.015336,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.021366,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "74% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 1 document",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.221787,
+       "k": null,
+       "lo": 0.032661,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.127224,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 1
+    },
+    {
+     "documents": 6,
+     "id": "o7",
+     "kind": "firm",
+     "label": "Organization 7",
+     "n": 7,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 63 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.005203,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 63,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 162 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.000387,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 162,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "401 of 503 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.833846,
+       "k": 401,
+       "lo": 0.764217,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 503,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.801186,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "401 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.244312,
+       "k": 401,
+       "lo": 0.205628,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.224576,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "71% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 3 documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.204888,
+       "k": null,
+       "lo": 0.018339,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 3,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.111613,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 3
+    },
+    {
+     "documents": 2,
+     "id": "o8",
+     "kind": "firm",
+     "label": "Organization 8",
+     "n": 8,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 29 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.00646,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 29,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 41 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.001166,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 41,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "no findings in the window",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no findings in the window to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "0 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.001405,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.000127,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "70% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 1 document",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.217138,
+       "k": null,
+       "lo": 0.028012,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.122575,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 1
+    },
+    {
+     "documents": 3,
+     "id": "o9",
+     "kind": "firm",
+     "label": "Organization 9",
+     "n": 9,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 25 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.007409,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 25,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 120 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.000635,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 120,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "15 of 15 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 1.0,
+       "k": 15,
+       "lo": 0.918148,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 15,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.996597,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "15 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.013466,
+       "k": 15,
+       "lo": 0.004918,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.008491,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "79% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 1 document",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.224549,
+       "k": null,
+       "lo": 0.035423,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.129986,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 2
+    },
+    {
+     "documents": 1,
+     "id": "o10",
+     "kind": "firm",
+     "label": "Organization 10",
+     "n": 10,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 15 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.010552,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 15,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 39 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.001394,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 39,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "2 of 2 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 1.0,
+       "k": 2,
+       "lo": 0.781108,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 2,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.990329,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "2 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.003588,
+       "k": 2,
+       "lo": 0.000233,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.001218,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "73% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 1 document",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.2217,
+       "k": null,
+       "lo": 0.032574,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.127137,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 1
+    },
+    {
+     "documents": 1,
+     "id": "o11",
+     "kind": "firm",
+     "label": "Organization 11",
+     "n": 11,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 20 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.007562,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 20,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 54 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.000809,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 54,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "16 of 16 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 1.0,
+       "k": 16,
+       "lo": 0.920779,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 16,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.996447,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "16 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.014162,
+       "k": 16,
+       "lo": 0.005341,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.009051,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "79% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 1 document",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.219968,
+       "k": null,
+       "lo": 0.030842,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.125405,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 1
+    },
+    {
+     "documents": 12,
+     "id": "o12",
+     "kind": "firm",
+     "label": "Organization 12",
+     "n": 12,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 43 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.005156,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 43,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 238 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.000435,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 238,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "50 of 50 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 1.0,
+       "k": 50,
+       "lo": 0.963786,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 50,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.998502,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "50 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.036427,
+       "k": 50,
+       "lo": 0.021091,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.028084,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "75% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 2 documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.220762,
+       "k": null,
+       "lo": 0.107778,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 2,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.16427,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 4
+    },
+    {
+     "documents": 1,
+     "id": "o13",
+     "kind": "firm",
+     "label": "Organization 13",
+     "n": 13,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 2 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.029329,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 2,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 81 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.000606,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 81,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "1 not checkable",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "88 of 89 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.999354,
+       "k": 88,
+       "lo": 0.95664,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 89,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.989388,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "88 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.060048,
+       "k": 88,
+       "lo": 0.039955,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.049356,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "77% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "no window document with enough later work",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "Staying power needs 5 later documents; the newest are too recent.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 1
+    },
+    {
+     "documents": 2,
+     "id": "o14",
+     "kind": "firm",
+     "label": "Organization 14",
+     "n": 14,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 7 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.01197,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 7,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 72 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.001021,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 72,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "86 of 87 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.999145,
+       "k": 86,
+       "lo": 0.953562,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 87,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.989012,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "86 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.058822,
+       "k": 86,
+       "lo": 0.038945,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.048237,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "65% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 1 document",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.211889,
+       "k": null,
+       "lo": 0.022763,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.117326,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 1
+    },
+    {
+     "documents": 2,
+     "id": "o15",
+     "kind": "firm",
+     "label": "Organization 15",
+     "n": 15,
+     "values": {
+      "cited_by_later": {
+       "basis": "no later documents on its sub-questions",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no later documents on its sub-questions to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 81 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.000827,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 81,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "11 of 11 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 1.0,
+       "k": 11,
+       "lo": 0.893807,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 11,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.995309,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "11 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.010634,
+       "k": 11,
+       "lo": 0.003277,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.006252,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "83% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "no window document with enough later work",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "Staying power needs 5 later documents; the newest are too recent.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 1
+    },
+    {
+     "documents": 5,
+     "id": "o16",
+     "kind": "firm",
+     "label": "Organization 16",
+     "n": 16,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 35 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.006943,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 35,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 199 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.000554,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 199,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "278 of 280 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.99879,
+       "k": 278,
+       "lo": 0.979089,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 280,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.99304,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "278 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.17302,
+       "k": 278,
+       "lo": 0.139405,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.155719,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "66% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 3 documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.217765,
+       "k": null,
+       "lo": 0.029371,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 3,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.123568,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 3
+    },
+    {
+     "documents": 5,
+     "id": "o17",
+     "kind": "firm",
+     "label": "Organization 17",
+     "n": 17,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 31 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.006775,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 31,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 120 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.000675,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 120,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "8 of 8 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 1.0,
+       "k": 8,
+       "lo": 0.880562,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 8,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.994555,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "8 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.008434,
+       "k": 8,
+       "lo": 0.00212,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.004573,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "79% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 2 documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.190711,
+       "k": null,
+       "lo": 0.011274,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 2,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.100992,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 2
+    },
+    {
+     "documents": 14,
+     "id": "o18",
+     "kind": "firm",
+     "label": "Organization 18",
+     "n": 18,
+     "values": {
+      "cited_by_later": {
+       "basis": "0 of 12 later documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.010173,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 12,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_minus_contribution": {
+       "basis": "needs both shares",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "coverage_share": {
+       "basis": "discovery not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "News discovery has not run for this map's reports.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "earlier_cited": {
+       "basis": "0 of 57 earlier documents",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.001254,
+       "k": 0,
+       "lo": 0.0,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 57,
+       "reason": "References are parsed by GROBID and matched to the map's titles; neither step has a gold set yet.",
+       "value": 0.0,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "first_contradicted": {
+       "basis": "no “first” claims",
+       "engine_version": "90fa8b3",
+       "gate": "too_few",
+       "hi": null,
+       "k": 0,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 0,
+       "reason": "There are no checkable “first” claims to count.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_rate": {
+       "basis": "23 of 26 findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.976205,
+       "k": 23,
+       "lo": 0.77968,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 26,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels.",
+       "value": 0.910728,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "new_share": {
+       "basis": "23 of 1,778 new findings",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.018926,
+       "k": 23,
+       "lo": 0.008404,
+       "map_build_hash": "30639005c5e2",
+       "model": "Dirichlet-multinomial share",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1778,
+       "reason": "The new-or-earlier decisions wait for Kyle's labels (newness sheet).",
+       "value": 0.012969,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_flagged": {
+       "basis": "88% of its claims flagged",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "pickups_intact": {
+       "basis": "matching not run",
+       "engine_version": "90fa8b3",
+       "gate": "pending",
+       "hi": null,
+       "k": null,
+       "lo": null,
+       "map_build_hash": "30639005c5e2",
+       "model": "hierarchical beta-binomial, partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": null,
+       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "value": null,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      },
+      "staying_power": {
+       "basis": "over 1 document",
+       "engine_version": "90fa8b3",
+       "gate": "provisional",
+       "hi": 0.220528,
+       "k": null,
+       "lo": 0.031402,
+       "map_build_hash": "30639005c5e2",
+       "model": "normal-normal partial pooling",
+       "model_version": "EH-Record-Pilot-0.1",
+       "n": 1,
+       "reason": "Sub-question groups wait for Kyle's labels.",
+       "value": 0.125965,
+       "window": [
+        "2023-01-01",
+        "2026-11-26"
+       ]
+      }
+     },
+     "window_documents": 1
+    }
+   ],
+   "question": "What are digital tools and data changing in how places are designed, built and run?"
+  }
+ ],
+ "schema": "eh-record/0.1"
+}

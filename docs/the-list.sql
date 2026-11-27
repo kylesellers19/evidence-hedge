@@ -79,3 +79,39 @@ create policy "Anyone can add to The List"
 create index if not exists list_entries_origin on public.list_entries (origin);
 create index if not exists list_entries_score on public.list_entries (score);
 
+
+-- ── Version 3 (Nov. 2026): which flags ───────────────────────────────────────
+-- Safe to run again. Adds how many of an entry's claims each flag marks, so
+-- firms can be compared on what their reports lean toward (/list/compare):
+--   unsupported    states something as fact and cites nothing
+--   overconfident  cites a source but says more than it can show
+--   overreach      claims more cause than its study shows
+-- A claim has at most one of the first two flags, and either can come with
+-- overreach, so unsupported + overconfident + overreach, less the claims with
+-- two flags, is flagged. The checks below hold what that allows once all three
+-- counts are present. Readers may send the counts with their entry, all three
+-- or none; the corpus audit's are set from the dashboard.
+
+alter table public.list_entries add column if not exists unsupported integer
+  check (unsupported is null or unsupported >= 0);
+alter table public.list_entries add column if not exists overconfident integer
+  check (overconfident is null or overconfident >= 0);
+alter table public.list_entries add column if not exists overreach integer
+  check (overreach is null or overreach >= 0);
+
+alter table public.list_entries drop constraint if exists list_entries_flag_counts;
+alter table public.list_entries add constraint list_entries_flag_counts check (
+  unsupported is null or overconfident is null or overreach is null or (
+    claims is not null and flagged is not null
+    and unsupported + overconfident <= flagged
+    and overreach <= flagged
+    and unsupported + overconfident + overreach >= flagged
+    and claims >= flagged));
+
+drop policy if exists "Anyone can add to The List" on public.list_entries;
+create policy "Anyone can add to The List"
+  on public.list_entries for insert
+  to anon, authenticated
+  with check (origin = 'reader' and published_precision = 'day' and published_on is not null
+    and ((unsupported is null and overconfident is null and overreach is null)
+      or (unsupported is not null and overconfident is not null and overreach is not null)));

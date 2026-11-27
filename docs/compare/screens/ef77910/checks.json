@@ -1,0 +1,257 @@
+{
+ "base": "http://localhost:4186",
+ "live": false,
+ "runs": [
+  {
+   "width": 1440,
+   "view": "panels",
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  },
+  {
+   "width": 1440,
+   "view": "results",
+   "ms": 4556,
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  },
+  {
+   "width": 1024,
+   "view": "panels",
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  },
+  {
+   "width": 1024,
+   "view": "results",
+   "ms": 4304,
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  },
+  {
+   "width": 768,
+   "view": "panels",
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  },
+  {
+   "width": 768,
+   "view": "results",
+   "ms": 4652,
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  },
+  {
+   "width": 390,
+   "view": "panels",
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  },
+  {
+   "width": 390,
+   "view": "results",
+   "ms": 4795,
+   "errors": [],
+   "failed": [],
+   "probe": {
+    "clipped": [],
+    "wrappedNumbers": [],
+    "overlaps": 0,
+    "sideways": 0
+   },
+   "axe": []
+  }
+ ],
+ "interactions": [
+  {
+   "width": 1440,
+   "steps": [
+    {
+     "step": "tab reaches the firm search",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "Enter picks the firm and the address holds it",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "focus moves to the second panel’s search",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "two firms picked as chips, in order",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "Shift-Tab reaches the WSP chip",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "Delete removes the chip and the address drops it",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "tab reaches the report types",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "Space ticks and unticks a type",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "tab reaches Compare",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "every control reached shows focus",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "Compare moves focus to the results heading",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "the shared address opens on the same results",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "Back brings the panels back, with the firms",
+     "ok": true,
+     "note": ""
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "steps": [
+    {
+     "step": "tab reaches the firm search",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "Enter picks the firm and the address holds it",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "focus moves to the second panel’s search",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "two firms picked as chips, in order",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "Shift-Tab reaches the WSP chip",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "Delete removes the chip and the address drops it",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "tab reaches the report types",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "Space ticks and unticks a type",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "tab reaches Compare",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "every control reached shows focus",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "Compare moves focus to the results heading",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "the shared address opens on the same results",
+     "ok": true,
+     "note": ""
+    },
+    {
+     "step": "Back brings the panels back, with the firms",
+     "ok": true,
+     "note": ""
+    }
+   ]
+  }
+ ],
+ "failures": []
+}

@@ -66,6 +66,7 @@ first, then `INVENTORY.md`.
   91.4% at 5 reports; rerun with editions counted once started.
 - 15:40 Milestone 3 checks: `npm run check` (31 scripts) and `compare-browser` pass locally.
 - 15:46 Coverage rerun with editions counted once (`coverage.md`; the first run is superseded).
+- 15:48 629096b live (Pages run 46065992682); session ends.
 - 15:39 Milestone 3 live: main = 75f7b36, Pages run 46064970220; `site-smoke` and `compare-browser`
   pass on https://evidencehedge.org. Without the snapshot, the live page shows its one sentence and
   The List shows no compare links: the gate holds until the SQL runs.
@@ -115,7 +116,9 @@ docs/compare/screens/live --live`, and refresh the checks' snapshot with
   add form sends.
 - Milestone 1, Part A: 7765977, Pages run 46056374322.
 - Milestone 2, the tool: c306dc7, Pages run 46061720397.
-- Milestone 3, predictions, reviews and fixes: 75f7b36, Pages run 46064970220.
+- Milestone 3, predictions, reviews and fixes: 75f7b36, Pages run 46064970220; coverage and this
+  report: 629096b, Pages run 46065992682, live 15:48 with `site-smoke` and `compare-browser`
+  passing on https://evidencehedge.org and the gate holding for readers.
 - `npm run check` runs 31 scripts, `check:compare` among them, and the deploy runs `check:compare`
   before its build.
 

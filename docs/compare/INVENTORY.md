@@ -186,9 +186,10 @@ So there is no write path: Part A writes its SQL to `checks/data/list/` for Kyle
    The scope line says how many of the chosen firms' reports another build scored and were left
    out. Today that splits the List into 5b40af6 (88 firms) and 90fa8b3 (Burns & McDonnell,
    Weitz, HKS, Gensler and three small ones); WATG can't be compared with anyone.
-2. **Kyle's optional SQL:** stamping the 1,518 5b40af6 entries as 90fa8b3, guarded on every
-   value the 90fa8b3 run reproduces, would put 1,790 entries on one build with no score
-   changing. It is written, not run (`checks/data/list/`), since it changes the engine column.
+2. **Kyle's optional SQL:** stamping the 1,518 5b40af6 entries and WATG's 19 (re-weighed at
+   90fa8b3 from a `git archive`: identical on all 20) as 90fa8b3, guarded on every value that run
+   reproduces, puts all 1,809 entries on one build with no score changing. It is written, not run
+   (`checks/data/list/list-restamp-to-90fa8b3.sql`), since it changes the engine column.
 3. **The page leads with "All chosen types".** Most firm × type cells are below 5 reports, so
    the first row of the grid pools the chosen types, and type rows in which no pair of firms
    reaches the minimum collapse behind one control. The minimums stay as written.

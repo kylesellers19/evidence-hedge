@@ -373,3 +373,6 @@
   .eh-compare .cmp-forest td.n::before { content: attr(data-label) ' '; color: var(--eh-ink-soft); font-size: 11px; }
   .eh-compare .cmp-forest td[data-label='Estimate']::before { content: ''; }
 }
+@media (max-width: 600px) {
+  .eh-compare .cmp-forest td.n:empty::before { content: none; }
+}

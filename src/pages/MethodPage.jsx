@@ -681,6 +681,8 @@ export default function MethodPage() {
             reports and every test from reshuffling which firm published which report, so a long report counts
             once, not once for each of its claims. A comparison uses the reports one engine build scored, the
             build behind most of the chosen firm’s reports, so every score and flag was read by the same rules.
+            A quarterly report issued for several cities, each copy with the same title and a different city,
+            counts once, as its middle-scoring copy, so near copies aren’t counted as separate evidence.
             Only our corpus audit’s reports count at first, since we collected every freely available report
             from each firm while readers choose which reports to add; theirs come in when you ask for them, and
             only if the same build scored them.
@@ -691,7 +693,7 @@ export default function MethodPage() {
             <li><strong>Each flag.</strong> A firm’s rate is its flagged claims per 100 claims weighed, pooled over its reports, and two firms are compared by the ratio of their rates. A gap is described only when the average of the reports’ own rates leans the same way, since pooling gives long reports more weight.</li>
             <li><strong>Each flag, report type accounted for.</strong> The Mantel–Haenszel ratio across report types, with claims weighed as the denominator.</li>
             <li><strong>Trends.</strong> The Theil–Sen slope of score, or of each report’s flag rate, on publication year, tested by shuffling the years among a firm’s reports.</li>
-            <li><strong>Gaps between trends.</strong> The chosen firm’s slope less the other’s, tested by shuffling which firm published which dated report. One firm’s trend passing while another’s does not is never read as a difference between them.</li>
+            <li><strong>Gaps between trends.</strong> The chosen firm’s slope less the other’s, with its interval and p from resampling each firm’s dated reports. One firm’s trend passing while another’s does not is never read as a difference between them.</li>
           </ul>
           <p>
             Holm’s method adjusts the p values within each family of tests. A gap is called a difference only

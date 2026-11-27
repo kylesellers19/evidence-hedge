@@ -25,7 +25,8 @@ predictions, session log, reviews, screenshots).
 1. **No language model.** The text comes from templates filled by the statistics. Every number in
    a sentence is a formatted value of a statistics row the sentence cites, and the check proves it.
 2. **The report is the unit.** Every interval resamples reports and every test shuffles reports
-   (or their years). Claims are never independent draws.
+   (or their years). Claims are never independent draws. City editions of one quarterly report
+   count once (Decisions).
 3. **Like with like.** One engine build per comparison. Only the corpus audit's entries by default;
    readers' entries only when asked for, and only those the same build scored.
 4. **Only differences that pass are described as differences** (below). When nothing passes, one
@@ -47,7 +48,7 @@ The chosen firm is compared with each other firm, one pair at a time.
 | Score | Hodges–Lehmann shift (median of every pairwise difference, chosen minus other), points | Percentile bootstrap, reports resampled within each firm | Firm names shuffled between the two firms' reports; statistic the Mann–Whitney U (centered) | Shift within each type both firms have, weighted n₁n₂/(n₁+n₂); bootstrap within firm × type; shuffles within type; statistic van Elteren's |
 | Each flag | Ratio of pooled rates (100 × count ÷ claims); the text also gives the rates | Cluster bootstrap over reports within each firm | Firm names shuffled over reports; statistic \|log ratio\| | Mantel–Haenszel rate ratio across types, claims as the denominator; bootstrap within firm × type; shuffles within type |
 | Trend, per firm | Theil–Sen slope of score, or of each report's flag rate, on publication year | Bootstrap over the firm's dated reports | Years shuffled among the firm's reports; statistic Mann–Kendall's \|S\| | — |
-| Trend gap | Chosen firm's slope minus the other's | The two firms' bootstraps, paired draw by draw | Firm names shuffled among the two firms' dated reports, years kept; statistic \|slope gap\| | — |
+| Trend gap | Chosen firm's slope minus the other's | The two firms' bootstraps, paired draw by draw | From the same paired draws: twice the smaller share on either side of no difference, each counted with one added (changed after review 3; see Decisions) | — |
 
 - **Draws:** 4,000 bootstrap, 10,000 permutation. A test with no more possible arrangements than
   10,000 counts every one (p = share at least as extreme); otherwise p = (b + 1) / (m + 1).
@@ -82,29 +83,52 @@ Taken while building, Nov. 27, 2026. Everything here is PROVISIONAL.
 - **The page leads with "All chosen types".** 174 of 238 firm × type cells hold fewer than 5 reports.
   Type rows where no pair (the chosen firm and another) reaches 5 reports collapse behind one
   control. The minimums are as written.
-- **The trend-gap test is the slow one.** Each shuffle needs two Theil–Sen medians over up to 113,000
-  pooled pairs, so the largest real selection (Arup US with Mortenson, WSP and JE Dunn
-  Construction, all types) is 21.8 seconds of work on one thread. The work is planned as 724 seeded
-  slices and spread over Web Workers (3.9 seconds on 9 threads here), with "Working it out…" while it
-  runs. The draw counts are as written.
-- **The trend-gap interval** pairs the two firms' own bootstrap draws (independent resamples), so it
-  costs nothing extra.
+- **City editions count once (after review 3).** Mortenson's 124 Construction Cost Index entries are
+  16 quarterly editions, each issued for several cities with near-identical text and scores; JE
+  Dunn's 111 are 7 editions of The Look Ahead. Counted as reports, the copies were treated as
+  independent draws: Mortenson's falling score trend (−0.5 a year, adjusted p 0.001) came entirely
+  from them, and its gap with JE Dunn read as a difference on what were about 7 documents. An edition
+  is one firm's reports with the same series (the title before its first colon, less the quarter)
+  and the same quarter; it counts as its median-scoring copy, a real entry. Only those two firms
+  have such groups today. `EDITIONS_COUNT_ONCE` switches it off; what counts as a report is Kyle's
+  call. The scope line says how many entries count as how many.
+- **The trend-gap test (after review 3).** As first built it shuffled firm names among the two firms'
+  dated reports, as the spec said. Review 3 showed that assumes the firms' reports are
+  interchangeable, which fails when they differ in level and in the years they cover: with no trend in
+  either firm, the shuffle gave p under 0.05 in 55% of simulations for Arup US against WSP. The p now
+  comes from the paired bootstrap that already gave the interval, so the two always agree. The
+  reference implementation was changed the same way, by this session, and says so.
+- **Speed.** With the trend-gap shuffle gone, the largest real selection (Arup US with Mortenson, WSP
+  and JE Dunn Construction, all types) runs in about a second on 9 threads. The work is still planned as
+  seeded slices and run in Web Workers, with "Working it out…" while it runs.
 - **Sign changes** with report type accounted for count only between gaps that print as more than
   0.0; a gap that rounds to nothing "closes".
-- **Too many sentences:** over eight, sentences go by rank (trend gaps, trends, flags, the type-mix
-  line, the type-adjusted line, the grouped "can't be told apart" lines), last first, but never the
-  last sentence of a kind of finding, so the text still says whether the firms lean differently and
-  whether any is changing. Every firm's score sentence stays.
-- **The type-mix line** ("Gensler publishes more market reports, which score lower across The List")
-  appears only when the type with the widest share gap scores on the side that explains the gap,
-  by its median across The List at the build.
+- **The text after the reviews.** The lead opens with the report types. A sentence says which flag is
+  most common in each firm's reports. A flag difference that doesn't hold once report type is
+  accounted for says so in the same sentence. A firm whose score differs keeps its like-with-like
+  sentence, which opens with the type mix when that is the likeliest reason. A like-with-like gap
+  that can't be told apart is given no direction. Trends name their years and dated reports ("From
+  2016 to 2026 … 135 dated reports"), and trend gaps their direction. Over eight sentences, the rest
+  go by rank, but never a differing firm's score or like-with-like sentence, or the last flag or trend
+  sentence.
+- **The table after the reviews.** Each group names its Holm family size and which side of the line is
+  which. Rows with too few reports show no estimate. Intervals that run across no difference read
+  "0.7 lower to 0.3 higher". A result that can't be told apart despite a small p says why (too small
+  to state, interval and p disagree, report rates lean the other way). Numbers round by magnitude.
+- **The type-mix clause** ("Gensler publishes more market reports, which score lower across The List")
+  appears only when the type with the widest share gap scores on the side that explains the gap, by
+  its median across the rest of The List at the build (the two compared firms left out).
 - **The closing line** reads "as Evidence Hedge weighed them", not "as the engine weighed them": "the
   engine" is on the list of words never shown to readers.
 - **The scope line** says readers' reports were "left out: a different engine build scored them",
   without "because".
 - **Over time:** the x axis spans the chosen firms' dated years; the context column shows The List's
-  reports from those years. A firm with enough dated reports but too few distinct years reads "Too
-  few years (n)".
+  reports from those years. A line is drawn, and the slope set in ink, only for a trend that passes.
+  A firm with enough dated reports but too few distinct years reads "Too few years (n)".
+- **Type rows** show every type in which any chosen firm has 5 reports; a thinner cell shows its count,
+  not a median. Counts link to The List narrowed to the firm, the type and our audit's entries.
+- **The scope line** dates the comparison ("on The List as of Nov. 27, 2026"), since an address
+  recomputes on the day's List.
 - **Per-firm trends** have rows in the forest table too, since the text cites them.
 - **Marks:** the chosen firm in `--eh-ink`, the others in `--eh-ink-faint` (5.4:1; `--eh-dot` is under
   3:1 on paper), the context column in `--eh-dot` with its values printed.

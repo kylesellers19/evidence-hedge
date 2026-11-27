@@ -37,3 +37,31 @@ first, then `INVENTORY.md`.
   passes on https://evidencehedge.org (`/list/compare` shows its one sentence).
 - Network: the system resolver stopped finding github.com (api.github.com and the site resolve).
   Git runs with `-c http.curloptResolve=github.com:443:<address from nslookup>`.
+- 14:28 Predictions written and committed (dd74d51) before any comparison ran on real data.
+- 14:33 List snapshot (`checks/targets/compare/list-rows.json`): the 1,809 public rows with counts
+  from the ledgers that gave each score.
+- 14:35 Statistics built. The largest selection took 28.7 s on one thread; the trend-gap shuffle
+  (Theil–Sen over up to 113,000 pooled pairs per shuffle) was most of it. Work replanned as seeded
+  slices for a worker pool: 3.9 s on 9 threads, results identical on any number of threads.
+- 14:44 Python reference started in a subagent, from the definitions only, without the JavaScript
+  (`scripts/compare-reference.py`, scipy and statsmodels).
+- 14:45 to 15:05 Text, page, worker pool, styles, `check:compare`, `compare-browser`.
+- 14:55 Reference agreement: estimates, rates and counted p to 1e-9; sampled p within three Monte
+  Carlo errors. Interval ends first failed on lumpy bootstrap distributions (Suffolk's 7 reports: the
+  97.5% point is 0.225 by 200,000 draws, but a 4,000-draw run lands on 0.225 or 0.05), where batch-
+  means errors understate the noise; tolerance changed to order-statistic bands (logged in
+  `docs/compare.md`). One end still outside its band was looked into (our end varies 9.36 to 9.40
+  over seeds, 100,000 draws give 9.367, the reference 9.330) and recorded in
+  `checks/targets/compare/reference-misses.json`.
+- 15:05 Milestone 2 pushed: main = c306dc7, Pages run 46061720397 (`check:compare` ran in the
+  workflow), live 15:11; `site-smoke` and `compare-browser` pass on https://evidencehedge.org (the
+  browser check answers the table's requests with the snapshot; readers see "isn't available yet").
+- 15:15 Predictions scored: 18 of 27 (`predictions.md`).
+- 15:15 to 15:30 Three reviews in subagents (`reviews/`). Fixed: the text, grid and table items they
+  marked "Fix now", and two statistical faults from review 3: city editions counted as reports, and
+  the trend-gap shuffle's false positives. Both are logged as decisions in `docs/compare.md`; neither
+  moved a constant. The reference was changed the same way for the trend-gap p. Predictions rescored:
+  19 of 27.
+- 15:28 Coverage study, first run (before editions counted once): score intervals cover 81.0% to
+  91.4% at 5 reports; rerun with editions counted once started.
+- 15:40 Milestone 3 checks: `npm run check` (31 scripts) and `compare-browser` pass locally.

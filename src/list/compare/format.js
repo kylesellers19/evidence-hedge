@@ -11,14 +11,17 @@ const MINUS = '−'
 const signed = (s) => s.replace(/^-/, MINUS)
 const nonzero = (s) => (/^[−-]0(\.0+)?$/.test(s) ? s.slice(1) : s)
 
-export const points = (v) => nonzero(signed((Math.round(v * 10) / 10).toFixed(1)))
+// Rounded by magnitude, half away from zero, so −1.45 and 1.45 print as
+// −1.5 and 1.5 wherever the sign is flipped for a sentence.
+const round = (v, k) => Math.sign(v) * Math.round(Math.abs(v) * 10 ** k + 1e-9) / 10 ** k
+export const points = (v) => nonzero(signed(round(v, 1).toFixed(1)))
 export const rate = (v) => {
   if (!Number.isFinite(v)) return v > 0 ? '∞' : `${MINUS}∞`
-  const r = Math.round(v * 10) / 10
-  return nonzero(signed(Math.abs(r) >= 10 ? String(Math.round(v)) : String(r)))
+  const r = round(v, 1)
+  return nonzero(signed(Math.abs(r) >= 10 ? String(round(v, 0)) : String(r)))
 }
-export const times = (v) => (Number.isFinite(v) ? (Math.round(v * 10) / 10).toFixed(1) : '∞')
-export const slope = (v) => nonzero(signed((Math.round(v * 10) / 10).toFixed(1)))
+export const times = (v) => (Number.isFinite(v) ? round(v, 1).toFixed(1) : '∞')
+export const slope = (v) => nonzero(signed(round(v, 1).toFixed(1)))
 export const count = (n) => Number(n).toLocaleString('en-US')
 export function pValue(p) {
   if (p == null) return ''
@@ -95,6 +98,8 @@ export function formatRow(row) {
       Object.assign(f, { estimate: points(row.estimate), size: points(Math.abs(row.estimate)), dir: up ? 'higher' : 'lower' })
       ;[f.lo, f.hi] = orient(points, up)
       if (ci) { f.signedLo = points(row.lo); f.signedHi = points(row.hi) }
+      // An interval across no difference, as "0.7 lower to 0.3 higher".
+      if (ci && row.lo < 0 && row.hi > 0 && points(row.lo) !== '0.0' && points(row.hi) !== '0.0') { f.crossLo = points(-row.lo); f.crossHi = points(row.hi) }
     }
   } else if (row.kind === 'pair' || row.kind === 'pair-type') {
     Object.assign(f, { rateA: row.rateA != null ? rate(row.rateA) : null, rateB: row.rateB != null ? rate(row.rateB) : null })
@@ -114,11 +119,13 @@ export function formatRow(row) {
     }
   } else if (row.kind === 'trend' || row.kind === 'trend-gap') {
     if (row.firstYear != null) f.firstYear = String(row.firstYear)
+    if (row.lastYear != null) f.lastYear = String(row.lastYear)
     if (has) {
       const up = row.estimate >= 0
       Object.assign(f, { estimate: slope(row.estimate), size: slope(Math.abs(row.estimate)), dir: up ? 'risen' : 'fallen' })
       ;[f.lo, f.hi] = orient(slope, up)
       if (ci) { f.signedLo = slope(row.lo); f.signedHi = slope(row.hi) }
+      if (ci && row.lo < 0 && row.hi > 0 && slope(row.lo) !== '0.0' && slope(row.hi) !== '0.0') { f.crossLo = slope(-row.lo); f.crossHi = slope(row.hi) }
     }
   }
   f.pAdj = pValue(row.pAdj)

@@ -11,7 +11,9 @@ const capital = (s) => s.charAt(0).toUpperCase() + s.slice(1)
 const flagName = (m) => capital(flagLabel(m, 2))
 const VERDICT = { differs: 'Differs', apart: 'Can’t be told apart', few: 'Too few reports' }
 const reportsWord = (n) => `${count(n)} ${n === 1 ? 'report' : 'reports'}`
-const listHref = (firm, type) => `/list?${new URLSearchParams({ firm, ...(type ? { type: slug(type) } : {}) })}`
+// The List, narrowed to a firm (and a type), and to our audit's entries unless
+// readers' reports are in the comparison.
+const listHref = (firm, type, readers) => `/list?${new URLSearchParams({ firm, ...(type ? { type: slug(type) } : {}), ...(readers ? {} : { show: 'audit' }) })}`
 // Why a firm has no trend: too few dated reports, or all of them in too few years.
 const tooFew = (pts) => (pts.length >= K.TREND_MIN_REPORTS
   ? `Too few years (${count(new Set(pts.map((p) => p.x)).size)})`
@@ -21,7 +23,7 @@ const jitterOf = (id) => ((((Number(id) || 0) * 9301 + 49297) % 233280) / 233280
 // The results: the lead as the heading, then one grid with the firms as
 // columns (score by report type, flagged claims per 100, over time), the
 // text, the numbers behind it, and the closing line.
-export default function Results({ data, result, sentences, short, headingRef }) {
+export default function Results({ data, result, sentences, short, headingRef, readers = false }) {
   const firms = data.firms
   const names = firms.map((f) => f.name)
   const rows = result.rows
@@ -36,7 +38,9 @@ export default function Results({ data, result, sentences, short, headingRef }) 
     cells: firms.map((f) => f.reports.filter((r) => r.type === type).map((r) => r.score)),
     context: data.context.filter((r) => r.type === type).map((r) => r.score),
   }))
-  const comparable = (row) => row.cells[0].length >= K.MIN_REPORTS && row.cells.slice(1).some((c) => c.length >= K.MIN_REPORTS)
+  // A type gets its own row when any chosen firm has the minimum in it; a
+  // thinner cell shows its count, not a median.
+  const comparable = (row) => row.cells.some((c) => c.length >= K.MIN_REPORTS)
   const shownTypes = typeRows.filter(comparable)
   const sparseTypes = typeRows.filter((t) => !comparable(t))
   const [openSparse, setOpenSparse] = useState(false)
@@ -106,12 +110,14 @@ export default function Results({ data, result, sentences, short, headingRef }) 
               {row.cells.map((scores, i) => (
                 <div className={`cmp-cell is-${tone(i)}`} key={names[i]}>
                   {cellName(i)}
-                  {scores.length ? (
+                  {scores.length >= (row.type ? K.MIN_REPORTS : 1) ? (
                     <>
-                      <BarCell value={median(scores)} min={1} max={10} ticks={scores} mark={i ? chosenMedian : null} tone={tone(i)} />
+                      <BarCell value={median(scores)} min={1} max={10} ticks={scores} mark={i && chosenMedian != null && row.cells[0].length >= (row.type ? K.MIN_REPORTS : 1) ? chosenMedian : null} tone={tone(i)} />
                       <span className="cmp-value"><span className="cmp-num">{points(median(scores))}</span>{' '}
-                        <Link className="cmp-n" to={listHref(names[i], row.type || (data.types.length === 1 ? data.types[0] : null))}>{reportsWord(scores.length)}</Link></span>
+                        <Link className="cmp-n" to={listHref(names[i], row.type || (data.types.length === 1 ? data.types[0] : null), readers)}>{reportsWord(scores.length)}</Link></span>
                     </>
+                  ) : scores.length ? (
+                    <span className="cmp-value cmp-none"><Link className="cmp-n" to={listHref(names[i], row.type, readers)}>{reportsWord(scores.length)}</Link>, too few for a median</span>
                   ) : <span className="cmp-value cmp-none">No reports</span>}
                 </div>
               ))}
@@ -135,7 +141,7 @@ export default function Results({ data, result, sentences, short, headingRef }) 
           </button>
         </p>
       )}
-      <p className="cmp-key">Median score, 1 to 10; a tick for each report.</p>
+      <p className="cmp-key">Median score, 1 to 10. Ticks: reports. Ink line: {names[0]}.</p>
       <HiddenTable caption="Median score by report type, with the number of reports" cols={[...names, 'All firms on The List']}
         rows={scoreRows.map((row) => [row.label || row.type, ...row.cells.map((c) => (c.length ? `${points(median(c))} (${reportsWord(c.length)})` : 'No reports')),
           row.context.length ? `${points(median(row.context))} (${reportsWord(row.context.length)})` : 'No reports'])} />
@@ -164,6 +170,7 @@ export default function Results({ data, result, sentences, short, headingRef }) 
           </div>
         ))}
       </div>
+      <p className="cmp-key">Each row on its own scale. Ink line: {names[0]}.</p>
       <HiddenTable caption="Flagged claims per 100 claims weighed" cols={[...names, 'All firms on The List']}
         rows={flagRows.map((row) => [flagName(row.m), ...row.values.map((v) => (v == null ? 'No reports' : rate(v))), row.ctx == null ? '' : rate(row.ctx)])} />
 
@@ -173,30 +180,32 @@ export default function Results({ data, result, sentences, short, headingRef }) 
         {timeRows.map((row) => (
           <div className="cmp-row" key={row.m}>
             <div className="cmp-label">{row.m === 'score' ? 'Score' : flagName(row.m)}
-              {row.years && <span className="cmp-labelnote">{row.years}</span>}
-              {row.undated > 0 && <span className="cmp-labelnote">{count(row.undated)} undated {row.undated === 1 ? 'report' : 'reports'} left out</span>}
+              {row.m === 'score' && row.years && <span className="cmp-labelnote">{row.years}</span>}
+              {row.m === 'score' && row.undated > 0 && <span className="cmp-labelnote">{count(row.undated)} undated {row.undated === 1 ? 'report' : 'reports'} left out</span>}
             </div>
             {firms.map((f, i) => {
               const t = R[`trend-${row.m}-${i}`]
               return (
                 <div className={`cmp-cell is-${tone(i)}`} key={f.name}>
                   {cellName(i)}
-                  <TimeCell points={row.perFirm[i]} line={t?.eligible && t.estimate != null ? { slope: t.estimate, intercept: t.intercept } : null} xDomain={row.x} yMax={row.yMax} tone={tone(i)} />
+                  <TimeCell points={row.perFirm[i]} line={t?.verdict === 'differs' ? { slope: t.estimate, intercept: t.intercept } : null} xDomain={row.x} yMax={row.yMax} tone={tone(i)} />
                   <span className="cmp-value">{t?.eligible && t.estimate != null
-                    ? <span className="cmp-num">{fmtSlope(t.estimate)} a year</span>
+                    ? (t.verdict === 'differs'
+                      ? <span className="cmp-num">{fmtSlope(t.estimate)} a year</span>
+                      : <span className="cmp-none">{fmtSlope(t.estimate)} a year, can’t be told from none</span>)
                     : <span className="cmp-none">{tooFew(row.perFirm[i])}</span>}</span>
                 </div>
               )
             })}
             <div className="cmp-cell is-context">
               <span className="cmp-cellname is-context">All firms</span>
-              <TimeCell points={row.ctx} line={result.context[row.m]} xDomain={row.x} yMax={row.yMax} tone="context" />
-              <span className="cmp-value">{result.context[row.m] ? <span className="cmp-num">{fmtSlope(result.context[row.m].slope)} a year</span> : null}</span>
+              <TimeCell points={row.ctx} line={null} xDomain={row.x} yMax={row.yMax} tone="context" />
+              <span className="cmp-value">{result.context[row.m] ? <span className="cmp-none">{fmtSlope(result.context[row.m].slope)} a year</span> : null}</span>
             </div>
           </div>
         ))}
       </div>
-      <p className="cmp-key">A dot for each dated report; the line is its Theil–Sen trend.</p>
+      <p className="cmp-key">A dot for each dated report; a line where a trend passes.</p>
       <HiddenTable caption="Trend a year by publication year, Theil–Sen slope" cols={[...names, 'All firms on The List']}
         rows={timeRows.map((row) => [row.m === 'score' ? 'Score' : flagName(row.m), ...firms.map((f, i) => {
           const t = R[`trend-${row.m}-${i}`]
@@ -241,34 +250,46 @@ function Forest({ rows, names, cited }) {
     const m = Math.max(0.1, ...vals.map(Math.abs)) * 1.1
     return [-m, m]
   }
+  const A = names[0]
+  const tests = (ms) => { const n = ms[0]?.familySize || 0; return n ? `; Holm-adjusted over ${n} ${n === 1 ? 'test' : 'tests'}` : '' }
   for (const m of ['score', ...MEASURES]) {
     const word = m === 'score' ? 'Score' : flagName(m)
     const of = (kind) => rows.filter((r) => r.measure === m && r.kind === kind)
-    add(m === 'score' ? 'Score, points' : `${word}, ratio of rates`, of('pair'), (ms) => sym(ms.filter((r) => !r.zero)))
-    add(`${word}, report type accounted for`, of('pair-type'), (ms) => sym(ms.filter((r) => !r.zero)))
-    add(`${word}, trend a year`, of('trend').filter((r) => r.eligible), sym)
-    add(`${word}, gap between trends a year`, of('trend-gap').filter((r) => r.p != null), sym)
+    const lean = m === 'score' ? `left of the line, ${A} lower` : `left of the line, fewer at ${A}`
+    add(m === 'score' ? `Score, points: ${lean}` : `${word}, ratio of rates: ${lean}`, of('pair'), (ms) => sym(ms.filter((r) => !r.zero && r.verdict !== 'few')))
+    add(`${word}, report type accounted for`, of('pair-type'), (ms) => sym(ms.filter((r) => !r.zero && r.verdict !== 'few')))
+    add(`${word}, trend a year: left of the line, falling`, of('trend').filter((r) => r.eligible), sym)
+    add(`${word}, gap between trends a year: left of the line, ${A} lower`, of('trend-gap').filter((r) => r.p != null), sym)
   }
+  for (const g of groups) g.label += tests(g.members)
   const label = (r) => (r.kind === 'trend' ? names[r.firmIndex] : r.other)
+  // Too few reports: no estimate, so no number to quote.
   const estimate = (r) => {
     const f = r.fmt
-    if (r.estimate == null || !f.estimate) return 'None'
+    if (r.verdict === 'few' || r.estimate == null || !f.estimate) return ''
     if (r.measure === 'score' && (r.kind === 'pair' || r.kind === 'pair-type')) return `${f.estimate}`
-    if (r.kind === 'pair' || r.kind === 'pair-type') return r.zero ? `${f.estimate} per 100` : `${f.estimate}×`
+    if (r.kind === 'pair' || r.kind === 'pair-type') return r.zero ? `${f.estimate} per 100` : `${f.size}×`
     return `${f.estimate} a year`
   }
+  // The interval in words, naming whose reports it describes.
   const words = (r) => {
     const f = r.fmt
     if (r.lo == null || !f.lo) return ''
-    if (r.measure === 'score' && (r.kind === 'pair' || r.kind === 'pair-type')) return `${f.lo} to ${f.hi} points ${f.dir}`
+    if (r.measure === 'score' && (r.kind === 'pair' || r.kind === 'pair-type')) {
+      return f.crossLo != null ? `${r.firm} ${f.crossLo} lower to ${f.crossHi} higher` : `${r.firm} ${f.lo} to ${f.hi} points ${f.dir}`
+    }
     if (r.kind === 'pair' || r.kind === 'pair-type') {
       const who = f.more === 'A' ? possessive(r.firm) : possessive(r.other)
       return r.zero ? `${who} ${f.lo} to ${f.hi} more per 100` : `${who} ${f.lo} to ${f.hi} times as many`
     }
     if (f.lo === f.hi && Number(f.lo) === 0) return 'level'
-    if (r.kind === 'trend-gap') return `${f.lo} to ${f.hi} ${f.dir === 'risen' ? 'higher' : 'lower'} a year`
+    if (r.kind === 'trend-gap') {
+      return f.crossLo != null ? `${r.firm} ${f.crossLo} lower to ${f.crossHi} higher a year` : `${r.firm} ${f.lo} to ${f.hi} ${f.dir === 'risen' ? 'higher' : 'lower'} a year`
+    }
+    if (f.crossLo != null) return `falling ${f.crossLo} to rising ${f.crossHi} a year`
     return `${f.dir === 'risen' ? 'rising' : 'falling'} ${f.lo} to ${f.hi} a year`
   }
+  const WHY = { size: 'Too small a gap to state', lean: 'Report rates lean the other way', interval: 'Interval and p disagree', p: '' }
   return (
     <div className="eh-table-scroll" tabIndex={0} role="region" aria-label="The numbers behind each sentence">
       <table className="eh-data cmp-forest">
@@ -276,9 +297,9 @@ function Forest({ rows, names, cited }) {
         <thead>
           <tr>
             <th scope="col">Compared with</th>
-            <th scope="col" className="n">Estimate</th>
             <th scope="col" className="cmp-plotcol">95% interval</th>
             <th scope="col" className="cmp-wordscol">In words</th>
+            <th scope="col" className="n">Estimate</th>
             <th scope="col" className="n">Adjusted p</th>
             <th scope="col" className="n">Reports</th>
             <th scope="col">Verdict</th>
@@ -288,17 +309,16 @@ function Forest({ rows, names, cited }) {
           <tbody key={g.label}>
             <tr className="cmp-group"><th scope="rowgroup" colSpan={7}>{g.label}</th></tr>
             {g.members.map((r) => {
-              const ratio = (r.kind === 'pair' || r.kind === 'pair-type') && r.measure !== 'score' && !r.zero
               return (
                 <tr key={r.id} id={`n-${r.id}`} className={`${cited.has(r.id) ? 'is-cited ' : ''}is-${r.verdict}`}>
                   <th scope="row">{label(r)}</th>
-                  <td className="n">{estimate(r)}</td>
-                  <td className="cmp-plotcol">{r.zero ? <span className="cmp-none">per 100 claims</span>
-                    : <IntervalPlot lo={r.lo} hi={r.hi} est={r.estimate} domain={ratio ? g.domain : g.domain} />}</td>
+                  <td className="cmp-plotcol" data-label="95% interval">{r.verdict === 'few' ? null : r.zero ? <span className="cmp-none">per 100 claims</span>
+                    : <IntervalPlot lo={r.lo} hi={r.hi} est={r.estimate} domain={g.domain} />}</td>
                   <td className="cmp-wordscol">{words(r)}</td>
-                  <td className="n">{r.fmt.pAdj}</td>
-                  <td className="n">{r.n.map(count).join(' and ')}</td>
-                  <td>{VERDICT[r.verdict]}</td>
+                  <td className="n" data-label="Estimate">{estimate(r)}</td>
+                  <td className="n" data-label="Adjusted p">{r.fmt.pAdj}</td>
+                  <td className="n" data-label="Reports">{r.n.map(count).join(' and ')}</td>
+                  <td className="cmp-verdict">{VERDICT[r.verdict]}{r.verdict === 'apart' && WHY[r.why] ? <span className="cmp-why">{WHY[r.why]}</span> : null}</td>
                 </tr>
               )
             })}

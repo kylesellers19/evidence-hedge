@@ -6,7 +6,7 @@ import { count } from './format.js'
 // A search field over a list of firms, as a combobox: typing narrows the list
 // word by word, arrow keys move through it, Enter picks. The list stays open,
 // so a reader sees every firm on offer and its report count.
-export function FirmCombo({ label, placeholder, firms, onPick, full = false, inputRef, footer = null }) {
+export function FirmCombo({ label, placeholder, firms, onPick, full = false, inputRef, footer = null, hideLabel = false }) {
   const id = useId()
   const [q, setQ] = useState('')
   const [active, setActive] = useState(0)
@@ -37,7 +37,7 @@ export function FirmCombo({ label, placeholder, firms, onPick, full = false, inp
 
   return (
     <div className="cmp-combo">
-      <label className="cmp-label" htmlFor={`${id}-input`}>{label}</label>
+      <label className={hideLabel ? 'eh-sr-only' : 'cmp-label'} htmlFor={`${id}-input`}>{label}</label>
       <input
         id={`${id}-input`}
         ref={inputRef}

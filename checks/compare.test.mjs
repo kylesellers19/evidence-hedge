@@ -160,7 +160,12 @@ for (const [slug, run] of Object.entries(runs)) {
     for (const f of FIXED) rest = rest.replace(f, '')
     for (const n of rest.match(NUMBER) || []) if (!values.has(n)) unsupported.push(`"${n}" in: ${s.text}`)
     const cited = s.cites.map((id) => R[id])
-    if (s.kind === 'differs' && !cited.every((r) => r.verdict === 'differs')) wrongKind.push(s.text)
+    // A difference cites a row that differs; any other row it cites is the
+    // like-with-like check, which the sentence must say did not hold.
+    if (s.kind === 'differs' && (cited[0]?.verdict !== 'differs' ||
+      (cited.slice(1).some((r) => r.verdict !== 'differs') && !/though not once report type is accounted for|too few reports of the same types/.test(s.text)))) wrongKind.push(s.text)
+    // The lean sentence describes each firm's own rates, and compares none.
+    if (s.kind === 'lean' && /higher|lower|times as many|differ|more than|fewer/.test(s.text)) wrongKind.push(s.text)
     if (s.kind === 'apart' && !/can’t be told apart/.test(s.text)) wrongKind.push(s.text)
     if (s.kind === 'few' && !/too few/.test(s.text)) wrongKind.push(s.text)
     if (s.kind === 'none' && (!/can be told apart from chance/.test(s.text) || run.rows.some((r) => r.verdict === 'differs'))) wrongKind.push(s.text)

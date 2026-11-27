@@ -5,8 +5,9 @@ import {
   poolOf, buildOf, firmIndex, firmsAt, suggestionsFor, typesOffered, precheck,
   readSelection, writeSelection, selectionData, MEASURES,
 } from './data.js'
-import { joinAnd, shortNames, typePlural, count } from './format.js'
+import { joinAnd, shortNames, typePlural, count, possessive } from './format.js'
 import { narrate } from './narrate.js'
+import { apDate } from '../entry.js'
 import { useStats } from './useStats.js'
 import { FirmCombo, Chips, NotListed } from './Pickers.jsx'
 import Results from './Results.jsx'
@@ -104,7 +105,7 @@ export default function CompareTool({ rows }) {
               <p className="cmp-picked"><strong>{firm}</strong>{' '}
                 <button type="button" className="eh-inlinebutton" onClick={() => { go({ firm: '', vs: [] }); requestAnimationFrame(() => firmInput.current?.focus()) }}>Change</button></p>
             ) : (
-              <FirmCombo label="Search firms" placeholder="Your firm, or any firm on The List" firms={index} onPick={pickFirm} inputRef={firmInput} footer={<NotListed />} />
+              <FirmCombo label="Search firms" hideLabel placeholder="Your firm, or any firm on The List" firms={index} onPick={pickFirm} inputRef={firmInput} footer={<NotListed />} />
             )}
           </fieldset>
 
@@ -122,9 +123,11 @@ export default function CompareTool({ rows }) {
                 </ul>
               </div>
             )}
-            <FirmCombo label="Search firms to compare with" placeholder="Any firm on The List" firms={firm ? others.filter((f) => !vs.includes(f.name)) : index}
-              onPick={addOther} full={vs.length >= K.MAX_OTHERS} inputRef={otherInput}
-              footer={vs.length >= K.MAX_OTHERS ? <p className="cmp-notlisted" role="status">Remove one to add another.</p> : null} />
+            {firm && (
+              <FirmCombo label="Search firms to compare with" hideLabel placeholder="Any firm on The List" firms={others.filter((f) => !vs.includes(f.name))}
+                onPick={addOther} full={vs.length >= K.MAX_OTHERS} inputRef={otherInput}
+                footer={vs.length >= K.MAX_OTHERS ? <p className="cmp-notlisted" role="status">Remove one to add another.</p> : null} />
+            )}
           </fieldset>
 
           <fieldset className={`cmp-panel${vs.length ? '' : ' is-inactive'}`} disabled={!vs.length}>
@@ -149,12 +152,7 @@ export default function CompareTool({ rows }) {
                   <button type="button" className="eh-button is-quiet cmp-small" onClick={() => setDraft([])}>None</button>
                 </p>
               </>
-            ) : (
-              <p className="cmp-allnone">
-                <button type="button" className="eh-button is-quiet cmp-small" disabled>All</button>{' '}
-                <button type="button" className="eh-button is-quiet cmp-small" disabled>None</button>
-              </p>
-            )}
+            ) : null}
           </fieldset>
         </div>
       )}
@@ -171,12 +169,18 @@ export default function CompareTool({ rows }) {
           {stats.status === 'working' && <p className="cmp-working" role="status">Working it out…</p>}
           {stats.status === 'failed' && <p className="cmp-working" role="alert">The comparison could not be worked out. Reload the page to try again.</p>}
           {stats.status === 'done' && sentences && data && (
-            <Results data={data} result={stats.result} sentences={sentences} short={short} headingRef={heading} />
+            <Results data={data} result={stats.result} sentences={sentences} short={short} headingRef={heading} readers={sel.readers} />
           )}
         </div>
       )}
     </>
   )
+}
+
+// Today in New York, in Associated Press style, for "The List as of".
+const today = () => {
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date()).map((x) => [x.type, x.value]))
+  return apDate(`${p.year}-${p.month}-${p.day}`)
 }
 
 const offeredTypesFor = (pool, build, firm) => (build ? typesOffered(pool, build, [firm]).map((t) => t.type) : [])
@@ -193,7 +197,11 @@ function Scope({ data, readers, onReaders }) {
   let line = 'Comparing reports from our corpus audit, each comparison on one engine build.'
   if (data) {
     const n = data.firms.reduce((s, f) => s + f.reports.length, 0)
-    const parts = [`Comparing ${count(n)} ${n === 1 ? 'report' : 'reports'} from our corpus audit${readers && data.readerCount ? ' and readers' : ''}, weighed by engine ${data.build}.`]
+    const parts = [`Comparing ${count(n)} ${n === 1 ? 'report' : 'reports'} on The List as of ${today()}, from our corpus audit${readers && data.readerCount ? ' and readers' : ''}, weighed by engine ${data.build}.`]
+    if (data.editions.length) {
+      const e = data.editions.map((x, i) => `${possessive(x.firm)} ${count(x.entries)} ${i === 0 ? 'entries count as' : 'as'} ${count(x.counted)}`)
+      parts.push(`City editions of one quarterly report count once: ${joinAnd(e)}.`)
+    }
     if (data.left.auditOtherBuild) parts.push(`${count(data.left.auditOtherBuild)} more from these firms, weighed by another build, ${data.left.auditOtherBuild === 1 ? 'is' : 'are'} left out.`)
     if (readers) {
       const off = data.left.readersOtherBuild + data.left.readersNoCounts

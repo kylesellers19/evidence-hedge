@@ -70,6 +70,8 @@ first, then `INVENTORY.md`.
 - 15:39 Milestone 3 live: main = 75f7b36, Pages run 46064970220; `site-smoke` and `compare-browser`
   pass on https://evidencehedge.org. Without the snapshot, the live page shows its one sentence and
   The List shows no compare links: the gate holds until the SQL runs.
+- 17:13 Kyle: count city editions once. `EDITIONS_COUNT_ONCE` is now RATIFIED (`RATIFIED` in
+  `constants.js`, held by `check:compare`); the tool's behaviour is unchanged.
 
 ## Completion report
 
@@ -79,12 +81,10 @@ There is no write path to the database (no linked Supabase project, no database 
 key in any env file, no Supabase MCP server), so the SQL is written for the Supabase SQL editor, in
 the gitignored `checks/data/list/` of the main checkout.
 
-**Before running it, decide what counts as a report.** The tool goes live for readers the moment the
-SQL runs. It now counts a quarterly report issued for several cities once (`EDITIONS_COUNT_ONCE`,
-`src/list/compare/constants.js`): Mortenson's 135 entries count as 27 and JE Dunn's 111 as 7. If you
-want each city copy counted, set it to `false` (and re-record with
-`node checks/compare.test.mjs --write`); review 3 shows that inflates every interval and test that
-touches those two firms.
+**Decided: city editions count once** (Kyle, Nov. 27, 17:13 EST). The tool goes live for readers
+the moment the SQL runs, and counts a quarterly report issued for several cities once
+(`EDITIONS_COUNT_ONCE`, ratified in `src/list/compare/constants.js`): Mortenson's 135 entries count
+as 27 and JE Dunn's 111 as 7.
 
 Run, in order:
 
@@ -124,7 +124,7 @@ docs/compare/screens/live --live`, and refresh the checks' snapshot with
 
 ### 3. Ratification table
 
-Every value is PROVISIONAL. "Effect" is measured on the four predicted selections (largest four,
+Every value is PROVISIONAL except EDITIONS_COUNT_ONCE, which Kyle ratified on Nov. 27. "Effect" is measured on the four predicted selections (largest four,
 suggested peers, small against largest, most different mix), at 75f7b36.
 
 | Constant | Value | Why | Effect on the four selections |
@@ -139,7 +139,7 @@ suggested peers, small against largest, most different mix), at 75f7b36.
 | MIN_RATE_GAP | 2 per 100 claims | About one claim in a 50-claim report | Decided 3 rows (3, 0, 0, 0), all "cites too little" (rates 0.2 to 0.7 per 100) |
 | MIN_SCORE_SLOPE / MIN_RATE_SLOPE | 0.2 points / 1 per 100 a year | A band in five years; the rate gap in two | Decided 2 rows (1, 0, 1, 0): Arup US's score trend, 0.0 a year with adjusted p 0.001 |
 | TREND_MIN_REPORTS / YEARS | 6 / 3 | 15 pairs at most; not one jump | 4 trend rows short (all JE Dunn: 7 editions in 2 years) |
-| EDITIONS_COUNT_ONCE | true | Added after review 3; near copies aren't independent | Mortenson 135 → 27, JE Dunn 111 → 7. With the trend-gap change, the four selections went from 12 differences to 3; Mortenson's trends came from its copies |
+| EDITIONS_COUNT_ONCE | true (ratified Nov. 27) | Added after review 3; near copies aren't independent | Mortenson 135 → 27, JE Dunn 111 → 7. With the trend-gap change, the four selections went from 12 differences to 3; Mortenson's trends came from its copies |
 | MAX_OTHERS | 3 | Four columns fit a phone and a page | — |
 | SUGGESTIONS / SUGGEST_MIN_REPORTS | 4 / 5 | One line; comparable firms only | Suggested peers' selection is the first three |
 | MAX_SENTENCES | 8 | Text shorter than the grid | 5, 1, 1 and 5 sentences; none cut |
@@ -185,8 +185,8 @@ at this build, not lowest.
 
 ### 6. Open items from the reviews
 
-1. **What counts as a report** (reviews 2 and 3). City editions now count once; decide, and whether
-   The List should hold one entry per edition.
+1. **What counts as a report** (reviews 2 and 3). City editions count once, ratified Nov. 27. Still
+   open: whether The List itself should hold one entry per edition.
 2. **One build** (inventory, review 3). Run the optional restamp, or the build rule keeps seven firms
    apart from the rest.
 3. **Small-n intervals** (review 3, coverage). See 5.

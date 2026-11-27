@@ -37,7 +37,7 @@ predictions, session log, reviews, screenshots).
    "outperform", "better firm" and causal words about firms ("because", "due to", "drives", "leads
    to", "results in"). Sentence case, Delgam's copy rules, AP dates, "report types".
 6. **Constants are provisional,** all in `COMPARE_CONSTANTS` (`constants.js`), listed with reasons by
-   `ratificationTable()`.
+   `ratificationTable()`, except those in `RATIFIED` (today only `EDITIONS_COUNT_ONCE`).
 
 ## The statistics
 
@@ -71,7 +71,7 @@ The chosen firm is compared with each other firm, one pair at a time.
 
 ## Decisions
 
-Taken while building, Nov. 27, 2026. Everything here is PROVISIONAL.
+Taken while building, Nov. 27, 2026. Everything here is PROVISIONAL except where it says ratified.
 
 - **Builds.** The List holds three builds (5b40af6, 90fa8b3, 9bde978; `docs/compare/INVENTORY.md`).
   Rule 3 is applied literally: the build is the one behind most of the chosen firm's reports (ties
@@ -90,8 +90,9 @@ Taken while building, Nov. 27, 2026. Everything here is PROVISIONAL.
   from them, and its gap with JE Dunn read as a difference on what were about 7 documents. An edition
   is one firm's reports with the same series (the title before its first colon, less the quarter)
   and the same quarter; it counts as its median-scoring copy, a real entry. Only those two firms
-  have such groups today. `EDITIONS_COUNT_ONCE` switches it off; what counts as a report is Kyle's
-  call. The scope line says how many entries count as how many.
+  have such groups today. `EDITIONS_COUNT_ONCE` switches it off. Kyle ratified counting each edition
+  once on Nov. 27, 2026, before the tool went live; whether The List itself should hold one entry per
+  edition is still open. The scope line says how many entries count as how many.
 - **The trend-gap test (after review 3).** As first built it shuffled firm names among the two firms'
   dated reports, as the spec said. Review 3 showed that assumes the firms' reports are
   interchangeable, which fails when they differ in level and in the years they cover: with no trend in

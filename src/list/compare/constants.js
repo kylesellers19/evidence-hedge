@@ -2,7 +2,8 @@
 // Every threshold, minimum, draw count and interface cap the compare tool uses,
 // in one place. PROVISIONAL — not ratified: each value is a proposal, listed
 // with its reason by ratificationTable() and in docs/compare/SESSION_LOG.md's
-// completion report, and none was moved after seeing results.
+// completion report, and none was moved after seeing results. The one
+// exception is listed in RATIFIED below, with who ratified it and when.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const COMPARE_CONSTANTS = Object.freeze({
@@ -54,7 +55,7 @@ const WHY = {
   MIN_RATE_SLOPE: '1 claim in 100 a year is the rate gap above in two years.',
   TREND_MIN_REPORTS: 'Six dated reports give 15 pairs for a Theil–Sen slope at most.',
   TREND_MIN_YEARS: 'Three distinct years, so a slope is not one jump between two.',
-  EDITIONS_COUNT_ONCE: 'Added after review 3: city editions of one report are near copies (Mortenson’s Cost Index, JE Dunn’s Look Ahead), so counting each as a report treated copies as independent. Kyle decides what counts as a report.',
+  EDITIONS_COUNT_ONCE: 'Added after review 3: city editions of one report are near copies (Mortenson’s Cost Index, JE Dunn’s Look Ahead), so counting each as a report treated copies as independent. Kyle ratified counting each edition once on Nov. 27, 2026.',
   MAX_OTHERS: 'Four firms side by side fit a phone and a printed page.',
   SUGGESTIONS: 'Four suggestions fit one line on a wide screen.',
   SUGGEST_MIN_REPORTS: 'A suggestion should be comparable: the same minimum as a test.',
@@ -70,9 +71,15 @@ export const COMPARE_RULES = Object.freeze({
   BUILD: 'One engine build per comparison: the build that scored most of the chosen firm’s reports (ties to the build with more entries on The List).',
 })
 
+// The values Kyle has ratified, with the date. Everything else is PROVISIONAL.
+export const RATIFIED = Object.freeze({
+  EDITIONS_COUNT_ONCE: { value: true, by: 'Kyle', on: '2026-11-27' },
+})
+
 export function ratificationTable() {
   return [
-    ...Object.entries(COMPARE_CONSTANTS).map(([name, value]) => ({ name, value, why: WHY[name], status: 'PROVISIONAL' })),
+    ...Object.entries(COMPARE_CONSTANTS).map(([name, value]) => ({ name, value, why: WHY[name],
+      status: RATIFIED[name]?.value === value ? 'RATIFIED' : 'PROVISIONAL', ...(RATIFIED[name] ? { ratified: RATIFIED[name] } : {}) })),
     ...Object.entries(COMPARE_RULES).map(([name, value]) => ({ name, value, why: 'Interface rule.', status: 'PROVISIONAL' })),
   ]
 }

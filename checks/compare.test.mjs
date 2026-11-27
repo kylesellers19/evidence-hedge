@@ -17,7 +17,7 @@
 //     one (checks/targets/compare/<slug>.json; re-record a deliberate change
 //     with --write)
 //   · the address: repeated vs, names with commas, types as slugs, round trip
-//   · every constant is in COMPARE_CONSTANTS and the ratification table
+//   · every constant is in COMPARE_CONSTANTS and the ratification table; ratified ones keep their value
 //
 //   node checks/compare.test.mjs [--write]
 // ─────────────────────────────────────────────────────────────────────────────
@@ -25,7 +25,7 @@
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs'
 import { loadRows, runSelection } from './lib/compare-run.mjs'
 import { SELECTIONS, SMALL } from './lib/compare-selections.mjs'
-import { COMPARE_CONSTANTS, ratificationTable } from '../src/list/compare/constants.js'
+import { COMPARE_CONSTANTS, RATIFIED, ratificationTable } from '../src/list/compare/constants.js'
 import { holm, rankTest, trendTest, flagTest, rng, combineTest } from '../src/list/compare/stats.js'
 import { narrate } from '../src/list/compare/narrate.js'
 import { MEASURES, readSelection, writeSelection } from '../src/list/compare/data.js'
@@ -227,7 +227,10 @@ for (const [slug, run] of Object.entries(runs)) {
 // ── constants ────────────────────────────────────────────────────────────────
 {
   const table = ratificationTable()
-  log('every constant is in the ratification table, marked PROVISIONAL', Object.keys(COMPARE_CONSTANTS).every((k) => table.some((t) => t.name === k && t.status === 'PROVISIONAL' && t.why)))
+  log('every constant is in the ratification table, marked PROVISIONAL unless ratified', Object.keys(COMPARE_CONSTANTS).every((k) =>
+    table.some((t) => t.name === k && t.why && t.status === (RATIFIED[k]?.value === COMPARE_CONSTANTS[k] ? 'RATIFIED' : 'PROVISIONAL'))))
+  log('a ratified constant still holds its ratified value, with who and when', Object.entries(RATIFIED).every(([k, r]) =>
+    COMPARE_CONSTANTS[k] === r.value && r.by && /^\d{4}-\d{2}-\d{2}$/.test(r.on)))
   const src = readFileSync(new URL('../src/list/compare/constants.js', import.meta.url), 'utf8')
   log('the constants are marked PROVISIONAL in the code', /PROVISIONAL — not ratified/.test(src))
   log('the draw counts are the spec’s', COMPARE_CONSTANTS.BOOTSTRAP_DRAWS === 4000 && COMPARE_CONSTANTS.PERMUTATION_DRAWS === 10000)

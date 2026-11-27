@@ -1356,330 +1356,330 @@
    "open_ground": {
     "rows": [
      {
-      "basis": "6 documents (4 cross-sectional survey, 1 case study, 1 forecast)",
+      "basis": "75,459,300 mentions in news; 6 documents (4 cross-sectional survey, 1 case study, 1 forecast)",
       "depth_years": 1.55,
       "documents": 6,
       "label": "net · year-over-year · revenue growth",
       "meets_backfill": false,
       "organizations": 3,
       "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
+       "gate": "provisional",
+       "hi": 3.35009,
+       "lo": 1.237952,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": 1.891462
       },
       "saturated": null,
       "subq": 0
      },
      {
-      "basis": "14 documents (7 cross-sectional survey, 2 forecast, 2 panel survey, 1 case study)",
-      "depth_years": 4.5,
-      "documents": 14,
-      "label": "career · candidates · talent",
-      "meets_backfill": false,
-      "organizations": 5,
-      "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
-      },
-      "saturated": null,
-      "subq": 1
-     },
-     {
-      "basis": "26 documents (10 cross-sectional survey, 4 forecast, 2 case study, 2 panel survey, 1 administrative data, 1 telemetry)",
-      "depth_years": 8.5,
-      "documents": 26,
-      "label": "new markets · geopolitical · unforeseen",
-      "meets_backfill": true,
-      "organizations": 10,
-      "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
-      },
-      "saturated": null,
-      "subq": 2
-     },
-     {
-      "basis": "5 documents (1 case study, 1 forecast)",
-      "depth_years": 2.5,
-      "documents": 5,
-      "label": "digital twin · digital twins · immersive",
-      "meets_backfill": false,
-      "organizations": 4,
-      "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
-      },
-      "saturated": null,
-      "subq": 3
-     },
-     {
-      "basis": "10 documents (5 cross-sectional survey, 1 case study, 1 forecast)",
-      "depth_years": 4.5,
-      "documents": 10,
-      "label": "project managers · project management · project performance",
-      "meets_backfill": false,
-      "organizations": 6,
-      "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
-      },
-      "saturated": null,
-      "subq": 4
-     },
-     {
-      "basis": "26 documents (5 cross-sectional survey, 2 administrative data, 2 case study, 1 telemetry)",
-      "depth_years": 6.13,
-      "documents": 26,
-      "label": "scheduled maintenance · workflow · information requirements",
-      "meets_backfill": true,
-      "organizations": 9,
-      "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
-      },
-      "saturated": null,
-      "subq": 5
-     },
-     {
-      "basis": "2 documents (1 cross-sectional survey)",
-      "depth_years": 4.05,
-      "documents": 2,
-      "label": "bim · intensity · building information",
-      "meets_backfill": false,
-      "organizations": 2,
-      "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
-      },
-      "saturated": null,
-      "subq": 6
-     },
-     {
-      "basis": "16 documents (8 cross-sectional survey, 2 panel survey, 1 forecast)",
-      "depth_years": 4.5,
-      "documents": 16,
-      "label": "digital maturity · digitally mature · digital transformation",
-      "meets_backfill": false,
-      "organizations": 7,
-      "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
-      },
-      "saturated": null,
-      "subq": 7
-     },
-     {
-      "basis": "13 documents (2 forecast, 1 administrative data, 1 cross-sectional survey)",
-      "depth_years": 4.5,
-      "documents": 13,
-      "label": "republic · proud · design build",
-      "meets_backfill": false,
-      "organizations": 7,
-      "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
-      },
-      "saturated": null,
-      "subq": 8
-     },
-     {
-      "basis": "13 documents (8 cross-sectional survey, 1 case study, 1 forecast, 1 quasi-experiment)",
+      "basis": "65,728,491 mentions in news; 13 documents (8 cross-sectional survey, 1 case study, 1 forecast, 1 quasi-experiment)",
       "depth_years": 5.5,
       "documents": 13,
       "label": "score · statements · awarded",
       "meets_backfill": true,
       "organizations": 8,
       "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
+       "gate": "provisional",
+       "hi": 2.739183,
+       "lo": 0.758214,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": 1.474445
       },
       "saturated": null,
       "subq": 9
      },
      {
-      "basis": "20 documents (3 cross-sectional survey, 3 telemetry, 2 administrative data, 1 quasi-experiment)",
-      "depth_years": 6.13,
-      "documents": 20,
-      "label": "data management · data standards · use data",
-      "meets_backfill": true,
-      "organizations": 10,
+      "basis": "57,910,869 mentions in news; 14 documents (7 cross-sectional survey, 2 forecast, 2 panel survey, 1 case study)",
+      "depth_years": 4.5,
+      "documents": 14,
+      "label": "career · candidates · talent",
+      "meets_backfill": false,
+      "organizations": 5,
       "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
+       "gate": "provisional",
+       "hi": 2.401094,
+       "lo": 0.529941,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": 1.197831
       },
       "saturated": null,
-      "subq": 10
+      "subq": 1
      },
      {
-      "basis": "16 documents (3 cross-sectional survey, 2 case study, 2 forecast, 2 telemetry, 1 administrative data)",
+      "basis": "49,702,785 mentions in news; 16 documents (3 cross-sectional survey, 2 case study, 2 forecast, 2 telemetry, 1 administrative data)",
       "depth_years": 5.5,
       "documents": 16,
       "label": "climate · emissions · carbon",
       "meets_backfill": true,
       "organizations": 7,
       "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
+       "gate": "provisional",
+       "hi": 2.044643,
+       "lo": 0.248067,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": 0.896588
       },
       "saturated": null,
       "subq": 11
      },
      {
-      "basis": "9 documents (5 cross-sectional survey, 2 panel survey)",
-      "depth_years": 1.5,
-      "documents": 9,
-      "label": "ai-enabled · artificial intelligence · functionalities",
-      "meets_backfill": false,
-      "organizations": 6,
-      "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
-      },
-      "saturated": null,
-      "subq": 12
-     },
-     {
-      "basis": "19 documents (6 cross-sectional survey, 1 administrative data, 1 quasi-experiment)",
-      "depth_years": 8.5,
-      "documents": 19,
-      "label": "building design · design firms · contractor",
-      "meets_backfill": true,
-      "organizations": 10,
-      "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
-      },
-      "saturated": null,
-      "subq": 13
-     },
-     {
-      "basis": "14 documents (4 cross-sectional survey, 1 case study)",
+      "basis": "39,589,338 mentions in news; 14 documents (4 cross-sectional survey, 1 case study)",
       "depth_years": 5.5,
       "documents": 14,
       "label": "scientific · ideas · science",
       "meets_backfill": true,
       "organizations": 6,
       "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
+       "gate": "provisional",
+       "hi": 2.107419,
+       "lo": 0.009479,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": 0.686944
       },
       "saturated": null,
       "subq": 14
      },
      {
-      "basis": "11 documents (1 case study, 1 telemetry)",
-      "depth_years": 6.71,
-      "documents": 11,
-      "label": "data centers · data center · iot",
-      "meets_backfill": true,
-      "organizations": 6,
-      "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
-      },
-      "saturated": null,
-      "subq": 15
-     },
-     {
-      "basis": "12 documents (3 forecast, 2 case study, 2 cross-sectional survey, 2 telemetry)",
-      "depth_years": 4.47,
-      "documents": 12,
-      "label": "spaces · rooms · amenities",
-      "meets_backfill": false,
-      "organizations": 4,
-      "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
-      },
-      "saturated": null,
-      "subq": 16
-     },
-     {
-      "basis": "5 documents (2 case study, 1 cross-sectional survey)",
-      "depth_years": 1.38,
-      "documents": 5,
-      "label": "brands · retailers · stores",
-      "meets_backfill": false,
-      "organizations": 3,
-      "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
-      },
-      "saturated": null,
-      "subq": 17
-     },
-     {
-      "basis": "10 documents (3 case study, 2 forecast)",
+      "basis": "30,512,123 mentions in news; 10 documents (3 case study, 2 forecast)",
       "depth_years": 7.55,
       "documents": 10,
       "label": "recycled · materials · assembly",
       "meets_backfill": true,
       "organizations": 3,
       "residual": {
-       "gate": "pending",
-       "hi": null,
-       "lo": null,
-       "reason": "News demand has not been counted.",
-       "value": null
+       "gate": "provisional",
+       "hi": 1.569437,
+       "lo": -0.349415,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": 0.320005
       },
       "saturated": null,
       "subq": 18
+     },
+     {
+      "basis": "30,842,206 mentions in news; 5 documents (2 case study, 1 cross-sectional survey)",
+      "depth_years": 1.38,
+      "documents": 5,
+      "label": "brands · retailers · stores",
+      "meets_backfill": false,
+      "organizations": 3,
+      "residual": {
+       "gate": "provisional",
+       "hi": 1.6576,
+       "lo": -0.357057,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": 0.31812
+      },
+      "saturated": null,
+      "subq": 17
+     },
+     {
+      "basis": "24,195,382 mentions in news; 13 documents (2 forecast, 1 administrative data, 1 cross-sectional survey)",
+      "depth_years": 4.5,
+      "documents": 13,
+      "label": "republic · proud · design build",
+      "meets_backfill": false,
+      "organizations": 7,
+      "residual": {
+       "gate": "provisional",
+       "hi": 1.697366,
+       "lo": -0.631602,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": 0.043156
+      },
+      "saturated": 2024,
+      "subq": 8
+     },
+     {
+      "basis": "11,359,505 mentions in news; 12 documents (3 forecast, 2 case study, 2 cross-sectional survey, 2 telemetry)",
+      "depth_years": 4.47,
+      "documents": 12,
+      "label": "spaces · rooms · amenities",
+      "meets_backfill": false,
+      "organizations": 4,
+      "residual": {
+       "gate": "provisional",
+       "hi": 0.782408,
+       "lo": -1.07356,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": -0.403907
+      },
+      "saturated": 2024,
+      "subq": 16
+     },
+     {
+      "basis": "3,554,664 mentions in news; 26 documents (10 cross-sectional survey, 4 forecast, 2 case study, 2 panel survey, 1 administrative data, 1 telemetry)",
+      "depth_years": 8.5,
+      "documents": 26,
+      "label": "new markets · geopolitical · unforeseen",
+      "meets_backfill": true,
+      "organizations": 10,
+      "residual": {
+       "gate": "provisional",
+       "hi": 0.837522,
+       "lo": -1.19735,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": -0.508777
+      },
+      "saturated": null,
+      "subq": 2
+     },
+     {
+      "basis": "3,648,592 mentions in news; 9 documents (5 cross-sectional survey, 2 panel survey)",
+      "depth_years": 1.5,
+      "documents": 9,
+      "label": "ai-enabled · artificial intelligence · functionalities",
+      "meets_backfill": false,
+      "organizations": 6,
+      "residual": {
+       "gate": "provisional",
+       "hi": 0.734396,
+       "lo": -1.218546,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": -0.521771
+      },
+      "saturated": null,
+      "subq": 12
+     },
+     {
+      "basis": "2,415,877 mentions in news; 5 documents (1 case study, 1 forecast)",
+      "depth_years": 2.5,
+      "documents": 5,
+      "label": "digital twin · digital twins · immersive",
+      "meets_backfill": false,
+      "organizations": 4,
+      "residual": {
+       "gate": "provisional",
+       "hi": 0.790032,
+       "lo": -1.226377,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": -0.603855
+      },
+      "saturated": null,
+      "subq": 3
+     },
+     {
+      "basis": "2,057,645 mentions in news; 11 documents (1 case study, 1 telemetry)",
+      "depth_years": 6.71,
+      "documents": 11,
+      "label": "data centers · data center · iot",
+      "meets_backfill": true,
+      "organizations": 6,
+      "residual": {
+       "gate": "provisional",
+       "hi": 0.525395,
+       "lo": -1.295711,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": -0.635559
+      },
+      "saturated": null,
+      "subq": 15
+     },
+     {
+      "basis": "2,677,289 mentions in news; 2 documents (1 cross-sectional survey)",
+      "depth_years": 4.05,
+      "documents": 2,
+      "label": "bim · intensity · building information",
+      "meets_backfill": false,
+      "organizations": 2,
+      "residual": {
+       "gate": "provisional",
+       "hi": 0.780061,
+       "lo": -1.322423,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": -0.643226
+      },
+      "saturated": null,
+      "subq": 6
+     },
+     {
+      "basis": "2,362,712 mentions in news; 19 documents (6 cross-sectional survey, 1 administrative data, 1 quasi-experiment)",
+      "depth_years": 8.5,
+      "documents": 19,
+      "label": "building design · design firms · contractor",
+      "meets_backfill": true,
+      "organizations": 10,
+      "residual": {
+       "gate": "provisional",
+       "hi": 0.735435,
+       "lo": -1.386976,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": -0.674809
+      },
+      "saturated": 2024,
+      "subq": 13
+     },
+     {
+      "basis": "1,220,522 mentions in news; 26 documents (5 cross-sectional survey, 2 administrative data, 2 case study, 1 telemetry)",
+      "depth_years": 6.13,
+      "documents": 26,
+      "label": "scheduled maintenance · workflow · information requirements",
+      "meets_backfill": true,
+      "organizations": 9,
+      "residual": {
+       "gate": "provisional",
+       "hi": 0.654318,
+       "lo": -1.474694,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": -0.687612
+      },
+      "saturated": null,
+      "subq": 5
+     },
+     {
+      "basis": "1,274,769 mentions in news; 16 documents (8 cross-sectional survey, 2 panel survey, 1 forecast)",
+      "depth_years": 4.5,
+      "documents": 16,
+      "label": "digital maturity · digitally mature · digital transformation",
+      "meets_backfill": false,
+      "organizations": 7,
+      "residual": {
+       "gate": "provisional",
+       "hi": 0.481482,
+       "lo": -1.340731,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": -0.698482
+      },
+      "saturated": null,
+      "subq": 7
+     },
+     {
+      "basis": "425,921 mentions in news; 10 documents (5 cross-sectional survey, 1 case study, 1 forecast)",
+      "depth_years": 4.5,
+      "documents": 10,
+      "label": "project managers · project management · project performance",
+      "meets_backfill": false,
+      "organizations": 6,
+      "residual": {
+       "gate": "provisional",
+       "hi": 0.73815,
+       "lo": -1.412914,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": -0.724817
+      },
+      "saturated": null,
+      "subq": 4
+     },
+     {
+      "basis": "552,728 mentions in news; 20 documents (3 cross-sectional survey, 3 telemetry, 2 administrative data, 1 quasi-experiment)",
+      "depth_years": 6.13,
+      "documents": 20,
+      "label": "data management · data standards · use data",
+      "meets_backfill": true,
+      "organizations": 10,
+      "residual": {
+       "gate": "provisional",
+       "hi": 0.4341,
+       "lo": -1.361605,
+       "reason": "Sub-question groups and their labels wait for Kyle's check.",
+       "value": -0.725413
+      },
+      "saturated": null,
+      "subq": 10
      }
     ],
-    "summary": "Each sub-question with its documents and how far back the map reaches; news demand is not counted yet."
+    "summary": "Sorted by demand gap. The widest is “net · year-over-year · revenue growth”."
    },
    "organizations": [
     {

@@ -60,7 +60,9 @@ export default function Scatter({ q, selectedId, onSelect, xKey, yKey }) {
         {pts.length === 0
           ? (q.organizations.every((o) => o.values[xKey]?.gate === 'pending')
             ? `${xm.label} is not measured yet, so this figure of ${xm.label.toLowerCase()} against ${ym.label.toLowerCase()} waits for it.`
-            : 'No organization has both measures yet, so there is nothing to plot.')
+            : q.organizations.some((o) => o.values[xKey]?.gate === 'too_few')
+              ? `No independent news article about these reports was found in the sources searched, so the figure of ${xm.label.toLowerCase()} against ${ym.label.toLowerCase()} has nothing to plot.`
+              : 'No organization has both measures yet, so there is nothing to plot.')
           : 'Too few organizations have both measures to plot.'}
       </p>
     )

@@ -1,8 +1,9 @@
 # Gate: news coverage and claims repeated in it
 
-Status: **pending** for the map until Gate 1 for its reports (`record-c11`) finishes;
-**provisional** after, because no L1 or L2 link has a gold label (the propagation
-precision gate needs 60 labeled links per tier with a Wilson lower bound of 0.90).
+Status: **too few** for 16 of the 18 organizations (no independent article found) and
+**pending** for 2 (their window documents are dated only by the file's creation date, so
+they were not in the run). No L1 or L2 link has a gold label; the propagation precision
+gate needs 60 labeled links per tier with a Wilson lower bound of 0.90.
 
 ## Where coverage comes from
 
@@ -40,6 +41,42 @@ Needs at least two discovery sources with results for the same reports. Gate 1 r
 Infini-News for every report and GDELT only for recent ones, so for most reports there is
 one list and the share is over what was found. Stated on the page.
 
-## Results for the map
+## Results for the map (`record-c11`)
 
-(Filled in when `record-c11` finishes.)
+Run 02:25 to 09:35 on research branch `record` (propagation code at a92fd88 plus the
+GDELT spacing fixes and the manifest fix 4144ae6), linking rules **E2**: the rules of the
+propagation session's first pilot run (`pilot`); its widened run (`pilot-w`) used E3. The
+manifest was written by an offline replay from cache (the live run crashed on the last
+line, the manifest's index-version list; fixed by 4144ae6).
+
+| | Count |
+|---|---|
+| Reports | 30 |
+| Discovery queries | 2,074 |
+| Candidates | 754, for 23 reports |
+| Article texts the engine read | 547 |
+| L1 links | 7, for 2 reports |
+| L2, L3 | 0, 0 |
+| X | 489: edition_anchor 323, undated 137, edition_title 20, upstream 8, predates 1 |
+| none | 258 |
+
+**All 7 L1 links are the firms speaking, not being heard.** Three of one firm's press
+releases on wire services and two copies of one of them, and another firm's release and
+its own web page. The Record counts an article as coverage only when it is independent:
+not the firm's own release (Part B), not a wire copy of one (same syndication group), not
+a page on the firm's own site. **Independent articles: 0.** Coverage share, coverage minus
+contribution, and both pickup rows are "too few to estimate"; the figure says it has
+nothing to plot. Claim matching ran and had nothing to match.
+
+## Predictions (written before discovery)
+
+| # | Prediction | Result |
+|---|---|---|
+| R1 | Infini-News yields a candidate for at most half of the 30 reports | **Miss**: 23 of 30 |
+| R2 | No L2 link for any report | Hit |
+| R3 | At most 3 L1 links across all 30, each a hyperlink or firm and title | **Miss on count**: 7, each by firm and title |
+| R4 | Firm queries for Autodesk, Trimble, Arup and Bentley Systems too broad to resolve | **Miss**: with the cap at 250,000 every firm query resolved (Autodesk 242,081 occurrences) |
+| R5 | Reports dated after April 2026 get no Infini-News candidate | **Miss**: one got 3 (earlier articles matching its phrases) |
+| R6 | Every L3 candidate comes from a rare phrase | Hit, vacuously: no L3 |
+
+Nothing was changed because of a miss.

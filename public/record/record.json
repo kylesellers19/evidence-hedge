@@ -85,10 +85,10 @@
        "share": 0.6267672007540056
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -136,10 +136,10 @@
        "share": 0.7272727272727273
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -187,10 +187,10 @@
        "share": 0.7857142857142857
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -258,10 +258,10 @@
        "share": 0.7531707317073171
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -309,10 +309,10 @@
        "share": 0.7677793904208998
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -360,10 +360,10 @@
        "share": 0.6455223880597015
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -416,10 +416,10 @@
        "share": 0.8303571428571429
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -472,10 +472,10 @@
        "share": 0.6617238183503243
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -533,10 +533,10 @@
        "share": 0.7853403141361257
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -604,10 +604,10 @@
        "share": 0.8842592592592593
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -655,10 +655,10 @@
        "share": 0.75
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -716,10 +716,10 @@
        "share": 0.852233676975945
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -767,10 +767,10 @@
        "share": 0.423728813559322
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -828,10 +828,10 @@
        "share": 0.7547169811320755
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -879,10 +879,10 @@
        "share": 0.7379807692307693
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -940,10 +940,10 @@
        "share": 0.7139379184418746
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -991,10 +991,10 @@
        "share": 0.7
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -1042,10 +1042,10 @@
        "share": 0.7898550724637681
       },
       {
-       "gate": "pending",
+       "gate": "provisional",
        "key": "picked",
-       "label": "Repeated in articles",
-       "n": null,
+       "label": "Repeated in independent articles",
+       "n": 0,
        "share": null
       }
      ]
@@ -1243,9 +1243,9 @@
       "result": "155 findings were restated by later documents. Half stopped being restated within 1.1 years (Kaplan-Meier). Flagged findings: hazard ratio 0.79 (95% interval 0.57 to 1.10), no clear difference from unflagged ones (Cox)."
      },
      {
-      "gate": "pending",
+      "gate": "too_few",
       "name": "Pickup that begets pickup",
-      "result": "A Hawkes process needs 20 independent articles for one report; news links are not in yet."
+      "result": "A Hawkes process needs 20 independent articles for one report; 0 of 0 reports with independent articles reach that (no report has one)."
      },
      {
       "gate": "too_few",
@@ -1280,14 +1280,14 @@
       "status": "provisional"
      },
      {
-      "detail": "Discovery has not run for these reports.",
+      "detail": "30 reports searched in CC-NEWS (and GDELT for recent ones): 7 links at the strictest tier, all the firms’ own press releases, wire copies of them or their own pages; 0 independent articles. No gold labels yet.",
       "name": "News links",
-      "status": "pending"
+      "status": "too_few"
      },
      {
-      "detail": "Claim-level matching (propagation Parts F and G) waits for news links.",
+      "detail": "Matching ran; with no independent article there is nothing to match. On the propagation pilot's five links it found 4 repeated claims, 3 kept intact.",
       "name": "Claims repeated in articles",
-      "status": "pending"
+      "status": "too_few"
      }
     ],
     "limits": [
@@ -1710,7 +1710,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -1718,7 +1718,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -1726,17 +1726,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -1818,7 +1818,7 @@
       "pickups_flagged": {
        "basis": "63% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -1826,7 +1826,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -1834,9 +1834,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -1844,7 +1844,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -1900,7 +1900,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -1908,7 +1908,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -1916,17 +1916,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2008,7 +2008,7 @@
       "pickups_flagged": {
        "basis": "75% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2016,7 +2016,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2024,9 +2024,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2034,7 +2034,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2090,7 +2090,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2098,7 +2098,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2106,17 +2106,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2198,7 +2198,7 @@
       "pickups_flagged": {
        "basis": "85% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2206,7 +2206,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2214,9 +2214,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2224,7 +2224,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2280,7 +2280,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2288,7 +2288,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2296,17 +2296,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2388,7 +2388,7 @@
       "pickups_flagged": {
        "basis": "42% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2396,7 +2396,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2404,9 +2404,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2414,7 +2414,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2470,7 +2470,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2478,7 +2478,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2486,17 +2486,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2578,7 +2578,7 @@
       "pickups_flagged": {
        "basis": "75% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2586,7 +2586,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2594,9 +2594,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2604,7 +2604,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2660,7 +2660,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2668,7 +2668,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2676,17 +2676,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2768,7 +2768,7 @@
       "pickups_flagged": {
        "basis": "74% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2776,7 +2776,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2784,9 +2784,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2794,7 +2794,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2850,7 +2850,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2858,7 +2858,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2866,17 +2866,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2958,7 +2958,7 @@
       "pickups_flagged": {
        "basis": "71% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2966,7 +2966,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -2974,9 +2974,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -2984,7 +2984,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3048,7 +3048,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "None of this organization's window reports was in the discovery run.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3056,7 +3056,7 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "no report in the discovery run",
        "engine_version": "90fa8b3",
        "gate": "pending",
        "hi": null,
@@ -3066,7 +3066,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "None of this organization's window reports was in the discovery run.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3148,7 +3148,7 @@
       "pickups_flagged": {
        "basis": "70% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -3156,7 +3156,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3164,9 +3164,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -3174,7 +3174,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3230,7 +3230,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -3238,7 +3238,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3246,17 +3246,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3338,7 +3338,7 @@
       "pickups_flagged": {
        "basis": "79% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -3346,7 +3346,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3354,9 +3354,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -3364,7 +3364,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3428,7 +3428,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "None of this organization's window reports was in the discovery run.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3436,7 +3436,7 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "no report in the discovery run",
        "engine_version": "90fa8b3",
        "gate": "pending",
        "hi": null,
@@ -3446,7 +3446,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "None of this organization's window reports was in the discovery run.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3528,7 +3528,7 @@
       "pickups_flagged": {
        "basis": "73% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -3536,7 +3536,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3544,9 +3544,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -3554,7 +3554,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3610,7 +3610,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -3618,7 +3618,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3626,17 +3626,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3718,7 +3718,7 @@
       "pickups_flagged": {
        "basis": "79% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -3726,7 +3726,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3734,9 +3734,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -3744,7 +3744,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3800,7 +3800,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -3808,7 +3808,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3816,17 +3816,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3908,7 +3908,7 @@
       "pickups_flagged": {
        "basis": "75% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -3916,7 +3916,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3924,9 +3924,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -3934,7 +3934,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -3990,7 +3990,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -3998,7 +3998,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4006,17 +4006,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4098,7 +4098,7 @@
       "pickups_flagged": {
        "basis": "77% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -4106,7 +4106,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4114,9 +4114,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -4124,7 +4124,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4180,7 +4180,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -4188,7 +4188,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4196,17 +4196,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4288,7 +4288,7 @@
       "pickups_flagged": {
        "basis": "65% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -4296,7 +4296,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4304,9 +4304,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -4314,7 +4314,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4370,7 +4370,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -4378,7 +4378,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4386,17 +4386,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4478,7 +4478,7 @@
       "pickups_flagged": {
        "basis": "83% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -4486,7 +4486,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4494,9 +4494,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -4504,7 +4504,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4560,7 +4560,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -4568,7 +4568,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4576,17 +4576,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4668,7 +4668,7 @@
       "pickups_flagged": {
        "basis": "66% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -4676,7 +4676,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4684,9 +4684,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -4694,7 +4694,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4750,7 +4750,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -4758,7 +4758,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4766,17 +4766,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4858,7 +4858,7 @@
       "pickups_flagged": {
        "basis": "79% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -4866,7 +4866,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4874,9 +4874,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -4884,7 +4884,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4940,7 +4940,7 @@
       "coverage_minus_contribution": {
        "basis": "needs both shares",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -4948,7 +4948,7 @@
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -4956,17 +4956,17 @@
        ]
       },
       "coverage_share": {
-       "basis": "discovery not run",
+       "basis": "0 independent articles found",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
-       "k": null,
+       "k": 0,
        "lo": null,
        "map_build_hash": "19ad617a8af2",
        "model": "Dirichlet-multinomial share",
        "model_version": "EH-Record-Pilot-0.1",
-       "n": null,
-       "reason": "News discovery has not run for this map's reports.",
+       "n": 0,
+       "reason": "No independent articles were found, so no share can be taken.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -5048,7 +5048,7 @@
       "pickups_flagged": {
        "basis": "88% of its claims flagged",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -5056,7 +5056,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",
@@ -5064,9 +5064,9 @@
        ]
       },
       "pickups_intact": {
-       "basis": "matching not run",
+       "basis": "no pickups",
        "engine_version": "90fa8b3",
-       "gate": "pending",
+       "gate": "too_few",
        "hi": null,
        "k": null,
        "lo": null,
@@ -5074,7 +5074,7 @@
        "model": "hierarchical beta-binomial, partial pooling",
        "model_version": "EH-Record-Pilot-0.1",
        "n": null,
-       "reason": "Claim-level matching of articles to reports (propagation Parts F and G) has not run.",
+       "reason": "No claim of this organization was found in an article.",
        "value": null,
        "window": [
         "2023-01-01",

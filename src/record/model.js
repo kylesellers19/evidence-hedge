@@ -88,7 +88,11 @@ export function sentence(q, org) {
   }
   const cov = v.coverage_share
   let tail = ''
-  if (!isShown(cov)) tail = '. Its news coverage is not measured yet'
+  if (!isShown(cov)) {
+    tail = cov && cov.gate === 'too_few'
+      ? '. No independent news article about its reports was found in the sources searched'
+      : '. Its news coverage is not measured yet'
+  }
   else parts.push(`and drew ${pctWords(cov.value)} of the coverage found`)
   if (!parts.length) return `${docs}${tail}.`
   const body = parts.join(' ').replace(/,$/, '')
